@@ -41,6 +41,7 @@ std::list<Particle> particles;
 int main(int argc, char* argsv[]) {
 
     std::cout << "Hello from MolSim for PSE!" << std::endl;
+    // TODO: Argsv[0] and delta_t <= 0 and end_time < 0
     if (argc == 4) {
         end_time = std::stod(argsv[2]);
         delta_t = std::stod(argsv[3]);
