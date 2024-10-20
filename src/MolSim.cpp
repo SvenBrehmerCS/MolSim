@@ -7,6 +7,7 @@
 #include <cmath>
 #include <iostream>
 #include <list>
+#include <string>
 
 /**** forward declaration of the calculation functions ****/
 
@@ -31,8 +32,8 @@ void calculateV();
 void plotParticles(int iteration);
 
 constexpr double start_time = 0;
-constexpr double end_time = 1000;
-constexpr double delta_t = 0.014;
+double end_time = 1000;
+double delta_t = 0.014;
 
 // TODO: what data structure to pick?
 std::list<Particle> particles;
@@ -40,9 +41,17 @@ std::list<Particle> particles;
 int main(int argc, char* argsv[]) {
 
     std::cout << "Hello from MolSim for PSE!" << std::endl;
-    if (argc != 2) {
+    if (argc == 4) {
+        end_time = std::stod(argsv[2]);
+        delta_t = std::stod(argsv[3]);
+    }else if (argc == 2)
+    {
+        std::cout << "Using default t_end and delta_t!" << std::endl;
+        std::cout << "Use './MolSim filename t_end delta_t' for custom values" << std::endl;
+    }else{
         std::cout << "Erroneous programme call! " << std::endl;
-        std::cout << "./molsym filename" << std::endl;
+        std::cout << "./MolSim filename t_end delta_t" << std::endl;
+        exit(-1);
     }
 
     FileReader fileReader;
