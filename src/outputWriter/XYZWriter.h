@@ -14,15 +14,14 @@
 
 namespace outputWriter {
 
-class XYZWriter {
+    class XYZWriter {
 
-public:
-  XYZWriter();
+    public:
+        XYZWriter();
 
-  virtual ~XYZWriter();
+        virtual ~XYZWriter();
 
-  void plotParticles(std::list<Particle> particles, const std::string &filename,
-                     int iteration);
-};
+        void plotParticles(std::list<Particle> particles, const std::string& filename, int iteration);
+    };
 
 } // namespace outputWriter
