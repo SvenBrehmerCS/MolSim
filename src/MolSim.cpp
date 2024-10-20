@@ -45,11 +45,10 @@ int main(int argc, char* argsv[]) {
     if (argc == 4) {
         end_time = std::stod(argsv[2]);
         delta_t = std::stod(argsv[3]);
-    }else if (argc == 2)
-    {
+    } else if (argc == 2) {
         std::cout << "Using default t_end and delta_t!" << std::endl;
         std::cout << "Use './MolSim filename t_end delta_t' for custom values" << std::endl;
-    }else{
+    } else {
         std::cout << "Erroneous programme call! " << std::endl;
         std::cout << "./MolSim filename t_end delta_t" << std::endl;
         exit(-1);
