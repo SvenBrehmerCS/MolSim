@@ -79,6 +79,9 @@ void calculateF() {
     iterator = particles.begin();
 
     for (auto& p1 : particles) {
+        p1.setOldF(p1.getF());
+        p1.setF({ 0, 0, 0 });
+
         for (auto& p2 : particles) {
             if (p1 == p2) {
                 continue;
@@ -89,8 +92,11 @@ void calculateF() {
 
             const double force = p1.getM() * p2.getM() / (distance * distance * distance);
 
-            p1.setOldF(p1.getF());
-            p1.setF({ (p2.getX()[0] - p1.getX()[0]) * force, (p2.getX()[1] - p1.getX()[1]) * force, (p2.getX()[2] - p1.getX()[2]) * force });
+            p1.setF({
+                (p2.getX()[0] - p1.getX()[0]) * force + p1.getF()[0],
+                (p2.getX()[1] - p1.getX()[1]) * force + p1.getF()[1],
+                (p2.getX()[2] - p1.getX()[2]) * force + p1.getF()[2],
+            });
         }
     }
 }
