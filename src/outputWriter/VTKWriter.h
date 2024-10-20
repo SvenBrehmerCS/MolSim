@@ -46,6 +46,9 @@ namespace outputWriter {
          */
         void writeFile(const std::string& filename, int iteration);
 
+        // TODO: Documentation
+        void plotParticles(std::list<Particle> particles, const std::string& filename, int iteration);
+
     private:
         VTKFile_t* vtkFile;
     };
