@@ -38,6 +38,8 @@ double delta_t = 0.014;
 // TODO: what data structure to pick?
 std::list<Particle> particles;
 
+std::unique_ptr<outputWriter::Writer> writer { new outputWriter::VTKWriter() };
+
 int main(int argc, char* argsv[]) {
 
     std::cout << "Hello from MolSim for PSE!" << std::endl;
@@ -134,8 +136,5 @@ void plotParticles(int iteration) {
 
     std::string out_name("MD_vtk");
 
-    outputWriter::VTKWriter writer;
-
-    // TODO: Inefficient
-    writer.plotParticles(particles, out_name, iteration);
+    writer->plotParticles(particles, out_name, iteration);
 }
