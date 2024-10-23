@@ -14,5 +14,18 @@ For building the project follow these steps:
 6. Run `make` or `cmake --build .` to build the executable.
 7. Execute the executale by runing `./MolSim <args>`. For further details refer to the [Usage](#usage) section.
 
+## Documentation
+
+For generating the Doxygen documentation:
+
+1. Install doxygen on your computer with `sudo apt install doxygen`
+2. Install the required graphviz library for the documentation with `sudo apt install graphviz`
+3. Enter the [build](./build/) directory by running `cd build`.
+4. Execute `cmake ..` to generate the Makefile.
+5. Run `make` or `cmake --build .` to build the executable.
+6. You can now generate the documentation by running `make doc_doxygen`
+7. the documentation will be created in [Dokumentation in html](./build/docs/html/index.html)
+
+
 ## Usage
 
