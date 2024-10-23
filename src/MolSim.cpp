@@ -1,4 +1,5 @@
 
+#include "Environment.h"
 #include "FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
@@ -14,125 +15,121 @@
 /**
  * calculate the force for all particles
  */
-void calculateF();
+void calculateF(const Environment& env);
 
 /**
  * calculate the position for all particles
  */
-void calculateX();
+void calculateX(const Environment& env);
 
 /**
  * calculate the position for all particles
  */
-void calculateV();
+void calculateV(const Environment& env);
 
 /**
  * plot the particles to a xyz-file
  */
-void plotParticles(int iteration);
+void plotParticles(const int iteration, const Environment& env);
 
-constexpr double start_time = 0;
-double end_time = 1000;
-double delta_t = 0.014;
-
-// TODO: what data structure to pick?
+// TODO: what data structure to pick? vector
 std::list<Particle> particles;
 
-int main(int argc, char* argsv[]) {
+// TODO: const argv
+int main(const int argc, char* argv[]) {
 
-    std::cout << "Hello from MolSim for PSE!" << std::endl;
-    // TODO: Argsv[0] and delta_t <= 0 and end_time < 0
-    if (argc == 4) {
-        end_time = std::stod(argsv[2]);
-        delta_t = std::stod(argsv[3]);
-    } else if (argc == 2) {
-        std::cout << "Using default t_end and delta_t!" << std::endl;
-        std::cout << "Use './MolSim filename t_end delta_t' for custom values" << std::endl;
-    } else {
-        std::cout << "Erroneous programme call! " << std::endl;
-        std::cout << "./MolSim filename t_end delta_t" << std::endl;
-        exit(-1);
-    }
+    std::cout << "Started " << argv[0] << std::endl;
+
+    Environment env(argc, argv);
 
     FileReader fileReader;
-    fileReader.readFile(particles, argsv[1]);
+    fileReader.readFile(particles, env.get_input_file_name());
 
-    double current_time = start_time;
-
+    double current_time = 0.0;
     int iteration = 0;
 
     // for this loop, we assume: current x, current f and current v are known
-    while (current_time < end_time) {
+    // ? Possible Optimization: Replace some std::endl with "\n" ->
+    // ?    Avoid flushing the stream unnecessarily often.
+    // ?    Reduce the number of calls to ostream.operator<<.
+    // ? Possible Improvement:
+    // ?    Measure simulation time.
+    // ?    Add an option for disabling and enabling print statements.
+    // ?    Add assertions for simpler error detection.
+    while (current_time < env.get_t_end()) {
         // calculate new x
-        calculateX();
+        calculateX(env);
         // calculate new f
-        calculateF();
+        calculateF(env);
         // calculate new v
-        calculateV();
+        calculateV(env);
 
         iteration++;
-        if (iteration % 10 == 0) {
-            plotParticles(iteration);
+
+        if (iteration % env.get_print_step() == 0) {
+            plotParticles(iteration, env);
         }
+
         std::cout << "Iteration " << iteration << " finished." << std::endl;
 
-        current_time += delta_t;
+        current_time += env.get_delta_t();
     }
 
     std::cout << "output written. Terminating..." << std::endl;
     return 0;
 }
 
-void calculateF() {
-    std::list<Particle>::iterator iterator;
-    iterator = particles.begin();
+void calculateF(const Environment& env) {
+    for (Particle& p : particles) {
+        p.setOldF(p.getF());
+        p.setF({ 0.0, 0.0, 0.0 });
+    }
 
-    for (auto& p1 : particles) {
-        p1.setOldF(p1.getF());
-        p1.setF({ 0, 0, 0 });
+    for (size_t i = 0; i < particles.size(); i++) {
+        for (size_t j = i + 1; j < particles.size(); j++) {
+            // TODO: Update the forces (requires vector)
+            Particle p1, p2;
 
-        for (auto& p2 : particles) {
-            if (p1 == p2) {
-                continue;
-            }
-
-            const double distance = std::sqrt((p1.getX()[0] - p2.getX()[0]) * (p1.getX()[0] - p2.getX()[0])
-                + (p1.getX()[1] - p2.getX()[1]) * (p1.getX()[1] - p2.getX()[1]) + (p1.getX()[2] - p2.getX()[2]) * (p1.getX()[2] - p2.getX()[2]));
-
+            const double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
             const double force = p1.getM() * p2.getM() / (distance * distance * distance);
 
-            p1.setF({
-                (p2.getX()[0] - p1.getX()[0]) * force + p1.getF()[0],
-                (p2.getX()[1] - p1.getX()[1]) * force + p1.getF()[1],
-                (p2.getX()[2] - p1.getX()[2]) * force + p1.getF()[2],
-            });
+            p1.setF(force * (p2.getX() - p1.getX()) + p1.getF());
+            p2.setF(force * (p1.getX() - p2.getX()) + p2.getF());
         }
     }
+
+    // for (auto& p1 : particles) {
+    //     p1.setOldF(p1.getF());
+    //     p1.setF({ 0, 0, 0 });
+
+    //     for (auto& p2 : particles) {
+    //         if (p1 == p2) {
+    //             continue;
+    //         }
+
+    //         const double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
+
+    //         const double force = p1.getM() * p2.getM() / (distance * distance * distance);
+
+    //         p1.setF(force * (p2.getX() - p1.getX()) + p1.getF());
+    //     }
+    // }
 }
 
-void calculateX() {
-    for (auto& p : particles) {
-        p.setX({
-            p.getX()[0] + delta_t * p.getV()[0] + delta_t * delta_t * 0.5 * p.getF()[0] / p.getM(),
-            p.getX()[1] + delta_t * p.getV()[1] + delta_t * delta_t * 0.5 * p.getF()[1] / p.getM(),
-            p.getX()[2] + delta_t * p.getV()[2] + delta_t * delta_t * 0.5 * p.getF()[2] / p.getM(),
-        });
+void calculateX(const Environment& env) {
+    for (Particle& p : particles) {
+        p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
     }
 }
 
-void calculateV() {
-    for (auto& p : particles) {
-        p.setV({
-            p.getV()[0] + delta_t * 0.5 * (p.getOldF()[0] + p.getF()[0]) / p.getM(),
-            p.getV()[1] + delta_t * 0.5 * (p.getOldF()[1] + p.getF()[1]) / p.getM(),
-            p.getV()[2] + delta_t * 0.5 * (p.getOldF()[2] + p.getF()[2]) / p.getM(),
-        });
+void calculateV(const Environment& env) {
+    for (Particle& p : particles) {
+        p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
     }
 }
 
-void plotParticles(int iteration) {
-
-    std::string out_name("MD_vtk");
+void plotParticles(const int iteration, const Environment& env) {
+    std::string out_name(env.get_output_file_name());
 
     outputWriter::VTKWriter writer;
 
