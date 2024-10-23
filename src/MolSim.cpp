@@ -7,8 +7,8 @@
 
 #include <cmath>
 #include <iostream>
-#include <list>
 #include <string>
+#include <vector>
 
 /**** forward declaration of the calculation functions ****/
 
@@ -32,13 +32,10 @@ void calculateV(const Environment& env);
  */
 void plotParticles(const int iteration, const Environment& env);
 
-// TODO: what data structure to pick? vector
-std::list<Particle> particles;
-
+std::vector<Particle> particles;
 std::unique_ptr<outputWriter::Writer> writer { new outputWriter::VTKWriter() };
 
-// TODO: const argv
-int main(const int argc, char* argv[]) {
+int main(const int argc, const char* argv[]) {
 
     std::cout << "Started " << argv[0] << std::endl;
 
@@ -89,33 +86,13 @@ void calculateF(const Environment& env) {
 
     for (size_t i = 0; i < particles.size(); i++) {
         for (size_t j = i + 1; j < particles.size(); j++) {
-            // TODO: Update the forces (requires vector)
-            Particle p1, p2;
+            const double distance = ArrayUtils::L2Norm(particles[j].getX() - particles[i].getX());
+            const double force = particles[i].getM() * particles[j].getM() / (distance * distance * distance);
 
-            const double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
-            const double force = p1.getM() * p2.getM() / (distance * distance * distance);
-
-            p1.setF(force * (p2.getX() - p1.getX()) + p1.getF());
-            p2.setF(force * (p1.getX() - p2.getX()) + p2.getF());
+            particles[i].setF(force * (particles[j].getX() - particles[i].getX()) + particles[i].getF());
+            particles[j].setF(force * (particles[i].getX() - particles[j].getX()) + particles[j].getF());
         }
     }
-
-    // for (auto& p1 : particles) {
-    //     p1.setOldF(p1.getF());
-    //     p1.setF({ 0, 0, 0 });
-
-    //     for (auto& p2 : particles) {
-    //         if (p1 == p2) {
-    //             continue;
-    //         }
-
-    //         const double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
-
-    //         const double force = p1.getM() * p2.getM() / (distance * distance * distance);
-
-    //         p1.setF(force * (p2.getX() - p1.getX()) + p1.getF());
-    //     }
-    // }
 }
 
 void calculateX(const Environment& env) {

@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include <list>
+#include <vector>
 #include <string>
 
 class Particle;
@@ -24,6 +24,6 @@ namespace outputWriter {
          * @param iteration the number of the current iteration,
          *        which is used to generate an unique filename
          */
-        virtual void plotParticles(const std::list<Particle>& particles, const std::string& filename, int iteration) = 0;
+        virtual void plotParticles(const std::vector<Particle>& particles, const std::string& filename, int iteration) = 0;
     };
 } // namespace outputWriter

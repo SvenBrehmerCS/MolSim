@@ -10,7 +10,7 @@
 #include "Writer.h"
 #include "outputWriter/vtk-unstructured.h"
 
-#include <list>
+#include <vector>
 
 namespace outputWriter {
 
@@ -54,7 +54,7 @@ namespace outputWriter {
          * @param iteration the number of the current iteration,
          *        which is used to generate an unique filename
          */
-        virtual void plotParticles(const std::list<Particle>& particles, const std::string& filename, int iteration);
+        virtual void plotParticles(const std::vector<Particle>& particles, const std::string& filename, int iteration);
 
     private:
         VTKFile_t* vtkFile;

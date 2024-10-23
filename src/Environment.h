@@ -12,7 +12,7 @@ private:
     int print_step = 10;
     bool default_print_step = true;
 
-    char* input_file = nullptr;
+    const char* input_file = nullptr;
     const char* output_file = "MD_vtk";
     bool default_out_name = true;
 
@@ -22,7 +22,7 @@ private:
 public:
     Environment();
 
-    Environment(const int argc, char* argv[]);
+    Environment(const int argc, const  char* argv[]);
 
     ~Environment();
 
@@ -32,7 +32,7 @@ public:
 
     int get_print_step() const;
 
-    char* get_input_file_name() const;
+    const char* get_input_file_name() const;
 
     const char* get_output_file_name() const;
 

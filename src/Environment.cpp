@@ -15,7 +15,7 @@ static void panic_exit(const char* message) {
 
 Environment::Environment() { std::cout << "Initialized with a standard environment." << std::endl; }
 
-Environment::Environment(const int argc, char* argv[]) {
+Environment::Environment(const int argc, const char* argv[]) {
     for (int i = 0; i < argc; i++) {
         if (std::strcmp(argv[i], "-h") == 0 || std::strcmp(argv[i], "--h") == 0 || std::strcmp(argv[i], "-help") == 0
             || std::strcmp(argv[i], "--help") == 0) {
@@ -215,7 +215,7 @@ double Environment::get_delta_t() const { return delta_t; }
 
 int Environment::get_print_step() const { return print_step; }
 
-char* Environment::get_input_file_name() const { return input_file; }
+const char* Environment::get_input_file_name() const { return input_file; }
 
 const char* Environment::get_output_file_name() const { return output_file; }
 
