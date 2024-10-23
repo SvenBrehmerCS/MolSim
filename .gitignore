@@ -41,3 +41,7 @@
 
 # Ignore the CLion build folder
 cmake-build-debug/
+
+#ignore the doxygen generated binary files, such as html and lateX
+html/
+latex/
