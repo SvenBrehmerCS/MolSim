@@ -1,13 +1,14 @@
 /*
- * VTKWriter.h
+ * Writer.h
  *
  *  Created on: 23.10.2024
  *      Author: Sven Brehmer
  */
 
 #pragma once
-#include <vector>
+
 #include <string>
+#include <vector>
 
 class Particle;
 

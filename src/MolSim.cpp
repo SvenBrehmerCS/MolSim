@@ -1,14 +1,18 @@
 
 #include "Environment.h"
-#include "FileReader.h"
+#include "Particle.h"
+#include "inputReader/FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 
 #include <cmath>
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
+
+namespace fs = std::filesystem;
 
 /**** forward declaration of the calculation functions ****/
 
@@ -33,6 +37,7 @@ void calculateV(const Environment& env);
 void plotParticles(const int iteration, const Environment& env);
 
 std::vector<Particle> particles;
+std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
 std::unique_ptr<outputWriter::Writer> writer { new outputWriter::VTKWriter() };
 
 int main(const int argc, const char* argv[]) {
@@ -41,8 +46,17 @@ int main(const int argc, const char* argv[]) {
 
     Environment env(argc, argv);
 
-    FileReader fileReader;
-    fileReader.readFile(particles, env.get_input_file_name());
+    fileReader->readFile(particles, env.get_input_file_name());
+
+    std::cout << "Cleaning up old output files!" << std::endl;
+    fs::path dir_path { "." };
+    for (auto const& dir_entry : fs::directory_iterator { dir_path }) {
+        if (dir_entry.path().extension() == ".vtu" || dir_entry.path().extension() == ".xyz") {
+            fs::remove(dir_entry.path());
+        }
+    }
+    // std::string command = "rm ./*.vtu";
+    // system(command.c_str());
 
     double current_time = 0.0;
     int iteration = 0;
