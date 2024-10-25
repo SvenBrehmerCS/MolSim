@@ -16,9 +16,12 @@ static void panic_exit(const char* message) {
 Environment::Environment() { std::cout << "Initialized with a standard environment." << std::endl; }
 
 Environment::Environment(const int argc, const char* argv[]) {
-    for (int i = 0; i < argc; i++) {
+    // Test if there is a request for a help message within all passed arguments
+    for (int i = 1; i < argc; i++) {
         if (std::strcmp(argv[i], "-h") == 0 || std::strcmp(argv[i], "--h") == 0 || std::strcmp(argv[i], "-help") == 0
             || std::strcmp(argv[i], "--help") == 0) {
+
+            // Print the help message
             std::cout << "Usage:" << std::endl;
             std::cout << "    " << argv[0] << " <args> <input file>" << std::endl;
             std::cout << std::endl;
@@ -68,6 +71,14 @@ Environment::Environment(const int argc, const char* argv[]) {
         }
     }
 
+    // Initialize the booleans indicating if an argument was already parsed once
+    bool default_end = true;
+    bool default_delta = true;
+    bool default_print_step = true;
+    bool default_out_name = true;
+    bool default_file_format = true;
+
+    // Parse all arguments but help.
     for (int i = 1; i < argc; i++) {
         if (std::strncmp(argv[i], "-t_end=", std::strlen("-t_end=")) == 0) {
             // Parse the end time
@@ -132,12 +143,12 @@ Environment::Environment(const int argc, const char* argv[]) {
             size_t idx = 0;
 
             try {
-                print_step = std::stoi(argv[i] + std::strlen("-delta_t="), &idx);
+                print_step = std::stoi(argv[i] + std::strlen("-print_step="), &idx);
             } catch (const std::exception& e) {
-                panic_exit("The option delta_t requires an integer small enough to fit into an int.");
+                panic_exit("The option print_step requires an integer small enough to fit into an int.");
             }
 
-            if (argv[i][idx + std::strlen("-delta_t=")] != 0) {
+            if (argv[i][idx + std::strlen("-print_step=")] != 0) {
                 panic_exit("The option print_step must only have one integer as input.");
             }
 
@@ -205,6 +216,7 @@ Environment::Environment(const int argc, const char* argv[]) {
     std::cout << "    print_step = " << print_step << " (" << btos(default_print_step) << ")" << std::endl;
     std::cout << "    input_file = " << input_file << std::endl;
     std::cout << "    output_file = " << output_file << "(" << btos(default_out_name) << ")" << std::endl;
+    std::cout << "    format = " << format << "(" << btos(default_file_format) << ")" << std::endl;
 }
 
 Environment::~Environment() = default;
