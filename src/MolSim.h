@@ -7,24 +7,28 @@
 #pragma once
 
 #include "Environment.h"
+#include "ParticleContainer.h"
 
 /**
  * Update the forces and old forces experienced by all the particles.
  *
+ * @param container The container for the particles.
  * @param env The simulation environment.
  */
-void calculateF(const Environment& env);
+void calculateF(ParticleContainer& container, const Environment& env);
 
 /**
  * Update the position of all the particles.
  *
+ * @param container The container for the particles.
  * @param env The simulation environment.
  */
-void calculateX(const Environment& env);
+void calculateX(ParticleContainer& container, const Environment& env);
 
 /**
  * Update the velocity of all the particles.
  *
+ * @param container The container for the particles.
  * @param env The simulation environment.
  */
-void calculateV(const Environment& env);
+void calculateV(ParticleContainer& container, const Environment& env);

@@ -10,6 +10,9 @@
 #include <array>
 #include <string>
 
+/**
+ * Store a single particle during the simulation.
+ */
 class Particle {
 
 private:

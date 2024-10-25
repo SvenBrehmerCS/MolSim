@@ -10,9 +10,6 @@
 #include <string>
 #include <vector>
 
-
-std::vector<Particle> particles;
-
 /**
  * The main entry point for the programm.
  */
@@ -23,8 +20,12 @@ int main(const int argc, const char* argv[]) {
     // Initialize the simulation environment, readers and writers.
     Environment env(argc, argv);
 
+    std::vector<Particle> particles;
+
     FileReader fileReader;
     fileReader.readFile(particles, env.get_input_file_name());
+
+    ParticleContainer container(particles);
 
     std::unique_ptr<outputWriter::Writer> writer { nullptr };
 
@@ -48,11 +49,11 @@ int main(const int argc, const char* argv[]) {
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // calculate new x
-        calculateX(env);
+        calculateX(container, env);
         // calculate new f
-        calculateF(env);
+        calculateF(container, env);
         // calculate new v
-        calculateV(env);
+        calculateV(container, env);
 
         iteration++;
 
@@ -60,7 +61,7 @@ int main(const int argc, const char* argv[]) {
         if (iteration % env.get_print_step() == 0) {
             std::string out_name(env.get_output_file_name());
 
-            writer->plotParticles(particles, out_name, iteration);
+            writer->plotParticles(container.get_particles(), out_name, iteration);
         }
 
         // End the iteration and initialize the new one
@@ -73,34 +74,36 @@ int main(const int argc, const char* argv[]) {
     return 0;
 }
 
-void calculateF(const Environment& env) {
+void calculateF(ParticleContainer& container, const Environment& env) {
     // Set the old f to f and reset the current forces
-    for (Particle& p : particles) {
+    for (Particle& p : container.get_particles()) {
         p.setOldF(p.getF());
         p.setF({ 0.0, 0.0, 0.0 });
     }
 
-    for (size_t i = 0; i < particles.size(); i++) {
-        for (size_t j = i + 1; j < particles.size(); j++) {
+    for (size_t i = 0; i < container.get_particles().size(); i++) {
+        for (size_t j = i + 1; j < container.get_particles().size(); j++) {
             // Calculate the distance and force experienced by two particles
-            const double distance = ArrayUtils::L2Norm(particles[j].getX() - particles[i].getX());
-            const double force = particles[i].getM() * particles[j].getM() / (distance * distance * distance);
+            const double distance = ArrayUtils::L2Norm(container.get_particles()[j].getX() - container.get_particles()[i].getX());
+            const double force = container.get_particles()[i].getM() * container.get_particles()[j].getM() / (distance * distance * distance);
 
             // Update the forces fo rboth particles
-            particles[i].setF(force * (particles[j].getX() - particles[i].getX()) + particles[i].getF());
-            particles[j].setF(force * (particles[i].getX() - particles[j].getX()) + particles[j].getF());
+            container.get_particles()[i].setF(
+                force * (container.get_particles()[j].getX() - container.get_particles()[i].getX()) + container.get_particles()[i].getF());
+            container.get_particles()[j].setF(
+                force * (container.get_particles()[i].getX() - container.get_particles()[j].getX()) + container.get_particles()[j].getF());
         }
     }
 }
 
-void calculateX(const Environment& env) {
-    for (Particle& p : particles) {
+void calculateX(ParticleContainer& container, const Environment& env) {
+    for (Particle& p : container.get_particles()) {
         p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
     }
 }
 
-void calculateV(const Environment& env) {
-    for (Particle& p : particles) {
+void calculateV(ParticleContainer& container, const Environment& env) {
+    for (Particle& p : container.get_particles()) {
         p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
     }
 }
