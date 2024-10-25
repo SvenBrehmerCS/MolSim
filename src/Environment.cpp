@@ -8,9 +8,12 @@
 
 #define btos(__BOOL) (static_cast<bool>(#__BOOL) ? "true" : "false")
 
+/**
+ * Print an error message and exit immediately with EXIT_FAILURE.
+ */
 static void panic_exit(const char* message) {
     std::cout << message << std::endl;
-    exit(EXIT_FAILURE);
+    std::exit(EXIT_FAILURE);
 }
 
 Environment::Environment() { std::cout << "Initialized with a standard environment." << std::endl; }

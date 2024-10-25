@@ -39,6 +39,8 @@ int main(const int argc, const char* argv[]) {
         break;
 
     default:
+        std::cout << "Error: Illegal file fomat specifier." << std::endl;
+        std::exit(EXIT_FAILURE);
         break;
     }
 
