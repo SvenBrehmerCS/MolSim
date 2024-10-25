@@ -43,7 +43,7 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "    -print_step=<print step>" << std::endl;
             std::cout << "        Set the print step with wich the steps should be performed." << std::endl;
             std::cout << "        The print step must be a strictly positive integer." << std::endl;
-            std::cout << "        The default print step is 0.014." << std::endl;
+            std::cout << "        The default print step is 10." << std::endl;
             std::cout << std::endl;
             std::cout << "    -out_name=<output file name>" << std::endl;
             std::cout << "        Set the beginning of the output file name as given." << std::endl;
