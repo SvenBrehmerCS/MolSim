@@ -11,12 +11,11 @@
 #include <string>
 #include <vector>
 
-namespace fs = std::filesystem;
-
 /**
  * The main entry point for the programm.
  */
 int main(const int argc, const char* argv[]) {
+    namespace fs = std::filesystem;
 
     std::cout << "Started " << argv[0] << std::endl;
 
@@ -57,11 +56,14 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
-    // Initialize the
+    // Initialize the simulation environment
     double current_time = 0.0;
     int iteration = 0;
 
-    // for this loop, we assume: current x, current f and current v are known
+    // Initialize the force for the first iteration
+    calculateF(container, env);
+
+    // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // calculate new x
         calculateX(container, env);
