@@ -1,7 +1,7 @@
 /**
- * ParticleContainer.h
+ * @file
  *
- * The class ParticleContainer is in charge of storing the particules as well as there molecular bondings.
+ * @brief The ParticleContainer is in charge of storing the particules as well as there molecular bondings.
  */
 
 #pragma once
@@ -10,7 +10,9 @@
 #include <vector>
 
 /**
- * Store all the particles during the simulation.
+ * @class ParticleContainer
+ *
+ * @brief Store all the particles during the simulation.
  */
 class ParticleContainer {
 private:
@@ -20,6 +22,11 @@ private:
     std::vector<Particle> particles;
 
 public:
+    /**
+     * Create a particle container with an empty particle vector.
+     */
+    ParticleContainer();
+
     /**
      * Create a particle container from a vector of particles.
      *

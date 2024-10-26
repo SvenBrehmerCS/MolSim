@@ -11,22 +11,21 @@
 #include <string>
 #include <vector>
 
-namespace fs = std::filesystem;
-
 /**
  * The main entry point for the programm.
  */
 int main(const int argc, const char* argv[]) {
+    namespace fs = std::filesystem;
 
     std::cout << "Started " << argv[0] << std::endl;
 
     // Initialize the simulation environment, readers and writers.
     Environment env(argc, argv);
 
-    std::vector<Particle> particles;
+    ParticleContainer container;
 
     std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
-    fileReader->readFile(particles, env.get_input_file_name());
+    fileReader->readFile(container.get_particles(), env.get_input_file_name());
 
     std::cout << "Cleaning up old output files!" << std::endl;
     fs::path dir_path { "." };
@@ -38,7 +37,6 @@ int main(const int argc, const char* argv[]) {
     // std::string command = "rm ./*.vtu";
     // system(command.c_str());
 
-    ParticleContainer container(particles);
 
     std::unique_ptr<outputWriter::Writer> writer { nullptr };
 
@@ -57,11 +55,14 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
-    // Initialize the
+    // Initialize the simulation environment
     double current_time = 0.0;
     int iteration = 0;
 
-    // for this loop, we assume: current x, current f and current v are known
+    // Initialize the force for the first iteration
+    calculateF(container, env);
+
+    // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // calculate new x
         calculateX(container, env);

@@ -12,7 +12,7 @@
 
 Particle::Particle(int type_arg) {
     type = type_arg;
-    std::cout << "Particle generated!" << std::endl;
+    std::cout << "Particle generated without args!" << std::endl;
     f = { 0., 0., 0. };
     old_f = { 0., 0., 0. };
 }
@@ -34,7 +34,7 @@ Particle::Particle(const std::array<double, 3>& x_arg, const std::array<double, 
     type = type_arg;
     f = { 0., 0., 0. };
     old_f = { 0., 0., 0. };
-    std::cout << "Particle generated!" << std::endl;
+    std::cout << "Particle generated with args!" << std::endl;
 }
 
 Particle::~Particle() { std::cout << "Particle destructed!" << std::endl; }

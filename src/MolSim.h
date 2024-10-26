@@ -1,7 +1,8 @@
 /**
- * MolSim.h
+ * @file
  *
- * This file povides the definitions required in MolSim.cpp
+ * @brief Handles the main program flow. It initializes the simulation and simulates each step, using the force, position and velocity
+ * calculations.
  */
 
 #pragma once
