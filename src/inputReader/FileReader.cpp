@@ -20,12 +20,6 @@ namespace inputReader {
 
     FileReader::~FileReader() = default;
 
-    /**
-     * Imports a particle system from the given input file
-     *
-     * @param particles data structure for holding the particles.
-     * @param filename file path to input file.
-     */
     void FileReader::readFile(std::vector<Particle>& particles, const char* filename) {
         std::array<double, 3> x;
         std::array<double, 3> v;

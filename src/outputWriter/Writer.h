@@ -1,8 +1,6 @@
-/*
- * Writer.h
- *
- *  Created on: 23.10.2024
- *      Author: Sven Brehmer
+/**
+ * @file
+ * @brief Defines a default interface for the output writers
  */
 
 #pragma once

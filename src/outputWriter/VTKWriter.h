@@ -1,8 +1,7 @@
-/*
- * VTKWriter.h
- *
- *  Created on: 01.03.2010
- *      Author: eckhardw
+/**
+ * @file
+ * @brief Handles the output to a .vtu file
+ * @author eckhardw
  */
 
 #pragma once

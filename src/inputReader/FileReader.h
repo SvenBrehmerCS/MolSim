@@ -1,8 +1,7 @@
-/*
- * FileReader.h
- *
- *  Created on: 23.02.2010
- *      Author: eckhardw
+/**
+ * @file
+ * @brief Handles the reading of a standard input file
+ * @author eckhardw
  */
 
 #pragma once

@@ -1,8 +1,6 @@
-/*
- * Reader.h
- *
- *  Created on: 25.10.2024
- *      Author: Sven Brehmer
+/**
+ * @file
+ * @brief Defines a default interface for the input readers
  */
 
 #pragma once
