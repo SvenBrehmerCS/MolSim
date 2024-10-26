@@ -1,6 +1,8 @@
 /**
  * @file
+ *
  * @brief Handles the output to a .vtu file
+ *
  * @author eckhardw
  */
 
@@ -14,7 +16,9 @@
 namespace outputWriter {
 
     /**
-     * This class implements the functionality to generate vtk output from
+     * @class VTKWriter
+     *
+     * @brief This class implements the functionality to generate vtk output from
      * particles.
      */
     class VTKWriter : public Writer {

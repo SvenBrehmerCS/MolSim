@@ -1,6 +1,8 @@
 /**
  * @file
+ *
  * @brief Handles the output to a .xyz file
+ *
  * @author eckhardw
  */
 
@@ -14,7 +16,9 @@
 namespace outputWriter {
 
     /**
-     * This class implements the generation of an XYZ output from particles.
+     * @class XYZWriter
+     *
+     * @brief class implements the generation of an XYZ output from particles.
      */
     class XYZWriter : public Writer {
 

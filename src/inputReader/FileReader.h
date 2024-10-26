@@ -1,6 +1,8 @@
 /**
  * @file
+ *
  * @brief Handles the reading of a standard input file
+ *
  * @author eckhardw
  */
 
@@ -10,6 +12,11 @@
 
 namespace inputReader {
 
+    /**
+     * @class FileReader
+     *
+     * @brief A Reader able to read standard input files and parse the arguments into the Enviroment
+     */
     class FileReader : public Reader {
 
     public:

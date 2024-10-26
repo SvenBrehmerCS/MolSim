@@ -1,8 +1,8 @@
-/*
- * MaxwellBoltzmannDistribution.h
- *
- * @Date: 13.12.2019
- * @Author: F. Gratl
+/**
+ * @file
+ * @brief Implements a generator for a random velocity vector according to the Maxwell-Boltzmann distribution
+ * @author F. Gratl
+ * @date 13.12.2019
  */
 
 #pragma once

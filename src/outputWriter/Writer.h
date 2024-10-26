@@ -1,5 +1,6 @@
 /**
  * @file
+ *
  * @brief Defines a default interface for the output writers
  */
 
@@ -10,8 +11,16 @@
 
 class Particle;
 
+/**
+ * @brief Collection of writers for different output types
+ */
 namespace outputWriter {
 
+    /**
+     * @class Writer
+     *
+     * @brief The default class for an instance of a wirter
+     */
     class Writer {
 
     public:
