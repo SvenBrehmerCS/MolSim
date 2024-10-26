@@ -1,14 +1,17 @@
 
 #include "MolSim.h"
-#include "FileReader.h"
+#include "inputReader/FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 
 #include <cmath>
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
+
+namespace fs = std::filesystem;
 
 /**
  * The main entry point for the programm.
@@ -22,8 +25,18 @@ int main(const int argc, const char* argv[]) {
 
     std::vector<Particle> particles;
 
-    FileReader fileReader;
-    fileReader.readFile(particles, env.get_input_file_name());
+    std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
+    fileReader->readFile(particles, env.get_input_file_name());
+
+    std::cout << "Cleaning up old output files!" << std::endl;
+    fs::path dir_path { "." };
+    for (auto const& dir_entry : fs::directory_iterator { dir_path }) {
+        if (dir_entry.path().extension() == ".vtu" || dir_entry.path().extension() == ".xyz") {
+            fs::remove(dir_entry.path());
+        }
+    }
+    // std::string command = "rm ./*.vtu";
+    // system(command.c_str());
 
     ParticleContainer container(particles);
 

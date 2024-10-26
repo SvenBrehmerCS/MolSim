@@ -56,6 +56,8 @@
 //
 // End prologue.
 
+#pragma once
+
 #include <xsd/cxx/config.hxx>
 
 #if (XSD_INT_VERSION != 4000000L)
