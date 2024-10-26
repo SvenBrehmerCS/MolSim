@@ -51,6 +51,8 @@ namespace inputReader {
             getline(input_file, tmp_string);
             std::cout << "Read line: " << tmp_string << std::endl;
 
+            particles.resize(num_particles);
+
             for (int i = 0; i < num_particles; i++) {
                 std::istringstream datastream(tmp_string);
 
@@ -70,6 +72,8 @@ namespace inputReader {
                 getline(input_file, tmp_string);
                 std::cout << "Read line: " << tmp_string << std::endl;
             }
+
+            particles.shrink_to_fit();
         } else {
             std::cout << "Error: could not open file " << filename << std::endl;
             exit(-1);
