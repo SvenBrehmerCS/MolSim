@@ -20,6 +20,11 @@ private:
     std::vector<Particle> particles;
 
 public:
+/**
+     * Create a particle container with an empty particle vector.
+     */
+    ParticleContainer();
+
     /**
      * Create a particle container from a vector of particles.
      *

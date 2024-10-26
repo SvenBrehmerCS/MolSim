@@ -67,7 +67,8 @@ namespace inputReader {
                     exit(-1);
                 }
                 datastream >> m;
-                particles.emplace_back(x, v, m);
+
+                particles[i] = Particle(x, v, m);
 
                 getline(input_file, tmp_string);
                 std::cout << "Read line: " << tmp_string << std::endl;

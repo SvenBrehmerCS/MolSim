@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-#define btos(__BOOL) (static_cast<bool>(#__BOOL) ? "true" : "false")
+#define btos(__BOOL) (static_cast<bool>(__BOOL) ? "true" : "false")
 
 /**
  * Print an error message and exit immediately with EXIT_FAILURE.
@@ -218,8 +218,8 @@ Environment::Environment(const int argc, const char* argv[]) {
     std::cout << "    delta_t = " << delta_t << " (" << btos(default_delta) << ")" << std::endl;
     std::cout << "    print_step = " << print_step << " (" << btos(default_print_step) << ")" << std::endl;
     std::cout << "    input_file = " << input_file << std::endl;
-    std::cout << "    output_file = " << output_file << "(" << btos(default_out_name) << ")" << std::endl;
-    std::cout << "    format = " << format << "(" << btos(default_file_format) << ")" << std::endl;
+    std::cout << "    output_file = " << output_file << " (" << btos(default_out_name) << ")" << std::endl;
+    std::cout << "    format = " << format << " (" << btos(default_file_format) << ")" << std::endl;
 }
 
 Environment::~Environment() = default;

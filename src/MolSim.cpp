@@ -22,10 +22,10 @@ int main(const int argc, const char* argv[]) {
     // Initialize the simulation environment, readers and writers.
     Environment env(argc, argv);
 
-    std::vector<Particle> particles;
+    ParticleContainer container;
 
     std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
-    fileReader->readFile(particles, env.get_input_file_name());
+    fileReader->readFile(container.get_particles(), env.get_input_file_name());
 
     std::cout << "Cleaning up old output files!" << std::endl;
     fs::path dir_path { "." };
@@ -37,7 +37,6 @@ int main(const int argc, const char* argv[]) {
     // std::string command = "rm ./*.vtu";
     // system(command.c_str());
 
-    ParticleContainer container(particles);
 
     std::unique_ptr<outputWriter::Writer> writer { nullptr };
 
