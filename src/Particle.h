@@ -1,8 +1,9 @@
-/*
- * Particle.h
+/**
+ * @file
  *
- *  Created on: 23.02.2010
- *      Author: eckhardw
+ * @brief Define the default particle layout.
+ *
+ * @author eckhardw
  */
 
 #pragma once
@@ -11,7 +12,9 @@
 #include <string>
 
 /**
- * Store a single particle during the simulation.
+ * @class Particle
+ *
+ * @brief Store a single particle during the simulation.
  */
 class Particle {
 

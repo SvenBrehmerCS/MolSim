@@ -1,11 +1,15 @@
 /**
- * The file environment.h defines a container for global constants that can be given as command line arguments.
+ * @file
+ *
+ * @brief Defines a container for global constants that can be given as command line arguments.
  */
 
 #pragma once
 
 /**
- * The enum describes the different file formats used by this programm.
+ * @enum FileFormat
+ *
+ * @brief The enum describes the different file formats used by this programm.
  */
 enum FileFormat : int {
     /**
@@ -20,7 +24,9 @@ enum FileFormat : int {
 };
 
 /**
- * Describe the simulation environment. The simulation environment stores the simulation parameters.
+ * @class Environment
+ *
+ * @brief Describe the simulation environment. The simulation environment stores the simulation parameters.
  */
 class Environment {
 private:
