@@ -18,7 +18,7 @@ namespace outputWriter {
     /**
      * @class XYZWriter
      *
-     * @brief class implements the generation of an XYZ output from particles.
+     * @brief Class implements the generation of an XYZ output from particles.
      */
     class XYZWriter : public Writer {
 
@@ -28,11 +28,11 @@ namespace outputWriter {
         virtual ~XYZWriter();
 
         /**
-         * creates the XYZ file and plots the particles
+         * Creates the XYZ file and plots the particles
          *
-         * @param particles list of particles to be plotted.
-         * @param filename the base name of the file to be written.
-         * @param iteration the number of the current iteration,
+         * @param particles List of particles to be plotted.
+         * @param filename The base name of the file to be written.
+         * @param iteration The number of the current iteration,
          *        which is used to generate an unique filename
          */
         virtual void plotParticles(const std::vector<Particle>& particles, const std::string& filename, int iteration);

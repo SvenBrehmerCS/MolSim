@@ -29,32 +29,32 @@ namespace outputWriter {
         virtual ~VTKWriter();
 
         /**
-         * set up internal data structures and prepare to plot a particle.
+         * Set up internal data structures and prepare to plot a particle.
          */
         void initializeOutput(int numParticles);
 
         /**
-         * plot type, mass, position, velocity and force of a particle.
+         * Plot type, mass, position, velocity and force of a particle.
          *
          * @note: initializeOutput() must have been called before.
          */
         void plotParticle(const Particle& p);
 
         /**
-         * writes the final output file.
+         * Writes the final output file.
          *
-         * @param filename the base name of the file to be written.
-         * @param iteration the number of the current iteration,
+         * @param filename The base name of the file to be written.
+         * @param iteration The number of the current iteration,
          *        which is used to generate an unique filename
          */
         void writeFile(const std::string& filename, int iteration);
 
         /**
-         * handles the creation and writing of the vtk file
+         * Handles the creation and writing of the vtk file
          *
-         * @param particles list of particles to be plotted.
-         * @param filename the base name of the file to be written.
-         * @param iteration the number of the current iteration,
+         * @param particles List of particles to be plotted.
+         * @param filename The base name of the file to be written.
+         * @param iteration The number of the current iteration,
          *        which is used to generate an unique filename
          */
         virtual void plotParticles(const std::vector<Particle>& particles, const std::string& filename, int iteration);

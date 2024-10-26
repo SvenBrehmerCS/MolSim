@@ -27,6 +27,7 @@ int main(const int argc, const char* argv[]) {
     std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
     fileReader->readFile(container.get_particles(), env.get_input_file_name());
 
+    // TODO: Comment out befor final merge
     std::cout << "Cleaning up old output files!" << std::endl;
     fs::path dir_path { "." };
     for (auto const& dir_entry : fs::directory_iterator { dir_path }) {
