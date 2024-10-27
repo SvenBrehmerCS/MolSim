@@ -1,0 +1,27 @@
+# Define the base style
+BasedOnStyle: WebKit
+
+# Define C/C++ specific settings
+Language: Cpp
+
+# Define the maximum line length
+ColumnLimit: 150
+
+# Define the maximum number of empty lines
+MaxEmptyLinesToKeep: 2
+
+# Sort includes
+IncludeBlocks: Preserve
+SortIncludes: true
+
+# Define the tab size
+UseTab: Never
+IndentWidth: 4
+TabWidth: 4
+
+# Automattically intend namespaces
+NamespaceIndentation: All
+BreakBeforeBraces: Attach
+
+# Allign pointers to the right
+PointerAlignment: Left
