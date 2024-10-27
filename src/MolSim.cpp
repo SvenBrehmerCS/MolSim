@@ -3,6 +3,7 @@
 #include "inputReader/FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
+#include "solver/Analytical.h"
 #include "utils/ArrayUtils.h"
 
 #include <cmath>
@@ -81,10 +82,22 @@ int main(const int argc, const char* argv[]) {
             writer->plotParticles(container.get_particles(), out_name, iteration);
         }
 
+        current_time += env.get_delta_t();
+
+        // Test if the solution corresponds to an analytical solution.
+        constexpr bool test_analytical = true; // < TODO: Set to false before release
+        if (!solver::is_center_evasion_solution(container.get_particles()[0], container.get_particles()[1], current_time) || !test_analytical) {
+            std::cout << "Simulation diverged." << std::endl;
+
+            for (const Particle& p : container.get_particles()) {
+                std::cout << "    " << p << std::endl;
+            }
+
+            std::cout << "Time: " << current_time << std::endl;
+        }
+
         // End the iteration and initialize the new one
         std::cout << "Iteration " << iteration << " finished." << std::endl;
-
-        current_time += env.get_delta_t();
     }
 
     std::cout << "output written. Terminating..." << std::endl;
