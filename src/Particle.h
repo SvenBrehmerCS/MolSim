@@ -140,7 +140,7 @@ public:
      *
      * @param m_new The new mass.
      */
-    void Particle::setM(const double m_new);
+    void setM(const double m_new);
 
     /**
      * Get the mass of the particle.
