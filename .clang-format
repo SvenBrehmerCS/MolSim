@@ -23,5 +23,5 @@ TabWidth: 4
 NamespaceIndentation: All
 BreakBeforeBraces: Attach
 
-# Allign pointers to the right
+# Allign pointers to the left
 PointerAlignment: Left
