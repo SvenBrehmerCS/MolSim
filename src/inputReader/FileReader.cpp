@@ -62,7 +62,9 @@ namespace inputReader {
                 }
                 datastream >> m;
 
-                particles[i] = Particle(x, v, m);
+                particles[i].setX(x);
+                particles[i].setV(v);
+                particles[i].setM(m);
 
                 getline(input_file, tmp_string);
                 std::cout << "Read line: " << tmp_string << std::endl;

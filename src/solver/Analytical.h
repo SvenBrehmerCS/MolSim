@@ -14,7 +14,7 @@ namespace solver {
     /**
      * Test if two particles correspond to the center dance problem. This problem is a problem with a simple
      * periodical analytical solution, therefore it is well suited for testing. The corresponding problem
-     * state is given in input/ballanced-dance.txt
+     * state is given in input/balanced-dance.txt
      *
      * @param p1 The first particle.
      * @param p2 The second particle.
@@ -22,12 +22,12 @@ namespace solver {
      *
      * @return A boolean indicating if the points are close to the analytical solution.
      */
-    bool is_ballanced_dance_solution(const Particle& p1, const Particle& p2, const double t);
+    bool is_balanced_dance_solution(const Particle& p1, const Particle& p2, const double t);
 
     /**
      * Test if three particles correspond to a balanced center dance problem. This problem is a problem with a
      * simple periodical analytical solution, therefore it is well suited for testing. The corresponding problem
-     * state is given in input/ballanced-center.txt
+     * state is given in input/balanced-center.txt
      *
      * @param p1 The first particle.
      * @param p2 The second particle.

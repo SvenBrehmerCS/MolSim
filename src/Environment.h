@@ -9,7 +9,7 @@
 /**
  * @enum FileFormat
  *
- * @brief The enum describes the different file formats used by this programm.
+ * @brief The enum describes the different file formats used by this program.
  */
 enum FileFormat : int {
     /**
@@ -46,7 +46,7 @@ private:
     int print_step = 10;
 
     /**
-     * Store the input file, wich provides the initial simulation state.
+     * Store the input file, which provides the initial simulation state.
      */
     const char* input_file = nullptr;
 
@@ -70,7 +70,7 @@ public:
      * Create a simulation environment from the command line arguments. The constructor also handels the help argument.
      *
      * @param argc The number of arguments passed.
-     * @param argv The array storing all passed arguments, including the programm name.
+     * @param argv The array storing all passed arguments, including the program name.
      */
     Environment(const int argc, const char* argv[]);
 
@@ -96,7 +96,7 @@ public:
     /**
      * Get how often the simulation output file should be generated.
      *
-     * @return An integer indicating wich simulation steps should be saved.
+     * @return An integer indicating which simulation steps should be saved.
      */
     int get_print_step() const;
 

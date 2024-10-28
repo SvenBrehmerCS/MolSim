@@ -15,7 +15,7 @@ namespace inputReader {
     /**
      * @class FileReader
      *
-     * @brief A Reader able to read standard input files and parse the arguments into the Enviroment
+     * @brief A Reader able to read standard input files and parse the arguments into the Environment
      */
     class FileReader : public Reader {
 

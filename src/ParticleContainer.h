@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @brief The ParticleContainer is in charge of storing the particules as well as there molecular bondings.
+ * @brief The ParticleContainer is in charge of storing the particles as well as there molecular bonds.
  */
 
 #pragma once
@@ -30,7 +30,7 @@ public:
     /**
      * Create a particle container from a vector of particles.
      *
-     * @param new_particles The particles wich should be stored.
+     * @param new_particles The particles which should be stored.
      */
     ParticleContainer(std::vector<Particle>& new_particles);
 
@@ -40,7 +40,7 @@ public:
     ~ParticleContainer();
 
     /**
-     * Get a non constant refference to all the particles.
+     * Get a non constant reference to all the particles.
      *
      * @return The particles.
      */

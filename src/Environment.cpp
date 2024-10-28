@@ -34,17 +34,17 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        Print a help message (this message) and exit." << std::endl;
             std::cout << std::endl;
             std::cout << "    -t_end=<end time>" << std::endl;
-            std::cout << "        Set the time until wich the simulation should run." << std::endl;
+            std::cout << "        Set the time until which the simulation should run." << std::endl;
             std::cout << "        The end time must be a positive floating point number." << std::endl;
             std::cout << "        The default end time is 1000.0." << std::endl;
             std::cout << std::endl;
             std::cout << "    -delta_t=<time delta>" << std::endl;
-            std::cout << "        Set the time delta with wich the steps should be performed." << std::endl;
+            std::cout << "        Set the time delta with which the steps should be performed." << std::endl;
             std::cout << "        The delta time must be a strictly positive floating point number." << std::endl;
             std::cout << "        The default time delta is 0.014." << std::endl;
             std::cout << std::endl;
             std::cout << "    -print_step=<print step>" << std::endl;
-            std::cout << "        Set the print step with wich the steps should be performed." << std::endl;
+            std::cout << "        Set the print step with which the steps should be performed." << std::endl;
             std::cout << "        The print step must be a strictly positive integer." << std::endl;
             std::cout << "        The default print step is 10." << std::endl;
             std::cout << std::endl;
@@ -61,7 +61,7 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "Each argument may only be provided once. If no argument is provided the default" << std::endl;
             std::cout << "value is being used. There may not be any blank spaces seperating the option" << std::endl;
             std::cout << "and its value. The output files will be placed in the folder, from where the" << std::endl;
-            std::cout << "programm is executed. The output files will have the VTK format." << std::endl;
+            std::cout << "program is executed. The output files will have the VTK format." << std::endl;
             std::cout << std::endl;
             std::cout << "Example:" << std::endl;
             std::cout << "    " << argv[0] << " -t_end=10.0 -print_step=20 ./path/to/input.txt" << std::endl;
@@ -198,7 +198,7 @@ Environment::Environment(const int argc, const char* argv[]) {
             }
 
             if (argv[i][0] == '-') {
-                panic_exit("An inputfile must not start with '-'. Check if all arguments are spelled correctly.");
+                panic_exit("An input file must not start with '-'. Check if all arguments are spelled correctly.");
             }
 
             if (input_file != nullptr) {
@@ -213,7 +213,7 @@ Environment::Environment(const int argc, const char* argv[]) {
         panic_exit("There was no input file provided.");
     }
 
-    std::cout << "The programm was executed using the command line arguments." << std::endl;
+    std::cout << "The program was executed using the command line arguments." << std::endl;
     std::cout << "    t_end = " << t_end << " (" << btos(default_end) << ")" << std::endl;
     std::cout << "    delta_t = " << delta_t << " (" << btos(default_delta) << ")" << std::endl;
     std::cout << "    print_step = " << print_step << " (" << btos(default_print_step) << ")" << std::endl;

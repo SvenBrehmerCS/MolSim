@@ -13,7 +13,7 @@
 #include <vector>
 
 /**
- * The main entry point for the programm.
+ * The main entry point for the program.
  */
 int main(const int argc, const char* argv[]) {
     namespace fs = std::filesystem;
@@ -52,7 +52,7 @@ int main(const int argc, const char* argv[]) {
         break;
 
     default:
-        std::cout << "Error: Illegal file fomat specifier." << std::endl;
+        std::cout << "Error: Illegal file format specifier." << std::endl;
         std::exit(EXIT_FAILURE);
         break;
     }
@@ -117,7 +117,7 @@ void calculateF(ParticleContainer& container, const Environment& env) {
             const double distance = ArrayUtils::L2Norm(container.get_particles()[j].getX() - container.get_particles()[i].getX());
             const double force = container.get_particles()[i].getM() * container.get_particles()[j].getM() / (distance * distance * distance);
 
-            // Update the forces fo rboth particles
+            // Update the forces for both particles
             container.get_particles()[i].setF(
                 force * (container.get_particles()[j].getX() - container.get_particles()[i].getX()) + container.get_particles()[i].getF());
             container.get_particles()[j].setF(

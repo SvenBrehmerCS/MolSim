@@ -80,28 +80,28 @@ public:
     virtual ~Particle();
 
     /**
-     * Get the constant refference to the particle position.
+     * Get the constant reference to the particle position.
      *
      * @return The particle position.
      */
     const std::array<double, 3>& getX() const;
 
     /**
-     * Get the constant refference to the particle velocity.
+     * Get the constant reference to the particle velocity.
      *
      * @return The particle velocity.
      */
     const std::array<double, 3>& getV() const;
 
     /**
-     * Get the constant refference to the force on the particle.
+     * Get the constant reference to the force on the particle.
      *
      * @return The force on the particle.
      */
     const std::array<double, 3>& getF() const;
 
     /**
-     * Get the constant refference to the old force on the particle.
+     * Get the constant reference to the old force on the particle.
      *
      * @return The force on the particle.
      */
@@ -136,12 +136,18 @@ public:
     void setOldF(const std::array<double, 3>& old_f_new);
 
     /**
+     * Set the mass of the particle.
+     *
+     * @param m_new The new mass.
+     */
+    void Particle::setM(const double m_new);
+
+    /**
      * Get the mass of the particle.
      *
      * @return The mass of the particle.
      */
     double getM() const;
-
 
     /**
      * Get the type of the particle.
@@ -150,11 +156,10 @@ public:
      */
     int getType() const;
 
-
     /**
      * Compare if two particles are equal.
      *
-     * @param other The particle which shoul be compared.
+     * @param other The particle which should be compared.
      *
      * @return A boolean indicating if the particles are equal.
      */
@@ -171,9 +176,9 @@ public:
 /**
  * Print a particle to an output stream.
  *
- * @param stream THe output stream, to wich the particle should be printed. (cout, cerr)
+ * @param stream THe output stream, to which the particle should be printed. (cout, cerr)
  * @param p The particle that should be printed.
  *
- * @return The outpt stream.
+ * @return The output stream.
  */
 std::ostream& operator<<(std::ostream& stream, const Particle& p);

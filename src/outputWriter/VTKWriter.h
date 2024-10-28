@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Writer.h"
-#include "outputWriter/vtk-unstructured.h"
+#include "vtk-unstructured.h"
 
 #include <vector>
 

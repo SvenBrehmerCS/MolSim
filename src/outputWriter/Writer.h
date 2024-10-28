@@ -19,7 +19,7 @@ namespace outputWriter {
     /**
      * @class Writer
      *
-     * @brief The default class for an instance of a wirter
+     * @brief The default class for an instance of a writer
      */
     class Writer {
 
