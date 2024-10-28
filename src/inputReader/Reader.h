@@ -24,6 +24,11 @@ namespace inputReader {
 
     public:
         /**
+         * Provide a default destructor for every reader.
+         */
+        virtual ~Reader() = 0;
+
+        /**
          * Imports a particle system from the given input file
          *
          * @param particles data structure for holding the particles.
