@@ -24,11 +24,10 @@ namespace outputWriter {
     class Writer {
 
     public:
-
         /**
          * Provide a default destructor for every writer.
          */
-        virtual ~Reader() = 0;
+        virtual ~Writer() {};
 
         /**
          * @brief Creates an output file based on the state of the given particles

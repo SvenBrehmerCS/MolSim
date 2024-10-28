@@ -11,8 +11,6 @@
 #include "Writer.h"
 #include "vtk-unstructured.h"
 
-#include <vector>
-
 namespace outputWriter {
 
     /**

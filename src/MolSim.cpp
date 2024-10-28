@@ -3,14 +3,13 @@
 #include "inputReader/FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
+#include "physicsCalculator/SimpleCalculator.h"
 #include "solver/Analytical.h"
 #include "utils/ArrayUtils.h"
 
-#include <cmath>
 #include <filesystem>
 #include <iostream>
 #include <string>
-#include <vector>
 
 /**
  * The main entry point for the program.
@@ -61,17 +60,19 @@ int main(const int argc, const char* argv[]) {
     double current_time = 0.0;
     int iteration = 0;
 
+    // Initialize the calculator
+    std::unique_ptr<physicsCalculator::Calculator> calculator { new physicsCalculator::SimpleCalculator() };
     // Initialize the force for the first iteration
-    calculateF(container, env);
+    calculator->calculateF(container, env);
 
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // calculate new x
-        calculateX(container, env);
+        calculator->calculateX(container, env);
         // calculate new f
-        calculateF(container, env);
+        calculator->calculateF(container, env);
         // calculate new v
-        calculateV(container, env);
+        calculator->calculateV(container, env);
 
         iteration++;
 
@@ -104,36 +105,36 @@ int main(const int argc, const char* argv[]) {
     return 0;
 }
 
-void calculateF(ParticleContainer& container, const Environment& env) {
-    // Set the old f to f and reset the current forces
-    for (Particle& p : container.get_particles()) {
-        p.setOldF(p.getF());
-        p.setF({ 0.0, 0.0, 0.0 });
-    }
+// void calculateF(ParticleContainer& container, const Environment& env) {
+//     // Set the old f to f and reset the current forces
+//     for (Particle& p : container.get_particles()) {
+//         p.setOldF(p.getF());
+//         p.setF({ 0.0, 0.0, 0.0 });
+//     }
 
-    for (size_t i = 0; i < container.get_particles().size(); i++) {
-        for (size_t j = i + 1; j < container.get_particles().size(); j++) {
-            // Calculate the distance and force experienced by two particles
-            const double distance = ArrayUtils::L2Norm(container.get_particles()[j].getX() - container.get_particles()[i].getX());
-            const double force = container.get_particles()[i].getM() * container.get_particles()[j].getM() / (distance * distance * distance);
+//     for (size_t i = 0; i < container.get_particles().size(); i++) {
+//         for (size_t j = i + 1; j < container.get_particles().size(); j++) {
+//             // Calculate the distance and force experienced by two particles
+//             const double distance = ArrayUtils::L2Norm(container.get_particles()[j].getX() - container.get_particles()[i].getX());
+//             const double force = container.get_particles()[i].getM() * container.get_particles()[j].getM() / (distance * distance * distance);
 
-            // Update the forces for both particles
-            container.get_particles()[i].setF(
-                force * (container.get_particles()[j].getX() - container.get_particles()[i].getX()) + container.get_particles()[i].getF());
-            container.get_particles()[j].setF(
-                force * (container.get_particles()[i].getX() - container.get_particles()[j].getX()) + container.get_particles()[j].getF());
-        }
-    }
-}
+//             // Update the forces for both particles
+//             container.get_particles()[i].setF(
+//                 force * (container.get_particles()[j].getX() - container.get_particles()[i].getX()) + container.get_particles()[i].getF());
+//             container.get_particles()[j].setF(
+//                 force * (container.get_particles()[i].getX() - container.get_particles()[j].getX()) + container.get_particles()[j].getF());
+//         }
+//     }
+// }
 
-void calculateX(ParticleContainer& container, const Environment& env) {
-    for (Particle& p : container.get_particles()) {
-        p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
-    }
-}
+// void calculateX(ParticleContainer& container, const Environment& env) {
+//     for (Particle& p : container.get_particles()) {
+//         p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
+//     }
+// }
 
-void calculateV(ParticleContainer& container, const Environment& env) {
-    for (Particle& p : container.get_particles()) {
-        p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
-    }
-}
+// void calculateV(ParticleContainer& container, const Environment& env) {
+//     for (Particle& p : container.get_particles()) {
+//         p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
+//     }
+// }
