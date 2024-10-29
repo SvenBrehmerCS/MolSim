@@ -18,13 +18,11 @@ For building the project follow these steps:
 
 For generating the Doxygen documentation:
 
-1. Install doxygen on your computer with `sudo apt install doxygen`
-2. Install the required graphviz library for the documentation with `sudo apt install graphviz`
-3. Enter the [build](./build/) directory by running `cd build`.
-4. Execute `cmake ..` to generate the Makefile.
-5. Run `make` or `cmake --build .` to build the executable.
-6. You can now generate the documentation by running `make doc_doxygen`.
-7. the documentation will be created in [build/docs/html](./build/docs/html/index.html) in html format.
+1. Install doxygen on your computer with `sudo apt install doxygen`.
+2. Install the required graphviz library for the documentation with `sudo apt install graphviz`.
+3. Build the project according to [Building](#building) (Steps 1.-5.).
+4. You can now generate the documentation by running `make doc_doxygen`.
+5. The documentation will be created in [build/docs/html](./build/docs/html/index.html) in html format.
 
 
 ## Usage
