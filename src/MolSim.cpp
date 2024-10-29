@@ -27,17 +27,14 @@ int main(const int argc, const char* argv[]) {
     std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
     fileReader->readFile(container.get_particles(), env.get_input_file_name());
 
-    // TODO: Comment out befor final merge
-    std::cout << "Cleaning up old output files!" << std::endl;
-    fs::path dir_path { "." };
-    for (auto const& dir_entry : fs::directory_iterator { dir_path }) {
-        if (dir_entry.path().extension() == ".vtu" || dir_entry.path().extension() == ".xyz") {
-            fs::remove(dir_entry.path());
-        }
-    }
-    // std::string command = "rm ./*.vtu";
-    // system(command.c_str());
-
+    // Comment out befor final merge (This code removes all old .vtu and .xyz files directly within the build folder)
+    // std::cout << "Cleaning up old output files!" << std::endl;
+    // fs::path dir_path { "." };
+    // for (auto const& dir_entry : fs::directory_iterator { dir_path }) {
+    //     if (dir_entry.path().extension() == ".vtu" || dir_entry.path().extension() == ".xyz") {
+    //         fs::remove(dir_entry.path());
+    //     }
+    // }
 
     std::unique_ptr<outputWriter::Writer> writer { nullptr };
 
@@ -86,8 +83,8 @@ int main(const int argc, const char* argv[]) {
         current_time += env.get_delta_t();
 
         // Test if the solution corresponds to an analytical solution.
-        constexpr bool test_analytical = true; // < TODO: Set to false before release
-        if (!solver::is_center_evasion_solution(container.get_particles()[0], container.get_particles()[1], current_time) || !test_analytical) {
+        constexpr bool test_analytical = false; // < Set to false before release
+        if (!solver::is_center_evasion_solution(container.get_particles()[0], container.get_particles()[1], current_time) && test_analytical) {
             std::cout << "Simulation diverged." << std::endl;
 
             for (const Particle& p : container.get_particles()) {
@@ -95,6 +92,7 @@ int main(const int argc, const char* argv[]) {
             }
 
             std::cout << "Time: " << current_time << std::endl;
+            std::exit(EXIT_FAILURE);
         }
 
         // End the iteration and initialize the new one

@@ -7,9 +7,9 @@
 #pragma once
 
 #include "Calculator.h"
-#include "Environment.h"
-#include "ParticleContainer.h"
-#include "utils/ArrayUtils.h"
+#include "../Environment.h"
+#include "../ParticleContainer.h"
+#include "../utils/ArrayUtils.h"
 
 namespace physicsCalculator {
 

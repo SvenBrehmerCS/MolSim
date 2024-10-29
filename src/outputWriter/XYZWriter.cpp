@@ -5,8 +5,8 @@
  *      Author: eckhardw
  */
 
-#include "outputWriter/XYZWriter.h"
-#include "Particle.h"
+#include "XYZWriter.h"
+#include "../Particle.h"
 #include <iomanip>
 #include <sstream>
 
