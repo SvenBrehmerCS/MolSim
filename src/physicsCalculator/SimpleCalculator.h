@@ -14,9 +14,9 @@
 namespace physicsCalculator {
 
     /**
-     * @class Calculator
+     * @class SimpleCalculator
      *
-     * @brief The default class for an instance of a calculator
+     * @brief Class corresponding to a simple position, velocity and force calculator
      */
     class SimpleCalculator : public Calculator {
 

@@ -17,7 +17,7 @@
 class ParticleContainer {
 private:
     /**
-     * Store all the particles required during the simulation.s
+     * Store all the particles required during the simulation.
      */
     std::vector<Particle> particles;
 

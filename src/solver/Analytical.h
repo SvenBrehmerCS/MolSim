@@ -1,14 +1,14 @@
 /**
  * @file
  *
- * Describe analytical solutions for multiple problems.
+ * @brief Describe analytical solutions for multiple problems.
  */
 #include "../Particle.h"
 
 /**
- * @namespace
+ * @namespace solver
  *
- * This namespace contains multiple analytical solutions to different single, two and three body problems.
+ * @brief This namespace contains multiple analytical solutions to different single, two and three body problems.
  */
 namespace solver {
     /**
