@@ -63,3 +63,18 @@ if(NOT NO_DOC)
     # Generate the doxygen make option
     include(doxygen)
 endif(NOT NO_DOC)
+
+
+# GoogleTest-Modul einbinden
+include(GoogleTestConfig)
+
+# Füge deinen Test hinzu und linke GoogleTest
+add_executable(MeinTest tests/main_test.cpp)
+target_link_libraries(MeinTest PRIVATE GTest::gtest_main)
+
+# Test registrieren
+enable_testing()
+add_test(NAME MeinTest COMMAND MeinTest)
+
+
+
