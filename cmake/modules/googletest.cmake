@@ -1,3 +1,5 @@
+# Define the installation of google tests
+
 include(FetchContent)
 
 FetchContent_Declare(
