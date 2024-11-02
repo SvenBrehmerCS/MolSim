@@ -23,6 +23,13 @@ file(GLOB_RECURSE MY_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
+# collect all test.cpp files
+file(GLOB_RECURSE MY_TEST
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
+    # header don't need to be included but this might be necessary for some IDEs
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h"
+)
+
 # create make target
 add_executable(MolSim ${MY_SRC})
 
@@ -69,8 +76,17 @@ endif(NOT NO_DOC)
 include(googletest)
 
 # Add and link the google test
-target_link_libraries(MolSim PRIVATE GTest::gtest_main)
+add_executable(MolTest ${MY_TEST})
+
+target_include_directories(MolSim
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c)
 
 # Enable testing
 enable_testing()
-add_test(NAME MolSim COMMAND MolSim)
+add_test(NAME MolTest COMMAND MolTest)
