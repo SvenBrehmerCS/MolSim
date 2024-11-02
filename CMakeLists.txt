@@ -65,16 +65,12 @@ if(NOT NO_DOC)
 endif(NOT NO_DOC)
 
 
-# GoogleTest-Modul einbinden
-include(GoogleTestConfig)
+# Include the google test module
+include(googletest)
 
-# Füge deinen Test hinzu und linke GoogleTest
-add_executable(MeinTest tests/main_test.cpp)
-target_link_libraries(MeinTest PRIVATE GTest::gtest_main)
+# Add and link the google test
+target_link_libraries(MolSim PRIVATE GTest::gtest_main)
 
-# Test registrieren
+# Enable testing
 enable_testing()
-add_test(NAME MeinTest COMMAND MeinTest)
-
-
-
+add_test(NAME MolSim COMMAND MolSim)
