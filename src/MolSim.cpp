@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <spdlog/spdlog.h>
 
 /**
  * The main entry point for the program.
@@ -17,7 +18,7 @@
 int main(const int argc, const char* argv[]) {
     namespace fs = std::filesystem;
 
-    std::cout << "Started " << argv[0] << std::endl;
+    spdlog::info("Started {}", argv[0]);
 
     // Initialize the simulation environment, readers and writers.
     Environment env(argc, argv);
@@ -47,8 +48,8 @@ int main(const int argc, const char* argv[]) {
         writer.reset(new outputWriter::XYZWriter());
         break;
 
-    default:
-        std::cout << "Error: Illegal file format specifier." << std::endl;
+        default:
+        spdlog::critical("Error: Illegal file format specifier.");
         std::exit(EXIT_FAILURE);
         break;
     }
@@ -96,9 +97,9 @@ int main(const int argc, const char* argv[]) {
         }
 
         // End the iteration and initialize the new one
-        std::cout << "Iteration " << iteration << " finished." << std::endl;
+        spdlog::info("Iteration {} finished.", iteration);
     }
 
-    std::cout << "output written. Terminating..." << std::endl;
+    spdlog::info("output written. Terminating...");
     return 0;
 }

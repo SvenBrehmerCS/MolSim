@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <spdlog/spdlog.h>
 
 namespace outputWriter {
 
@@ -63,9 +64,9 @@ namespace outputWriter {
 
     void VTKWriter::plotParticle(const Particle& p) {
         if (vtkFile->UnstructuredGrid().present()) {
-            std::cout << "UnstructuredGrid is present" << std::endl;
+            spdlog::info("UnstructuredGrid is present");
         } else {
-            std::cout << "ERROR: No UnstructuredGrid present" << std::endl;
+            spdlog::error("ERROR: No UnstructuredGrid present");
         }
 
         PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();

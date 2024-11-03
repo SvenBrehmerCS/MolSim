@@ -5,6 +5,7 @@
 #include <float.h>
 #include <iostream>
 #include <string>
+#include <spdlog/spdlog.h>
 
 #define btos(__BOOL) (static_cast<bool>(__BOOL) ? "true" : "false")
 
@@ -12,11 +13,13 @@
  * Print an error message and exit immediately with EXIT_FAILURE.
  */
 static void panic_exit(const char* message) {
-    std::cout << message << std::endl;
+    spdlog::critical(message);
     std::exit(EXIT_FAILURE);
 }
 
-Environment::Environment() { std::cout << "Initialized with a standard environment." << std::endl; }
+Environment::Environment() {
+    spdlog::info("Initialized with a standard environment.");
+}
 
 Environment::Environment(const int argc, const char* argv[]) {
     // Test if there is a request for a help message within all passed arguments
