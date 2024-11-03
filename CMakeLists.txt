@@ -90,3 +90,15 @@ target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c)
 # Enable testing
 enable_testing()
 add_test(NAME MolTest COMMAND MolTest)
+
+#include the spdlog module
+include(spdlog)
+
+target_include_directories(
+        MolSim
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+)
+target_link_libraries(MolSim PRIVATE spdlog::spdlog)
+
+
