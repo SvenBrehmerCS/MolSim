@@ -42,7 +42,7 @@ target_compile_features(MolSim
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PRIVATE
+        PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
@@ -76,16 +76,16 @@ endif(NOT NO_DOC)
 include(googletest)
 
 # Add and link the google test
-add_executable(MolTest ${MY_TEST})
+add_executable(MolTest ${PROJECT_SOURCE_DIR}/tests/main_test.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/Particle.cpp)
 
-target_include_directories(MolSim
+target_include_directories(MolTest
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c)
+target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC spdlog::spdlog)
 
 # Enable testing
 enable_testing()
