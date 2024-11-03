@@ -33,16 +33,16 @@ namespace inputReader {
         if (input_file.is_open()) {
 
             getline(input_file, tmp_string);
-            spdlog::info("Read line: {}", tmp_string);
+            spdlog::debug("Read line: {}", tmp_string);
 
             while (tmp_string.empty() or tmp_string[0] == '#') {
                 getline(input_file, tmp_string);
-                spdlog::info("Read line: {}", tmp_string);
+                spdlog::debug("Read line: {}", tmp_string);
             }
 
             std::istringstream numstream(tmp_string);
             numstream >> num_particles;
-            spdlog::info("Reading {}.", num_particles);
+            spdlog::debug("Reading {}.", num_particles);
             getline(input_file, tmp_string);
             spdlog::info("Read line: {}", tmp_string);
 
@@ -68,7 +68,7 @@ namespace inputReader {
                 particles[i].setM(m);
 
                 getline(input_file, tmp_string);
-                spdlog::info("Read line: {}", tmp_string);
+                spdlog::debug("Read line: {}", tmp_string);
             }
 
             particles.shrink_to_fit();

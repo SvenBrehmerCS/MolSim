@@ -64,7 +64,7 @@ namespace outputWriter {
 
     void VTKWriter::plotParticle(const Particle& p) {
         if (vtkFile->UnstructuredGrid().present()) {
-            spdlog::info("UnstructuredGrid is present");
+            spdlog::debug("UnstructuredGrid is present");
         } else {
             spdlog::error("ERROR: No UnstructuredGrid present");
         }

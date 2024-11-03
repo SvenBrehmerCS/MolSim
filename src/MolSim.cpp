@@ -9,8 +9,8 @@
 
 #include <filesystem>
 #include <iostream>
-#include <string>
 #include <spdlog/spdlog.h>
+#include <string>
 
 /**
  * The main entry point for the program.
@@ -29,7 +29,7 @@ int main(const int argc, const char* argv[]) {
     fileReader->readFile(container.get_particles(), env.get_input_file_name());
 
     // Comment out befor final merge (This code removes all old .vtu and .xyz files directly within the build folder)
-    // std::cout << "Cleaning up old output files!" << std::endl;
+    // spdlog::trace("Cleaning up old output files!");
     // fs::path dir_path { "." };
     // for (auto const& dir_entry : fs::directory_iterator { dir_path }) {
     //     if (dir_entry.path().extension() == ".vtu" || dir_entry.path().extension() == ".xyz") {
@@ -48,7 +48,7 @@ int main(const int argc, const char* argv[]) {
         writer.reset(new outputWriter::XYZWriter());
         break;
 
-        default:
+    default:
         spdlog::critical("Error: Illegal file format specifier.");
         std::exit(EXIT_FAILURE);
         break;
@@ -86,13 +86,13 @@ int main(const int argc, const char* argv[]) {
         // Test if the solution corresponds to an analytical solution.
         constexpr bool test_analytical = false; // < Set to false before release
         if (!solver::is_center_evasion_solution(container.get_particles()[0], container.get_particles()[1], current_time) && test_analytical) {
-            std::cout << "Simulation diverged." << std::endl;
+            spdlog::error("Simulation diverged.");
 
             for (const Particle& p : container.get_particles()) {
-                std::cout << "    " << p << std::endl;
+                spdlog::error("    {}", p.toString());
             }
 
-            std::cout << "Time: " << current_time << std::endl;
+            spdlog::error("Time: {}", current_time);
             std::exit(EXIT_FAILURE);
         }
 
