@@ -76,7 +76,11 @@ endif(NOT NO_DOC)
 include(googletest)
 
 # Add and link the google test
-add_executable(MolTest ${PROJECT_SOURCE_DIR}/tests/main_test.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/Particle.cpp)
+add_executable(MolTest
+        ${MY_TEST}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/Environment.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/Particle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/ParticleContainer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/physicsCalculator/SimpleCalculator.cpp
+)
 
 target_include_directories(MolTest
         PUBLIC
@@ -94,10 +98,9 @@ add_test(NAME MolTest COMMAND MolTest)
 #include the spdlog module
 include(spdlog)
 
-target_include_directories(
-        MolSim
+target_include_directories(MolSim
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
 )
 target_link_libraries(MolSim PRIVATE spdlog::spdlog)
 

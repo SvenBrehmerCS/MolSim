@@ -1,15 +1,12 @@
-//
-// Created by frederik on 11/2/24.
-//
-
 #include <gtest/gtest.h>
-#include <Particle.h>
 
-TEST(getType, Get_Type) {
-    Particle particle(1);
-    EXPECT_EQ(particle.getType(), 1);
-}
-TEST(getType, GetType2) {
-    Particle particle(1);
-    EXPECT_NE(particle.getType(), 2);
-}
+// In general there are no tests for the getter, seter, destructors and default constructors, as well as other very simple functions
+// Most of these functions are still used within the tests, therefore they are implicitly tested.
+
+// There are no tests for physicsCalculator/Calculator.h as this file only contains an interface
+#include "physicsCalculator/SimpleCalculator.test.h"
+
+#include "Environment.test.h"
+// There are no tests for MolSim.h as this file only contains the main function
+#include "Particle.test.h"
+#include "ParticleContainer.test.h"

@@ -32,7 +32,7 @@ public:
      *
      * @param new_particles The particles which should be stored.
      */
-    ParticleContainer(std::vector<Particle>& new_particles);
+    ParticleContainer(const std::vector<Particle>& new_particles);
 
     /**
      * Destroy all particles.
