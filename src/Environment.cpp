@@ -223,6 +223,15 @@ Environment::Environment(const int argc, const char* argv[]) {
     spdlog::debug("    format = {} ({})", format, btos(default_file_format));
 }
 
+Environment::Environment(const Environment& env) {
+    t_end = env.get_t_end();
+    delta_t = env.get_delta_t();
+    print_step = env.get_print_step();
+    input_file = env.get_input_file_name();
+    output_file = env.get_output_file_name();
+    format = env.get_output_file_format();
+}
+
 Environment::~Environment() = default;
 
 double Environment::get_t_end() const { return t_end; }

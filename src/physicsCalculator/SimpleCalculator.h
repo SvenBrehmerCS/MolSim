@@ -21,8 +21,25 @@ namespace physicsCalculator {
     class SimpleCalculator : public Calculator {
 
     public:
-        SimpleCalculator();
+        /**
+         * Initialize a simple calculator using a simulation environmetn.
+         * 
+         * @param new_env THe simulation environment that should be used for initialization.
+         */
+        SimpleCalculator(const Environment& new_env);
 
+        /**
+         * Provide a constructor that allows the construction of a calculator using a particle container
+         * and simulation environment. This class should be used for testing.
+         * 
+         * @param new_env The new simulation environment.
+         * @param particles The vector storing the particles that should be used throughout the simulation.
+         */
+        SimpleCalculator(const Environment& new_env, const std::vector<Particle>& particles);
+
+        /**
+         * Define a constructor for a simple calculator.
+         */
         virtual ~SimpleCalculator();
 
         /**
@@ -31,7 +48,7 @@ namespace physicsCalculator {
          * @param container The container for the particles.
          * @param env The simulation environment.
          */
-        virtual void calculateF(ParticleContainer& container, const Environment& env);
+        virtual void calculateF();
 
         /**
          * Update the position of all the particles based on the basic calculation scheme.
@@ -39,7 +56,7 @@ namespace physicsCalculator {
          * @param container The container for the particles.
          * @param env The simulation environment.
          */
-        virtual void calculateX(ParticleContainer& container, const Environment& env);
+        virtual void calculateX();
 
         /**
          * Update the velocity of all the particles based on the basic calculation scheme.
@@ -47,6 +64,6 @@ namespace physicsCalculator {
          * @param container The container for the particles.
          * @param env The simulation environment.
          */
-        virtual void calculateV(ParticleContainer& container, const Environment& env);
+        virtual void calculateV();
     };
 } // namespace physicsCalculator

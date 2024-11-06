@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SimpleCalculator.h>
+#include <physicsCalculator/SimpleCalculator.h>
 #include <gtest/gtest.h>
 
 // Test if update x works for handcrafted values

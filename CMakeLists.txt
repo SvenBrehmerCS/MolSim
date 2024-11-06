@@ -79,7 +79,7 @@ include(googletest)
 add_executable(MolTest
         ${MY_TEST}
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Environment.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/Particle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/ParticleContainer.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/physicsCalculator/SimpleCalculator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/physicsCalculator/SimpleCalculator.h
 )
 
 target_include_directories(MolTest

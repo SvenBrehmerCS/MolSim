@@ -260,7 +260,7 @@ TEST(EnvironmentConstructor, EnvironmentInfDeltaT) {
 }
 
 // Test if float -print_step is recognized
-TEST(EnvironmentConstructor, EnvironmentInfDeltaT) {
+TEST(EnvironmentConstructor, EnvironmentFloatPrintStep) {
     const char* argv[] = {
         "./msim.exe",
         "-t_end=0.3",
