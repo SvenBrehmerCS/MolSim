@@ -1,104 +1,104 @@
 
-#include "FileReader.h"
+#include "MolSim.h"
+#include "inputReader/FileReader.h"
+#include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
+#include "physicsCalculator/SimpleCalculator.h"
+#include "solver/Analytical.h"
 #include "utils/ArrayUtils.h"
 
+#include <filesystem>
 #include <iostream>
-#include <list>
-
-/**** forward declaration of the calculation functions ****/
+#include <string>
 
 /**
- * calculate the force for all particles
+ * The main entry point for the program.
  */
-void calculateF();
+int main(const int argc, const char* argv[]) {
+    namespace fs = std::filesystem;
 
-/**
- * calculate the position for all particles
- */
-void calculateX();
+    std::cout << "Started " << argv[0] << std::endl;
 
-/**
- * calculate the position for all particles
- */
-void calculateV();
+    // Initialize the simulation environment, readers and writers.
+    Environment env(argc, argv);
 
-/**
- * plot the particles to a xyz-file
- */
-void plotParticles(int iteration);
+    ParticleContainer container;
 
-constexpr double start_time = 0;
-constexpr double end_time = 1000;
-constexpr double delta_t = 0.014;
+    std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
+    fileReader->readFile(container.get_particles(), env.get_input_file_name());
 
-// TODO: what data structure to pick?
-std::list<Particle> particles;
+    // Comment out befor final merge (This code removes all old .vtu and .xyz files directly within the build folder)
+    // std::cout << "Cleaning up old output files!" << std::endl;
+    // fs::path dir_path { "." };
+    // for (auto const& dir_entry : fs::directory_iterator { dir_path }) {
+    //     if (dir_entry.path().extension() == ".vtu" || dir_entry.path().extension() == ".xyz") {
+    //         fs::remove(dir_entry.path());
+    //     }
+    // }
 
-int main(int argc, char *argsv[]) {
+    std::unique_ptr<outputWriter::Writer> writer { nullptr };
 
-  std::cout << "Hello from MolSim for PSE!" << std::endl;
-  if (argc != 2) {
-    std::cout << "Erroneous programme call! " << std::endl;
-    std::cout << "./molsym filename" << std::endl;
-  }
+    switch (env.get_output_file_format()) {
+    case VTK:
+        writer.reset(new outputWriter::VTKWriter());
+        break;
 
-  FileReader fileReader;
-  fileReader.readFile(particles, argsv[1]);
+    case XYZ:
+        writer.reset(new outputWriter::XYZWriter());
+        break;
 
-  double current_time = start_time;
-
-  int iteration = 0;
-
-  // for this loop, we assume: current x, current f and current v are known
-  while (current_time < end_time) {
-    // calculate new x
-    calculateX();
-    // calculate new f
-    calculateF();
-    // calculate new v
-    calculateV();
-
-    iteration++;
-    if (iteration % 10 == 0) {
-      plotParticles(iteration);
+    default:
+        std::cout << "Error: Illegal file format specifier." << std::endl;
+        std::exit(EXIT_FAILURE);
+        break;
     }
-    std::cout << "Iteration " << iteration << " finished." << std::endl;
 
-    current_time += delta_t;
-  }
+    // Initialize the simulation environment
+    double current_time = 0.0;
+    int iteration = 0;
 
-  std::cout << "output written. Terminating..." << std::endl;
-  return 0;
-}
+    // Initialize the calculator
+    std::unique_ptr<physicsCalculator::Calculator> calculator { new physicsCalculator::SimpleCalculator() };
+    // Initialize the force for the first iteration
+    calculator->calculateF(container, env);
 
-void calculateF() {
-  std::list<Particle>::iterator iterator;
-  iterator = particles.begin();
+    // For this loop, we assume: current x, current f and current v are known
+    while (current_time < env.get_t_end()) {
+        // calculate new x
+        calculator->calculateX(container, env);
+        // calculate new f
+        calculator->calculateF(container, env);
+        // calculate new v
+        calculator->calculateV(container, env);
 
-  for (auto &p1 : particles) {
-    for (auto &p2 : particles) {
-      // @TODO: insert calculation of forces here!
+        iteration++;
+
+        // Store the particles to an output file
+        if (iteration % env.get_print_step() == 0) {
+            std::string out_name(env.get_output_file_name());
+
+            writer->plotParticles(container.get_particles(), out_name, iteration);
+        }
+
+        current_time += env.get_delta_t();
+
+        // Test if the solution corresponds to an analytical solution.
+        constexpr bool test_analytical = false; // < Set to false before release
+        if (!solver::is_center_evasion_solution(container.get_particles()[0], container.get_particles()[1], current_time) && test_analytical) {
+            std::cout << "Simulation diverged." << std::endl;
+
+            for (const Particle& p : container.get_particles()) {
+                std::cout << "    " << p << std::endl;
+            }
+
+            std::cout << "Time: " << current_time << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+
+        // End the iteration and initialize the new one
+        std::cout << "Iteration " << iteration << " finished." << std::endl;
     }
-  }
-}
 
-void calculateX() {
-  for (auto &p : particles) {
-    // @TODO: insert calculation of position updates here!
-  }
-}
-
-void calculateV() {
-  for (auto &p : particles) {
-    // @TODO: insert calculation of veclocity updates here!
-  }
-}
-
-void plotParticles(int iteration) {
-
-  std::string out_name("MD_vtk");
-
-  outputWriter::XYZWriter writer;
-  writer.plotParticles(particles, out_name, iteration);
+    std::cout << "output written. Terminating..." << std::endl;
+    return 0;
 }

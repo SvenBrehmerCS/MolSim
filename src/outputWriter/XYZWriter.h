@@ -1,28 +1,41 @@
-/*
- * XYZWriter.h
+/**
+ * @file
  *
- *  Created on: 01.03.2010
- *      Author: eckhardw
+ * @brief Handles the output to a .xyz file
+ *
+ * @author eckhardw
  */
 
 #pragma once
 
-#include "Particle.h"
+#include "Writer.h"
 
 #include <fstream>
-#include <list>
+#include <vector>
 
 namespace outputWriter {
 
-class XYZWriter {
+    /**
+     * @class XYZWriter
+     *
+     * @brief Class implements the generation of an XYZ output from particles.
+     */
+    class XYZWriter : public Writer {
 
-public:
-  XYZWriter();
+    public:
+        XYZWriter();
 
-  virtual ~XYZWriter();
+        virtual ~XYZWriter();
 
-  void plotParticles(std::list<Particle> particles, const std::string &filename,
-                     int iteration);
-};
+        /**
+         * Creates the XYZ file and plots the particles
+         *
+         * @param particles List of particles to be plotted.
+         * @param filename The base name of the file to be written.
+         * @param iteration The number of the current iteration,
+         *        which is used to generate an unique filename
+         */
+        virtual void plotParticles(const std::vector<Particle>& particles, const std::string& filename, int iteration);
+    };
 
 } // namespace outputWriter

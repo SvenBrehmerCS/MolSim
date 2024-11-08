@@ -1,8 +1,9 @@
-/*
- * Particle.h
+/**
+ * @file
  *
- *  Created on: 23.02.2010
- *      Author: eckhardw
+ * @brief Define the default particle layout.
+ *
+ * @author eckhardw
  */
 
 #pragma once
@@ -10,68 +11,174 @@
 #include <array>
 #include <string>
 
+/**
+ * @class Particle
+ *
+ * @brief Store a single particle during the simulation.
+ */
 class Particle {
 
 private:
-  /**
-   * Position of the particle
-   */
-  std::array<double, 3> x;
+    /**
+     * Position of the particle
+     */
+    std::array<double, 3> x;
 
-  /**
-   * Velocity of the particle
-   */
-  std::array<double, 3> v;
+    /**
+     * Velocity of the particle
+     */
+    std::array<double, 3> v;
 
-  /**
-   * Force effective on this particle
-   */
-  std::array<double, 3> f;
+    /**
+     * Force effective on this particle
+     */
+    std::array<double, 3> f;
 
-  /**
-   * Force which was effective on this particle
-   */
-  std::array<double, 3> old_f;
+    /**
+     * Force which was effective on this particle
+     */
+    std::array<double, 3> old_f;
 
-  /**
-   * Mass of this particle
-   */
-  double m;
+    /**
+     * Mass of this particle
+     */
+    double m;
 
-  /**
-   * Type of the particle. Use it for whatever you want (e.g. to separate
-   * molecules belonging to different bodies, matters, and so on)
-   */
-  int type;
+    /**
+     * Type of the particle.
+     */
+    int type;
 
 public:
-  explicit Particle(int type = 0);
+    /**
+     * Generate a Particle without initializing velocity, position and mass.
+     *
+     * @param type Optional: Define the atom type.
+     */
+    explicit Particle(int type = 0);
 
-  Particle(const Particle &other);
+    /**
+     * Generate the copy of a particle.
+     *
+     * @param other The particle that should be copied.
+     */
+    Particle(const Particle& other);
 
-  Particle(
-      // for visualization, we need always 3 coordinates
-      // -> in case of 2d, we use only the first and the second
-      std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,
-      int type = 0);
+    /**
+     * Generate a particle with its position, velocity and mass.
+     *
+     * @param x_arg The position of the particle
+     * @param v_arg The velocity of the particle
+     * @param m_arg The mass of the particle
+     * @param type Optional: Define the atom type.
+     */
+    Particle(const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, const double m_arg, const int type_arg = 0);
 
-  virtual ~Particle();
+    /**
+     * Destroy a particle.
+     */
+    virtual ~Particle();
 
-  const std::array<double, 3> &getX() const;
+    /**
+     * Get the constant reference to the particle position.
+     *
+     * @return The particle position.
+     */
+    const std::array<double, 3>& getX() const;
 
-  const std::array<double, 3> &getV() const;
+    /**
+     * Get the constant reference to the particle velocity.
+     *
+     * @return The particle velocity.
+     */
+    const std::array<double, 3>& getV() const;
 
-  const std::array<double, 3> &getF() const;
+    /**
+     * Get the constant reference to the force on the particle.
+     *
+     * @return The force on the particle.
+     */
+    const std::array<double, 3>& getF() const;
 
-  const std::array<double, 3> &getOldF() const;
+    /**
+     * Get the constant reference to the old force on the particle.
+     *
+     * @return The force on the particle.
+     */
+    const std::array<double, 3>& getOldF() const;
 
-  double getM() const;
+    /**
+     * Set the position of the particle.
+     *
+     * @param x_new The new position.
+     */
+    void setX(const std::array<double, 3>& x_new);
 
-  int getType() const;
+    /**
+     * Set the velocity of the particle.
+     *
+     * @param v_new The new velocity.
+     */
+    void setV(const std::array<double, 3>& v_new);
 
-  bool operator==(Particle &other);
+    /**
+     * Set the force affecting the particle.
+     *
+     * @param f_new The new force.
+     */
+    void setF(const std::array<double, 3>& f_new);
 
-  std::string toString() const;
+    /**
+     * Set the force that affected the particle the previous iteration.
+     *
+     * @param f_new The new old force.
+     */
+    void setOldF(const std::array<double, 3>& old_f_new);
+
+    /**
+     * Set the mass of the particle.
+     *
+     * @param m_new The new mass.
+     */
+    void setM(const double m_new);
+
+    /**
+     * Get the mass of the particle.
+     *
+     * @return The mass of the particle.
+     */
+    double getM() const;
+
+    /**
+     * Get the type of the particle.
+     *
+     * @return The type of the particle.
+     */
+    int getType() const;
+
+    /**
+     * Compare if two particles are equal.
+     *
+     * @param other The particle which should be compared.
+     *
+     * @return A boolean indicating if the particles are equal.
+     */
+    bool operator==(const Particle& other);
+
+    /**
+     * Generate a string describing the particle.
+     *
+     * @return A string describing the particle.
+     */
+    std::string toString() const;
 };
 
-std::ostream &operator<<(std::ostream &stream, Particle &p);
+/**
+ * Print a particle to an output stream.
+ *
+ * @param stream THe output stream, to which the particle should be printed. (cout, cerr)
+ * @param p The particle that should be printed.
+ *
+ * @return The output stream.
+ */
+std::ostream& operator<<(std::ostream& stream, const Particle& p);

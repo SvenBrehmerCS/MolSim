@@ -1,0 +1,9 @@
+#
+# This file provides a two body problem with an analytical solution (periodic + linear).
+# The evading dance consists of two bodys moving around the center of mass on two different
+# size circles. Simulatneously the center of mass moves at constant speed away from the origin.
+#
+# xyz-coordinates        velocities          masses
+2
+ 1  0  0                 0.1  1  0             18
+-2  0  0                 0.1 -2  0             9

@@ -1,0 +1,8 @@
+#
+# This file provides a two body problem with a simple periodic analytical solution.
+# The balanced dance consists of two bodys moving around the center on a unit circle all the time.
+#
+# xyz-coordinates        velocities          masses
+2
+ 1  0  0                 0  1  0             4
+-1  0  0                 0 -1  0             4

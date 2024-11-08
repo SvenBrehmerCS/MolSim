@@ -38,3 +38,10 @@
 # Build folders.
 # This rule ignores any folder in the project root that contains "build"
 /*build*/
+
+# Ignore the CLion build folder
+cmake-build-debug/
+
+#ignore the doxygen generated binary files, such as html and lateX
+html/
+latex/

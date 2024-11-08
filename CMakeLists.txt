@@ -1,7 +1,11 @@
+#
+# The doxygen file has these options:
+#   NO_DOC - Disable the doxygen documentation generation if NO_DOC=ON.
+#
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
-project(PSEMolDyn VERSION 0.0.1)
+project(PSEMolDyn_GroupB VERSION 0.0.1)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -52,4 +56,10 @@ target_compile_options(MolSim
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
-include(doxygen)
+# Define an option to turn of doxygen
+option(NO_DOC "Disable the support for generating doxygen in the makefile." OFF)
+
+if(NOT NO_DOC)
+    # Generate the doxygen make option
+    include(doxygen)
+endif(NOT NO_DOC)
