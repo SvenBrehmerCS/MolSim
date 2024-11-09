@@ -34,8 +34,9 @@ namespace physicsCalculator {
          * 
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
+         * @param init_forces Define wether the forces should be initialized
          */
-        SimpleCalculator(const Environment& new_env, const std::vector<Particle>& particles);
+        SimpleCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true);
 
         /**
          * Define a constructor for a simple calculator.
@@ -44,26 +45,7 @@ namespace physicsCalculator {
 
         /**
          * Update the forces and old forces experienced by all the particles based on the basic calculation scheme.
-         *
-         * @param container The container for the particles.
-         * @param env The simulation environment.
          */
         virtual void calculateF();
-
-        /**
-         * Update the position of all the particles based on the basic calculation scheme.
-         *
-         * @param container The container for the particles.
-         * @param env The simulation environment.
-         */
-        virtual void calculateX();
-
-        /**
-         * Update the velocity of all the particles based on the basic calculation scheme.
-         *
-         * @param container The container for the particles.
-         * @param env The simulation environment.
-         */
-        virtual void calculateV();
     };
 } // namespace physicsCalculator

@@ -30,6 +30,17 @@ file(GLOB_RECURSE MY_TEST
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h"
 )
 
+# Get the cpp files that should be tested
+file(GLOB_RECURSE MY_TEST_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+    # header don't need to be included but this might be necessary for some IDEs
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+)
+
+list(REMOVE_ITEM MY_TEST_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.h)
+
 # create make target
 add_executable(MolSim ${MY_SRC})
 
@@ -78,8 +89,7 @@ include(googletest)
 # Add and link the google test
 add_executable(MolTest
         ${MY_TEST}
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/Environment.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/Particle.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/ParticleContainer.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/physicsCalculator/SimpleCalculator.h
+        ${MY_TEST_SRC}
 )
 
 target_include_directories(MolTest
@@ -103,5 +113,3 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
 )
 target_link_libraries(MolSim PRIVATE spdlog::spdlog)
-
-

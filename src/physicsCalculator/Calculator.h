@@ -17,7 +17,7 @@ namespace physicsCalculator {
     /**
      * @class Calculator
      *
-     * @brief The default class for an instance of a calculator
+     * @brief The default class for an instance of a force calculator. It implements the leep frog method.
      */
     class Calculator {
     protected:
@@ -45,24 +45,37 @@ namespace physicsCalculator {
         Calculator(const Environment& new_env);
 
         /**
+         * Create a calculator from an environment and a particle vector. This method should only be used for debugging.
+         * 
+         * @param new_env The simulation environment.
+         * @param particles The particles used for testing.
+         */
+        Calculator(const Environment& new_env, const std::vector<Particle>& particles);
+
+        /**
          * Define the default destructor for every calculator.
          */
         virtual ~Calculator() {};
 
         /**
-         * Update the forces and old forces experienced by all the particles.
+         * Update the forces experienced by all the particles.
          */
         virtual void calculateF() = 0;
 
         /**
+         * Update the old forces and set the current forces to 0.
+         */
+        void calculateOldF();
+
+        /**
          * Update the position of all the particles.
          */
-        virtual void calculateX() = 0;
+        void calculateX();
 
         /**
          * Update the velocity of all the particles.
          */
-        virtual void calculateV() = 0;
+        void calculateV();
 
         /**
          * Perform a single simulation step, assuming that the leep frog method is being used.

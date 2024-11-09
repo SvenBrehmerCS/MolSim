@@ -3,6 +3,8 @@
 #include <Environment.h>
 #include <gtest/gtest.h>
 
+// TODO: Add tests for the log level
+
 // Test if the arguments are parsed correctly if only a path to an input file is provided
 TEST(EnvironmentConstructor, EnvironmentOnlyPath1) {
     const char* argv[] = {

@@ -59,6 +59,11 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The file format must either be 'vtk' or 'xyz'." << std::endl;
             std::cout << "        The default output file format is vtk." << std::endl;
             std::cout << std::endl;
+            std::cout << "    -log_level=<log level>" << std::endl;
+            std::cout << "        Set the log level of the programm to a spdlog level." << std::endl;
+            std::cout << "        The log level must be one off: off, error, warn, info, debug, trace." << std::endl;
+            std::cout << "        The default log level is info." << std::endl;
+            std::cout << std::endl;
             std::cout << "Each argument may only be provided once. If no argument is provided the default" << std::endl;
             std::cout << "value is being used. There may not be any blank spaces seperating the option" << std::endl;
             std::cout << "and its value. The output files will be placed in the folder, from where the" << std::endl;
@@ -81,6 +86,7 @@ Environment::Environment(const int argc, const char* argv[]) {
     bool default_print_step = true;
     bool default_out_name = true;
     bool default_file_format = true;
+    bool default_log_level = true;
 
     // Parse all arguments but help.
     for (int i = 1; i < argc; i++) {
@@ -192,6 +198,60 @@ Environment::Environment(const int argc, const char* argv[]) {
             format = XYZ;
 
             default_file_format = false;
+        } else if (std::strcmp(argv[i], "-log_level=off") == 0) {
+            // Parse the output file format
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::off);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=error") == 0) {
+            // Parse the output file format
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::err);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=warn") == 0) {
+            // Parse the output file format
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::warn);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=info") == 0) {
+            // Parse the output file format
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::info);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=trace") == 0) {
+            // Parse the output file format
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::trace);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=debug") == 0) {
+            // Parse the output file format
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::debug);
+
+            default_log_level = false;
         } else {
             // Parse the input file
             if (std::strlen(argv[i]) == 0) {
@@ -221,6 +281,7 @@ Environment::Environment(const int argc, const char* argv[]) {
     spdlog::debug("    input_file = {}", input_file);
     spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
     spdlog::debug("    format = {} ({})", format, btos(default_file_format));
+    spdlog::debug("    log_level = {} ({})", spdlog::get_level(), btos(default_log_level));
 }
 
 Environment::Environment(const Environment& env) {
