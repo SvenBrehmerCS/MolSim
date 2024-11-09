@@ -4,6 +4,7 @@
 #include <cstring>
 #include <float.h>
 #include <iostream>
+#include <spdlog/spdlog.h>
 #include <string>
 
 #define btos(__BOOL) (static_cast<bool>(__BOOL) ? "true" : "false")
@@ -12,11 +13,11 @@
  * Print an error message and exit immediately with EXIT_FAILURE.
  */
 static void panic_exit(const char* message) {
-    std::cout << message << std::endl;
+    spdlog::critical(message);
     std::exit(EXIT_FAILURE);
 }
 
-Environment::Environment() { std::cout << "Initialized with a standard environment." << std::endl; }
+Environment::Environment() { spdlog::trace("Initialized with a standard environment."); }
 
 Environment::Environment(const int argc, const char* argv[]) {
     // Test if there is a request for a help message within all passed arguments
@@ -213,13 +214,13 @@ Environment::Environment(const int argc, const char* argv[]) {
         panic_exit("There was no input file provided.");
     }
 
-    std::cout << "The program was executed using the command line arguments." << std::endl;
-    std::cout << "    t_end = " << t_end << " (" << btos(default_end) << ")" << std::endl;
-    std::cout << "    delta_t = " << delta_t << " (" << btos(default_delta) << ")" << std::endl;
-    std::cout << "    print_step = " << print_step << " (" << btos(default_print_step) << ")" << std::endl;
-    std::cout << "    input_file = " << input_file << std::endl;
-    std::cout << "    output_file = " << output_file << " (" << btos(default_out_name) << ")" << std::endl;
-    std::cout << "    format = " << format << " (" << btos(default_file_format) << ")" << std::endl;
+    spdlog::debug("The program was executed using the command line arguments.");
+    spdlog::debug("    t_end = {} ({})", t_end, btos(default_end));
+    spdlog::debug("    delta_t = {} ({})", delta_t, btos(default_delta));
+    spdlog::debug("    print_step = {} ({})", print_step, btos(default_print_step));
+    spdlog::debug("    input_file = {}", input_file);
+    spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
+    spdlog::debug("    format = {} ({})", format, btos(default_file_format));
 }
 
 Environment::~Environment() = default;

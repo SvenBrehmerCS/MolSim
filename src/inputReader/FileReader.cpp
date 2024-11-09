@@ -13,6 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <spdlog/spdlog.h>
 
 namespace inputReader {
 
@@ -32,18 +33,18 @@ namespace inputReader {
         if (input_file.is_open()) {
 
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
+            spdlog::debug("Read line: {}", tmp_string);
 
             while (tmp_string.empty() or tmp_string[0] == '#') {
                 getline(input_file, tmp_string);
-                std::cout << "Read line: " << tmp_string << std::endl;
+                spdlog::debug("Read line: {}", tmp_string);
             }
 
             std::istringstream numstream(tmp_string);
             numstream >> num_particles;
-            std::cout << "Reading " << num_particles << "." << std::endl;
+            spdlog::debug("Reading {}.", num_particles);
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
+            spdlog::info("Read line: {}", tmp_string);
 
             particles.resize(num_particles);
 
@@ -57,7 +58,7 @@ namespace inputReader {
                     datastream >> vj;
                 }
                 if (datastream.eof()) {
-                    std::cout << "Error reading file: eof reached unexpectedly reading from line " << i << std::endl;
+                    spdlog::critical("Error reading file: eof reached unexpectedly reading from line {}", i);
                     exit(-1);
                 }
                 datastream >> m;
@@ -67,12 +68,12 @@ namespace inputReader {
                 particles[i].setM(m);
 
                 getline(input_file, tmp_string);
-                std::cout << "Read line: " << tmp_string << std::endl;
+                spdlog::debug("Read line: {}", tmp_string);
             }
 
             particles.shrink_to_fit();
         } else {
-            std::cout << "Error: could not open file " << filename << std::endl;
+            spdlog::critical("Error: could not open file {}", filename);
             exit(-1);
         }
     }
