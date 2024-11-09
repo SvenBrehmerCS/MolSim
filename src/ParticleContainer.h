@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @brief The ParticleContainer is in charge of storing the particles as well as there molecular bonds.
+ * @brief The ParticleContainer is in charge of storing the particles as well as their molecular bonds.
  */
 
 #pragma once
