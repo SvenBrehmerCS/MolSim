@@ -61,7 +61,7 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << std::endl;
             std::cout << "    -log_level=<log level>" << std::endl;
             std::cout << "        Set the log level of the programm to a spdlog level." << std::endl;
-            std::cout << "        The log level must be one off: off, error, warn, info, debug, trace." << std::endl;
+            std::cout << "        The log level must be one off: off, crit, error, warn, info, debug, trace." << std::endl;
             std::cout << "        The default log level is info." << std::endl;
             std::cout << std::endl;
             std::cout << "Each argument may only be provided once. If no argument is provided the default" << std::endl;
@@ -205,6 +205,15 @@ Environment::Environment(const int argc, const char* argv[]) {
             }
 
             spdlog::set_level(spdlog::level::off);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=crit") == 0) {
+            // Parse the output file format
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::critical);
 
             default_log_level = false;
         } else if (std::strcmp(argv[i], "-log_level=error") == 0) {
