@@ -51,3 +51,9 @@ This would run a simulation lasting for 10 time units, printing every 20th itera
 `./MolSim -delta_t=1 -out_name=MD ./path/to/input.txt`
 
 This would run a simulation with an update increment of 1 time unit, printing to output files of the format `MD_<iteration>.vtu`. The initial state would be given in the file input.txt, every other parameter would have the default value.
+
+## Tests
+
+To invoke the Tests: 
+1. First BUILD the project by following the BUILDING steps 1-6.
+2. run the tests manually by calling `ctest` through the command line, while in the build directory.
