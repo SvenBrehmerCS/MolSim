@@ -8,6 +8,8 @@
 
 #include "Particle.h"
 #include <vector>
+#include <iterator>
+#include <cstddef>
 
 /**
  * @class ParticleContainer
@@ -45,4 +47,9 @@ public:
      * @return The particles.
      */
     std::vector<Particle>& get_particles();
+
+    class PIterator;
+
+
+    PIterator begin();
 };
