@@ -46,7 +46,7 @@ public:
      *
      * @return The particles.
      */
-    std::vector<Particle>& get_particles();
+    std::vector<Particle> get_particles();
 
     struct PIterator {
         using iterator_category = std::random_access_iterator_tag;
@@ -83,7 +83,6 @@ public:
     private:
         pointer m_ptr;
     };
-
 
     PIterator begin();
     PIterator end();
