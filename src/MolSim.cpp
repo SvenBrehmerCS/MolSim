@@ -59,7 +59,7 @@ int main(const int argc, const char* argv[]) {
         if (iteration % env.get_print_step() == 0) {
             std::string out_name(env.get_output_file_name());
 
-            writer->plotParticles(calculator->get_particles(), out_name, iteration);
+            writer->plotParticles(calculator->get_container(), out_name, iteration);
         }
 
         current_time += env.get_delta_t();

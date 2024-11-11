@@ -55,18 +55,23 @@ TEST(Calculator, UpdateX1) {
     ASSERT_NO_THROW(calc.calculateX());
 
     // Make sure that there are no unwanted changes
-    ASSERT_EQ(particles.size(), calc.get_particles().size()) << "The number of particles must not change when updating the particles positions.";
+    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles positions.";
+
+    auto pi = calc.get_container().begin();
 
     for (size_t i = 0; i < particles.size(); i++) {
-        EXPECT_TRUE(calc.get_particles()[i].getV() == particles[i].getV()) << "The velocity must not change when updating the position.";
-        EXPECT_TRUE(calc.get_particles()[i].getF() == particles[i].getF()) << "The force must not change when updating the position.";
-        EXPECT_TRUE(calc.get_particles()[i].getOldF() == particles[i].getOldF()) << "The old force must not change when updating the position.";
-        EXPECT_FLOAT_EQ(calc.get_particles()[i].getM(), particles[i].getM()) << "The mass must not change when updating the position.";
-        EXPECT_EQ(calc.get_particles()[i].getType(), particles[i].getType()) << "The type must not change when updating the position.";
+        EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the position.";
+        EXPECT_TRUE(pi->getF() == particles[i].getF()) << "The force must not change when updating the position.";
+        EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the position.";
+        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the position.";
+        EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the position.";
 
         // Test if the new position is correct
-        EXPECT_LT(ArrayUtils::L2Norm(calc.get_particles()[i].getX() - expected_x[i]), error_margine)
-            << "The position was not correct. (expected: " << ArrayUtils::to_string(expected_x[i]) << ", got: " << ArrayUtils::to_string(calc.get_particles()[i].getX()) << ")";
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected_x[i]), error_margine)
+            << "The position was not correct. (expected: " << ArrayUtils::to_string(expected_x[i]) << ", got: " << ArrayUtils::to_string(pi->getX())
+            << ")";
+
+        pi++;
     }
 }
 

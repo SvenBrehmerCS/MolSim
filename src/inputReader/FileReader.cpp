@@ -9,12 +9,12 @@
 #include "FileReader.h"
 #include "../Particle.h"
 
+#include <ParticleGenerator.h>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <ParticleGenerator.h>
-#include <sstream>
 #include <spdlog/spdlog.h>
+#include <sstream>
 
 namespace inputReader {
 
@@ -22,7 +22,7 @@ namespace inputReader {
 
     FileReader::~FileReader() = default;
 
-    void FileReader::readFile(std::vector<Particle>& particles, const char* filename) {
+    void FileReader::readFile(ParticleContainer& container, const char* filename) {
         std::array<double, 3> x;
         std::array<double, 3> v;
         std::array<int, 3> N;
@@ -52,7 +52,9 @@ namespace inputReader {
             getline(input_file, tmp_string);
             spdlog::info("Read line: {}", tmp_string);
 
-            particles.resize(num_particles);
+            container.resize(num_particles);
+
+            auto particle = container.begin();
 
             for (int i = 0; i < num_particles; i++) {
                 std::istringstream datastream(tmp_string);
@@ -69,12 +71,14 @@ namespace inputReader {
                 }
                 datastream >> m;
 
-                particles[i].setX(x);
-                particles[i].setV(v);
-                particles[i].setM(m);
+                particle->setX(x);
+                particle->setV(v);
+                particle->setM(m);
 
                 getline(input_file, tmp_string);
                 spdlog::debug("Read line: {}", tmp_string);
+
+                particle++;
             }
 
             std::istringstream cubestream(tmp_string);
@@ -104,9 +108,9 @@ namespace inputReader {
                 }
                 datastream >> h;
 
-                particles.resize(num_particles + (N[0] * N[1] * N[2]));
+                container.resize(num_particles + (N[0] * N[1] * N[2]));
 
-                generator.generateCuboid(particles, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
+                generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
 
                 num_particles += (N[0] * N[1] * N[2]);
 
@@ -114,7 +118,7 @@ namespace inputReader {
                 spdlog::debug("Read line: {}", tmp_string);
             }
 
-            particles.shrink_to_fit();
+            // particles.shrink_to_fit();
         } else {
             spdlog::critical("Error: could not open file {}", filename);
             exit(-1);
