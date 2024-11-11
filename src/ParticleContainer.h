@@ -7,9 +7,9 @@
 #pragma once
 
 #include "Particle.h"
-#include <vector>
-#include <iterator>
 #include <cstddef>
+#include <iterator>
+#include <vector>
 
 /**
  * @class ParticleContainer
@@ -46,10 +46,77 @@ public:
      *
      * @return The particles.
      */
-    std::vector<Particle>& get_particles();
+    std::vector<Particle> get_particles();
 
-    class PIterator;
+    class PIterator {
+    public:
+        using iterator_category = std::random_access_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = Particle;
+        using pointer = Particle*;
+        using reference = Particle&;
 
+        PIterator(pointer ptr)
+            : m_ptr(ptr) { }
 
-    PIterator begin();
+        reference operator*() /*const?*/ { return *m_ptr; }
+        pointer operator->() /*const?*/ { return m_ptr; }
+
+        // Prefix/Postfix increment
+        PIterator& operator++() {
+            ++m_ptr;
+            return *this;
+        }
+        PIterator operator++(int) {
+            PIterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+        // Prefix/Postfix decrement
+        PIterator& operator--() {
+            --m_ptr;
+            return *this;
+        }
+        PIterator operator--(int) {
+            PIterator tmp = *this;
+            --(*this);
+            return tmp;
+        }
+
+        difference_type operator-(const PIterator& other) const { return m_ptr - other.m_ptr; }
+
+        PIterator operator+(difference_type offset) const { return PIterator(m_ptr + offset); }
+        PIterator operator-(difference_type offset) const { return PIterator(m_ptr - offset); }
+        PIterator& operator+=(difference_type offset) {
+            m_ptr += offset;
+            return *this;
+        }
+        PIterator& operator-=(difference_type offset) {
+            m_ptr -= offset;
+            return *this;
+        }
+
+        reference operator[](difference_type diff) const { return m_ptr[diff]; }
+
+        bool operator==(const PIterator& other) const { return m_ptr == other.m_ptr; }
+        bool operator!=(const PIterator& other) const { return m_ptr != other.m_ptr; }
+        bool operator<(const PIterator& other) const { return m_ptr < other.m_ptr; }
+        bool operator>(const PIterator& other) const { return m_ptr > other.m_ptr; }
+        bool operator<=(const PIterator& other) const { return m_ptr <= other.m_ptr; }
+        bool operator>=(const PIterator& other) const { return m_ptr >= other.m_ptr; }
+
+    private:
+        pointer m_ptr;
+    };
+
+    PIterator getparticles() {
+        return begin();
+    }
+
+    PIterator begin() {
+        return PIterator(&particles.front());
+    }
+    PIterator end() {
+        return PIterator(&particles.back());
+    }
 };
