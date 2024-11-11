@@ -48,9 +48,9 @@ namespace inputReader {
 
             std::istringstream numstream(tmp_string);
             numstream >> num_particles;
-            spdlog::debug("Reading {}.", num_particles);
+            spdlog::debug("Reading {} particles.", num_particles);
             getline(input_file, tmp_string);
-            spdlog::info("Read line: {}", tmp_string);
+            spdlog::debug("Read line: {}", tmp_string);
 
             container.resize(num_particles);
 
@@ -82,7 +82,7 @@ namespace inputReader {
             }
 
             std::istringstream cubestream(tmp_string);
-            numstream >> num_cubes >> num_dimensions;
+            cubestream >> num_cubes >> num_dimensions;
             spdlog::debug("Reading num_cubes {}, num_dimensions {}", num_cubes, num_dimensions);
             getline(input_file, tmp_string);
             spdlog::debug("Read line: {}", tmp_string);
