@@ -19,6 +19,9 @@ static void panic_exit(const char* message) {
 
 Environment::Environment() { spdlog::trace("Initialized with a standard environment."); }
 
+// TODO: bool Write Output
+// TODO: Choose calculator
+
 Environment::Environment(const int argc, const char* argv[]) {
     // Test if there is a request for a help message within all passed arguments
     for (int i = 1; i < argc; i++) {
@@ -43,6 +46,16 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        Set the time delta with which the steps should be performed." << std::endl;
             std::cout << "        The delta time must be a strictly positive floating point number." << std::endl;
             std::cout << "        The default time delta is 0.014." << std::endl;
+            std::cout << std::endl;
+            std::cout << "    -sigma=<sigma>" << std::endl;
+            std::cout << "        Set the sigma used for the lenard jones simulation." << std::endl;
+            std::cout << "        The sigma must be a strictly positive floating point number." << std::endl;
+            std::cout << "        The default sigma is 1.0." << std::endl;
+            std::cout << std::endl;
+            std::cout << "    -epsilon=<epsilon>" << std::endl;
+            std::cout << "        Set the epsilon used for the lenard jones simulation." << std::endl;
+            std::cout << "        The epsilon must be a strictly positive floating point number." << std::endl;
+            std::cout << "        The default epsilon is 5.0." << std::endl;
             std::cout << std::endl;
             std::cout << "    -print_step=<print step>" << std::endl;
             std::cout << "        Set the print step with which the steps should be performed." << std::endl;
@@ -83,6 +96,8 @@ Environment::Environment(const int argc, const char* argv[]) {
     // Initialize the booleans indicating if an argument was already parsed once
     bool default_end = true;
     bool default_delta = true;
+    bool default_sigma = true;
+    bool default_epsilon = true;
     bool default_print_step = true;
     bool default_out_name = true;
     bool default_file_format = true;
@@ -144,6 +159,60 @@ Environment::Environment(const int argc, const char* argv[]) {
             }
 
             default_delta = false;
+        } else if (std::strncmp(argv[i], "-sigma=", std::strlen("-sigma=")) == 0) {
+            // Parse the time delta
+            if (default_sigma == false) {
+                panic_exit("The option sigma was provided multiple times. Options may only be provided once.");
+            }
+
+            size_t idx = 0;
+
+            try {
+                sigma = std::stod(argv[i] + std::strlen("-sigma="), &idx);
+            } catch (const std::exception& e) {
+                panic_exit("The option sigma requires a floatingpoint number within the region of a 64 bit float.");
+            }
+
+            if (argv[i][idx + std::strlen("-sigma=")] != 0) {
+                panic_exit("The option sigma must only have one floating point number as input.");
+            }
+
+            if (sigma <= 0.0) {
+                panic_exit("The option sigma must have a strictly positive value.");
+            }
+
+            if (std::isnan(sigma) || std::isinf(sigma)) {
+                panic_exit("The option sigma must be a valid number, not NAN or INF.");
+            }
+
+            default_sigma = false;
+        } else if (std::strncmp(argv[i], "-epsilon=", std::strlen("-epsilon=")) == 0) {
+            // Parse the time delta
+            if (default_epsilon == false) {
+                panic_exit("The option epsilon was provided multiple times. Options may only be provided once.");
+            }
+
+            size_t idx = 0;
+
+            try {
+                epsilon = std::stod(argv[i] + std::strlen("-epsilon="), &idx);
+            } catch (const std::exception& e) {
+                panic_exit("The option epsilon requires a floatingpoint number within the region of a 64 bit float.");
+            }
+
+            if (argv[i][idx + std::strlen("-epsilon=")] != 0) {
+                panic_exit("The option epsilon must only have one floating point number as input.");
+            }
+
+            if (epsilon <= 0.0) {
+                panic_exit("The option epsilon must have a strictly positive value.");
+            }
+
+            if (std::isnan(epsilon) || std::isinf(epsilon)) {
+                panic_exit("The option epsilon must be a valid number, not NAN or INF.");
+            }
+
+            default_epsilon = false;
         } else if (std::strncmp(argv[i], "-print_step=", std::strlen("-print_step=")) == 0) {
             // Parse the print steps
             if (default_print_step == false) {
@@ -286,6 +355,8 @@ Environment::Environment(const int argc, const char* argv[]) {
     spdlog::debug("The program was executed using the command line arguments.");
     spdlog::debug("    t_end = {} ({})", t_end, btos(default_end));
     spdlog::debug("    delta_t = {} ({})", delta_t, btos(default_delta));
+    spdlog::debug("    sigma = {} ({})", sigma, btos(default_sigma));
+    spdlog::debug("    epsilon = {} ({})", epsilon, btos(default_epsilon));
     spdlog::debug("    print_step = {} ({})", print_step, btos(default_print_step));
     spdlog::debug("    input_file = {}", input_file);
     spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
@@ -307,6 +378,10 @@ Environment::~Environment() = default;
 double Environment::get_t_end() const { return t_end; }
 
 double Environment::get_delta_t() const { return delta_t; }
+
+double Environment::get_sigma() const { return sigma; }
+
+double Environment::get_epsilon() const { return epsilon; }
 
 int Environment::get_print_step() const { return print_step; }
 

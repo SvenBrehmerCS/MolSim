@@ -24,6 +24,23 @@ enum FileFormat : int {
 };
 
 /**
+ * @enum CalculatorType
+ *
+ * @brief This enum describes the different calculators used by this program.
+ */
+enum CalculatorType : int {
+    /**
+     * Define the gravity calculation type.
+     */
+    GRAVITY = 1,
+
+    /**
+     * Define the lenard jones calculation type without range cut-offs.
+     */
+    LJ_FULL = 2,
+};
+
+/**
  * @class Environment
  *
  * @brief Describe the simulation environment. The simulation environment stores the simulation parameters.
@@ -39,6 +56,16 @@ private:
      * Store the time delta. By default it is initialized to 0.014.
      */
     double delta_t = 0.014;
+
+    /**
+     * Store the epsilon used for the Lenard-Jones calculation. By default it is initialized to 5.0.
+     */
+    double epsilon = 5.0;
+
+    /**
+     * Store the sigma used for the Lenard-Jones calculation. By default it is initialized to 1.0.
+     */
+    double sigma = 1.0;
 
     /**
      * Store after how many steps the simulation state should be saved. By default it is initialized to 10.
@@ -76,10 +103,10 @@ public:
 
     /**
      * Create a copy of an environment object.
-     * 
+     *
      * @param env THe environmetn that should be copied.
      */
-    Environment(const Environment &env);
+    Environment(const Environment& env);
 
     /**
      * Destroy a simulation environment.
@@ -99,6 +126,20 @@ public:
      * @return The time delta for a single simulation step.
      */
     double get_delta_t() const;
+
+    /**
+     * Get the sigma used for lenard jones simulations.
+     *
+     * @return The sigma for force calculation.
+     */
+    double get_sigma() const;
+
+    /**
+     * Get the epsilon used for lenard jones simulations.
+     *
+     * @return The epsilon for force calculation.
+     */
+    double get_epsilon() const;
 
     /**
      * Get how often the simulation output file should be generated.
