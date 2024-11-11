@@ -1,0 +1,8 @@
+#
+# This is the simulation for Assignment 2 task 4
+#
+# x         v           m           N           h           Brown
+0
+2 2
+0 0 0       0 0 0       1           40 8 1      1.1225      
+15 15 0     0 -10 0     1           8 8 1       1.1225      
