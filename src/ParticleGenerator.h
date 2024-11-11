@@ -15,7 +15,7 @@ public:
 
     ~ParticleGenerator();
 
-    void generateCuboid(std::vector<Particle> particles, int num_particles, std::array<double, 3> x, std::array<double, 3> y, double m,
+    void generateCuboid(std::vector<Particle>& particles, int num_particles, std::array<double, 3> x, std::array<double, 3> y, double m,
         std::array<int, 3> N, double h, double b_m, int num_dimensions);
 };
 
