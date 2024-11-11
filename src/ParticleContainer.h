@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Particle.h"
+#include <iterator>
 #include <vector>
 
 /**
@@ -39,10 +40,12 @@ public:
      */
     ~ParticleContainer();
 
-    /**
-     * Get a non constant reference to all the particles.
-     *
-     * @return The particles.
-     */
-    std::vector<Particle>& get_particles();
+    std::vector<Particle>::iterator begin();
+    std::vector<Particle>::const_iterator begin() const;
+
+    std::vector<Particle>::iterator end();
+    std::vector<Particle>::const_iterator end() const;
+
+    size_t size() const;
+    void resize(size_t count);
 };

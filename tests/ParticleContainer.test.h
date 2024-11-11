@@ -15,5 +15,8 @@ TEST(ParticleContainerSonstructor, CreateFromVector) {
 
     ASSERT_NO_THROW(pc = ParticleContainer(pv));
 
-    ASSERT_TRUE(pc.get_particles() == pv) << "The particle container must be constructed from the correct particles.";
+    auto pi = pc.begin();
+    for (const auto& p : pv) {
+        ASSERT_TRUE(*(pi++) == p) << "The particle container must be constructed from the correct particles.";
+    }
 }

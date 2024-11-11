@@ -20,7 +20,7 @@ namespace physicsCalculator {
 
         // Read the input file
         std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
-        fileReader->readFile(container.get_particles(), env.get_input_file_name());
+        fileReader->readFile(container, env.get_input_file_name());
     }
 
     Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles) {
@@ -43,10 +43,8 @@ namespace physicsCalculator {
 
     ParticleContainer& Calculator::get_container() { return container; }
 
-    std::vector<Particle>& Calculator::get_particles() { return container.get_particles(); }
-
     void Calculator::calculateOldF() {
-        for (Particle& p : container.get_particles()) {
+        for (Particle& p : container) {
             p.setOldF(p.getF());
             p.setF({ 0.0, 0.0, 0.0 });
         }
@@ -55,7 +53,7 @@ namespace physicsCalculator {
     }
 
     void Calculator::calculateX() {
-        for (Particle& p : container.get_particles()) {
+        for (Particle& p : container) {
             p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
         }
 
@@ -63,7 +61,7 @@ namespace physicsCalculator {
     }
 
     void Calculator::calculateV() {
-        for (Particle& p : container.get_particles()) {
+        for (Particle& p : container) {
             p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
         }
 

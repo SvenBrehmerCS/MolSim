@@ -46,7 +46,7 @@ namespace physicsCalculator {
 
         /**
          * Create a calculator from an environment and a particle vector. This method should only be used for debugging.
-         * 
+         *
          * @param new_env The simulation environment.
          * @param particles The particles used for testing.
          */
@@ -88,12 +88,5 @@ namespace physicsCalculator {
          * @return A refference to the particle container.
          */
         ParticleContainer& get_container();
-
-        /**
-         * Get a refference to the vector storing the particles.
-         *
-         * @return A refference to the particle vector.
-         */
-        std::vector<Particle>& get_particles();
     };
 } // namespace physicsCalculator

@@ -12,8 +12,8 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <string>
 #include <spdlog/spdlog.h>
+#include <string>
 
 namespace outputWriter {
 
@@ -97,10 +97,10 @@ namespace outputWriter {
         pointsIterator->push_back(p.getX()[2]);
     }
 
-    void VTKWriter::plotParticles(const std::vector<Particle>& particles, const std::string& filename, int iteration) {
-        initializeOutput(particles.size());
+    void VTKWriter::plotParticles(const ParticleContainer& container, const std::string& filename, int iteration) {
+        initializeOutput(container.size());
 
-        for (auto& p : particles) {
+        for (const auto& p : container) {
             plotParticle(p);
         }
 

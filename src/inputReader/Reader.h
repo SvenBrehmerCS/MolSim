@@ -8,7 +8,7 @@
 
 #include <vector>
 
-class Particle;
+class ParticleContainer;
 
 /**
  * @brief Collection of readers for different input types
@@ -34,6 +34,6 @@ namespace inputReader {
          * @param particles data structure for holding the particles.
          * @param filename file path to input file.
          */
-        virtual void readFile(std::vector<Particle>& particles, const char* filename) = 0;
+        virtual void readFile(ParticleContainer& container, const char* filename) = 0;
     };
 } // namespace inputReader
