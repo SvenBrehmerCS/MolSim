@@ -4,6 +4,7 @@
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "physicsCalculator/SimpleCalculator.h"
+#include "physicsCalculator/LJCalculator.h"
 #include "solver/Analytical.h"
 #include "utils/ArrayUtils.h"
 
@@ -24,7 +25,7 @@ int main(const int argc, const char* argv[]) {
     Environment env(argc, argv);
 
     // Initialize the calculator
-    std::unique_ptr<physicsCalculator::Calculator> calculator { new physicsCalculator::SimpleCalculator(env) };
+    std::unique_ptr<physicsCalculator::Calculator> calculator { new physicsCalculator::LJCalculator(env) };
 
     // Initialize the writer
     std::unique_ptr<outputWriter::Writer> writer { nullptr };
