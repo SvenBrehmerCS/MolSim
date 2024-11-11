@@ -59,5 +59,5 @@ TEST(ParticleToString, FirstToStringMethod) {
     ASSERT_NO_THROW(str = p.toString());
 
     const std::string res = "Particle: X: [-2, 17.9, -1.33] v: [-4.21, 2.1, 1.234] f: [-0.01, -1.2, 0.34] old_f: [6.6, 0.2, -1] type: 22";
-    EXPECT_TRUE(str == res) << "The correct string sould be returned.";
+    EXPECT_TRUE(str == res) << "The correct string should be returned.";
 }

@@ -4,7 +4,7 @@
 // Most of these functions are still used within the tests, therefore they are implicitly tested.
 
 // There are no tests for physicsCalculator/Calculator.h as this file only contains an interface
-#include "physicsCalculator/SimpleCalculator.test.h"
+#include "physicsCalculator/GravityCalculator.test.h"
 
 #include "Environment.test.h"
 // There are no tests for MolSim.h as this file only contains the main function

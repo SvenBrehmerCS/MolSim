@@ -26,7 +26,6 @@ namespace physicsCalculator {
         for (auto i = container.begin(); i < container.end(); i++) {
             std::array<double, 3> prev_f = i->getF();
             std::array<double, 3> new_f = { 0.0, 0.0, 0.0 };
-#pragma omp parallel for reduction(+:new_f)
             for (auto j = i + 1; j < container.end(); j++) {
                 // Calculate the distance and force experienced by two particles
                 const double distance = ArrayUtils::L2Norm(j->getX() - i->getX());

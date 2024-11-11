@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <vector>
-
 class ParticleContainer;
 
 /**

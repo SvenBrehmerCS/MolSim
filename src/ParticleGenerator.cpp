@@ -12,9 +12,9 @@ ParticleGenerator::~ParticleGenerator() = default;
 void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> v, double m,
     std::array<int, 3> N, double h, double b_m, int dim) {
 
-    double N1 = N[0];
-    double N2 = N[1];
-    double N3 = N[2];
+    int N1 = N[0];
+    int N2 = N[1];
+    int N3 = N[2];
 
     std::array<double, 3> boltz_v;
 

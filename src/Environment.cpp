@@ -360,8 +360,8 @@ Environment::Environment(const int argc, const char* argv[]) {
     spdlog::debug("    print_step = {} ({})", print_step, btos(default_print_step));
     spdlog::debug("    input_file = {}", input_file);
     spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
-    spdlog::debug("    format = {} ({})", format, btos(default_file_format));
-    spdlog::debug("    log_level = {} ({})", spdlog::get_level(), btos(default_log_level));
+    spdlog::debug("    format = {} ({})", static_cast<int>(format), btos(default_file_format));
+    spdlog::debug("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
 }
 
 Environment::Environment(const Environment& env) {

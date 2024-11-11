@@ -74,14 +74,8 @@ target_compile_options(MolSim
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
-# Define an option to turn of doxygen
-option(NO_DOC "Disable the support for generating doxygen in the makefile." OFF)
-
-if(NOT NO_DOC)
-    # Generate the doxygen make option
-    include(doxygen)
-endif(NOT NO_DOC)
-
+# Generate the doxygen make option
+include(doxygen)
 
 # Include the google test module
 include(googletest)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include <physicsCalculator/SimpleCalculator.h>
+#include <physicsCalculator/GravityCalculator.h>
 
 // Test if update x works for handcrafted values
 TEST(Calculator, UpdateX1) {
@@ -41,7 +41,7 @@ TEST(Calculator, UpdateX1) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::SimpleCalculator calc(env, particles, false);
+    physicsCalculator::GravityCalculator calc(env, particles, false);
 
     // Initialize the positions to the expected values
     const std::vector<std::array<double, 3>> expected_x = {
@@ -86,16 +86,16 @@ TEST(Calculator, UpdateOldF1) {
 }
 
 // Test if update f works for handcrafted values
-TEST(SimpleCalculator, UpdateF1) {
+TEST(GravityCalculator, UpdateF1) {
     // TODO:
 }
 
 // Test if step works for handcrafted values
-TEST(SimpleCalculator, Step1) {
+TEST(GravityCalculator, Step1) {
     // TODO:
 }
 
 // Test if step works for an analytical solution
-TEST(SimpleCalculator, Analytical1) {
+TEST(GravityCalculator, Analytical1) {
     // TODO:
 }

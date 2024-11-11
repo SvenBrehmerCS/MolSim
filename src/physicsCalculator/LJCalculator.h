@@ -14,7 +14,7 @@
 namespace physicsCalculator {
 
     /**
-     * @class SimpleCalculator
+     * @class Calculator
      *
      * @brief Class corresponding to a simple position, velocity and force calculator
      */

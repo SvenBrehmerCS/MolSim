@@ -3,7 +3,7 @@
 #include "inputReader/FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
-#include "physicsCalculator/SimpleCalculator.h"
+#include "physicsCalculator/GravityCalculator.h"
 #include "physicsCalculator/LJCalculator.h"
 #include "solver/Analytical.h"
 #include "utils/ArrayUtils.h"
@@ -55,6 +55,7 @@ int main(const int argc, const char* argv[]) {
         calculator->step();
 
         iteration++;
+        current_time += env.get_delta_t();
 
         // Store the particles to an output file
         if (iteration % env.get_print_step() == 0) {
@@ -63,9 +64,7 @@ int main(const int argc, const char* argv[]) {
             writer->plotParticles(calculator->get_container(), out_name, iteration);
         }
 
-        current_time += env.get_delta_t();
-
-        // End the iteration and initialize the new one
+        // End the iteration
         spdlog::info("Iteration {} finished.", iteration);
     }
 
