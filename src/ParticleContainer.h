@@ -7,9 +7,9 @@
 #pragma once
 
 #include "Particle.h"
-#include <vector>
-#include <iterator>
 #include <cstddef>
+#include <iterator>
+#include <vector>
 
 /**
  * @class ParticleContainer
@@ -48,8 +48,43 @@ public:
      */
     std::vector<Particle>& get_particles();
 
-    class PIterator;
+    struct PIterator {
+        using iterator_category = std::random_access_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = Particle;
+        using pointer = Particle*;
+        using reference = Particle&;
+
+        PIterator(pointer ptr);
+
+        reference operator*();
+        pointer operator->();
+
+        PIterator& operator++();
+        PIterator operator++(int);
+        PIterator& operator--();
+        PIterator operator--(int);
+
+        PIterator operator+(difference_type offset) const;
+        PIterator operator-(difference_type offset) const;
+        difference_type operator-(const PIterator& other) const;
+        PIterator& operator+=(difference_type offset);
+        PIterator& operator-=(difference_type offset);
+
+        bool operator==(const PIterator& other) const;
+        bool operator!=(const PIterator& other) const;
+        bool operator<(const PIterator& other) const;
+        bool operator>(const PIterator& other) const;
+        bool operator<=(const PIterator& other) const;
+        bool operator>=(const PIterator& other) const;
+
+        reference operator[](difference_type index) const;
+
+    private:
+        pointer m_ptr;
+    };
 
 
     PIterator begin();
+    PIterator end();
 };

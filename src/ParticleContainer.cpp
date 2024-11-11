@@ -11,10 +11,10 @@ std::vector<Particle>& ParticleContainer::get_particles() { return begin(); }
 class PIterator {
 public:
     using iterator_category = std::random_access_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-    using value_type = Particle;
-    using pointer = Particle*;
-    using reference = Particle&;
+    using difference_type   = std::ptrdiff_t;
+    using value_type        = Particle;
+    using pointer           = Particle*;
+    using reference         = Particle&;
 
     PIterator(pointer ptr)
         : m_ptr(ptr) { }
@@ -70,4 +70,4 @@ private:
 };
 
 PIterator begin() { return PIterator(particles); }
-PIterator end() {return PIterator(particles + particles.size())}
+PIterator end() { return PIterator(particles + particles.size()) }
