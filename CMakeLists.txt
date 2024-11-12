@@ -98,6 +98,9 @@ target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC s
 # Enable testing
 enable_testing()
 add_test(NAME MolTest COMMAND MolTest)
+add_test(NAME ParticleGeneratorGenerateCuboid COMMAND MolTest --gtest_filter=ParticleGeneratorTest.ParticleGeneratorGenerateCuboid)
+add_test(NAME ParticleGeneratorGenerateCuboid_Test COMMAND MolTest --gtest_filter=ParticleGeneratorTest.ParticleGeneratorTest_ParticleGeneratorGenerateCuboid_Test)
+
 
 #include the spdlog module
 include(spdlog)
