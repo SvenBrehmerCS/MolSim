@@ -5,6 +5,7 @@
 
 // There are no tests for physicsCalculator/Calculator.h as this file only contains an interface
 #include "physicsCalculator/GravityCalculator.test.h"
+#include "physicsCalculator/LJCalculator.test.h"
 
 #include "Environment.test.h"
 // There are no tests for MolSim.h as this file only contains the main function

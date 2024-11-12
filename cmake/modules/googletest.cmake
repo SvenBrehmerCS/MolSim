@@ -4,8 +4,8 @@ include(FetchContent)
 
 FetchContent_Declare(
         googletest
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-        URL https://github.com/google/googletest/archive/b514bdc898e2951020cbdca1304b75f5950d1f59.zip
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.15.2
 )
 
 FetchContent_MakeAvailable(googletest)

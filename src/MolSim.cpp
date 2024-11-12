@@ -20,10 +20,10 @@
 int main(const int argc, const char* argv[]) {
     namespace fs = std::filesystem;
 
-    spdlog::info("Started {}", argv[0]);
-
     // Initialize the simulation environment, readers and writers.
     Environment env(argc, argv);
+
+    spdlog::info("Started {}", argv[0]);
 
     // Initialize the calculator
     std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
@@ -38,6 +38,8 @@ int main(const int argc, const char* argv[]) {
         break;
 
     default:
+        spdlog::critical("Error: Illegal force model specifier.");
+        std::exit(EXIT_FAILURE);
         break;
     }
 
