@@ -19,9 +19,6 @@ static void panic_exit(const char* message) {
 
 Environment::Environment() { spdlog::trace("Initialized with a standard environment."); }
 
-// TODO: bool Write Output
-// TODO: Choose calculator
-
 Environment::Environment(const int argc, const char* argv[]) {
     // Test if there is a request for a help message within all passed arguments
     for (int i = 1; i < argc; i++) {
@@ -68,8 +65,8 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The default output file name is MD_vtk." << std::endl;
             std::cout << std::endl;
             std::cout << "    -output_format=<file format>" << std::endl;
-            std::cout << "        Set the format of the output file either to 'vtk' or to 'xyz'." << std::endl;
-            std::cout << "        The file format must either be 'vtk' or 'xyz'." << std::endl;
+            std::cout << "        Set the format of the output file either to 'no', 'vtk' or to 'xyz'." << std::endl;
+            std::cout << "        The file format must either be 'no' (disable writing files), 'vtk' or 'xyz'." << std::endl;
             std::cout << "        The default output file format is vtk." << std::endl;
             std::cout << std::endl;
             std::cout << "    -log_level=<log level>" << std::endl;
@@ -77,10 +74,15 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The log level must be one off: off, crit, error, warn, info, debug, trace." << std::endl;
             std::cout << "        The default log level is info." << std::endl;
             std::cout << std::endl;
+            std::cout << "    -calc=<force model>" << std::endl;
+            std::cout << "        Set the force calculation of the programm to a force model." << std::endl;
+            std::cout << "        The force model can either be gravity or lj (lenard jones)." << std::endl;
+            std::cout << "        The default force model is lj." << std::endl;
+            std::cout << std::endl;
             std::cout << "Each argument may only be provided once. If no argument is provided the default" << std::endl;
             std::cout << "value is being used. There may not be any blank spaces seperating the option" << std::endl;
             std::cout << "and its value. The output files will be placed in the folder, from where the" << std::endl;
-            std::cout << "program is executed. The output files will have the VTK format." << std::endl;
+            std::cout << "program is executed." << std::endl;
             std::cout << std::endl;
             std::cout << "Example:" << std::endl;
             std::cout << "    " << argv[0] << " -t_end=10.0 -print_step=20 ./path/to/input.txt" << std::endl;
@@ -102,6 +104,7 @@ Environment::Environment(const int argc, const char* argv[]) {
     bool default_out_name = true;
     bool default_file_format = true;
     bool default_log_level = true;
+    bool default_calculator = true;
 
     // Parse all arguments but help.
     for (int i = 1; i < argc; i++) {
@@ -249,6 +252,15 @@ Environment::Environment(const int argc, const char* argv[]) {
             output_file = argv[i] + std::strlen("-out_name=");
 
             default_out_name = false;
+        } else if (std::strcmp(argv[i], "-output_format=no") == 0) {
+            // Parse the output file format
+            if (default_file_format == false) {
+                panic_exit("The option output_format was provided multiple times. Options may only be provided once.");
+            }
+
+            format = NO_OUT;
+
+            default_file_format = false;
         } else if (std::strcmp(argv[i], "-output_format=vtk") == 0) {
             // Parse the output file format
             if (default_file_format == false) {
@@ -268,7 +280,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
             default_file_format = false;
         } else if (std::strcmp(argv[i], "-log_level=off") == 0) {
-            // Parse the output file format
+            // Parse the log level
             if (default_log_level == false) {
                 panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
             }
@@ -277,7 +289,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
             default_log_level = false;
         } else if (std::strcmp(argv[i], "-log_level=crit") == 0) {
-            // Parse the output file format
+            // Parse the output log level
             if (default_log_level == false) {
                 panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
             }
@@ -286,7 +298,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
             default_log_level = false;
         } else if (std::strcmp(argv[i], "-log_level=error") == 0) {
-            // Parse the output file format
+            // Parse the output log level
             if (default_log_level == false) {
                 panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
             }
@@ -295,7 +307,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
             default_log_level = false;
         } else if (std::strcmp(argv[i], "-log_level=warn") == 0) {
-            // Parse the output file format
+            // Parse the output log level
             if (default_log_level == false) {
                 panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
             }
@@ -304,7 +316,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
             default_log_level = false;
         } else if (std::strcmp(argv[i], "-log_level=info") == 0) {
-            // Parse the output file format
+            // Parse the output log level
             if (default_log_level == false) {
                 panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
             }
@@ -313,7 +325,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
             default_log_level = false;
         } else if (std::strcmp(argv[i], "-log_level=trace") == 0) {
-            // Parse the output file format
+            // Parse the log level
             if (default_log_level == false) {
                 panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
             }
@@ -322,7 +334,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
             default_log_level = false;
         } else if (std::strcmp(argv[i], "-log_level=debug") == 0) {
-            // Parse the output file format
+            // Parse the log level
             if (default_log_level == false) {
                 panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
             }
@@ -330,6 +342,24 @@ Environment::Environment(const int argc, const char* argv[]) {
             spdlog::set_level(spdlog::level::debug);
 
             default_log_level = false;
+        } else if (std::strcmp(argv[i], "-calc=gravity") == 0) {
+            // Parse the calculator type
+            if (default_calculator == false) {
+                panic_exit("The option calc was provided multiple times. Options may only be provided once.");
+            }
+
+            calc = GRAVITY;
+
+            default_calculator = false;
+        } else if (std::strcmp(argv[i], "-calc=lj") == 0) {
+            // Parse the calculator type
+            if (default_calculator == false) {
+                panic_exit("The option calc was provided multiple times. Options may only be provided once.");
+            }
+
+            calc = LJ_FULL;
+
+            default_calculator = false;
         } else {
             // Parse the input file
             if (std::strlen(argv[i]) == 0) {
@@ -362,6 +392,7 @@ Environment::Environment(const int argc, const char* argv[]) {
     spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
     spdlog::debug("    format = {} ({})", static_cast<int>(format), btos(default_file_format));
     spdlog::debug("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
+    spdlog::debug("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
 }
 
 Environment::Environment(const Environment& env) {
@@ -390,3 +421,5 @@ const char* Environment::get_input_file_name() const { return input_file; }
 const char* Environment::get_output_file_name() const { return output_file; }
 
 FileFormat Environment::get_output_file_format() const { return format; }
+
+CalculatorType Environment::get_calculator_type() const { return calc; }

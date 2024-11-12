@@ -1,6 +1,7 @@
 
 #include "MolSim.h"
 #include "inputReader/FileReader.h"
+#include "outputWriter/NoWriter.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "physicsCalculator/GravityCalculator.h"
@@ -25,12 +26,29 @@ int main(const int argc, const char* argv[]) {
     Environment env(argc, argv);
 
     // Initialize the calculator
-    std::unique_ptr<physicsCalculator::Calculator> calculator { new physicsCalculator::LJCalculator(env) };
+    std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
+
+    switch (env.get_calculator_type()) {
+    case GRAVITY:
+        calculator.reset(new physicsCalculator::GravityCalculator(env));
+        break;
+
+    case LJ_FULL:
+        calculator.reset(new physicsCalculator::LJCalculator(env));
+        break;
+
+    default:
+        break;
+    }
 
     // Initialize the writer
     std::unique_ptr<outputWriter::Writer> writer { nullptr };
 
     switch (env.get_output_file_format()) {
+    case NO_OUT:
+        writer.reset(new outputWriter::NoWriter());
+        break;
+
     case VTK:
         writer.reset(new outputWriter::VTKWriter());
         break;

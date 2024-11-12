@@ -13,6 +13,11 @@
  */
 enum FileFormat : int {
     /**
+     * Define the no output format.
+     */
+    NO_OUT = 0,
+
+    /**
      * Define the ascii based vtk file format.
      */
     VTK = 1,
@@ -86,6 +91,11 @@ private:
      * Store the output file format. it can either be vtk or xyz, with vtk being the default.
      */
     FileFormat format = VTK;
+
+    /**
+     * Store which calculator should be used for the force calculations.
+     */
+    CalculatorType calc = LJ_FULL;
 
 public:
     /**
@@ -168,4 +178,11 @@ public:
      * @return The file format of the output file.
      */
     FileFormat get_output_file_format() const;
+
+    /**
+     * Get the calculator type which should be used for the force calculations.
+     * 
+     * @return The calculator type.
+     */
+    CalculatorType get_calculator_type() const;
 };
