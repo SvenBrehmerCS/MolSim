@@ -1,6 +1,3 @@
-//
-// Created by frederik on 11/10/24.
-//
 
 #include "ParticleGenerator.h"
 

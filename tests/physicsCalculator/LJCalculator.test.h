@@ -148,7 +148,7 @@ TEST(Calculator, UpdateV2) {
     ASSERT_NO_THROW(calc.calculateV());
 
     // Make sure that there are no unwanted changes
-    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles positions.";
+    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles velocity.";
 
     auto pi = calc.get_container().begin();
 
@@ -186,7 +186,7 @@ TEST(Calculator, UpdateVNo) {
 
     ASSERT_NO_THROW(calc.calculateV());
 
-    EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the position on an empty container should not add a particle.";
+    EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the velocity on an empty container should not add a particle.";
 }
 
 // Test if update old f works for handcrafted values
@@ -232,7 +232,7 @@ TEST(Calculator, UpdateOldF2) {
     ASSERT_NO_THROW(calc.calculateOldF());
 
     // Make sure that there are no unwanted changes
-    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles positions.";
+    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles old force.";
 
     auto pi = calc.get_container().begin();
     const std::array<double, 3> zero_v = { 0.0, 0.0, 0.0 };
@@ -251,14 +251,25 @@ TEST(Calculator, UpdateOldF2) {
     }
 }
 
-// Test if update f works for handcrafted values
-TEST(LJCalculator, UpdateFNo) {
-    // TODO:
-}
+// Test if update OldF works for an empty particle container
+TEST(Calculator, UpdateOldFNo) {
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+    };
 
-// Test if update f works for handcrafted values
-TEST(LJCalculator, UpdateFSingle) {
-    // TODO:
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, {}, false);
+
+    ASSERT_NO_THROW(calc.calculateOldF());
+
+    EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the velocity on an empty container should not add a particle.";
 }
 
 // Test if update f works for handcrafted values
@@ -266,4 +277,81 @@ TEST(LJCalculator, UpdateF1) {
     // TODO:
 }
 
-// TODO: Four analytical tests
+// Test if update f works for handcrafted values
+TEST(LJCalculator, UpdateF2) {
+    // TODO:
+}
+
+// Test if update f works for handcrafted values
+TEST(LJCalculator, UpdateF3) {
+    // TODO:
+}
+
+// Test if update f works for an empty particle container
+TEST(LJCalculator, UpdateFNo) {
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, {}, false);
+
+    ASSERT_NO_THROW(calc.calculateF());
+
+    EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the force on an empty container should not add a particle.";
+}
+
+// Test if update f works for a single particle
+TEST(LJCalculator, UpdateFSingle) {
+    // Set the margine for the maximum floatingpoint error
+    const double error_margine = 1E-9;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 2.0, -1.0, 2.0 }, { 3.0, -2.0, 2.0 }, 0.5, 1),
+    };
+
+    // When calling calculateF the current force must be zero
+    particles[0].setF({ 0.0, 0.0, 0.0 });
+    particles[0].setOldF({ -2.0, 2.0, 2.0 });
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, false);
+
+    // Perform a single calculateF
+    ASSERT_NO_THROW(calc.calculateF());
+
+    // Make sure that there are no unwanted changes
+    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles forces.";
+
+    const std::array<double, 3> zero_v = { 0.0, 0.0, 0.0 };
+
+    EXPECT_TRUE(calc.get_container()[0].getX() == particles[0].getX()) << "The position must not change when updating the force.";
+    EXPECT_TRUE(calc.get_container()[0].getV() == particles[0].getV()) << "The velocity must not change when updating the force.";
+    EXPECT_TRUE(calc.get_container()[0].getOldF() == particles[0].getOldF()) << "The old force must not change when updating the force.";
+    EXPECT_FLOAT_EQ(calc.get_container()[0].getM(), particles[0].getM()) << "The mass must not change when updating the force.";
+    EXPECT_EQ(calc.get_container()[0].getType(), particles[0].getType()) << "The type must not change when updating the force.";
+
+    // Test if the new forces are correct
+    EXPECT_TRUE(calc.get_container()[0].getF() == zero_v) << "The current force should remain zero.";
+}
+
+// TODO: multiple analytical tests
