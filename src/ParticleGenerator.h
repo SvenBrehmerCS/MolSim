@@ -36,7 +36,7 @@ public:
    * @param m the mass of the particles
    * @param N the number of particles in each dimension
    * @param h the distance between particles
-   * @param b_m the boltzmann motion
+   * @param b_m the brownian motion
    * @param num_dimensions the number of dimensions
    **/
     void generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> y, double m,
