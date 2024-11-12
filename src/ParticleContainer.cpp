@@ -6,6 +6,8 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles)
 
 ParticleContainer::~ParticleContainer() = default;
 
+Particle& ParticleContainer::operator[](const size_t idx) { return particles[idx]; }
+
 std::vector<Particle>::iterator ParticleContainer::begin() { return particles.begin(); }
 std::vector<Particle>::const_iterator ParticleContainer::begin() const { return particles.cbegin(); }
 

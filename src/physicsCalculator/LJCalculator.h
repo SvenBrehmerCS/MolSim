@@ -6,24 +6,24 @@
 
 #pragma once
 
-#include "Calculator.h"
 #include "../Environment.h"
 #include "../ParticleContainer.h"
 #include "../utils/ArrayUtils.h"
+#include "Calculator.h"
 
 namespace physicsCalculator {
 
     /**
-     * @class Calculator
+     * @class LJCalculator
      *
-     * @brief Class corresponding to a simple position, velocity and force calculator
+     * @brief Class corresponding to a leep frog integrator using Lenard Jones potentials.
      */
     class LJCalculator : public Calculator {
 
     public:
         /**
-         * Initialize a simple calculator using a simulation environmetn.
-         * 
+         * Initialize a Lenard Jones calculator using a simulation environmetn.
+         *
          * @param new_env THe simulation environment that should be used for initialization.
          */
         LJCalculator(const Environment& new_env);
@@ -31,20 +31,20 @@ namespace physicsCalculator {
         /**
          * Provide a constructor that allows the construction of a calculator using a particle container
          * and simulation environment. This class should be used for testing.
-         * 
+         *
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
-         * @param init_forces Define wether the forces should be initialized
+         * @param init_forces Define wether the forces should be initialized.
          */
         LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true);
 
         /**
-         * Define a constructor for a simple calculator.
+         * Define a constructor for a Lenard Jones calculator.
          */
         virtual ~LJCalculator();
 
         /**
-         * Update the forces and old forces experienced by all the particles based on the basic calculation scheme.
+         * Update the forces experienced by all the particles based on the Lenard Jones calculation scheme.
          */
         virtual void calculateF();
     };

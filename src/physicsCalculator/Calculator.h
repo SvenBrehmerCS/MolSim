@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @brief Defines a default interface for the physics caculators
+ * @brief Defines a default interface for the physics caculators.
  */
 
 #pragma once
@@ -10,7 +10,7 @@
 #include "../ParticleContainer.h"
 
 /**
- * @brief Collection of calculators for different levels of complexity
+ * @brief Collection of calculators for different levels of complexity.
  */
 namespace physicsCalculator {
 

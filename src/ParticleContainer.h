@@ -40,6 +40,15 @@ public:
      */
     ~ParticleContainer();
 
+    /**
+     * Get the reference of a particle at a certain index.
+     * 
+     * @param idx THe index of the referenced particle.
+     * 
+     * @return The reference to the particle 
+     */
+    Particle& operator[](const size_t idx);
+
     std::vector<Particle>::iterator begin();
     std::vector<Particle>::const_iterator begin() const;
 

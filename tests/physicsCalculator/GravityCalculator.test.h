@@ -95,7 +95,230 @@ TEST(GravityCalculator, Step1) {
     // TODO:
 }
 
-// Test if step works for an analytical solution
+// Test if step works for an analytical solution using a single moving body
 TEST(GravityCalculator, Analytical1) {
-    // TODO:
+    // Set the margine for the maximum floatingpoint error
+    const double error_margine = 1E-8;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 0.5, 2.0, -31.0 }, { 2.0, -0.5, 2.5 }, 2.0),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::GravityCalculator calc(env, particles);
+    double total_time = 0.0;
+
+    // Perform the steps for 50 time units
+    for (size_t i = 0; i <= 500000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos = { 0.5 + total_time * 2.0, 2.0 + total_time * -0.5, -31.0 + total_time * 2.5 };
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ")";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+    }
+}
+
+// Test if step works for an analytical solution using two bodies dancing around a shared center of mass, while the center of mass is moving
+TEST(GravityCalculator, Analytical2) {
+    // Set the margine for the maximum floatingpoint error
+    const double error_margine = 1E-6;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 3.0, 1.0, 3.0 }, { 0.1, 1.0, -0.05 }, 4.0),
+        Particle({ 1.0, 1.0, 3.0 }, { 0.1, -1.0, -0.05 }, 4.0),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::GravityCalculator calc(env, particles);
+    double total_time = 0.0;
+    double time_mod_two_pi = 0.0;
+    constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
+
+    // Perform the steps for 100 time units
+    for (size_t i = 0; i <= 1000000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos_1 = {
+            2.0 + std::cos(time_mod_two_pi) + total_time * 0.1,
+            1.0 + std::sin(time_mod_two_pi),
+            3.0 + total_time * -0.05,
+        };
+
+        const std::array<double, 3> expected_pos_2 = {
+            2.0 + -std::cos(time_mod_two_pi) + total_time * 0.1,
+            1.0 + -std::sin(time_mod_two_pi),
+            3.0 + total_time * -0.05,
+        };
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_1), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 1.";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_2), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+        time_mod_two_pi += 0.0001;
+
+        if (time_mod_two_pi >= two_pi) {
+            time_mod_two_pi -= two_pi;
+        }
+    }
+}
+
+// Test if step works for an analytical solution using two bodies dancing around a third body in the center of mass, while the center of mass is
+// moving
+TEST(GravityCalculator, Analytical3) {
+    // Set the margine for the maximum floatingpoint error
+    const double error_margine = 1E-4;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 2.0, -1.0, 2.0 }, { 0.01, 1.05, -0.05 }, 1.0),
+        Particle({ 0.0, -1.0, 2.0 }, { 0.01, -0.95, -0.05 }, 1.0),
+        Particle({ 1.0, -1.0, 2.0 }, { 0.01, 0.05, -0.05 }, 0.75),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::GravityCalculator calc(env, particles);
+    double total_time = 0.0;
+    double time_mod_two_pi = 0.0;
+    constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
+
+    // Perform the steps for 10 time units
+    for (size_t i = 0; i <= 100000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos_1 = {
+            1.0 + std::cos(time_mod_two_pi) + total_time * 0.01,
+            -1.0 + std::sin(time_mod_two_pi) + total_time * 0.05,
+            2.0 + total_time * -0.05,
+        };
+
+        const std::array<double, 3> expected_pos_2 = {
+            1.0 + -std::cos(time_mod_two_pi) + total_time * 0.01,
+            -1.0 + -std::sin(time_mod_two_pi) + total_time * 0.05,
+            2.0 + total_time * -0.05,
+        };
+
+        const std::array<double, 3> expected_pos_3 = {
+            1.0 + total_time * 0.01,
+            -1.0 + total_time * 0.05,
+            2.0 + total_time * -0.05,
+        };
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_1), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 1.";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_2), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[2].getX() - expected_pos_3), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 3.";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+        time_mod_two_pi += 0.0001;
+
+        if (time_mod_two_pi >= two_pi) {
+            time_mod_two_pi -= two_pi;
+        }
+    }
+}
+
+// Test if step works for an analytical solution using two bodies dancing around a shared center of mass, while the center of mass is moving. The two
+// bodies have different masses and therefore a different circle radius
+TEST(GravityCalculator, Analytical4) {
+    // Set the margine for the maximum floatingpoint error
+    const double error_margine = 1E-6;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        //  1  0  0                 0.1  1  0             18
+        // -2  0  0                 0.1 -2  0             9
+        Particle({ 1.0, -2.0, 1.0 }, { 1.05, 0.05, 0.01 }, 18),
+        Particle({ 1.0, -2.0, -2.0 }, { -1.95, 0.05, 0.01 }, 9),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::GravityCalculator calc(env, particles);
+    double total_time = 0.0;
+    double time_mod_two_pi = 0.0;
+    constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
+
+    // Perform the steps for 100 time units
+    for (size_t i = 0; i <= 1000000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos_1 = {
+            1.0 + std::sin(time_mod_two_pi) + total_time * 0.05,
+            -2.0 + total_time * 0.05,
+            0.0 + std::cos(time_mod_two_pi) + total_time * 0.01,
+        };
+
+        const std::array<double, 3> expected_pos_2 = {
+            1.0 + -2.0 * std::sin(time_mod_two_pi) + total_time * 0.05,
+            -2.0 + total_time * 0.05,
+            0.0 + -2.0 * std::cos(time_mod_two_pi) + total_time * 0.01,
+        };
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_1), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 1.";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_2), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+        time_mod_two_pi += 0.0001;
+
+        if (time_mod_two_pi >= two_pi) {
+            time_mod_two_pi -= two_pi;
+        }
+    }
 }

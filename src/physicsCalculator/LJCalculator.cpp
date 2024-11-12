@@ -24,8 +24,6 @@ namespace physicsCalculator {
 
     void LJCalculator::calculateF() {
         for (auto i = container.begin(); i < container.end(); i++) {
-            std::array<double, 3> prev_f = i->getF();
-            std::array<double, 3> new_f = { 0.0, 0.0, 0.0 };
             for (auto j = i + 1; j < container.end(); j++) {
                 // Calculate the distance and force experienced by two particles
                 const double distance = ArrayUtils::L2Norm(j->getX() - i->getX());
@@ -36,12 +34,9 @@ namespace physicsCalculator {
                 const double force = -24.0 * env.get_epsilon() / (distance * distance * distance) * (term_to_6 - 2.0 * term_to_6 * term_to_6);
 
                 // Update the forces for both particles
-                // i->setF(force * (i->getX() - j->getX()) + i->getF());
-                new_f = force * (i->getX() - j->getX()) + new_f;
+                i->setF(force * (i->getX() - j->getX()) + i->getF());
                 j->setF(force * (j->getX() - i->getX()) + j->getF());
             }
-
-            i->setF(prev_f + new_f);
         }
 
         spdlog::debug("Calculated the new force.");
