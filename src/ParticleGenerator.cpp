@@ -7,8 +7,6 @@
 ParticleGenerator::ParticleGenerator() = default;
 ParticleGenerator::~ParticleGenerator() = default;
 
-//* function generates a cuboid, with the given parameters*//
-
 void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> v, double m,
     std::array<int, 3> N, double h, double b_m, int dim) {
 

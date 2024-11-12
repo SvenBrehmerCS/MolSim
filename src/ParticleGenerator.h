@@ -9,13 +9,36 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 
+/**
+ * @class ParticleGenerator
+ *
+ * @brief generate a cuboid of Particles.
+ */
+
+
 class ParticleGenerator {
 
 public:
+    /** Create a particle Generator**/
     ParticleGenerator();
 
+    /** Particle Generator destructor**/
     ~ParticleGenerator();
 
+
+  /**
+   * generates the cuboid from the given parameters
+   *
+   * @param container the particle container where the particles from the cuboid are stored inside
+   * @param num_particles the offset inside the container where the cuboid starts at
+   * @param x the positon of the lower left corner of the cuboid
+   * @param y the base velocity of each particle
+   * @param m the mass of the particles
+   * @param N the number of particles in each dimension
+   * @param h the distance between particles
+   * @param b_m the boltzmann motion
+   * @param num_dimensions the number of dimensions
+   **/
     void generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> y, double m,
         std::array<int, 3> N, double h, double b_m, int num_dimensions);
 };

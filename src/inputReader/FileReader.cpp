@@ -31,7 +31,7 @@ namespace inputReader {
         int num_particles = 0;
         int num_cubes = 0;
         int num_dimensions = 0;
-        int brownian_motion = 0.1;
+        double brownian_motion = 0.1;
 
         std::ifstream input_file(filename);
         std::string tmp_string;
@@ -81,41 +81,51 @@ namespace inputReader {
                 particle++;
             }
 
-            std::istringstream cubestream(tmp_string);
-            cubestream >> num_cubes >> num_dimensions;
-            spdlog::debug("Reading num_cubes {}, num_dimensions {}", num_cubes, num_dimensions);
-            getline(input_file, tmp_string);
-            spdlog::debug("Read line: {}", tmp_string);
-
-            ParticleGenerator generator;
-            for (int i = 0; i < num_cubes; i++) {
-                std::istringstream datastream(tmp_string);
-
-                for (auto& xj : x) {
-                    datastream >> xj;
-                }
-                for (auto& vj : v) {
-                    datastream >> vj;
-                }
-                datastream >> m;
-
-                for (auto& nj : N) {
-                    datastream >> nj;
-                }
-                if (datastream.eof()) {
-                    spdlog::critical("Error reading file: eof reached unexpectedly reading from line {}", i);
-                    exit(-1);
-                }
-                datastream >> h;
-
-                container.resize(num_particles + (N[0] * N[1] * N[2]));
-
-                generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
-
-                num_particles += (N[0] * N[1] * N[2]);
-
+            //if() clause to also support older text files
+            if (!input_file.eof()) {
+                spdlog::debug("Reading File with cuboid support");
+                std::istringstream cubestream(tmp_string);
+                cubestream >> num_cubes >> num_dimensions;
+                spdlog::debug("Reading num_cubes {}, num_dimensions {}", num_cubes, num_dimensions);
                 getline(input_file, tmp_string);
                 spdlog::debug("Read line: {}", tmp_string);
+
+                ParticleGenerator generator;
+                for (int i = 0; i < num_cubes; i++) {
+                    std::istringstream datastream(tmp_string);
+
+                    for (auto& xj : x) {
+                        datastream >> xj;
+                    }
+                    for (auto& vj : v) {
+                        datastream >> vj;
+                    }
+                    datastream >> m;
+
+                    for (auto& nj : N) {
+                        datastream >> nj;
+                    }
+                    if (datastream.eof()) {
+                        spdlog::critical("Error reading file: eof reached unexpectedly reading from line {}", i);
+                        exit(-1);
+                    }
+                    datastream >> h;
+
+
+                    if(!datastream.eof()) {
+                        datastream >> brownian_motion;
+                        spdlog::debug("Read brownian motion from input file: {}", brownian_motion);
+                    }
+
+                    container.resize(num_particles + (N[0] * N[1] * N[2]));
+
+                    generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
+
+                    num_particles += (N[0] * N[1] * N[2]);
+
+                    getline(input_file, tmp_string);
+                    spdlog::debug("Read line: {}", tmp_string);
+                }
             }
 
             // particles.shrink_to_fit();
