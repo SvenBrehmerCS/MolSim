@@ -65,9 +65,14 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
+
     // Initialize the simulation environment
     double current_time = 0.0;
     int iteration = 0;
+
+    // Write step 0
+    const std::string out_name(env.get_output_file_name());
+    writer->plotParticles(calculator->get_container(), out_name, iteration);
 
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
@@ -79,13 +84,16 @@ int main(const int argc, const char* argv[]) {
 
         // Store the particles to an output file
         if (iteration % env.get_print_step() == 0) {
-            std::string out_name(env.get_output_file_name());
-
             writer->plotParticles(calculator->get_container(), out_name, iteration);
         }
 
         // End the iteration
         spdlog::info("Iteration {} finished.", iteration);
+    }
+
+    // Store the particles to an output file if it is the last iteration
+    if (iteration % env.get_print_step() != 0) {
+        writer->plotParticles(calculator->get_container(), out_name, iteration);
     }
 
     spdlog::info("output written. Terminating...");
