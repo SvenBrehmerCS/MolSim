@@ -149,14 +149,35 @@ TEST(ParticleContainerSize, CorrectSize) {
 }
 
 // Test if we can properly resize the particle container
-TEST(ParticleContainerResize, CorrectSize) {
-    ParticleContainer pc = ParticleContainer();
+TEST(ParticleContainerResize, CorrectResize) {
+    std::vector<Particle> pv = {
+        Particle({ 1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 }, 1.0, 1),
+        Particle({ -1.0, 0.0, 0.0 }, { 0.0, -1.0, 0.0 }, 1.0, 1),
+        Particle({ 0.0, 1.0, 0.0 }, { 1.0, 0.0, 0.0 }, 1.0, 1),
+        Particle({ 0.0, -1.0, 0.0 }, { -1.0, 0.0, 0.0 }, 1.0, 1),
+        Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
+    };
+    ParticleContainer pc = ParticleContainer(pv);
 
     ASSERT_NO_THROW(pc.resize(5));
 
-    ASSERT_TRUE(pc.size() == 5) << "Resize must enlarge the data structure correctly";
+    EXPECT_TRUE(pc.size() == 5) << "Resize must not change the data structure's size when given the current size";
 
     ASSERT_NO_THROW(pc.resize(3));
+    pv.resize(3);
 
-    ASSERT_TRUE(pc.size() == 3) << "Resize must shrink the data structure correctly";
+    EXPECT_TRUE(pc.size() == 3) << "Resize must shrink the data structure correctly";
+    auto pi = pc.begin();
+    for (auto& p : pv) {
+        EXPECT_TRUE(*(pi++) == p) << "Resize must shrink the data structure correctly";
+    }
+
+    ASSERT_NO_THROW(pc.resize(5));
+    pv.resize(5);
+
+    EXPECT_TRUE(pc.size() == 5) << "Resize must expand the data structure correctly";
+    pi = pc.begin();
+    for (auto& p : pv) {
+        EXPECT_TRUE(*(pi++) == p) << "Resize must expand the data structure correctly";
+    }
 }
