@@ -355,3 +355,40 @@ TEST(LJCalculator, UpdateFSingle) {
 }
 
 // TODO: multiple analytical tests
+// Test if step works for an analytical solution using a single moving body
+TEST(LJCalculator, Analytical1) {
+    // Set the margine for the maximum floatingpoint error
+    const double error_margine = 1E-9;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 1.0, 10.0, -25.0 }, { 0.5, -0.5, 0.2 }, 3.3),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::GravityCalculator calc(env, particles);
+    double total_time = 0.0;
+
+    // Perform the steps for 50 time units
+    for (size_t i = 0; i <= 500000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos = { 1.0 + total_time * 0.5, 10.0 + total_time * -0.5, -25.0 + total_time * 0.2 };
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos), error_margine)
+            << "The calculation diverged at time step " << i << " (" << total_time << ")";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+    }
+}

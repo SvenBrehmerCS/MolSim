@@ -10,7 +10,7 @@ For building the project follow these steps:
 2. Install the libxerces-c library. On Ubuntu it can be installed by executing `sudo apt-get install libxerces-c-dev`.
 3. Create the [build](./build/) directory by running `mkdir build`.
 4. Enter the [build](./build/) directory by running `cd build`.
-5. Execute `cmake ..` to generate the Makefile. If you don't have doxygen installed run `cmake .. -DNO_DOC=ON`.
+5. Execute `cmake ..` to generate the Makefile.
 6. Run `make` or `cmake --build .` to build the executable.
 7. Execute the executable by running `./MolSim <args> <input file>`. For further details refer to the [Usage](#usage) section.
 
@@ -32,6 +32,7 @@ For executing the tests follow these steps:
 
 1. First build the project following the steps 1-6 in the section [Building](#building).
 2. Run the tests by calling `ctest` in the build directory.
+3. For detailed debugging refer to the [TestLog.log](./build/Testing/Temporary/LastTest.log)
 
 ## Usage
 
@@ -60,6 +61,6 @@ A program call might look like this:
 
 This would run a simulation lasting for 10 time units, printing every 20th iteration. The initial state would be given in the file input.txt, every other parameter would have the default value.
 
-`./MolSim -delta_t=1 -out_name=MD ./path/to/input.txt`
+`./MolSim -delta_t=1 -out_name=MD -calc=gravity ./path/to/input.txt`
 
-This would run a simulation with an update increment of 1 time unit, printing to output files of the format `MD_<iteration>.vtu`. The initial state would be given in the file input.txt, every other parameter would have the default value.
+This would run a simulation with an update increment of 1 time unit, printing to output files of the format `MD_<iteration>.vtu`. The gravity force model would be used for simulating based on the initial state, given in the file input.txt. Every other parameter would have the default value.
