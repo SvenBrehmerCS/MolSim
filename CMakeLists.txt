@@ -80,6 +80,12 @@ include(doxygen)
 # Include the google test module
 include(googletest)
 
+# Enable testing
+enable_testing()
+
+#declares the gtest_discover_tests function
+include(GoogleTest)
+
 # Add and link the google test
 add_executable(MolTest
         ${MY_TEST}
@@ -95,9 +101,6 @@ target_include_directories(MolTest
 
 target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC spdlog::spdlog)
 
-# Enable testing
-enable_testing()
-include(GoogleTest)
 gtest_discover_tests(MolTest)
 
 
