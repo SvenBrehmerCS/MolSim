@@ -1,12 +1,11 @@
-#pragma once
 
 #include <gtest/gtest.h>
 #include <physicsCalculator/LJCalculator.h>
 
 // Test if update x works for handcrafted values
 TEST(Calculator, UpdateX2) {
-    // Set the margine for the maximum floatingpoint error
-    const double error_margine = 1E-9;
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
@@ -67,7 +66,7 @@ TEST(Calculator, UpdateX2) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the position.";
 
         // Test if the new position is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected_x[i]), error_margine)
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected_x[i]), error_margin)
             << "The position was not correct. (expected: " << ArrayUtils::to_string(expected_x[i]) << ", got: " << ArrayUtils::to_string(pi->getX())
             << ")";
 
@@ -98,8 +97,8 @@ TEST(Calculator, UpdateXNo) {
 
 // Test if update v works for handcrafted values
 TEST(Calculator, UpdateV2) {
-    // Set the margine for the maximum floatingpoint error
-    const double error_margine = 1E-9;
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
@@ -160,7 +159,7 @@ TEST(Calculator, UpdateV2) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the velocity.";
 
         // Test if the new velocity is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getV() - expected_v[i]), error_margine)
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getV() - expected_v[i]), error_margin)
             << "The velocity was not correct. (expected: " << ArrayUtils::to_string(expected_v[i]) << ", got: " << ArrayUtils::to_string(pi->getV())
             << ")";
 
@@ -191,8 +190,8 @@ TEST(Calculator, UpdateVNo) {
 
 // Test if update old f works for handcrafted values
 TEST(Calculator, UpdateOldF2) {
-    // Set the margine for the maximum floatingpoint error
-    const double error_margine = 1E-9;
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
@@ -244,7 +243,7 @@ TEST(Calculator, UpdateOldF2) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the old force.";
 
         // Test if the new forces are correct
-        EXPECT_TRUE(pi->getF() == zero_v) << "The current force should be reseted.";
+        EXPECT_TRUE(pi->getF() == zero_v) << "The current force should be reset.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getF()) << "The old force should be updated.";
 
         pi++;
@@ -274,17 +273,197 @@ TEST(Calculator, UpdateOldFNo) {
 
 // Test if update f works for handcrafted values
 TEST(LJCalculator, UpdateF1) {
-    // TODO:
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 1.0, 2.0, -1.0 }, { 2.0, 3.0, -3.0 }, 2.0),
+        Particle({ 1.0, 4.0, -1.0 }, { 3.0, -2.0, -1.0 }, 3.0),
+    };
+
+    // The forces must always be set to zero before calculateF is called.
+    particles[0].setF({ 0.0, 0.0, 0.0 });
+    particles[0].setOldF({ -2.0, -3.0, 2.0 });
+
+    particles[1].setF({ 0.0, 0.0, 0.0 });
+    particles[1].setOldF({ 2.0, -1.0, 3.0 });
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.1",
+        "-sigma=1.0",
+        "-epsilon=5.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, false);
+
+    // Initialize the positions to the expected values
+    const std::vector<std::array<double, 3>> expected_F = {
+        { 0.0, 465.0 / 512.0, 0.0 },
+        { 0.0, -465.0 / 512.0, 0.0 },
+    };
+
+    // Perform a single calculateF
+    ASSERT_NO_THROW(calc.calculateF());
+
+    // Make sure that there are no unwanted changes
+    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles forces.";
+
+    auto pi = calc.get_container().begin();
+
+    for (size_t i = 0; i < particles.size(); i++) {
+        EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
+        EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
+        EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
+        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the forces.";
+        EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
+
+        // Test if the new force is correct
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_F[i]), error_margin)
+            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_F[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
+            << ")";
+
+        pi++;
+    }
 }
 
 // Test if update f works for handcrafted values
 TEST(LJCalculator, UpdateF2) {
-    // TODO:
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 1.0, 1.0, 1.0 }, { 1.0, 2.0, -2.0 }, 4.0),
+        Particle({ 5.0, 1.0, 1.0 }, { 2.0, 2.0, 1.0 }, 2.0),
+    };
+
+    // The forces must always be set to zero before calculateF is called.
+    particles[0].setF({ 0.0, 0.0, 0.0 });
+    particles[0].setOldF({ 1.0, 2.0, -1.0 });
+
+    particles[1].setF({ 0.0, 0.0, 0.0 });
+    particles[1].setOldF({ -2.0, -3.0, 3.0 });
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.1",
+        "-sigma=2.0",
+        "-epsilon=4.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, false);
+
+    // Initialize the positions to the expected values
+    const std::vector<std::array<double, 3>> expected_F = {
+        { 93.0 / 256.0, 0.0, 0.0 },
+        { -93.0 / 256.0, 0.0, 0.0 },
+    };
+
+    // Perform a single calculateF
+    ASSERT_NO_THROW(calc.calculateF());
+
+    // Make sure that there are no unwanted changes
+    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles forces.";
+
+    auto pi = calc.get_container().begin();
+
+    for (size_t i = 0; i < particles.size(); i++) {
+        EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
+        EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
+        EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
+        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the forces.";
+        EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
+
+        // Test if the new force is correct
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_F[i]), error_margin)
+            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_F[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
+            << ")";
+
+        pi++;
+    }
 }
 
 // Test if update f works for handcrafted values
 TEST(LJCalculator, UpdateF3) {
-    // TODO:
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 0.0, 2.0, -1.0 }, { 3.0, 1.0, -2.0 }, 2.0),
+        Particle({ 0.0, 2.0, 0.0 }, { 1.0, 1.0, 0.0 }, 5.0),
+    };
+
+    // The forces must always be set to zero before calculateF is called.
+    particles[0].setF({ 0.0, 0.0, 0.0 });
+    particles[0].setOldF({ 2.0, 4.0, -2.0 });
+
+    particles[1].setF({ 0.0, 0.0, 0.0 });
+    particles[1].setOldF({ -1.0, 2.0, 2.0 });
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.1",
+        "-sigma=2.0",
+        "-epsilon=5.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, false);
+
+    // Initialize the positions to the expected values
+    const std::vector<std::array<double, 3>> expected_F = {
+        { 0.0, 0.0, -975360.0 },
+        { 0.0, 0.0, 975360.0 },
+    };
+
+    // Perform a single calculateF
+    ASSERT_NO_THROW(calc.calculateF());
+
+    // Make sure that there are no unwanted changes
+    ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles forces.";
+
+    auto pi = calc.get_container().begin();
+
+    for (size_t i = 0; i < particles.size(); i++) {
+        EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
+        EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
+        EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
+        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the forces.";
+        EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
+
+        // Test if the new force is correct
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_F[i]), error_margin)
+            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_F[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
+            << ")";
+
+        pi++;
+    }
 }
 
 // Test if update f works for an empty particle container
@@ -310,8 +489,8 @@ TEST(LJCalculator, UpdateFNo) {
 
 // Test if update f works for a single particle
 TEST(LJCalculator, UpdateFSingle) {
-    // Set the margine for the maximum floatingpoint error
-    const double error_margine = 1E-9;
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
@@ -354,11 +533,99 @@ TEST(LJCalculator, UpdateFSingle) {
     EXPECT_TRUE(calc.get_container()[0].getF() == zero_v) << "The current force should remain zero.";
 }
 
-// TODO: multiple analytical tests
+// Test if a single step computes the correct values
+TEST(LJCalculator, Step1) {
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 4.0, 0.0, 0.0 }, { -1.0, 0.0, 0.0 }, 1.0),
+        Particle({ -4.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0 }, 1.0),
+    };
+
+    particles[0].setF({ -0.1, 0.0, 0.0 });
+    particles[0].setOldF({ 2.0, 1.0, 2.0 });
+
+    particles[1].setF({ 0.1, 0.0, 0.0 });
+    particles[1].setOldF({ -2.0, 1.0, 1.0 });
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=1.0",
+        "-sigma=1",
+        "-epsilon=4",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, false);
+
+    // Initialize the positions to the expected values
+    std::vector<Particle> expected = {
+        Particle({ 2.95, 0.0, 0.0 }, { -1.0501928663952, 0.0, 0.0 }, 1.0),
+        Particle({ -2.95, 0.0, 0.0 }, { 1.0501928663952, 0.0, 0.0 }, 1.0),
+    };
+
+    expected[0].setF({ -0.0003857327903, 0.0, 0.0 });
+    expected[0].setOldF({ -0.1, 0.0, 0.0 });
+
+    expected[1].setF({ 0.0003857327903, 0.0, 0.0 });
+    expected[1].setOldF({ 0.1, 0.0, 0.0 });
+
+    // Perform a single step
+    ASSERT_NO_THROW(calc.step());
+
+    // Make sure that there are no unwanted changes
+    ASSERT_EQ(expected.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles forces.";
+
+    auto pi = calc.get_container().begin();
+
+    for (size_t i = 0; i < expected.size(); i++) {
+        EXPECT_FLOAT_EQ(pi->getM(), expected[i].getM()) << "The particle mass must not change.";
+        EXPECT_EQ(pi->getType(), expected[i].getType()) << "The particle type must not change.";
+
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected[i].getX()), error_margin) << "The particle must have the new position.";
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getV() - expected[i].getV()), error_margin) << "The particle must have the new velocity.";
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected[i].getF()), error_margin) << "The particle must have the new force.";
+        EXPECT_LT(ArrayUtils::L2Norm(pi->getOldF() - expected[i].getOldF()), error_margin) << "The particle must have the new old force.";
+
+        pi++;
+    }
+}
+
+// Test if step works for an empty particle container
+TEST(Calculator, StepNo) {
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, {}, false);
+
+    ASSERT_NO_THROW(calc.step());
+
+    EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the velocity on an empty container should not add a particle.";
+}
+
+// TODO: multiple analytical tests (No Move Problem, spin problems)
 // Test if step works for an analytical solution using a single moving body
 TEST(LJCalculator, Analytical1) {
-    // Set the margine for the maximum floatingpoint error
-    const double error_margine = 1E-9;
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-9;
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
@@ -378,14 +645,14 @@ TEST(LJCalculator, Analytical1) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::GravityCalculator calc(env, particles);
+    physicsCalculator::LJCalculator calc(env, particles);
     double total_time = 0.0;
 
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
         // Test that the position is correct
         const std::array<double, 3> expected_pos = { 1.0 + total_time * 0.5, 10.0 + total_time * -0.5, -25.0 + total_time * 0.2 };
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos), error_margine)
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ")";
 
         ASSERT_NO_THROW(calc.step());
