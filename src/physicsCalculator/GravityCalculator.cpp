@@ -10,7 +10,7 @@ namespace physicsCalculator {
     }
 
     GravityCalculator::GravityCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces) {
-        spdlog::warn("Called a GravityCalculator constructor wich should only be used for testing.");
+        spdlog::warn("Called a GravityCalculator constructor which should only be used for testing.");
         env = new_env;
         container = ParticleContainer(particles);
 

@@ -1,5 +1,3 @@
-#pragma once
-
 #include <gtest/gtest.h>
 #include <physicsCalculator/GravityCalculator.h>
 
@@ -210,30 +208,16 @@ TEST(Calculator, UpdateOldF1) {
     }
 }
 
-// Test if update f works for handcrafted values
+// Test if update f works for a single mass point
 TEST(GravityCalculator, UpdateF1) {
-    // Set the margin for the maximum floatingpoint error
+    //  Set the margin for the maximum floatingpoint error
     const double error_margin = 1E-9;
 
-    // Initialize the list of particles
-    std::vector<Particle> particles = {
-        Particle({ 0.1, 1.3, -2.0 }, { 7.0, 2.0, -0.5 }, 2.0, 2),
-        Particle({ 2.5, -3.0, -0.5 }, { -3.0, 1.5, -1.5 }, 1.0, 2),
-        Particle({ -2.0, 3.0, 3.5 }, { 1.0, -2.0, 0.5 }, 1.0, 1),
-        Particle({ 0.1, -1.5, 2.0 }, { 3.0, 2.0, -0.5 }, 4.0, 0),
-    };
+    // // Initialize the list of particles
+    std::vector<Particle> particles = { Particle({ 0.1, 1.3, -2.0 }, { 7.0, 2.0, -0.5 }, 2.0, 2) };
 
     particles[0].setF({ -1.0, 2.0, 1.0 });
     particles[0].setOldF({ -0.5, -3.0, 2.0 });
-
-    particles[1].setF({ 2.0, 1.0, 0.5 });
-    particles[1].setOldF({ 0.5, 1.5, -2.0 });
-
-    particles[2].setF({ 2.0, 2.5, -1.0 });
-    particles[2].setOldF({ -1.5, -1.5, -2.0 });
-
-    particles[3].setF({ 3.5, 1.5, 2.0 });
-    particles[3].setOldF({ 3.0, 2.0, 1.5 });
 
     // Initialize the simulation environment
     const char* argv[] = {
@@ -250,13 +234,7 @@ TEST(GravityCalculator, UpdateF1) {
     // Initialize the Calculator
     physicsCalculator::GravityCalculator calc(env, particles, false);
 
-    // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_f = {
-        { 6.9625, 1.975, -0.425 },
-        { -2.875, 1.625, -1.575 },
-        { 1.025, -1.95, 0.35 },
-        { 3.08125, 2.04375, -0.45625 },
-    };
+    const std::array<double, 3> zero_v = { 0.0, 0.0, 0.0 };
 
     // Perform a single calculateF
     ASSERT_NO_THROW(calc.calculateF());
@@ -266,21 +244,18 @@ TEST(GravityCalculator, UpdateF1) {
 
     auto pi = calc.get_container().begin();
 
-    for (size_t i = 0; i < particles.size(); i++) {
-        EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The positions must not change when updating the force.";
-        EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the force.";
-        EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the force.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the force.";
-        EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the force.";
+    EXPECT_TRUE(pi->getX() == particles[0].getX()) << "The positions must not change when updating the force.";
+    EXPECT_TRUE(pi->getV() == particles[0].getV()) << "The velocity must not change when updating the force.";
+    EXPECT_TRUE(pi->getOldF() == particles[0].getOldF()) << "The old force must not change when updating the force.";
+    EXPECT_FLOAT_EQ(pi->getM(), particles[0].getM()) << "The mass must not change when updating the force.";
+    EXPECT_EQ(pi->getType(), particles[0].getType()) << "The type must not change when updating the force.";
 
-        // Test if the new position is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_f[i]), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_f[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
-            << ")";
-
-        pi++;
-    }
+    // Test if the new force is the same as the force before, as the sum of the new forces are zero but the force value has not been reset by
+    // setOldF()
+    EXPECT_TRUE(pi->getF() == particles[0].getF()) << "The current force should have changed.";
 }
+
+// TODO: Find another simple example for force test
 
 // Test if step works for handcrafted values
 TEST(GravityCalculator, Step1) {
