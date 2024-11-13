@@ -1,5 +1,3 @@
-#pragma once
-
 #include <Particle.h>
 #include <gtest/gtest.h>
 
