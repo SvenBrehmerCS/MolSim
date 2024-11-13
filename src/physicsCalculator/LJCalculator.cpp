@@ -10,7 +10,7 @@ namespace physicsCalculator {
     }
 
     LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces) {
-        spdlog::warn("Called a LJCalculator constructor wich should only be used for testing.");
+        spdlog::warn("Called a LJCalculator constructor which should only be used for testing.");
         env = new_env;
         container = ParticleContainer(particles);
 
@@ -31,7 +31,7 @@ namespace physicsCalculator {
                 const double term = (env.get_sigma() / distance);
                 const double term_to_2 = term * term;
                 const double term_to_6 = term_to_2 * term_to_2 * term_to_2;
-                const double force = -24.0 * env.get_epsilon() / (distance * distance * distance) * (term_to_6 - 2.0 * term_to_6 * term_to_6);
+                const double force = (-24.0 * env.get_epsilon() / (distance * distance)) * (term_to_6 - 2.0 * term_to_6 * term_to_6);
 
                 // Update the forces for both particles
                 i->setF(force * (i->getX() - j->getX()) + i->getF());
