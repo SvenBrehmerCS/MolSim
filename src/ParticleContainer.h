@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @brief The ParticleContainer is in charge of storing the particles as well as their molecular bonds.
+ * @brief Handles the storage of the particles as well as their molecular bonds.
  */
 
 #pragma once
@@ -87,7 +87,7 @@ public:
     size_t size() const;
 
     /**
-     * This function will resize the particle container to the specified number of elements.
+     * Resizes the particle container to the specified number of elements.
      * If the number is smaller than the particle container current size the particle container is truncated,
      * otherwise default constructed elements are appended.
      *

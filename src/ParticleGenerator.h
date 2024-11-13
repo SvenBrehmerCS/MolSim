@@ -1,3 +1,8 @@
+/**
+ * @file
+ *
+ * @brief In charge of complex particle structure generation.
+ */
 #pragma once
 
 #include "Particle.h"
@@ -8,12 +13,9 @@
 /**
  * @class ParticleGenerator
  *
- * @brief generate a cuboid of Particles.
+ * @brief A class handling the generation of complex particles structures such as cubes.
  */
-
-
 class ParticleGenerator {
-
 public:
     /** Create a particle Generator**/
     ParticleGenerator();
@@ -27,7 +29,7 @@ public:
      *
      * @param container the particle container where the particles from the cuboid are stored inside
      * @param num_particles the offset inside the container where the cuboid starts at
-     * @param x the positon of the lower left corner of the cuboid
+     * @param x the position of the lower left corner of the cuboid
      * @param y the base velocity of each particle
      * @param m the mass of the particles
      * @param N the number of particles in each dimension

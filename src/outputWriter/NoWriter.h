@@ -11,10 +11,9 @@
 namespace outputWriter {
 
     /**
-     * @class VTKWriter
+     * @class NoWriter
      *
-     * @brief This class implements the functionality to generate vtk output from
-     * particles.
+     * @brief This class implements a writer for profiling purposes with no writing capabilities
      */
     class NoWriter : public Writer {
 
