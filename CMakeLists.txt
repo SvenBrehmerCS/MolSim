@@ -78,13 +78,8 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 include(doxygen)
 
 # Include the google test module
-include(googletest)
-
-# Enable testing
+include(gtest)
 enable_testing()
-
-#declares the gtest_discover_tests function
-include(GoogleTest)
 
 # Add and link the google test
 add_executable(MolTest
@@ -101,8 +96,8 @@ target_include_directories(MolTest
 
 target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC spdlog::spdlog)
 
+include(GoogleTest)
 gtest_discover_tests(MolTest)
-
 
 #include the spdlog module
 include(spdlog)
