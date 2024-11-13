@@ -42,19 +42,56 @@ public:
 
     /**
      * Get the reference of a particle at a certain index.
-     * 
+     *
      * @param idx THe index of the referenced particle.
-     * 
-     * @return The reference to the particle 
+     *
+     * @return The reference to the particle
      */
     Particle& operator[](const size_t idx);
 
+    /**
+     * Returns a read/write iterator that points to the first element in the particle container.
+     * Iteration is done in ordinary element order
+     *
+     * @return read/write iterator
+     */
     std::vector<Particle>::iterator begin();
+
+    /**
+     * Returns a read-only (constant) iterator that points to the first element in the particle container.
+     * Iteration is done in ordinary element order.
+     *
+     * @return read-only iterator
+     */
     std::vector<Particle>::const_iterator begin() const;
 
+    /**
+     * Returns a read/write iterator that points one past the last element in the particle container.
+     * Iteration is done in ordinary element order.
+     *
+     * @return read/write iterator
+     */
     std::vector<Particle>::iterator end();
+
+    /**
+     * Returns a read-only (constant) iterator that points one past the last element in the particle container.
+     * Iteration is done in ordinary element order.
+     *
+     * @return read-only iterator
+     */
     std::vector<Particle>::const_iterator end() const;
 
+    /**
+     * Returns the number of elements in the particle container.
+     */
     size_t size() const;
-    void resize(size_t count);
+
+    /**
+     * This function will resize the particle container to the specified number of elements.
+     * If the number is smaller than the particle container current size the particle container is truncated,
+     * otherwise default constructed elements are appended.
+     *
+     * @param new_size  Number of elements the particle container should contain.
+     */
+    void resize(size_t new_size);
 };
