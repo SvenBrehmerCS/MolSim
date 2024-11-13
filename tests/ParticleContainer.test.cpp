@@ -1,4 +1,3 @@
-#pragma once
 
 #include <ParticleContainer.h>
 #include <gtest/gtest.h>
