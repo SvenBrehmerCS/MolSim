@@ -100,6 +100,7 @@ enable_testing()
 add_test(NAME MolTest COMMAND MolTest)
 add_test(NAME ParticleGeneratorGenerateCuboid COMMAND MolTest --gtest_filter=ParticleGeneratorTest.ParticleGeneratorGenerateCuboid)
 add_test(NAME ParticleGeneratorGenerateCuboid_Test COMMAND MolTest --gtest_filter=ParticleGeneratorTest.ParticleGeneratorTest_ParticleGeneratorGenerateCuboid_Test)
+add_test(NAME ParticleGeneratorTest_BROWNIAN_Motion COMMAND MolTest --gtest_filter=ParticleGeneratorTest.ParticleGeneratorTest_ParticleGenerateCuboid_brownian_motion_Test)
 
 
 #include the spdlog module

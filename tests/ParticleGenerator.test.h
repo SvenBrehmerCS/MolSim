@@ -127,3 +127,44 @@ TEST(ParticleGeneratorTest, ParticleGeneratorTest_ParticleGeneratorGenerateCuboi
     ASSERT_NEAR(container[2].getV()[1], particle2.getV()[1], 0.5);
     ASSERT_NEAR(container[2].getV()[2], particle2.getV()[2], 0.5);
 }
+
+//tests the velocity with a brownian motion of 0
+TEST(ParticleGeneratorTest, ParticleGeneratorTest_ParticleGenerateCuboid_brownian_motion_Test) {
+    ParticleGenerator generator;
+    ParticleContainer container;
+
+    std::array<double, 3> x = {0.0, 0.0, 0.0};
+    std::array<double, 3> y = {1.0, 1.0, 1.0};
+    double mass = 1.0;
+    std::array<int, 3> N = {2, 1, 1};
+    double h = 1.0;
+    double brownian_motion = 0.0;
+    int dimension = 2;
+    int num_particles = 0;
+
+    container.resize(num_particles + (N[0] * N[1] * N[2]));
+
+    Particle particle0;
+    particle0.setX({0.0,0.0,0});
+    particle0.setM(mass);
+    particle0.setV({1.0, 1.0, 1.0});
+
+    Particle particle1;
+    particle1.setX({h, 0,0});
+    particle1.setM(mass);
+    particle1.setV({1.0, 1.0, 1.0});
+
+    generator.generateCuboid(container, num_particles, x, y, mass, N, h, brownian_motion, dimension);
+
+    ASSERT_EQ(container.size(), 2);
+    ASSERT_EQ(container[0].getX(), particle0.getX());
+    ASSERT_EQ(container[0].getM(), particle0.getM());
+    ASSERT_EQ(container[0].getV()[0], particle0.getV()[0]);
+    ASSERT_EQ(container[0].getV()[1], particle0.getV()[1]);
+    ASSERT_EQ(container[0].getV()[2], particle0.getV()[2]);
+    ASSERT_EQ(container[1].getX(), particle1.getX());
+    ASSERT_EQ(container[1].getM(), particle1.getM());
+    ASSERT_EQ(container[1].getV()[0], particle1.getV()[0]);
+    ASSERT_EQ(container[1].getV()[1], particle1.getV()[1]);
+    ASSERT_EQ(container[1].getV()[2], particle1.getV()[2]);
+}
