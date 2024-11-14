@@ -28,11 +28,11 @@ jobs:
     - name: Install clang-format
       run: sudo apt -y install clang-format
 
-    -name: TestSrcFormat
+    - name: TestSrcFormat
       # Test if the format of each file in the src directory is correct
       run: find src/ -iname '*.h' -o -iname '*.cpp' | xargs clang-format -style=file --dry-run -Werror -i
 
-    -name: TestTestFormat
+    - name: TestTestFormat
       # Test if the format of each file in the tests directory is correct
       run: find tests/ -iname '*.h' -o -iname '*.cpp' | xargs clang-format -style=file --dry-run -Werror -i
 
