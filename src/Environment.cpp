@@ -70,12 +70,12 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The default output file format is vtk." << std::endl;
             std::cout << std::endl;
             std::cout << "    -log_level=<log level>" << std::endl;
-            std::cout << "        Set the log level of the programm to a spdlog level." << std::endl;
+            std::cout << "        Set the log level of the program to a spdlog level." << std::endl;
             std::cout << "        The log level must be one off: off, crit, error, warn, info, debug, trace." << std::endl;
             std::cout << "        The default log level is info." << std::endl;
             std::cout << std::endl;
             std::cout << "    -calc=<force model>" << std::endl;
-            std::cout << "        Set the force calculation of the programm to a force model." << std::endl;
+            std::cout << "        Set the force calculation of the program to a force model." << std::endl;
             std::cout << "        The force model can either be gravity or lj (lenard jones)." << std::endl;
             std::cout << "        The default force model is lj." << std::endl;
             std::cout << std::endl;

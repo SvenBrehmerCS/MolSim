@@ -16,13 +16,13 @@ namespace physicsCalculator {
     /**
      * @class LJCalculator
      *
-     * @brief Class corresponding to a leep frog integrator using Lenard Jones potentials.
+     * @brief Class corresponding to a leap frog integrator using Lenard Jones potentials.
      */
     class LJCalculator : public Calculator {
 
     public:
         /**
-         * Initialize a Lenard Jones calculator using a simulation environmetn.
+         * Initialize a Lenard Jones calculator using a simulation environment.
          *
          * @param new_env THe simulation environment that should be used for initialization.
          */

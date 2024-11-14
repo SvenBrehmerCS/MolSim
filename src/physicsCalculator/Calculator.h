@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @brief Defines a default interface for the physics caculators.
+ * @brief Defines a default interface for the physics calculators.
  */
 
 #pragma once
@@ -17,7 +17,7 @@ namespace physicsCalculator {
     /**
      * @class Calculator
      *
-     * @brief The default class for an instance of a force calculator. It implements the leep frog method.
+     * @brief The default class for an instance of a force calculator. It implements the leap frog method.
      */
     class Calculator {
     protected:
@@ -78,14 +78,14 @@ namespace physicsCalculator {
         void calculateV();
 
         /**
-         * Perform a single simulation step, assuming that the leep frog method is being used.
+         * Perform a single simulation step, assuming that the leap frog method is being used.
          */
         void step();
 
         /**
-         * Get a refference to the particle container.
+         * Get a reference to the particle container.
          *
-         * @return A refference to the particle container.
+         * @return A reference to the particle container.
          */
         ParticleContainer& get_container();
     };
