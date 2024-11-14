@@ -682,7 +682,6 @@ TEST(Calculator, StepNo) {
     EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the velocity on an empty container should not add a particle.";
 }
 
-// TODO: multiple analytical tests (No Move Problem, spin problems)
 // Test if step works for an analytical solution using a single moving body
 TEST(LJCalculator, Analytical1) {
     // Set the margin for the maximum floatingpoint error
@@ -714,7 +713,201 @@ TEST(LJCalculator, Analytical1) {
         // Test that the position is correct
         const std::array<double, 3> expected_pos = { 1.0 + total_time * 0.5, 10.0 + total_time * -0.5, -25.0 + total_time * 0.2 };
         ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ")";
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+    }
+}
+
+// Test if step works for an analytical solution using two bodies circling around their shared center of gravity on the same circle. Meanwhile the
+// center of gravity is slowly moving.
+TEST(LJCalculator, Analytical2) {
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-6;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 6.3, 2.2, -1.5 }, { 0.02, 0.99, 0.03 }, 365346816.0),
+        Particle({ -3.7, 2.2, -1.5 }, { 0.02, -1.01, 0.03 }, 365346816.0),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+        "-sigma=8.0",
+        "-epsilon=244140625.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles);
+    double total_time = 0.0;
+
+    // Perform the steps for 100 time units
+    for (size_t i = 0; i <= 1000000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos_0 = {
+            5.0 * std::cos(total_time / 5.0) + total_time * 0.02 + 1.3,
+            5.0 * std::sin(total_time / 5.0) + total_time * -0.01 + 2.2,
+            -1.5 + total_time * 0.03,
+        };
+
+        const std::array<double, 3> expected_pos_1 = {
+            -5.0 * std::cos(total_time / 5.0) + total_time * 0.02 + 1.3,
+            -5.0 * std::sin(total_time / 5.0) + total_time * -0.01 + 2.2,
+            -1.5 + total_time * 0.03,
+        };
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+    }
+}
+
+// Test if step works for an analytical solution using two bodies circling around their shared center of gravity. However this time the two circles
+// have two different radiuses.
+TEST(LJCalculator, Analytical3) {
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-6;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 0.0, 0.0, 5.0 }, { 0.0, 1.0, 0.0 }, 243564544.0),
+        Particle({ 0.0, 0.0, -10.0 }, { 0.0, -2.0, 0.0 }, 121782272.5),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+        "-sigma=12.0",
+        "-epsilon=244140625.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles);
+    double total_time = 0.0;
+
+    // Perform the steps for 50 time units
+    for (size_t i = 0; i <= 500000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos_0 = {
+            0.0,
+            5.0 * std::sin(total_time / 5.0),
+            5.0 * std::cos(total_time / 5.0),
+        };
+
+        const std::array<double, 3> expected_pos_1 = {
+            0.0,
+            -10.0 * std::sin(total_time / 5.0),
+            -10.0 * std::cos(total_time / 5.0),
+        };
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+
+        ASSERT_NO_THROW(calc.step());
+        total_time += 0.0001;
+    }
+}
+
+// Test if step works for an analytical solution using three bodies which are completely stationary relative to each other. The shared center of
+// gravity is also moving.
+TEST(LJCalculator, Analytical4) {
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-5;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle(
+            {
+                1.7480669497636142554225485204397801807855281376745671279006682579,
+                -1.351933050236385744577451479560219819214471862325432872099331742,
+                1.1480669497636142554225485204397801807855281376745671279006682579,
+            },
+            { 0.001, 0.001, -0.002 }, 1.0),
+        Particle({ 1.1, -2.0, 0.5 }, { 0.001, 0.001, -0.002 }, 1.5),
+        Particle(
+            {
+                0.4519330502363857445774514795602198192144718623254328720993317420,
+                -2.6480669497636142554225485204397801807855281376745671279006682579,
+                -0.148066949763614255422548520439780180785528137674567127900668257,
+            },
+            { 0.001, 0.001, -0.002 }, 2.0),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+        "-sigma=1.0012978649056434718130942322111430509313330669648478791579796678",
+        "-epsilon=4.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles);
+    double total_time = 0.0;
+
+    // Perform the steps for 20 time units
+    for (size_t i = 0; i <= 200000; i++) {
+        // Test that the position is correct
+        const std::array<double, 3> expected_pos_0 = {
+            1.7480669497636142554225485204397801807855281376745671279006682579 + total_time * 0.001,
+            -1.351933050236385744577451479560219819214471862325432872099331742 + total_time * 0.001,
+            1.1480669497636142554225485204397801807855281376745671279006682579 + total_time * -0.002,
+        };
+
+        const std::array<double, 3> expected_pos_1 = {
+            1.1 + total_time * 0.001,
+            -2.0 + total_time * 0.001,
+            0.5 + total_time * -0.002,
+        };
+
+        const std::array<double, 3> expected_pos_2 = {
+            0.4519330502363857445774514795602198192144718623254328720993317420 + total_time * 0.001,
+            -2.6480669497636142554225485204397801807855281376745671279006682579 + total_time * 0.001,
+            -0.148066949763614255422548520439780180785528137674567127900668257 + total_time * -0.002,
+        };
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[2].getX() - expected_pos_2), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_2)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[2].getX()) << ")";
 
         ASSERT_NO_THROW(calc.step());
         total_time += 0.0001;

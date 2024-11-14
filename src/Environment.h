@@ -104,7 +104,7 @@ public:
     Environment();
 
     /**
-     * Create a simulation environment from the command line arguments. The constructor also handels the help argument.
+     * Create a simulation environment from the command line arguments. The constructor also handles the help argument.
      *
      * @param argc The number of arguments passed.
      * @param argv The array storing all passed arguments, including the program name.
@@ -114,7 +114,7 @@ public:
     /**
      * Create a copy of an environment object.
      *
-     * @param env THe environmetn that should be copied.
+     * @param env THe environment that should be copied.
      */
     Environment(const Environment& env);
 

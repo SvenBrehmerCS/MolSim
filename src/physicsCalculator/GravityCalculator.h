@@ -16,13 +16,13 @@ namespace physicsCalculator {
     /**
      * @class GravityCalculator
      *
-     * @brief Class corresponding to a leep frog based gravity force calculator.
+     * @brief Class corresponding to a leap frog based gravity force calculator.
      */
     class GravityCalculator : public Calculator {
 
     public:
         /**
-         * Initialize a simple calculator using a simulation environmetn.
+         * Initialize a simple calculator using a simulation environment.
          *
          * @param new_env THe simulation environment that should be used for initialization.
          */
