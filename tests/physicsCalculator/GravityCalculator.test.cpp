@@ -355,7 +355,7 @@ TEST(GravityCalculator, Step1) {
     // Initialize the Calculator
     physicsCalculator::GravityCalculator calc(env, particles, false);
 
-    // Perform a single calculateF
+    // Perform a single step
     ASSERT_NO_THROW(calc.step());
 
     std::vector<Particle> exp = {
