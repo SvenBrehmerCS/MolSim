@@ -23,7 +23,18 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install xerces-c
-      run: sudo apt install libxerces-c-dev
+      run: sudo apt -y install libxerces-c-dev
+
+    - name: Install clang-format
+      run: sudo apt -y install clang-format
+
+    -name: TestSrcFormat
+      # Test if the format of each file in the src directory is correct
+      run: find src/ -iname '*.h' -o -iname '*.cpp' | xargs clang-format -style=file --dry-run -Werror -i
+
+    -name: TestTestFormat
+      # Test if the format of each file in the tests directory is correct
+      run: find tests/ -iname '*.h' -o -iname '*.cpp' | xargs clang-format -style=file --dry-run -Werror -i
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -39,4 +50,3 @@ jobs:
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
-

@@ -1,5 +1,6 @@
 
 #include "ParticleGenerator.h"
+#include "utils/ArrayUtils.h"
 
 ParticleGenerator::ParticleGenerator() = default;
 ParticleGenerator::~ParticleGenerator() = default;
@@ -24,8 +25,8 @@ void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_par
 
                 boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
 
-                // set the velocity add the set velocity and boltzman velocity
-                particle->setV({ v[0] + boltz_v[0], v[1] + boltz_v[1], v[2] + boltz_v[2] });
+                // set the velocity add the set velocity and boltzmann velocity
+                particle->setV(v + boltz_v);
 
                 // set mass
                 particle->setM(m);

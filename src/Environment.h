@@ -181,7 +181,7 @@ public:
 
     /**
      * Get the calculator type which should be used for the force calculations.
-     * 
+     *
      * @return The calculator type.
      */
     CalculatorType get_calculator_type() const;

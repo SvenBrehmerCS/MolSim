@@ -81,7 +81,7 @@ namespace inputReader {
                 particle++;
             }
 
-            //if() clause to also support older text files
+            // if() clause to also support older text files
             if (!input_file.eof()) {
                 spdlog::debug("Reading File with cuboid support");
                 std::istringstream cubestream(tmp_string);
@@ -112,7 +112,7 @@ namespace inputReader {
                     datastream >> h;
 
 
-                    if(!datastream.eof()) {
+                    if (!datastream.eof()) {
                         datastream >> brownian_motion;
                         spdlog::debug("Read brownian motion from input file: {}", brownian_motion);
                     }
@@ -127,8 +127,6 @@ namespace inputReader {
                     spdlog::debug("Read line: {}", tmp_string);
                 }
             }
-
-            // particles.shrink_to_fit();
         } else {
             spdlog::critical("Error: could not open file {}", filename);
             exit(-1);
