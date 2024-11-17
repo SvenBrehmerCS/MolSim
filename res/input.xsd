@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="sim_t">
+        <xs:sequence>
+            <xs:element name="output" type="output_t" />
+            <xs:element name="param" type="param_t" />
+            <xs:element name="particle" type="particle_t" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="cuboid" type="cuboid_t" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="output_t">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" default="MD"> </xs:element>
+            <xs:element name="frequency" type="xs:int" default="10"> </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="param_t">
+        <xs:sequence>
+            <xs:element name="t_end" type="xs:double" default="1000.0"> </xs:element>
+            <xs:element name="delta_t" type="xs:double" default="0.014"> </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="particle_t">
+        <xs:sequence>
+            <xs:element name="pos_x" type="xs:double"></xs:element>
+            <xs:element name="pos_y" type="xs:double"></xs:element>
+            <xs:element name="pos_z" type="xs:double"></xs:element>
+            <xs:element name="vel_x" type="xs:double"></xs:element>
+            <xs:element name="vel_y" type="xs:double"></xs:element>
+            <xs:element name="vel_z" type="xs:double"></xs:element>
+            <xs:element name="m" type="xs:double"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="cuboid_t">
+        <xs:sequence>
+            <xs:element name="pos_x" type="xs:double"></xs:element>
+            <xs:element name="pos_y" type="xs:double"></xs:element>
+            <xs:element name="pos_z" type="xs:double"></xs:element>
+            <xs:element name="vel_x" type="xs:double"></xs:element>
+            <xs:element name="vel_y" type="xs:double"></xs:element>
+            <xs:element name="vel_z" type="xs:double"></xs:element>
+            <xs:element name="m" type="xs:double"></xs:element>
+            <xs:element name="n_x" type="xs:int"></xs:element>
+            <xs:element name="n_y" type="xs:int"></xs:element>
+            <xs:element name="n_z" type="xs:int"></xs:element>
+            <xs:element name="h" type="xs:double"></xs:element>
+            <xs:element name="b_motion" type="xs:double"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="simulation" type="sim_t">
+        <xs:annotation>
+            <xs:documentation> The hello simulation is a root of the Simulation XML vocabulary.
+                Every conforming document should start with this element. </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+</xs:schema>
