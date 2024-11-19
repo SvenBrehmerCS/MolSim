@@ -3,7 +3,7 @@
 #include "ParticleContainer.h"
 #include "ParticleGenerator.h"
 #include "spdlog/spdlog.h"
-
+#include "input.hxx"
 #include <fstream>
 #include <iostream>
 
@@ -24,6 +24,11 @@ namespace inputReader {
 
         // read in the simulation data
         std::unique_ptr<sim_t> sim = simulation(XMLFile);
+
+        if(!sim) {
+            spdlog::critical("Could not open file {}", filename);
+            return;
+        }
 
         //TODO !!! the following 4 variables are already red in but not used!
 

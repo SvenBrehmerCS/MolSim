@@ -1,6 +1,4 @@
-<?xml version="1.0"?>
-
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
     <xs:complexType name="sim_t">
         <xs:sequence>
             <xs:element name="output" type="output_t" />
