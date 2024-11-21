@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Reader.h"
+#include "spdlog/spdlog.h"
 
-#include <string>
 #include <Environment.h>
+#include <string>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 /**
@@ -11,7 +14,7 @@
  *
  * @brief Handles the reading of a xml file
  */
-
+using namespace xercesc;
 namespace inputReader {
 
 
@@ -36,7 +39,12 @@ namespace inputReader {
          * @param environment will set the environment variables read in from @filename to this environment
          *
          */
-        void readFile(ParticleContainer& container, const char* filename) override {}
+        void readFile(ParticleContainer& container, const char* filename) override { }
         void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment);
+
+        struct XMLInitializer {
+            XMLInitializer() { XMLPlatformUtils::Initialize(); }
+            ~XMLInitializer() { XMLPlatformUtils::Terminate(); }
+        };
     };
 }

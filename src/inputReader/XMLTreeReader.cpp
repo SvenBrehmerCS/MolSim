@@ -8,11 +8,8 @@
 #include <fstream>
 #include <iostream>
 #include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
 
 using namespace xml_schema;
-using namespace xercesc;
 
 namespace inputReader {
     XMLTreeReader::XMLTreeReader() = default;
@@ -20,73 +17,79 @@ namespace inputReader {
 
 
     void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema, Environment& environment) {
-        std::ifstream XMLFile(filename);
-        if (!XMLFile.is_open()) {
-            spdlog::error("Could not open file {}", filename);
+        if (xsd_schema == nullptr || strlen(xsd_schema) == 0) {
+            spdlog::error("Invalid XSD schema provided.");
             std::exit(EXIT_FAILURE);
         }
         try {
-            // initializes xerces-c
-            XMLPlatformUtils::Initialize();
+            // initializes xerces-c, RAII like
+            XMLInitializer xmlInitializer;
 
-        } catch (const XMLException& e) {
-            char* message = xercesc_3_2::XMLString::transcode(e.getMessage());
-            spdlog::error("Mistake Initiliazing xerces-c: {}", message);
-            XMLString::release(&message);
-            std::exit(EXIT_FAILURE);
-        }
+            // create a Parser
+            auto parser = std::make_shared<XercesDOMParser>();
+            parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
+            parser->setValidationScheme(XercesDOMParser::Val_Auto);
+            // TODO potential bug problem
+            parser->setDoNamespaces(true);
+            parser->setDoSchema(true);
+            //parser->setValidationSchemaFullChecking(true);
+            parser->setValidationConstraintFatal(true);
+            //parser->setExitOnFirstFatalError(true);
 
-        // create a Parser
-        XercesDOMParser* parser = new XercesDOMParser();
-        parser->setValidationScheme(XercesDOMParser::Val_Always);
-        parser->setDoNamespaces(true);
-        parser->setValidationSchemaFullChecking(true);
+            auto error_handler = std::make_shared<HandlerBase>();
+            parser->setErrorHandler(error_handler.get());
 
-        parser->setExternalNoNamespaceSchemaLocation(xsd_schema);
-
-        HandlerBase* error_handler;
-        parser->setErrorHandler(error_handler);
-
-        try {
+            //parsing, should throw if not valid
             parser->parse(filename);
-            spdlog::info("The XML-File {} is valid", filename);
+
+            //TODO geht hier rein immer, weil anscheinend ein Fehler in parser.parse(filename) auftritt.
+            if (parser->getErrorCount() > 0) {
+                spdlog::error("Error parsing file {}", filename);
+                std::exit(EXIT_FAILURE);
+            }
 
         } catch (const XMLException& e) {
             char* message = XMLString::transcode(e.getMessage());
-            spdlog::error("XMLException: {}" , message);
+            spdlog::error("XMLException: {}", message);
             XMLString::release(&message);
-            delete parser;
-            delete error_handler;
             std::exit(EXIT_FAILURE);
 
         } catch (const SAXParseException& e) {
             char* message = XMLString::transcode(e.getMessage());
             spdlog::error("SAXParseException: {}", message);
             XMLString::release(&message);
-            delete parser;
-            delete error_handler;
             std::exit(EXIT_FAILURE);
         } catch (...) {
             spdlog::error("Unknown exception occured");
-            delete parser;
-            delete error_handler;
             std::exit(EXIT_FAILURE);
         }
-        delete parser;
-        delete error_handler;
-        XMLPlatformUtils::Terminate();
 
+        spdlog::info("The XML-File {} is valid, starting to read now", filename);
 
-        spdlog::info("Reading XML file {}", filename);
+        std::ifstream XMLFile(filename);
+
+        if (!XMLFile.is_open()) {
+            spdlog::error("Could not open file {}", filename);
+            std::exit(EXIT_FAILURE);
+        }
 
         // read in the simulation data
         std::unique_ptr<sim_t> sim = simulation(XMLFile);
 
         if (!sim) {
             spdlog::critical("Could not open file {}", filename);
-            return;
+            std::exit(EXIT_FAILURE);
         }
 
+        if (sim->output().name().empty() || sim->output().frequency() <= 0) {
+            spdlog::critical("Invalid output data in simulation file {}", filename);
+            std::exit(EXIT_FAILURE);
+        }
+
+        if (sim->param().t_end() <= 0 || sim->param().delta_t() <= 0) {
+            spdlog::critical("Invalid simulation parameters in file {}", filename);
+            std::exit(EXIT_FAILURE);
+        }
 
         const char* output_file_name = sim->output().name().c_str();
         environment.set_output_file_name(output_file_name);
@@ -101,11 +104,16 @@ namespace inputReader {
         environment.set_delta_t(delta_t);
 
 
-        int num_particles = sim->particle().size();
+        size_t t = sim->particle().size();
+        if (t > INT_MAX) {
+            spdlog::error("Particle size too large");
+            std::exit(EXIT_FAILURE);
+        }
+        int num_particles = static_cast<int>(sim->particle().size());
 
         std::array<double, 3> x = { 0.0, 0.0, 0.0 };
         std::array<double, 3> v = { 0.0, 0.0, 0.0 };
-        std::array<int, 3> N;
+        std::array<int, 3> N = { 0, 0, 0 };
         double m;
         double h;
 
@@ -121,6 +129,15 @@ namespace inputReader {
         int i = 0;
         for (const auto& particle : particles) {
 
+            if (particle.m() <= 0) {
+                spdlog::critical("Invalid particle mass: {}", particle.m());
+                std::exit(EXIT_FAILURE);
+            }
+            if (std::isnan(particle.pos_x()) || std::isnan(particle.pos_y()) || std::isnan(particle.pos_z())) {
+                spdlog::critical("Invalid particle position in simulation file {}", filename);
+                std::exit(EXIT_FAILURE);
+            }
+
             container[i].setX({ particle.pos_x(), particle.pos_y(), particle.pos_z() });
             container[i].setV({ particle.vel_x(), particle.vel_y(), particle.vel_z() });
             container[i].setM(particle.m());
@@ -132,6 +149,15 @@ namespace inputReader {
 
         // initialize all the cuboids into the container
         for (const auto& cuboid : cuboids) {
+
+            if (cuboid.n_x() <= 0 || cuboid.n_y() <= 0 || cuboid.n_z() <= 0) {
+                spdlog::critical("Invalid cuboid dimensions in simulation file {}", filename);
+                std::exit(EXIT_FAILURE);
+            }
+            if (cuboid.m() <= 0) {
+                spdlog::critical("Invalid cuboid mass in simulation file {}", filename);
+                std::exit(EXIT_FAILURE);
+            }
 
             x = { cuboid.pos_x(), cuboid.pos_y(), cuboid.pos_z() };
             v = { cuboid.vel_x(), cuboid.vel_y(), cuboid.vel_z() };
