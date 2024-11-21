@@ -423,3 +423,17 @@ const char* Environment::get_output_file_name() const { return output_file; }
 FileFormat Environment::get_output_file_format() const { return format; }
 
 CalculatorType Environment::get_calculator_type() const { return calc; }
+
+void Environment::set_delta_t(const double delta_t) { this->delta_t = delta_t; }
+
+void Environment::set_sigma(const double sigma) { this->sigma = sigma; }
+
+void Environment::set_epsilon(const double epsilon) { this->epsilon = epsilon; }
+
+void Environment::set_print_step(const int print_step) { this->print_step = print_step; }
+
+void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
+
+void Environment::set_output_file_name(const char* output_file_name) { this->output_file = output_file_name; }
+
+

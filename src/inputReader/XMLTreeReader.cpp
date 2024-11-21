@@ -19,17 +19,17 @@ namespace inputReader {
     XMLTreeReader::~XMLTreeReader() = default;
 
 
-    void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema) {
+    void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema, Environment& environment) {
         std::ifstream XMLFile(filename);
         if (!XMLFile.is_open()) {
             spdlog::error("Could not open file {}", filename);
-            return;
+            std::exit(EXIT_FAILURE);
         }
         try {
             // initializes xerces-c
             XMLPlatformUtils::Initialize();
 
-        } catch (const xercesc_3_2::XMLException& e) {
+        } catch (const XMLException& e) {
             char* message = xercesc_3_2::XMLString::transcode(e.getMessage());
             spdlog::error("Mistake Initiliazing xerces-c: {}", message);
             XMLString::release(&message);
@@ -87,15 +87,17 @@ namespace inputReader {
             return;
         }
 
-        // TODO !!! the following 4 variables are already red in but not used!
-
-        /*
         const char* output_file_name = sim->output().name().c_str();
+        environment.set_output_file_name(output_file_name);
+
         int write_frequency = sim->output().frequency();
+        environment.set_print_step(write_frequency);
 
         double t_end = sim->param().t_end();
+        environment.set_t_end(t_end);
+
         double delta_t = sim->param().delta_t;
-        */
+        environment.set_delta_t(delta_t);
 
         int num_particles = sim->particle().size();
 

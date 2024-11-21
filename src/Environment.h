@@ -216,4 +216,36 @@ public:
      * @param epsilon The epsilon for force calculation.
      */
     void set_epsilon(const double epsilon);
+
+
+    /**
+     * Set how often the simulation output file should be generated.
+     *
+     * @param print_step An integer indicating which simulation steps should be saved.
+     */
+    void set_print_step(const int print_step);
+
+
+    /**
+     * Set the beginning of the name of the output file. All output files will start with this name.
+     *
+     * @param output_file_name The file name of the output file.
+     */
+    void set_output_file_name(const char* output_file_name);
+
+
+    /**
+     * Set the format of the the output file.
+     *
+     * @param format The file format of the output file.
+     */
+    void set_output_file_format(const FileFormat format);
+
+
+    /**
+    * Set the calculator type which should be used for the force calculations.
+    *
+    * @param calculator_type The calculator type.
+    */
+    void set_calculator_type(const CalculatorType calculator_type);
 };
