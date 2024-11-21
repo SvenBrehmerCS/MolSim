@@ -2,7 +2,6 @@
 
 #include "Reader.h"
 
-#include <gtest/gtest.h>
 #include <string>
 #include <Environment.h>
 

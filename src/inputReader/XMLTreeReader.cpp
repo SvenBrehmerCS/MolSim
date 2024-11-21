@@ -87,17 +87,19 @@ namespace inputReader {
             return;
         }
 
+
         const char* output_file_name = sim->output().name().c_str();
         environment.set_output_file_name(output_file_name);
 
         int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
 
-        double t_end = sim->param().t_end();
+        const double t_end = sim->param().t_end();
         environment.set_t_end(t_end);
 
-        double delta_t = sim->param().delta_t;
+        const double delta_t = sim->param().delta_t();
         environment.set_delta_t(delta_t);
+
 
         int num_particles = sim->particle().size();
 
