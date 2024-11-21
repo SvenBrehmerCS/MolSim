@@ -53,7 +53,7 @@ namespace inputReader {
 
         } catch (const XMLException& e) {
             char* message = XMLString::transcode(e.getMessage());
-            spdlog::error("XMLException: {}", filename, message);
+            spdlog::error("XMLException: {}" , message);
             XMLString::release(&message);
             delete parser;
             delete error_handler;

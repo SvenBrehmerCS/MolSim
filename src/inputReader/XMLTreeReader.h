@@ -36,6 +36,7 @@ namespace inputReader {
          * @param environment will set the environment variables read in from @filename to this environment
          *
          */
+        void readFile(ParticleContainer& container, const char* filename) override {}
         void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment);
     };
 }
