@@ -2,12 +2,15 @@
 
 #include "Reader.h"
 
+#include <string>
+
 
 /**
  * @file
  *
  * @brief Handles the reading of a xml file
  */
+
 namespace inputReader {
 
 
@@ -18,6 +21,7 @@ namespace inputReader {
      */
     class XMLTreeReader : public Reader {
     public:
+        using Reader::readFile;
 
         XMLTreeReader();
         ~XMLTreeReader();
@@ -25,10 +29,11 @@ namespace inputReader {
         /**
          * Imports a particle system from the given xml input file
          *
-         * @param particles data structure for holding the particles.
+         * @param container data structure for holding the particles.
          * @param filename file path to xml input file.
+         * @param xsdfile specifies the rules for the xml file @filename
+         *
          */
-
-        virtual void readFile(ParticleContainer& container, const char* filename);
+        void readFile(ParticleContainer& container, const char* filename, const char* xsdfile);
     };
 }

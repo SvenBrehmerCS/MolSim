@@ -1,23 +1,80 @@
 #include "XMLTreeReader.h"
 
+#include "Environment.h"
 #include "ParticleContainer.h"
 #include "ParticleGenerator.h"
-#include "spdlog/spdlog.h"
 #include "input.hxx"
+#include "spdlog/spdlog.h"
 #include <fstream>
 #include <iostream>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+
+using namespace xml_schema;
+using namespace xercesc;
 
 namespace inputReader {
     XMLTreeReader::XMLTreeReader() = default;
     XMLTreeReader::~XMLTreeReader() = default;
 
 
-    void XMLTreeReader::readFile(ParticleContainer& container, const char* filename) {
+    void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema) {
         std::ifstream XMLFile(filename);
         if (!XMLFile.is_open()) {
             spdlog::error("Could not open file {}", filename);
             return;
         }
+        try {
+            // initializes xerces-c
+            XMLPlatformUtils::Initialize();
+
+        } catch (const xercesc_3_2::XMLException& e) {
+            char* message = xercesc_3_2::XMLString::transcode(e.getMessage());
+            spdlog::error("Mistake Initiliazing xerces-c: {}", message);
+            XMLString::release(&message);
+            std::exit(EXIT_FAILURE);
+        }
+
+        // create a Parser
+        XercesDOMParser* parser = new XercesDOMParser();
+        parser->setValidationScheme(XercesDOMParser::Val_Always);
+        parser->setDoNamespaces(true);
+        parser->setValidationSchemaFullChecking(true);
+
+        parser->setExternalNoNamespaceSchemaLocation(xsd_schema);
+
+        HandlerBase* error_handler;
+        parser->setErrorHandler(error_handler);
+
+        try {
+            parser->parse(filename);
+            spdlog::info("The XML-File {} is valid", filename);
+
+        } catch (const XMLException& e) {
+            char* message = XMLString::transcode(e.getMessage());
+            spdlog::error("XMLException: {}", filename, message);
+            XMLString::release(&message);
+            delete parser;
+            delete error_handler;
+            std::exit(EXIT_FAILURE);
+
+        } catch (const SAXParseException& e) {
+            char* message = XMLString::transcode(e.getMessage());
+            spdlog::error("SAXParseException: {}", message);
+            XMLString::release(&message);
+            delete parser;
+            delete error_handler;
+            std::exit(EXIT_FAILURE);
+        } catch (...) {
+            spdlog::error("Unknown exception occured");
+            delete parser;
+            delete error_handler;
+            std::exit(EXIT_FAILURE);
+        }
+        delete parser;
+        delete error_handler;
+        XMLPlatformUtils::Terminate();
 
 
         spdlog::info("Reading XML file {}", filename);
@@ -25,12 +82,12 @@ namespace inputReader {
         // read in the simulation data
         std::unique_ptr<sim_t> sim = simulation(XMLFile);
 
-        if(!sim) {
+        if (!sim) {
             spdlog::critical("Could not open file {}", filename);
             return;
         }
 
-        //TODO !!! the following 4 variables are already red in but not used!
+        // TODO !!! the following 4 variables are already red in but not used!
 
         /*
         const char* output_file_name = sim->output().name().c_str();

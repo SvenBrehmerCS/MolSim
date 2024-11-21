@@ -185,4 +185,35 @@ public:
      * @return The calculator type.
      */
     CalculatorType get_calculator_type() const;
+
+
+    /**
+     * Set the end time (duration) of the simulation.
+     *
+     * @param t_end The end time of the simulation.
+     */
+    void set_t_end(const double t_end);
+
+
+    /**
+     * Set the amount of time simulated by a single step.
+     *
+     * @param delta_t The time delta for a single simulation step.
+     */
+    void set_delta_t(const double delta_t);
+
+
+    /**
+     * Get the sigma used for lenard jones simulations.
+     * @param sigma The sigma for force calculation.
+     */
+    void set_sigma(const double sigma);
+
+
+    /**
+     * Set the epsilon used for lenard jones simulations.
+     *
+     * @param epsilon The epsilon for force calculation.
+     */
+    void set_epsilon(const double epsilon);
 };
