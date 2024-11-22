@@ -5,9 +5,12 @@
 #include "ParticleGenerator.h"
 #include "input.hxx"
 #include "spdlog/spdlog.h"
+#include <bits/fs_fwd.h>
+#include <bits/fs_path.h>
 #include <fstream>
 #include <iostream>
 #include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
 
 using namespace xml_schema;
 
@@ -17,6 +20,7 @@ namespace inputReader {
 
 
     void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema, Environment& environment) {
+        std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
         if (xsd_schema == nullptr || strlen(xsd_schema) == 0) {
             spdlog::error("Invalid XSD schema provided.");
             std::exit(EXIT_FAILURE);
@@ -27,16 +31,33 @@ namespace inputReader {
 
             // create a Parser
             auto parser = std::make_shared<XercesDOMParser>();
-            parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
-            parser->setValidationScheme(XercesDOMParser::Val_Auto);
-            // TODO potential bug problem
+
+            parser->setValidationScheme(XercesDOMParser::Val_Always);
             parser->setDoNamespaces(true);
             parser->setDoSchema(true);
-            //parser->setValidationSchemaFullChecking(true);
             parser->setValidationConstraintFatal(true);
+            parser->setValidationSchemaFullChecking(true);
             //parser->setExitOnFirstFatalError(true);
 
-            auto error_handler = std::make_shared<HandlerBase>();
+            /*
+            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
+            if (grammar == nullptr) {
+                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
+            } else {
+                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
+            }
+            */
+            //LocalFileInputSource source(XMLString::transcode(xsd_schema));
+            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
+
+            if (grammar == nullptr) {
+                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
+            } else {
+                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
+            }
+
+
+            auto error_handler = std::make_shared<CustomErrorHandler>();
             parser->setErrorHandler(error_handler.get());
 
             //parsing, should throw if not valid

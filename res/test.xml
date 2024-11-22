@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="input.xsd">
+            xsi:NamespaceSchemaLocation="test1.xsd">
     <output>
         <name>MD</name>
         <frequency>10</frequency>

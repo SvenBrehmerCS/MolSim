@@ -4,6 +4,7 @@
 #include "spdlog/spdlog.h"
 
 #include <Environment.h>
+#include <iostream>
 #include <string>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -45,6 +46,27 @@ namespace inputReader {
         struct XMLInitializer {
             XMLInitializer() { XMLPlatformUtils::Initialize(); }
             ~XMLInitializer() { XMLPlatformUtils::Terminate(); }
+        };
+
+        class CustomErrorHandler : public HandlerBase {
+        public:
+            void fatalError(const SAXParseException& e) override {
+                char* message = XMLString::transcode(e.getMessage());
+                spdlog::error("fatal error: {}", message);
+                XMLString::release(&message);
+            }
+
+            void error(const SAXParseException& e) override {
+                char* message = XMLString::transcode(e.getMessage());
+                spdlog::error("error: {}", message);
+                XMLString::release(&message);
+            }
+
+            void warning(const SAXParseException& e) override {
+                char* message = XMLString::transcode(e.getMessage());
+                spdlog::warn("warning: {}", message);
+                XMLString::release(&message);
+            }
         };
     };
 }
