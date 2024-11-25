@@ -25,65 +25,6 @@ namespace inputReader {
             spdlog::error("Invalid XSD schema provided.");
             std::exit(EXIT_FAILURE);
         }
-        try {
-            // initializes xerces-c, RAII like
-            XMLInitializer xmlInitializer;
-
-            // create a Parser
-            auto parser = std::make_shared<XercesDOMParser>();
-
-            parser->setValidationScheme(XercesDOMParser::Val_Always);
-            parser->setDoNamespaces(true);
-            parser->setDoSchema(true);
-            parser->setValidationConstraintFatal(true);
-            parser->setValidationSchemaFullChecking(true);
-            //parser->setExitOnFirstFatalError(true);
-
-            /*
-            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
-            if (grammar == nullptr) {
-                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
-            } else {
-                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
-            }
-            */
-            //LocalFileInputSource source(XMLString::transcode(xsd_schema));
-            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
-
-            if (grammar == nullptr) {
-                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
-            } else {
-                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
-            }
-
-
-            auto error_handler = std::make_shared<CustomErrorHandler>();
-            parser->setErrorHandler(error_handler.get());
-
-            //parsing, should throw if not valid
-            parser->parse(filename);
-
-            //TODO geht hier rein immer, weil anscheinend ein Fehler in parser.parse(filename) auftritt.
-            if (parser->getErrorCount() > 0) {
-                spdlog::error("Error parsing file {}", filename);
-                std::exit(EXIT_FAILURE);
-            }
-
-        } catch (const XMLException& e) {
-            char* message = XMLString::transcode(e.getMessage());
-            spdlog::error("XMLException: {}", message);
-            XMLString::release(&message);
-            std::exit(EXIT_FAILURE);
-
-        } catch (const SAXParseException& e) {
-            char* message = XMLString::transcode(e.getMessage());
-            spdlog::error("SAXParseException: {}", message);
-            XMLString::release(&message);
-            std::exit(EXIT_FAILURE);
-        } catch (...) {
-            spdlog::error("Unknown exception occured");
-            std::exit(EXIT_FAILURE);
-        }
 
         spdlog::info("The XML-File {} is valid, starting to read now", filename);
 
@@ -94,8 +35,17 @@ namespace inputReader {
             std::exit(EXIT_FAILURE);
         }
 
+
+        //function checks if XML is valid, is defined below
+        if (!isValidXML(filename, xsd_schema)) {
+            spdlog::error("Invalid XML file {}", filename);
+            std::exit(EXIT_FAILURE);
+        }
+
+        CustomErrorHandler errHandler;
+
         // read in the simulation data
-        std::unique_ptr<sim_t> sim = simulation(XMLFile);
+        std::unique_ptr<sim_t> sim = simulation(filename);
 
         if (!sim) {
             spdlog::critical("Could not open file {}", filename);
@@ -195,4 +145,71 @@ namespace inputReader {
         }
     }
 
+    bool XMLTreeReader::isValidXML(const char* filename, const char* xsd_schema) {
+        try {
+            // initializes xerces-c, RAII like
+            XMLInitializer xmlInitializer;
+
+            // create a Parser
+            auto parser = std::make_shared<XercesDOMParser>();
+
+            parser->setValidationScheme(XercesDOMParser::Val_Always);
+            parser->setDoNamespaces(true);
+            parser->setDoSchema(true);
+            parser->setValidationConstraintFatal(true);
+            parser->setValidationSchemaFullChecking(true);
+
+            auto error_handler = std::make_shared<CustomErrorHandler>();
+            parser->setErrorHandler(error_handler.get());
+            //parser->setExitOnFirstFatalError(true);
+
+            /*
+            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
+            if (grammar == nullptr) {
+                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
+            } else {
+                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
+            }
+            */
+            //LocalFileInputSource source(XMLString::transcode(xsd_schema));
+            /*
+            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
+
+            if (grammar == nullptr) {
+                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
+                return false;
+            } else {
+                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
+            }
+            */
+
+            //parsing, should throw if not valid
+            parser->parse(filename);
+
+            if (parser->getErrorCount() > 0) {
+                spdlog::error("Error parsing file {}", filename);
+                return false;
+            }
+
+        } catch (const XMLException& e) {
+            char* message = XMLString::transcode(e.getMessage());
+            spdlog::error("XMLException: {}", message);
+            XMLString::release(&message);
+            return false;
+
+        } catch (const SAXParseException& e) {
+            char* message = XMLString::transcode(e.getMessage());
+            spdlog::error("SAXParseException: {}", message);
+            XMLString::release(&message);
+            return false;
+        } catch (...) {
+            spdlog::error("Unknown exception occured");
+            return false;
+        }
+        return true;
+    }
+
+
 }
+
+

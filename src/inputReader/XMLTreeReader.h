@@ -42,6 +42,7 @@ namespace inputReader {
          */
         void readFile(ParticleContainer& container, const char* filename) override { }
         void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment);
+        bool isValidXML(const char* filename, const char* xsdfile);
 
         struct XMLInitializer {
             XMLInitializer() { XMLPlatformUtils::Initialize(); }
