@@ -9,9 +9,11 @@
 #include "FileReader.h"
 #include "../Particle.h"
 
+#include <ParticleGenerator.h>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <spdlog/spdlog.h>
 #include <sstream>
 
 namespace inputReader {
@@ -20,11 +22,16 @@ namespace inputReader {
 
     FileReader::~FileReader() = default;
 
-    void FileReader::readFile(std::vector<Particle>& particles, const char* filename) {
+    void FileReader::readFile(ParticleContainer& container, const char* filename) {
         std::array<double, 3> x;
         std::array<double, 3> v;
+        std::array<int, 3> N;
         double m;
+        double h;
         int num_particles = 0;
+        int num_cubes = 0;
+        int num_dimensions = 0;
+        double brownian_motion = 0.1;
 
         std::ifstream input_file(filename);
         std::string tmp_string;
@@ -32,20 +39,22 @@ namespace inputReader {
         if (input_file.is_open()) {
 
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
+            spdlog::debug("Read line: {}", tmp_string);
 
             while (tmp_string.empty() or tmp_string[0] == '#') {
                 getline(input_file, tmp_string);
-                std::cout << "Read line: " << tmp_string << std::endl;
+                spdlog::debug("Read line: {}", tmp_string);
             }
 
             std::istringstream numstream(tmp_string);
             numstream >> num_particles;
-            std::cout << "Reading " << num_particles << "." << std::endl;
+            spdlog::debug("Reading {} particles.", num_particles);
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
+            spdlog::debug("Read line: {}", tmp_string);
 
-            particles.resize(num_particles);
+            container.resize(num_particles);
+
+            auto particle = container.begin();
 
             for (int i = 0; i < num_particles; i++) {
                 std::istringstream datastream(tmp_string);
@@ -57,22 +66,69 @@ namespace inputReader {
                     datastream >> vj;
                 }
                 if (datastream.eof()) {
-                    std::cout << "Error reading file: eof reached unexpectedly reading from line " << i << std::endl;
+                    spdlog::critical("Error reading file: eof reached unexpectedly reading from line {}", i);
                     exit(-1);
                 }
                 datastream >> m;
 
-                particles[i].setX(x);
-                particles[i].setV(v);
-                particles[i].setM(m);
+                particle->setX(x);
+                particle->setV(v);
+                particle->setM(m);
 
                 getline(input_file, tmp_string);
-                std::cout << "Read line: " << tmp_string << std::endl;
+                spdlog::debug("Read line: {}", tmp_string);
+
+                particle++;
             }
 
-            particles.shrink_to_fit();
+            // if() clause to also support older text files
+            if (!input_file.eof()) {
+                spdlog::debug("Reading File with cuboid support");
+                std::istringstream cubestream(tmp_string);
+                cubestream >> num_cubes >> num_dimensions;
+                spdlog::debug("Reading num_cubes {}, num_dimensions {}", num_cubes, num_dimensions);
+                getline(input_file, tmp_string);
+                spdlog::debug("Read line: {}", tmp_string);
+
+                ParticleGenerator generator;
+                for (int i = 0; i < num_cubes; i++) {
+                    std::istringstream datastream(tmp_string);
+
+                    for (auto& xj : x) {
+                        datastream >> xj;
+                    }
+                    for (auto& vj : v) {
+                        datastream >> vj;
+                    }
+                    datastream >> m;
+
+                    for (auto& nj : N) {
+                        datastream >> nj;
+                    }
+                    if (datastream.eof()) {
+                        spdlog::critical("Error reading file: eof reached unexpectedly reading from line {}", i);
+                        exit(-1);
+                    }
+                    datastream >> h;
+
+
+                    if (!datastream.eof()) {
+                        datastream >> brownian_motion;
+                        spdlog::debug("Read brownian motion from input file: {}", brownian_motion);
+                    }
+
+                    container.resize(num_particles + (N[0] * N[1] * N[2]));
+
+                    generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
+
+                    num_particles += (N[0] * N[1] * N[2]);
+
+                    getline(input_file, tmp_string);
+                    spdlog::debug("Read line: {}", tmp_string);
+                }
+            }
         } else {
-            std::cout << "Error: could not open file " << filename << std::endl;
+            spdlog::critical("Error: could not open file {}", filename);
             exit(-1);
         }
     }

@@ -30,7 +30,7 @@ namespace inputReader {
          * @param particles data structure for holding the particles.
          * @param filename file path to input file.
          */
-        virtual void readFile(std::vector<Particle>& particles, const char* filename);
+        virtual void readFile(ParticleContainer& container, const char* filename);
     };
 
 } // namespace inputReader

@@ -19,9 +19,9 @@ UseTab: Never
 IndentWidth: 4
 TabWidth: 4
 
-# Automattically intend namespaces
+# Automatically intend namespaces
 NamespaceIndentation: All
 BreakBeforeBraces: Attach
 
-# Allign pointers to the left
+# Align pointers to the left
 PointerAlignment: Left

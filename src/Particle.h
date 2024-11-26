@@ -163,7 +163,7 @@ public:
      *
      * @return A boolean indicating if the particles are equal.
      */
-    bool operator==(const Particle& other);
+    bool operator==(const Particle& other) const;
 
     /**
      * Generate a string describing the particle.

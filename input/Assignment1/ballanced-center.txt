@@ -1,7 +1,7 @@
 #
 # This file provides a three body problem with a simple periodic analytical solution.
-# The balanced centered dance consists of two bodys moving around the center on a unit
-# circle all the time. In the center there is a third body wich remains stationary
+# The balanced centered dance consists of two bodies moving around the center on a unit
+# circle all the time. In the center there is a third body which remains stationary
 # the entire time.
 #
 # xyz-coordinates        velocities          masses

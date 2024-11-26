@@ -21,8 +21,11 @@ namespace solver {
      * @param t The current simulation time.
      *
      * @return A boolean indicating if the points are close to the analytical solution.
+     *
+     * @deprecated This is legacy, as testing is now done using unit tests.
      */
-    bool is_balanced_dance_solution(const Particle& p1, const Particle& p2, const double t);
+    [[deprecated("This is legacy, as testing is now done using unit tests.")]] bool is_balanced_dance_solution(
+        const Particle& p1, const Particle& p2, const double t);
 
     /**
      * Test if three particles correspond to a balanced center dance problem. This problem is a problem with a
@@ -35,8 +38,11 @@ namespace solver {
      * @param t The current simulation time.
      *
      * @return A boolean indicating if the points are close to the analytical solution.
+     *
+     * @deprecated This is legacy, as testing is now done using unit tests.
      */
-    bool is_center_dance_solution(const Particle& p1, const Particle& p2, const Particle& center, const double t);
+    [[deprecated("This is legacy, as testing is now done using unit tests.")]] bool is_center_dance_solution(
+        const Particle& p1, const Particle& p2, const Particle& center, const double t);
 
     /**
      * Test if a particles correspond to a linear evasion problem. This problem is a problem with a simple
@@ -47,8 +53,10 @@ namespace solver {
      * @param t The current simulation time.
      *
      * @return A boolean indicating if the point is close to the analytical solution.
+     *
+     * @deprecated This is legacy, as testing is now done using unit tests.
      */
-    bool is_evasion_solution(const Particle& p, const double t);
+    [[deprecated("This is legacy, as testing is now done using unit tests.")]] bool is_evasion_solution(const Particle& p, const double t);
 
     /**
      * Test if two particles correspond to the center evasion problem. This problem is a problem with a
@@ -60,7 +68,10 @@ namespace solver {
      * @param t The current simulation time.
      *
      * @return A boolean indicating if the points are close to the analytical solution.
+     *
+     * @deprecated This is legacy, as testing is now done using unit tests.
      */
-    bool is_center_evasion_solution(const Particle& p1, const Particle& p2, const double t);
+    [[deprecated("This is legacy, as testing is now done using unit tests.")]] bool is_center_evasion_solution(
+        const Particle& p1, const Particle& p2, const double t);
 
 } // namespace solver

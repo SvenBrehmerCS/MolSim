@@ -4,6 +4,7 @@
 #include <cstring>
 #include <float.h>
 #include <iostream>
+#include <spdlog/spdlog.h>
 #include <string>
 
 #define btos(__BOOL) (static_cast<bool>(__BOOL) ? "true" : "false")
@@ -12,11 +13,11 @@
  * Print an error message and exit immediately with EXIT_FAILURE.
  */
 static void panic_exit(const char* message) {
-    std::cout << message << std::endl;
+    spdlog::critical(message);
     std::exit(EXIT_FAILURE);
 }
 
-Environment::Environment() { std::cout << "Initialized with a standard environment." << std::endl; }
+Environment::Environment() { spdlog::trace("Initialized with a standard environment."); }
 
 Environment::Environment(const int argc, const char* argv[]) {
     // Test if there is a request for a help message within all passed arguments
@@ -43,6 +44,16 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The delta time must be a strictly positive floating point number." << std::endl;
             std::cout << "        The default time delta is 0.014." << std::endl;
             std::cout << std::endl;
+            std::cout << "    -sigma=<sigma>" << std::endl;
+            std::cout << "        Set the sigma used for the lenard jones simulation." << std::endl;
+            std::cout << "        The sigma must be a strictly positive floating point number." << std::endl;
+            std::cout << "        The default sigma is 1.0." << std::endl;
+            std::cout << std::endl;
+            std::cout << "    -epsilon=<epsilon>" << std::endl;
+            std::cout << "        Set the epsilon used for the lenard jones simulation." << std::endl;
+            std::cout << "        The epsilon must be a strictly positive floating point number." << std::endl;
+            std::cout << "        The default epsilon is 5.0." << std::endl;
+            std::cout << std::endl;
             std::cout << "    -print_step=<print step>" << std::endl;
             std::cout << "        Set the print step with which the steps should be performed." << std::endl;
             std::cout << "        The print step must be a strictly positive integer." << std::endl;
@@ -54,14 +65,24 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The default output file name is MD_vtk." << std::endl;
             std::cout << std::endl;
             std::cout << "    -output_format=<file format>" << std::endl;
-            std::cout << "        Set the format of the output file either to 'vtk' or to 'xyz'." << std::endl;
-            std::cout << "        The file format must either be 'vtk' or 'xyz'." << std::endl;
+            std::cout << "        Set the format of the output file either to 'no', 'vtk' or to 'xyz'." << std::endl;
+            std::cout << "        The file format must either be 'no' (disable writing files), 'vtk' or 'xyz'." << std::endl;
             std::cout << "        The default output file format is vtk." << std::endl;
+            std::cout << std::endl;
+            std::cout << "    -log_level=<log level>" << std::endl;
+            std::cout << "        Set the log level of the program to a spdlog level." << std::endl;
+            std::cout << "        The log level must be one off: off, crit, error, warn, info, debug, trace." << std::endl;
+            std::cout << "        The default log level is info." << std::endl;
+            std::cout << std::endl;
+            std::cout << "    -calc=<force model>" << std::endl;
+            std::cout << "        Set the force calculation of the program to a force model." << std::endl;
+            std::cout << "        The force model can either be gravity or lj (lenard jones)." << std::endl;
+            std::cout << "        The default force model is lj." << std::endl;
             std::cout << std::endl;
             std::cout << "Each argument may only be provided once. If no argument is provided the default" << std::endl;
             std::cout << "value is being used. There may not be any blank spaces seperating the option" << std::endl;
             std::cout << "and its value. The output files will be placed in the folder, from where the" << std::endl;
-            std::cout << "program is executed. The output files will have the VTK format." << std::endl;
+            std::cout << "program is executed." << std::endl;
             std::cout << std::endl;
             std::cout << "Example:" << std::endl;
             std::cout << "    " << argv[0] << " -t_end=10.0 -print_step=20 ./path/to/input.txt" << std::endl;
@@ -77,9 +98,13 @@ Environment::Environment(const int argc, const char* argv[]) {
     // Initialize the booleans indicating if an argument was already parsed once
     bool default_end = true;
     bool default_delta = true;
+    bool default_sigma = true;
+    bool default_epsilon = true;
     bool default_print_step = true;
     bool default_out_name = true;
     bool default_file_format = true;
+    bool default_log_level = true;
+    bool default_calculator = true;
 
     // Parse all arguments but help.
     for (int i = 1; i < argc; i++) {
@@ -137,6 +162,60 @@ Environment::Environment(const int argc, const char* argv[]) {
             }
 
             default_delta = false;
+        } else if (std::strncmp(argv[i], "-sigma=", std::strlen("-sigma=")) == 0) {
+            // Parse the time delta
+            if (default_sigma == false) {
+                panic_exit("The option sigma was provided multiple times. Options may only be provided once.");
+            }
+
+            size_t idx = 0;
+
+            try {
+                sigma = std::stod(argv[i] + std::strlen("-sigma="), &idx);
+            } catch (const std::exception& e) {
+                panic_exit("The option sigma requires a floatingpoint number within the region of a 64 bit float.");
+            }
+
+            if (argv[i][idx + std::strlen("-sigma=")] != 0) {
+                panic_exit("The option sigma must only have one floating point number as input.");
+            }
+
+            if (sigma <= 0.0) {
+                panic_exit("The option sigma must have a strictly positive value.");
+            }
+
+            if (std::isnan(sigma) || std::isinf(sigma)) {
+                panic_exit("The option sigma must be a valid number, not NAN or INF.");
+            }
+
+            default_sigma = false;
+        } else if (std::strncmp(argv[i], "-epsilon=", std::strlen("-epsilon=")) == 0) {
+            // Parse the time delta
+            if (default_epsilon == false) {
+                panic_exit("The option epsilon was provided multiple times. Options may only be provided once.");
+            }
+
+            size_t idx = 0;
+
+            try {
+                epsilon = std::stod(argv[i] + std::strlen("-epsilon="), &idx);
+            } catch (const std::exception& e) {
+                panic_exit("The option epsilon requires a floatingpoint number within the region of a 64 bit float.");
+            }
+
+            if (argv[i][idx + std::strlen("-epsilon=")] != 0) {
+                panic_exit("The option epsilon must only have one floating point number as input.");
+            }
+
+            if (epsilon <= 0.0) {
+                panic_exit("The option epsilon must have a strictly positive value.");
+            }
+
+            if (std::isnan(epsilon) || std::isinf(epsilon)) {
+                panic_exit("The option epsilon must be a valid number, not NAN or INF.");
+            }
+
+            default_epsilon = false;
         } else if (std::strncmp(argv[i], "-print_step=", std::strlen("-print_step=")) == 0) {
             // Parse the print steps
             if (default_print_step == false) {
@@ -173,6 +252,15 @@ Environment::Environment(const int argc, const char* argv[]) {
             output_file = argv[i] + std::strlen("-out_name=");
 
             default_out_name = false;
+        } else if (std::strcmp(argv[i], "-output_format=no") == 0) {
+            // Parse the output file format
+            if (default_file_format == false) {
+                panic_exit("The option output_format was provided multiple times. Options may only be provided once.");
+            }
+
+            format = NO_OUT;
+
+            default_file_format = false;
         } else if (std::strcmp(argv[i], "-output_format=vtk") == 0) {
             // Parse the output file format
             if (default_file_format == false) {
@@ -191,6 +279,87 @@ Environment::Environment(const int argc, const char* argv[]) {
             format = XYZ;
 
             default_file_format = false;
+        } else if (std::strcmp(argv[i], "-log_level=off") == 0) {
+            // Parse the log level
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::off);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=crit") == 0) {
+            // Parse the output log level
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::critical);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=error") == 0) {
+            // Parse the output log level
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::err);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=warn") == 0) {
+            // Parse the output log level
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::warn);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=info") == 0) {
+            // Parse the output log level
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::info);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=trace") == 0) {
+            // Parse the log level
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::trace);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-log_level=debug") == 0) {
+            // Parse the log level
+            if (default_log_level == false) {
+                panic_exit("The option log_level was provided multiple times. Options may only be provided once.");
+            }
+
+            spdlog::set_level(spdlog::level::debug);
+
+            default_log_level = false;
+        } else if (std::strcmp(argv[i], "-calc=gravity") == 0) {
+            // Parse the calculator type
+            if (default_calculator == false) {
+                panic_exit("The option calc was provided multiple times. Options may only be provided once.");
+            }
+
+            calc = GRAVITY;
+
+            default_calculator = false;
+        } else if (std::strcmp(argv[i], "-calc=lj") == 0) {
+            // Parse the calculator type
+            if (default_calculator == false) {
+                panic_exit("The option calc was provided multiple times. Options may only be provided once.");
+            }
+
+            calc = LJ_FULL;
+
+            default_calculator = false;
         } else {
             // Parse the input file
             if (std::strlen(argv[i]) == 0) {
@@ -213,13 +382,26 @@ Environment::Environment(const int argc, const char* argv[]) {
         panic_exit("There was no input file provided.");
     }
 
-    std::cout << "The program was executed using the command line arguments." << std::endl;
-    std::cout << "    t_end = " << t_end << " (" << btos(default_end) << ")" << std::endl;
-    std::cout << "    delta_t = " << delta_t << " (" << btos(default_delta) << ")" << std::endl;
-    std::cout << "    print_step = " << print_step << " (" << btos(default_print_step) << ")" << std::endl;
-    std::cout << "    input_file = " << input_file << std::endl;
-    std::cout << "    output_file = " << output_file << " (" << btos(default_out_name) << ")" << std::endl;
-    std::cout << "    format = " << format << " (" << btos(default_file_format) << ")" << std::endl;
+    spdlog::debug("The program was executed using the command line arguments.");
+    spdlog::debug("    t_end = {} ({})", t_end, btos(default_end));
+    spdlog::debug("    delta_t = {} ({})", delta_t, btos(default_delta));
+    spdlog::debug("    sigma = {} ({})", sigma, btos(default_sigma));
+    spdlog::debug("    epsilon = {} ({})", epsilon, btos(default_epsilon));
+    spdlog::debug("    print_step = {} ({})", print_step, btos(default_print_step));
+    spdlog::debug("    input_file = {}", input_file);
+    spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
+    spdlog::debug("    format = {} ({})", static_cast<int>(format), btos(default_file_format));
+    spdlog::debug("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
+    spdlog::debug("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
+}
+
+Environment::Environment(const Environment& env) {
+    t_end = env.get_t_end();
+    delta_t = env.get_delta_t();
+    print_step = env.get_print_step();
+    input_file = env.get_input_file_name();
+    output_file = env.get_output_file_name();
+    format = env.get_output_file_format();
 }
 
 Environment::~Environment() = default;
@@ -228,6 +410,10 @@ double Environment::get_t_end() const { return t_end; }
 
 double Environment::get_delta_t() const { return delta_t; }
 
+double Environment::get_sigma() const { return sigma; }
+
+double Environment::get_epsilon() const { return epsilon; }
+
 int Environment::get_print_step() const { return print_step; }
 
 const char* Environment::get_input_file_name() const { return input_file; }
@@ -235,3 +421,5 @@ const char* Environment::get_input_file_name() const { return input_file; }
 const char* Environment::get_output_file_name() const { return output_file; }
 
 FileFormat Environment::get_output_file_format() const { return format; }
+
+CalculatorType Environment::get_calculator_type() const { return calc; }
