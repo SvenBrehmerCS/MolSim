@@ -1,12 +1,18 @@
+<?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="input.xsd">
+    xsi:noNamespaceSchemaLocation="input.xsd">
     <output>
-        <name>MD</name>
+        <name>MD_vtk</name>
+        <format>VTK</format>
         <frequency>10</frequency>
     </output>
     <param>
-        <t_end>1000.0</t_end>
+        <epsilon>5.0</epsilon>
+        <sigma>1.0</sigma>
         <delta_t>0.014</delta_t>
+        <t_end>1000.0</t_end>
+        <dimensions>3</dimensions>
+        <r_cutoff>3.0</r_cutoff>
     </param>
     <particle>
         <pos_x>0.1</pos_x>

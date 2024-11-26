@@ -3,14 +3,14 @@
 #include "Environment.h"
 #include "ParticleContainer.h"
 #include "ParticleGenerator.h"
-#include "input.hxx"
+#include "input.h"
 #include "spdlog/spdlog.h"
 #include <bits/fs_fwd.h>
 #include <bits/fs_path.h>
 #include <fstream>
 #include <iostream>
-#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 using namespace xml_schema;
 
@@ -36,7 +36,7 @@ namespace inputReader {
         }
 
 
-        //function checks if XML is valid, is defined below
+        // function checks if XML is valid, is defined below
         if (!isValidXML(filename, xsd_schema)) {
             spdlog::error("Invalid XML file {}", filename);
             std::exit(EXIT_FAILURE);
@@ -65,15 +65,30 @@ namespace inputReader {
         const char* output_file_name = sim->output().name().c_str();
         environment.set_output_file_name(output_file_name);
 
+        // TODO Fix enum implementation;
+        // const char* fstring = sim->output().format();
+        // FileFormat f = FileFormat(sim->output().format());
+        // environment.set_output_file_format(sim->output().format());
+
         int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
 
-        const double t_end = sim->param().t_end();
-        environment.set_t_end(t_end);
+        const double epsilon = sim->param().epsilon();
+        environment.set_epsilon(epsilon);
+
+        const double sigma = sim->param().sigma();
+        environment.set_sigma(sigma);
 
         const double delta_t = sim->param().delta_t();
         environment.set_delta_t(delta_t);
 
+        const double t_end = sim->param().t_end();
+        environment.set_t_end(t_end);
+
+        const int num_dimensions = sim->param().dimensions();
+
+        // const double r_cutoff = sim->param().r_cutoff();
+        // environment.set_r_cutoff(r_cutoff); TODO Don't forget to implement this function
 
         size_t t = sim->particle().size();
         if (t > INT_MAX) {
@@ -87,10 +102,7 @@ namespace inputReader {
         std::array<int, 3> N = { 0, 0, 0 };
         double m;
         double h;
-
-        // TODO !! num_dimensions in dem xml file als element unter cuboid hinzufügen, momentan hard gecoded als 3
-        int num_dimensions = 3;
-        double brownian_motion = 0.1;
+        double brownian_motion;
 
         container.resize(num_particles);
 
@@ -161,7 +173,7 @@ namespace inputReader {
 
             auto error_handler = std::make_shared<CustomErrorHandler>();
             parser->setErrorHandler(error_handler.get());
-            //parser->setExitOnFirstFatalError(true);
+            // parser->setExitOnFirstFatalError(true);
 
             /*
             Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
@@ -171,7 +183,7 @@ namespace inputReader {
                 std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
             }
             */
-            //LocalFileInputSource source(XMLString::transcode(xsd_schema));
+            // LocalFileInputSource source(XMLString::transcode(xsd_schema));
             /*
             Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
 
@@ -183,7 +195,7 @@ namespace inputReader {
             }
             */
 
-            //parsing, should throw if not valid
+            // parsing, should throw if not valid
             parser->parse(filename);
 
             if (parser->getErrorCount() > 0) {
@@ -211,5 +223,3 @@ namespace inputReader {
 
 
 }
-
-

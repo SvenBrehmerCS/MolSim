@@ -44,12 +44,6 @@ list(REMOVE_ITEM MY_TEST_SRC
 # create make target
 add_executable(MolSim ${MY_SRC})
 
-target_sources(MolSim
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd/input.cxx
-)
-
-
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
         PRIVATE
@@ -92,11 +86,6 @@ add_executable(MolTest
         ${MY_TEST}
         ${MY_TEST_SRC}
 )
-# TODO added this so that input.cxx would be included
-target_sources(MolTest
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd/input.cxx
-)
 
 target_include_directories(MolTest
         PUBLIC
@@ -112,7 +101,7 @@ gtest_discover_tests(MolTest)
 
 #include the spdlog module
 include(spdlog)
-message(STATUS "Using libxsd from: ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd")
+# message(STATUS "Using libxsd from: ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd")
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd

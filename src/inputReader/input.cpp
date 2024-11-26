@@ -38,7 +38,7 @@
 
 #include <xsd/cxx/pre.hxx>
 
-#include "input.hxx"
+#include "input.h"
 
 // sim_t
 //
@@ -161,6 +161,36 @@ name_default_value ()
   return name_default_value_;
 }
 
+const output_t::format_type& output_t::
+format () const
+{
+  return this->format_.get ();
+}
+
+output_t::format_type& output_t::
+format ()
+{
+  return this->format_.get ();
+}
+
+void output_t::
+format (const format_type& x)
+{
+  this->format_.set (x);
+}
+
+void output_t::
+format (::std::unique_ptr< format_type > x)
+{
+  this->format_.set (std::move (x));
+}
+
+const output_t::format_type& output_t::
+format_default_value ()
+{
+  return format_default_value_;
+}
+
 const output_t::frequency_type& output_t::
 frequency () const
 {
@@ -189,28 +219,52 @@ frequency_default_value ()
 // param_t
 //
 
-const param_t::t_end_type& param_t::
-t_end () const
+const param_t::epsilon_type& param_t::
+epsilon () const
 {
-  return this->t_end_.get ();
+  return this->epsilon_.get ();
 }
 
-param_t::t_end_type& param_t::
-t_end ()
+param_t::epsilon_type& param_t::
+epsilon ()
 {
-  return this->t_end_.get ();
+  return this->epsilon_.get ();
 }
 
 void param_t::
-t_end (const t_end_type& x)
+epsilon (const epsilon_type& x)
 {
-  this->t_end_.set (x);
+  this->epsilon_.set (x);
 }
 
-param_t::t_end_type param_t::
-t_end_default_value ()
+param_t::epsilon_type param_t::
+epsilon_default_value ()
 {
-  return t_end_type (1000.0);
+  return epsilon_type (5.0);
+}
+
+const param_t::sigma_type& param_t::
+sigma () const
+{
+  return this->sigma_.get ();
+}
+
+param_t::sigma_type& param_t::
+sigma ()
+{
+  return this->sigma_.get ();
+}
+
+void param_t::
+sigma (const sigma_type& x)
+{
+  this->sigma_.set (x);
+}
+
+param_t::sigma_type param_t::
+sigma_default_value ()
+{
+  return sigma_type (1.0);
 }
 
 const param_t::delta_t_type& param_t::
@@ -235,6 +289,84 @@ param_t::delta_t_type param_t::
 delta_t_default_value ()
 {
   return delta_t_type (.014);
+}
+
+const param_t::t_end_type& param_t::
+t_end () const
+{
+  return this->t_end_.get ();
+}
+
+param_t::t_end_type& param_t::
+t_end ()
+{
+  return this->t_end_.get ();
+}
+
+void param_t::
+t_end (const t_end_type& x)
+{
+  this->t_end_.set (x);
+}
+
+param_t::t_end_type param_t::
+t_end_default_value ()
+{
+  return t_end_type (1000.0);
+}
+
+const param_t::dimensions_type& param_t::
+dimensions () const
+{
+  return this->dimensions_.get ();
+}
+
+param_t::dimensions_type& param_t::
+dimensions ()
+{
+  return this->dimensions_.get ();
+}
+
+void param_t::
+dimensions (const dimensions_type& x)
+{
+  this->dimensions_.set (x);
+}
+
+void param_t::
+dimensions (::std::unique_ptr< dimensions_type > x)
+{
+  this->dimensions_.set (std::move (x));
+}
+
+param_t::dimensions_type param_t::
+dimensions_default_value ()
+{
+  return dimensions_type (3U);
+}
+
+const param_t::r_cutoff_type& param_t::
+r_cutoff () const
+{
+  return this->r_cutoff_.get ();
+}
+
+param_t::r_cutoff_type& param_t::
+r_cutoff ()
+{
+  return this->r_cutoff_.get ();
+}
+
+void param_t::
+r_cutoff (const r_cutoff_type& x)
+{
+  this->r_cutoff_.set (x);
+}
+
+param_t::r_cutoff_type param_t::
+r_cutoff_default_value ()
+{
+  return r_cutoff_type (3.0);
 }
 
 
@@ -588,6 +720,55 @@ b_motion (const b_motion_type& x)
 }
 
 
+// format
+//
+
+format::
+format (value v)
+: ::xml_schema::string (_xsd_format_literals_[v])
+{
+}
+
+format::
+format (const char* v)
+: ::xml_schema::string (v)
+{
+}
+
+format::
+format (const ::std::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+format::
+format (const ::xml_schema::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+format::
+format (const format& v,
+        ::xml_schema::flags f,
+        ::xml_schema::container* c)
+: ::xml_schema::string (v, f, c)
+{
+}
+
+format& format::
+operator= (value v)
+{
+  static_cast< ::xml_schema::string& > (*this) = 
+  ::xml_schema::string (_xsd_format_literals_[v]);
+
+  return *this;
+}
+
+
+// dimensions
+//
+
+
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
 
 // sim_t
@@ -753,13 +934,18 @@ sim_t::
 //
 
 const output_t::name_type output_t::name_default_value_ (
-  "MD");
+  "MD_vtk");
+
+const output_t::format_type output_t::format_default_value_ (
+  "VTK");
 
 output_t::
 output_t (const name_type& name,
+          const format_type& format,
           const frequency_type& frequency)
 : ::xml_schema::type (),
   name_ (name, this),
+  format_ (format, this),
   frequency_ (frequency, this)
 {
 }
@@ -770,6 +956,7 @@ output_t (const output_t& x,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   name_ (x.name_, f, this),
+  format_ (x.format_, f, this),
   frequency_ (x.frequency_, f, this)
 {
 }
@@ -780,6 +967,7 @@ output_t (const ::xercesc::DOMElement& e,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   name_ (this),
+  format_ (this),
   frequency_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -813,6 +1001,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // format
+    //
+    if (n.name () == "format" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< format_type > r (
+        format_traits::create (i, f, this));
+
+      if (!format_.present ())
+      {
+        this->format_.set (::std::move (r));
+        continue;
+      }
+    }
+
     // frequency
     //
     if (n.name () == "frequency" && n.namespace_ ().empty ())
@@ -831,6 +1033,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "name",
+      "");
+  }
+
+  if (!format_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "format",
       "");
   }
 
@@ -856,6 +1065,7 @@ operator= (const output_t& x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
     this->name_ = x.name_;
+    this->format_ = x.format_;
     this->frequency_ = x.frequency_;
   }
 
@@ -871,11 +1081,19 @@ output_t::
 //
 
 param_t::
-param_t (const t_end_type& t_end,
-         const delta_t_type& delta_t)
+param_t (const epsilon_type& epsilon,
+         const sigma_type& sigma,
+         const delta_t_type& delta_t,
+         const t_end_type& t_end,
+         const dimensions_type& dimensions,
+         const r_cutoff_type& r_cutoff)
 : ::xml_schema::type (),
+  epsilon_ (epsilon, this),
+  sigma_ (sigma, this),
+  delta_t_ (delta_t, this),
   t_end_ (t_end, this),
-  delta_t_ (delta_t, this)
+  dimensions_ (dimensions, this),
+  r_cutoff_ (r_cutoff, this)
 {
 }
 
@@ -884,8 +1102,12 @@ param_t (const param_t& x,
          ::xml_schema::flags f,
          ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  epsilon_ (x.epsilon_, f, this),
+  sigma_ (x.sigma_, f, this),
+  delta_t_ (x.delta_t_, f, this),
   t_end_ (x.t_end_, f, this),
-  delta_t_ (x.delta_t_, f, this)
+  dimensions_ (x.dimensions_, f, this),
+  r_cutoff_ (x.r_cutoff_, f, this)
 {
 }
 
@@ -894,8 +1116,12 @@ param_t (const ::xercesc::DOMElement& e,
          ::xml_schema::flags f,
          ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  epsilon_ (this),
+  sigma_ (this),
+  delta_t_ (this),
   t_end_ (this),
-  delta_t_ (this)
+  dimensions_ (this),
+  r_cutoff_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -914,13 +1140,24 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
-    // t_end
+    // epsilon
     //
-    if (n.name () == "t_end" && n.namespace_ ().empty ())
+    if (n.name () == "epsilon" && n.namespace_ ().empty ())
     {
-      if (!t_end_.present ())
+      if (!epsilon_.present ())
       {
-        this->t_end_.set (t_end_traits::create (i, f, this));
+        this->epsilon_.set (epsilon_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // sigma
+    //
+    if (n.name () == "sigma" && n.namespace_ ().empty ())
+    {
+      if (!sigma_.present ())
+      {
+        this->sigma_.set (sigma_traits::create (i, f, this));
         continue;
       }
     }
@@ -936,7 +1173,64 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // t_end
+    //
+    if (n.name () == "t_end" && n.namespace_ ().empty ())
+    {
+      if (!t_end_.present ())
+      {
+        this->t_end_.set (t_end_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // dimensions
+    //
+    if (n.name () == "dimensions" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< dimensions_type > r (
+        dimensions_traits::create (i, f, this));
+
+      if (!dimensions_.present ())
+      {
+        this->dimensions_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // r_cutoff
+    //
+    if (n.name () == "r_cutoff" && n.namespace_ ().empty ())
+    {
+      if (!r_cutoff_.present ())
+      {
+        this->r_cutoff_.set (r_cutoff_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     break;
+  }
+
+  if (!epsilon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "epsilon",
+      "");
+  }
+
+  if (!sigma_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "sigma",
+      "");
+  }
+
+  if (!delta_t_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "delta_t",
+      "");
   }
 
   if (!t_end_.present ())
@@ -946,10 +1240,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!delta_t_.present ())
+  if (!dimensions_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "delta_t",
+      "dimensions",
+      "");
+  }
+
+  if (!r_cutoff_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "r_cutoff",
       "");
   }
 }
@@ -967,8 +1268,12 @@ operator= (const param_t& x)
   if (this != &x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
-    this->t_end_ = x.t_end_;
+    this->epsilon_ = x.epsilon_;
+    this->sigma_ = x.sigma_;
     this->delta_t_ = x.delta_t_;
+    this->t_end_ = x.t_end_;
+    this->dimensions_ = x.dimensions_;
+    this->r_cutoff_ = x.r_cutoff_;
   }
 
   return *this;
@@ -1545,6 +1850,132 @@ operator= (const cuboid_t& x)
 
 cuboid_t::
 ~cuboid_t ()
+{
+}
+
+// format
+//
+
+format::
+format (const ::xercesc::DOMElement& e,
+        ::xml_schema::flags f,
+        ::xml_schema::container* c)
+: ::xml_schema::string (e, f, c)
+{
+  _xsd_format_convert ();
+}
+
+format::
+format (const ::xercesc::DOMAttr& a,
+        ::xml_schema::flags f,
+        ::xml_schema::container* c)
+: ::xml_schema::string (a, f, c)
+{
+  _xsd_format_convert ();
+}
+
+format::
+format (const ::std::string& s,
+        const ::xercesc::DOMElement* e,
+        ::xml_schema::flags f,
+        ::xml_schema::container* c)
+: ::xml_schema::string (s, e, f, c)
+{
+  _xsd_format_convert ();
+}
+
+format* format::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class format (*this, f, c);
+}
+
+format::value format::
+_xsd_format_convert () const
+{
+  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_format_literals_);
+  const value* i (::std::lower_bound (
+                    _xsd_format_indexes_,
+                    _xsd_format_indexes_ + 3,
+                    *this,
+                    c));
+
+  if (i == _xsd_format_indexes_ + 3 || _xsd_format_literals_[*i] != *this)
+  {
+    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
+  }
+
+  return *i;
+}
+
+const char* const format::
+_xsd_format_literals_[3] =
+{
+  "NO_OUT",
+  "VTK",
+  "XYZ"
+};
+
+const format::value format::
+_xsd_format_indexes_[3] =
+{
+  ::format::NO_OUT,
+  ::format::VTK,
+  ::format::XYZ
+};
+
+// dimensions
+//
+
+dimensions::
+dimensions (const ::xml_schema::unsigned_byte& _xsd_unsigned_byte_base)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::unsigned_byte, char, ::xml_schema::simple_type > (_xsd_unsigned_byte_base)
+{
+}
+
+dimensions::
+dimensions (const dimensions& x,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::unsigned_byte, char, ::xml_schema::simple_type > (x, f, c)
+{
+}
+
+dimensions::
+dimensions (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::unsigned_byte, char, ::xml_schema::simple_type > (e, f, c)
+{
+}
+
+dimensions::
+dimensions (const ::xercesc::DOMAttr& a,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::unsigned_byte, char, ::xml_schema::simple_type > (a, f, c)
+{
+}
+
+dimensions::
+dimensions (const ::std::string& s,
+            const ::xercesc::DOMElement* e,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::unsigned_byte, char, ::xml_schema::simple_type > (s, e, f, c)
+{
+}
+
+dimensions* dimensions::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class dimensions (*this, f, c);
+}
+
+dimensions::
+~dimensions ()
 {
 }
 
