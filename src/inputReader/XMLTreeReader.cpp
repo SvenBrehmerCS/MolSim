@@ -65,10 +65,20 @@ namespace inputReader {
         const char* output_file_name = sim->output().name().c_str();
         environment.set_output_file_name(output_file_name);
 
-        // TODO Fix enum implementation;
-        // const char* fstring = sim->output().format();
-        // FileFormat f = FileFormat(sim->output().format());
-        // environment.set_output_file_format(sim->output().format());
+        output_t::format_type temp = sim->output().format();
+        switch (temp) {
+        case NO_OUT:
+            environment.set_output_file_format(NO_OUT);
+            break;
+        case VTK:
+            environment.set_output_file_format(VTK);
+            break;
+        case XYZ:
+            environment.set_output_file_format(XYZ);
+            break;
+        default:
+            std::exit(EXIT_FAILURE);
+        }
 
         int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
