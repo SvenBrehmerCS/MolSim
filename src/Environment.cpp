@@ -436,4 +436,11 @@ void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
 
 void Environment::set_output_file_name(const char* output_file_name) { this->output_file = output_file_name; }
 
+void Environment::set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
+
+void Environment::set_output_file_format(const FileFormat format) { this->format = format; }
+
+
+
+
 

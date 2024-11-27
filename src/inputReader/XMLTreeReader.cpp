@@ -179,33 +179,10 @@ namespace inputReader {
             parser->setDoNamespaces(true);
             parser->setDoSchema(true);
             parser->setValidationConstraintFatal(true);
-            parser->setValidationSchemaFullChecking(true);
+            //parser->setValidationSchemaFullChecking(true);
 
             auto error_handler = std::make_shared<CustomErrorHandler>();
             parser->setErrorHandler(error_handler.get());
-            // parser->setExitOnFirstFatalError(true);
-
-            /*
-            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
-            if (grammar == nullptr) {
-                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
-            } else {
-                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
-            }
-            */
-            // LocalFileInputSource source(XMLString::transcode(xsd_schema));
-            /*
-            Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
-
-            if (grammar == nullptr) {
-                std::cerr << "Fehler: loadGrammar hat kein Schema geladen (nullptr)." << std::endl;
-                return false;
-            } else {
-                std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
-            }
-            */
-
-            // parsing, should throw if not valid
             parser->parse(filename);
 
             if (parser->getErrorCount() > 0) {

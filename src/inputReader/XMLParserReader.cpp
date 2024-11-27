@@ -15,7 +15,7 @@ namespace inputReader {
 
     XMLParserReader::~XMLParserReader() = default;
 
-    void XMLParserReader::readFile(const char* filename) {
+    void XMLParserReader::readFile(ParticleContainer& container, const char* filename) {
         try {
             // Instantiate individual parsers.
             //
