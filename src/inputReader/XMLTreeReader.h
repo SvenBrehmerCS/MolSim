@@ -40,15 +40,40 @@ namespace inputReader {
          * @param environment will set the environment variables read in from @filename to this environment
          *
          */
-        void readFile(ParticleContainer& container, const char* filename) override { }
-        void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment);
+        void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment) ;
+
+        /**
+         * checks if the filename is a validXML
+         *
+         * @param filename the specified file
+         *
+         */
         bool isValidXML(const char* filename, const char* xsdfile);
 
+
+        /**
+         * This method has no use in this class, but needs to be implemented
+         * @param container
+         * @param filename
+         */
+        void readFile(ParticleContainer& container, const char* filename) override {
+            spdlog::info("This function is of no use in this class XMLTreeReader but needs to be overridden, use the other function and specify the parameters accordingly");
+        }
+
+
+        /**
+         * A struct to initalize the XML Utils, supports RAII memory deallocation.
+         *
+         */
         struct XMLInitializer {
             XMLInitializer() { XMLPlatformUtils::Initialize(); }
             ~XMLInitializer() { XMLPlatformUtils::Terminate(); }
         };
 
+
+        /**
+         * A custom ErrorHandler
+         */
         class CustomErrorHandler : public HandlerBase {
         public:
             void fatalError(const SAXParseException& e) override {
