@@ -10,7 +10,7 @@ namespace inputReader {
         XMLParserReader();
         virtual ~XMLParserReader();
 
-        virtual void readFile(const char* filename); // TODO
+        virtual void readFile(ParticleContainer& container, const char* filename); // TODO
     };
 
 } // namespace inputReader

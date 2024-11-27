@@ -30,7 +30,7 @@ TEST(XMLTreeReader, Test1) {
 
     inputReader::XMLTreeReader reader;
     reader.readFile(container, xml, xsd_schema, environment);
-    EXPECT_EQ(environment.get_delta_t(), 0.14);
+    EXPECT_EQ(environment.get_delta_t(), 0.014);
     EXPECT_EQ(environment.get_t_end(), 1000);
 }
 
