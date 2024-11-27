@@ -6,10 +6,8 @@
 
 #pragma once
 
-#include "../ParticleContainer.h"
+#include "ParticleContainer.h"
 #include <string>
-
-class Particle;
 
 /**
  * @brief Collection of writers for different output types

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "../Environment.h"
-#include "../ParticleContainer.h"
+#include "Environment.h"
+#include "ParticleContainer.h"
 
 /**
  * @brief Collection of calculators for different levels of complexity.
@@ -58,9 +58,14 @@ namespace physicsCalculator {
         virtual ~Calculator() {};
 
         /**
+         * Get the force absolute and sign direction between two particles.
+         */
+        virtual double calculateFAbs(const Particle& p1, const Particle& p2) = 0;
+
+        /**
          * Update the forces experienced by all the particles.
          */
-        virtual void calculateF() = 0;
+        void calculateF();
 
         /**
          * Update the old forces and set the current forces to 0.

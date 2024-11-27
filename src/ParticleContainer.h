@@ -9,6 +9,9 @@
 #include "Particle.h"
 #include <iterator>
 #include <vector>
+#include <functional>
+
+typedef void(particle_it)(Particle&, Particle&);
 
 /**
  * @class ParticleContainer
@@ -94,4 +97,9 @@ public:
      * @param new_size  Number of elements the particle container should contain.
      */
     void resize(size_t new_size);
+
+    /**
+     * Iterate over all pairs and apply the provided method to both particles of the pair.
+     */
+    void iterate_pairs(std::function<particle_it> iterator);
 };

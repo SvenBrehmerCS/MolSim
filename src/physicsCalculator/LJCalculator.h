@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "../Environment.h"
-#include "../ParticleContainer.h"
-#include "../utils/ArrayUtils.h"
+#include "Environment.h"
+#include "ParticleContainer.h"
+#include "utils/ArrayUtils.h"
 #include "Calculator.h"
 
 namespace physicsCalculator {
@@ -43,9 +43,6 @@ namespace physicsCalculator {
          */
         virtual ~LJCalculator();
 
-        /**
-         * Update the forces experienced by all the particles based on the Lenard Jones calculation scheme.
-         */
-        virtual void calculateF();
+        virtual double calculateFAbs(const Particle& p1, const Particle& p2);
     };
 } // namespace physicsCalculator

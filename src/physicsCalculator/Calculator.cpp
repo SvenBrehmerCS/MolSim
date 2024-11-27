@@ -1,7 +1,7 @@
 #include "Calculator.h"
 
-#include "../inputReader/FileReader.h"
-#include "../inputReader/Reader.h"
+#include "inputReader/FileReader.h"
+#include "inputReader/Reader.h"
 
 #include "utils/ArrayUtils.h"
 
@@ -58,6 +58,18 @@ namespace physicsCalculator {
         }
 
         spdlog::debug("Updated the positions.");
+    }
+
+    void Calculator::calculateF() {
+        container.iterate_pairs([this](Particle& i, Particle& j) {
+            const double force = this->calculateFAbs(i, j);
+
+            // Update the forces for both particles
+            i.setF(force * (j.getX() - i.getX()) + i.getF());
+            j.setF(force * (i.getX() - j.getX()) + j.getF());
+        });
+
+        spdlog::debug("Calculated the new force.");
     }
 
     void Calculator::calculateV() {

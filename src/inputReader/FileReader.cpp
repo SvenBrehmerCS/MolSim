@@ -7,7 +7,7 @@
 
 
 #include "FileReader.h"
-#include "../Particle.h"
+#include "Particle.h"
 
 #include <ParticleGenerator.h>
 #include <cstdlib>

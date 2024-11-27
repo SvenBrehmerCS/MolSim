@@ -6,7 +6,7 @@
  */
 
 #include "XYZWriter.h"
-#include "../Particle.h"
+#include "Particle.h"
 #include <iomanip>
 #include <sstream>
 

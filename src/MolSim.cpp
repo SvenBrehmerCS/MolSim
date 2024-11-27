@@ -6,8 +6,6 @@
 #include "outputWriter/XYZWriter.h"
 #include "physicsCalculator/GravityCalculator.h"
 #include "physicsCalculator/LJCalculator.h"
-#include "solver/Analytical.h"
-#include "utils/ArrayUtils.h"
 
 #include <filesystem>
 #include <iostream>

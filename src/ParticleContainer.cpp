@@ -17,3 +17,11 @@ std::vector<Particle>::const_iterator ParticleContainer::end() const { return pa
 size_t ParticleContainer::size() const { return particles.size(); }
 
 void ParticleContainer::resize(size_t new_size) { particles.resize(new_size); }
+
+void ParticleContainer::iterate_pairs(std::function<particle_it> iterator) {
+    for (auto i = begin(); i < end(); i++) {
+        for (auto j = i + 1; j < end(); j++) {
+            iterator(*i, *j);
+        }
+    }
+}

@@ -22,19 +22,9 @@ namespace physicsCalculator {
 
     GravityCalculator::~GravityCalculator() = default;
 
-    void GravityCalculator::calculateF() {
-        for (auto i = container.begin(); i < container.end(); i++) {
-            for (auto j = i + 1; j < container.end(); j++) {
-                // Calculate the distance and force experienced by two particles
-                const double distance = ArrayUtils::L2Norm(j->getX() - i->getX());
-                const double force = i->getM() * j->getM() / (distance * distance * distance);
-
-                // Update the forces for both particles
-                i->setF(force * (j->getX() - i->getX()) + i->getF());
-                j->setF(force * (i->getX() - j->getX()) + j->getF());
-            }
-        }
-
-        spdlog::debug("Calculated the new force.");
+    double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2) { // Calculate the distance and force experienced by two particles
+        const double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
+        return p1.getM() * p2.getM() / (distance * distance * distance);
     }
+
 } // namespace physicsCalculator
