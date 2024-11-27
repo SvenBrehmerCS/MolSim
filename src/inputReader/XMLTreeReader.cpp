@@ -99,6 +99,7 @@ namespace inputReader {
 
         // const double r_cutoff = sim->param().r_cutoff();
         // environment.set_r_cutoff(r_cutoff); TODO Don't forget to implement this function
+        // TODO implement calculator type parsing
 
         size_t t = sim->particle().size();
         if (t > INT_MAX) {
@@ -175,11 +176,13 @@ namespace inputReader {
             // create a Parser
             auto parser = std::make_shared<XercesDOMParser>();
 
+            // TODO Take a look at parser->setExternalNoNamespaceSchemaLocation() and find a way xml is correct
+
             parser->setValidationScheme(XercesDOMParser::Val_Always);
             parser->setDoNamespaces(true);
             parser->setDoSchema(true);
             parser->setValidationConstraintFatal(true);
-            //parser->setValidationSchemaFullChecking(true);
+            // parser->setValidationSchemaFullChecking(true);
 
             auto error_handler = std::make_shared<CustomErrorHandler>();
             parser->setErrorHandler(error_handler.get());
@@ -207,6 +210,4 @@ namespace inputReader {
         }
         return true;
     }
-
-
 }

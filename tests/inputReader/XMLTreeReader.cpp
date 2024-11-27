@@ -10,7 +10,25 @@
 #include <fstream>
 #include <gtest/gtest.h>
 
-
+/**
+ * // TODO
+ * (Sven)
+ * Empty XML
+ * Error on restricted types(enumerations/dimensions)(isValid)
+ * no value(pos_x) => error (isValid)(Sven)
+ * Wrong value types (isValid)
+ *
+ *
+ * (Fred)
+ * Non default values = non default values
+ *
+ * Particles/Cuboids:
+ *      correct values and numbers of elements
+ *      no element = empty lists
+ *
+ * -----------------------------
+ * (?num elements > size_t?)
+ */
 TEST(XMLTreeReader, Test1) {
     const char* xml = "../res/input.xml";
     const char* xsd_schema = "../res/input.xsd";
@@ -33,4 +51,3 @@ TEST(XMLTreeReader, Test1) {
     EXPECT_EQ(environment.get_delta_t(), 0.014);
     EXPECT_EQ(environment.get_t_end(), 1000);
 }
-
