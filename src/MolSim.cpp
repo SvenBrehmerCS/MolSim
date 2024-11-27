@@ -1,5 +1,7 @@
 
 #include "MolSim.h"
+#include "boundaries/InfContainer.h"
+#include "boundaries/InfStepper.h"
 #include "inputReader/FileReader.h"
 #include "outputWriter/NoWriter.h"
 #include "outputWriter/VTKWriter.h"
@@ -63,6 +65,19 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
+    // Initialize the stepper
+    std::unique_ptr<Stepper> stepper { nullptr };
+
+    switch (INF_CONT) {
+    case INF_CONT:
+        stepper.reset(new InfStepper());
+        break;
+
+    default:
+        spdlog::critical("Error: Illegal step specifier.");
+        std::exit(EXIT_FAILURE);
+        break;
+    }
 
     // Initialize the simulation environment
     double current_time = 0.0;
@@ -75,7 +90,7 @@ int main(const int argc, const char* argv[]) {
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // Update x, v, f
-        calculator->step();
+        stepper->step(*calculator);
 
         iteration++;
         current_time += env.get_delta_t();

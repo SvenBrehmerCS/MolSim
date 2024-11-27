@@ -1,10 +1,12 @@
 #include <ParticleGenerator.h>
 #include <gtest/gtest.h>
 
+#include <boundaries/InfContainer.h>
+
 // test if the Particles are initialized correctly if there are no previous particles in the container
 TEST(ParticleGenerator, GenerateCuboid) {
     ParticleGenerator generator;
-    ParticleContainer container;
+    InfContainer container;
 
     std::array<double, 3> x = { 0.0, 0.0, 0.0 };
     std::array<double, 3> y = { 1.0, 1.0, 1.0 };
@@ -69,7 +71,7 @@ TEST(ParticleGenerator, GenerateCuboid) {
 // changed.
 TEST(ParticleGenerator, GenerateCuboidWithParticles) {
     ParticleGenerator generator;
-    ParticleContainer container;
+    InfContainer container;
 
     std::array<double, 3> x = { 0.0, 0.0, 0.0 };
     std::array<double, 3> y = { 1.0, 1.0, 1.0 };
@@ -129,7 +131,7 @@ TEST(ParticleGenerator, GenerateCuboidWithParticles) {
 // tests the velocity with a brownian motion of 0
 TEST(ParticleGenerator, GenerateCuboidNoMotion) {
     ParticleGenerator generator;
-    ParticleContainer container;
+    InfContainer container;
 
     std::array<double, 3> x = { 0.0, 0.0, 0.0 };
     std::array<double, 3> y = { 1.0, 1.0, 1.0 };

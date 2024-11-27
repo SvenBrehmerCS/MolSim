@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "ParticleContainer.h"
+#include "boundaries/ParticleContainer.h"
 #include <string>
 
 /**

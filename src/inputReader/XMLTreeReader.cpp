@@ -1,16 +1,16 @@
 #include "XMLTreeReader.h"
 
 #include "Environment.h"
-#include "ParticleContainer.h"
 #include "ParticleGenerator.h"
+#include "boundaries/ParticleContainer.h"
 #include "input.hxx"
 #include "spdlog/spdlog.h"
 #include <bits/fs_fwd.h>
 #include <bits/fs_path.h>
 #include <fstream>
 #include <iostream>
-#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 using namespace xml_schema;
 
@@ -37,7 +37,7 @@ namespace inputReader {
             parser->setDoSchema(true);
             parser->setValidationConstraintFatal(true);
             parser->setValidationSchemaFullChecking(true);
-            //parser->setExitOnFirstFatalError(true);
+            // parser->setExitOnFirstFatalError(true);
 
             /*
             Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
@@ -47,7 +47,7 @@ namespace inputReader {
                 std::cout << "Grammatik erfolgreich geladen: " << grammar << std::endl;
             }
             */
-            //LocalFileInputSource source(XMLString::transcode(xsd_schema));
+            // LocalFileInputSource source(XMLString::transcode(xsd_schema));
             Grammar* grammar = parser->loadGrammar(xsd_schema, Grammar::SchemaGrammarType, true);
 
             if (grammar == nullptr) {
@@ -60,10 +60,10 @@ namespace inputReader {
             auto error_handler = std::make_shared<CustomErrorHandler>();
             parser->setErrorHandler(error_handler.get());
 
-            //parsing, should throw if not valid
+            // parsing, should throw if not valid
             parser->parse(filename);
 
-            //TODO geht hier rein immer, weil anscheinend ein Fehler in parser.parse(filename) auftritt.
+            // TODO geht hier rein immer, weil anscheinend ein Fehler in parser.parse(filename) auftritt.
             if (parser->getErrorCount() > 0) {
                 spdlog::error("Error parsing file {}", filename);
                 std::exit(EXIT_FAILURE);

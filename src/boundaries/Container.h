@@ -10,6 +10,10 @@ typedef void(index_it)(size_t);
 
 typedef void(index_pair_it)(size_t, size_t);
 
+typedef void(particle_it)(Particle&);
+
+typedef void(particle_pair_it)(Particle&, Particle&);
+
 class Cell;
 
 class CellList {
@@ -21,20 +25,27 @@ private:
 public:
     CellList();
 
+    CellList(const double rc, const size_t n_x, const size_t n_y, const size_t n_z);
+
     ~CellList();
 
     size_t get_cell_index(size_t x, size_t y, size_t z);
 
+    void create_list(std::vector<Particle>& particles);
+
     void iterate_boundary_cells(std::function<index_it> iterator);
+
+    void loop_boundary_cells(std::function<particle_it> iterator, std::vector<Particle>& particles);
 
     void iterate_halo_cells(std::function<index_it> iterator);
 
-    void loop_cell_pairs(std::function<index_pair_it> iterator, std::vector<Particle> &particles);
+    void loop_cell_pairs(std::function<particle_pair_it> iterator, std::vector<Particle>& particles);
+
+    double getRC();
 };
 
 class Cell {
 private:
-    // TODO: Replace this list with a non shrinking vector
     std::list<size_t> list;
     CellList* cells;
     size_t x, y, z;
@@ -46,9 +57,17 @@ public:
 
     ~Cell();
 
+    void add_particle(size_t add);
+
     void add_particles(std::list<size_t>& add);
 
     void remove_particles(std::list<size_t>& remove);
 
     void iterate_particle_indicies(std::function<index_it> iterator);
+
+    void iterate_particle_pairs(std::function<particle_pair_it> iterator, std::vector<Particle>& particles);
+
+    std::list<size_t>::iterator begin();
+
+    std::list<size_t>::iterator end();
 };

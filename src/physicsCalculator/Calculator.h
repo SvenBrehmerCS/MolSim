@@ -7,7 +7,9 @@
 #pragma once
 
 #include "Environment.h"
-#include "ParticleContainer.h"
+#include "boundaries/ParticleContainer.h"
+
+#include <memory>
 
 /**
  * @brief Collection of calculators for different levels of complexity.
@@ -24,7 +26,7 @@ namespace physicsCalculator {
         /**
          * Store the particles used throughout the simulation.
          */
-        ParticleContainer container;
+        std::unique_ptr<ParticleContainer> container;
 
         /**
          * Store the simulation environment used throughout the simulation.
@@ -56,6 +58,11 @@ namespace physicsCalculator {
          * Define the default destructor for every calculator.
          */
         virtual ~Calculator() {};
+
+        /**
+         * Get the force absolute and sign direction between two particles.
+         */
+        virtual double calculateFDist(const double dist) const = 0;
 
         /**
          * Get the force absolute and sign direction between two particles.
@@ -93,5 +100,12 @@ namespace physicsCalculator {
          * @return A reference to the particle container.
          */
         ParticleContainer& get_container();
+
+        /**
+         * Get a reference to the simulation environment.
+         *
+         * @return A reference to the simulation environment.
+         */
+        const Environment& get_env() const;
     };
 } // namespace physicsCalculator
