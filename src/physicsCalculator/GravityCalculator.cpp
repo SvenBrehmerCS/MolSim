@@ -2,6 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include "boundaries/InfContainer.h"
+
 namespace physicsCalculator {
     GravityCalculator::GravityCalculator(const Environment& new_env)
         : Calculator(new_env) {
@@ -9,10 +11,21 @@ namespace physicsCalculator {
         calculateF();
     }
 
-    GravityCalculator::GravityCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces) {
+    GravityCalculator::GravityCalculator(
+        const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const Boundary type) {
         spdlog::warn("Called a GravityCalculator constructor which should only be used for testing.");
         env = new_env;
-        container = ParticleContainer(particles);
+
+        switch (type) {
+        case INF_CONT:
+            container.reset(new InfContainer(particles));
+            break;
+
+        default:
+            spdlog::critical("Tried to create a simulation with an illegal particle type: {}", static_cast<int>(type));
+            break;
+        }
+
 
         // Initialize the forces
         if (init_forces) {
@@ -22,19 +35,14 @@ namespace physicsCalculator {
 
     GravityCalculator::~GravityCalculator() = default;
 
-    void GravityCalculator::calculateF() {
-        for (auto i = container.begin(); i < container.end(); i++) {
-            for (auto j = i + 1; j < container.end(); j++) {
-                // Calculate the distance and force experienced by two particles
-                const double distance = ArrayUtils::L2Norm(j->getX() - i->getX());
-                const double force = i->getM() * j->getM() / (distance * distance * distance);
-
-                // Update the forces for both particles
-                i->setF(force * (j->getX() - i->getX()) + i->getF());
-                j->setF(force * (i->getX() - j->getX()) + j->getF());
-            }
-        }
-
-        spdlog::debug("Calculated the new force.");
+    double GravityCalculator::calculateFDist(const double dist) const {
+        spdlog::error("Called calculate abs f on force calculator");
+        return 0.0;
     }
+
+    double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2) { // Calculate the distance and force experienced by two particles
+        const double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
+        return p1.getM() * p2.getM() / (distance * distance * distance);
+    }
+
 } // namespace physicsCalculator

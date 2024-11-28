@@ -1,8 +1,8 @@
 #include "XMLTreeReader.h"
 
 #include "Environment.h"
-#include "ParticleContainer.h"
 #include "ParticleGenerator.h"
+#include "boundaries/ParticleContainer.h"
 #include "input.h"
 #include "spdlog/spdlog.h"
 #include <bits/fs_fwd.h>

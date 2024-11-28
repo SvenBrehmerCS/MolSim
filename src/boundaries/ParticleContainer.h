@@ -7,8 +7,19 @@
 #pragma once
 
 #include "Particle.h"
+#include <functional>
 #include <iterator>
 #include <vector>
+
+typedef void(particle_pair_it)(Particle&, Particle&);
+
+enum Boundary : int {
+    INF_CONT,
+    HALO,
+    HARD,
+    PERIODIC,
+    OUTFLOW,
+};
 
 /**
  * @class ParticleContainer
@@ -16,7 +27,7 @@
  * @brief Store all the particles during the simulation.
  */
 class ParticleContainer {
-private:
+protected:
     /**
      * Store all the particles required during the simulation.
      */
@@ -94,4 +105,9 @@ public:
      * @param new_size  Number of elements the particle container should contain.
      */
     void resize(size_t new_size);
+
+    /**
+     * Iterate over all pairs and apply the provided method to both particles of the pair.
+     */
+    virtual void iterate_pairs(std::function<particle_pair_it> iterator) = 0;
 };

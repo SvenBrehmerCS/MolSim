@@ -3,7 +3,8 @@
 //
 #include "inputReader/XMLTreeReader.h"
 #include "Environment.h"
-#include "ParticleContainer.h"
+#include "boundaries/InfContainer.h"
+#include "boundaries/ParticleContainer.h"
 
 #include <bits/fs_fwd.h>
 #include <bits/fs_path.h>
@@ -36,7 +37,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     const char* xsd_schema = "../tests/res/input.xsd";
 
     Environment environment;
-    ParticleContainer container;
+    InfContainer container;
     inputReader::XMLTreeReader reader;
 
     reader.readFile(container, xml, xsd_schema, environment);

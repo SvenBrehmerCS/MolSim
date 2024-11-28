@@ -1,13 +1,16 @@
 
 #include "MolSim.h"
+#include "boundaries/BoxContainer.h"
+#include "boundaries/HaloStepper.h"
+#include "boundaries/InfContainer.h"
+#include "boundaries/InfStepper.h"
+#include "boundaries/OutStepper.h"
 #include "inputReader/FileReader.h"
 #include "outputWriter/NoWriter.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "physicsCalculator/GravityCalculator.h"
 #include "physicsCalculator/LJCalculator.h"
-#include "solver/Analytical.h"
-#include "utils/ArrayUtils.h"
 
 #include <filesystem>
 #include <iostream>
@@ -19,6 +22,8 @@
  */
 int main(const int argc, const char* argv[]) {
     namespace fs = std::filesystem;
+
+    // TODO: Use the correct containers.
 
     // Initialize the simulation environment, readers and writers.
     Environment env(argc, argv);
@@ -65,6 +70,32 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
+    // Initialize the stepper
+    std::unique_ptr<Stepper> stepper { nullptr };
+
+    switch (INF_CONT) {
+    case INF_CONT:
+        stepper.reset(new InfStepper());
+        break;
+    case HALO:
+        stepper.reset(new HaloStepper());
+        break;
+    case HARD:
+        spdlog::warn("Not yet implemented.");
+        std::exit(EXIT_FAILURE);
+        break;
+    case OUTFLOW:
+        stepper.reset(new OutStepper());
+        break;
+    case PERIODIC:
+        spdlog::warn("Not yet implemented.");
+        std::exit(EXIT_FAILURE);
+        break;
+    default:
+        spdlog::critical("Error: Illegal step specifier.");
+        std::exit(EXIT_FAILURE);
+        break;
+    }
 
     // Initialize the simulation environment
     double current_time = 0.0;
@@ -77,7 +108,7 @@ int main(const int argc, const char* argv[]) {
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // Update x, v, f
-        calculator->step();
+        stepper->step(*calculator);
 
         iteration++;
         current_time += env.get_delta_t();

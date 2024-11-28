@@ -2,6 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include "boundaries/InfContainer.h"
+
 namespace physicsCalculator {
     LJCalculator::LJCalculator(const Environment& new_env)
         : Calculator(new_env) {
@@ -9,10 +11,19 @@ namespace physicsCalculator {
         calculateF();
     }
 
-    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces) {
+    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const Boundary type) {
         spdlog::warn("Called a LJCalculator constructor which should only be used for testing.");
         env = new_env;
-        container = ParticleContainer(particles);
+
+        switch (type) {
+        case INF_CONT:
+            container.reset(new InfContainer(particles));
+            break;
+
+        default:
+            spdlog::critical("Tried to create a simulation with an illegal particle type: {}", static_cast<int>(type));
+            break;
+        }
 
         // Initialize the forces
         if (init_forces) {
@@ -22,23 +33,19 @@ namespace physicsCalculator {
 
     LJCalculator::~LJCalculator() = default;
 
-    void LJCalculator::calculateF() {
-        for (auto i = container.begin(); i < container.end(); i++) {
-            for (auto j = i + 1; j < container.end(); j++) {
-                // Calculate the distance and force experienced by two particles
-                const double distance = ArrayUtils::L2Norm(i->getX() - j->getX());
-                // Calculate the powers of (sigma / distance)
-                const double term = (env.get_sigma() / distance);
-                const double term_to_2 = term * term;
-                const double term_to_6 = term_to_2 * term_to_2 * term_to_2;
-                const double force = (-24.0 * env.get_epsilon() / (distance * distance)) * (term_to_6 - 2.0 * term_to_6 * term_to_6);
+    double LJCalculator::calculateFAbs(const Particle& p1, const Particle& p2) {
+        // Calculate the distance and force experienced by two particles
+        const double distance = ArrayUtils::L2Norm(p1.getX() - p2.getX());
 
-                // Update the forces for both particles
-                i->setF(force * (i->getX() - j->getX()) + i->getF());
-                j->setF(force * (j->getX() - i->getX()) + j->getF());
-            }
-        }
+        return calculateFDist(distance);
+    }
 
-        spdlog::debug("Calculated the new force.");
+    double LJCalculator::calculateFDist(const double dist) const {
+        // Calculate the powers of (sigma / distance)
+        const double term = (env.get_sigma() / dist);
+        const double term_to_2 = term * term;
+        const double term_to_6 = term_to_2 * term_to_2 * term_to_2;
+
+        return (24.0 * env.get_epsilon() / (dist * dist)) * (term_to_6 - 2.0 * term_to_6 * term_to_6);
     }
 } // namespace physicsCalculator

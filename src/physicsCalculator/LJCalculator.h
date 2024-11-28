@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "../Environment.h"
-#include "../ParticleContainer.h"
-#include "../utils/ArrayUtils.h"
+#include "Environment.h"
+#include "boundaries/ParticleContainer.h"
+#include "utils/ArrayUtils.h"
 #include "Calculator.h"
 
 namespace physicsCalculator {
@@ -36,16 +36,15 @@ namespace physicsCalculator {
          * @param particles The vector storing the particles that should be used throughout the simulation.
          * @param init_forces Define wether the forces should be initialized.
          */
-        LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true);
+        LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const Boundary type = INF_CONT);
 
         /**
          * Define a constructor for a Lenard Jones calculator.
          */
         virtual ~LJCalculator();
 
-        /**
-         * Update the forces experienced by all the particles based on the Lenard Jones calculation scheme.
-         */
-        virtual void calculateF();
+        virtual double calculateFAbs(const Particle& p1, const Particle& p2);
+
+        virtual double calculateFDist(const double dist) const;
     };
 } // namespace physicsCalculator

@@ -17,3 +17,5 @@ std::vector<Particle>::const_iterator ParticleContainer::end() const { return pa
 size_t ParticleContainer::size() const { return particles.size(); }
 
 void ParticleContainer::resize(size_t new_size) { particles.resize(new_size); }
+
+

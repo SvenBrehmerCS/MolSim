@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include "../Environment.h"
-#include "../ParticleContainer.h"
-#include "../utils/ArrayUtils.h"
 #include "Calculator.h"
+#include "Environment.h"
+#include "boundaries/ParticleContainer.h"
+#include "utils/ArrayUtils.h"
 
 namespace physicsCalculator {
 
@@ -36,7 +36,8 @@ namespace physicsCalculator {
          * @param particles The vector storing the particles that should be used throughout the simulation.
          * @param init_forces Define wether the forces should be initialized.
          */
-        GravityCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true);
+        GravityCalculator(
+            const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const Boundary type = INF_CONT);
 
         /**
          * Define a constructor for a gravity calculator.
@@ -44,8 +45,13 @@ namespace physicsCalculator {
         virtual ~GravityCalculator();
 
         /**
-         * Update the forces experienced by all the particles based on the gravity calculation scheme.
+         * Get the force absolute and sign direction between two particles.
          */
-        virtual void calculateF();
+        virtual double calculateFAbs(const Particle& p1, const Particle& p2);
+        
+        /**
+         * Get the force absolute and sign direction between two particles.
+         */
+        virtual double calculateFDist(const double dist) const;
     };
 } // namespace physicsCalculator
