@@ -19,7 +19,7 @@ namespace inputReader {
     XMLTreeReader::~XMLTreeReader() = default;
 
 
-    void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema, Environment& environment) {
+    void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, Environment& environment) {
         spdlog::debug("Reading XML input {}", filename);
 
         std::ifstream XMLFile(filename);
@@ -74,8 +74,8 @@ namespace inputReader {
 
         const int num_dimensions = sim->param().dimensions();
 
-        // const double r_cutoff = sim->param().r_cutoff();
-        // environment.set_r_cutoff(r_cutoff); TODO Don't forget to implement this function
+        const double r_cutoff = sim->param().r_cutoff();
+        environment.set_r_cutoff(r_cutoff);
 
         spdlog::debug("Generating particles");
 

@@ -36,11 +36,10 @@ namespace inputReader {
          *
          * @param container data structure for holding the particles.
          * @param filename file path to xml input file.
-         * @param xsdfile specifies the rules for the xml file @filename
          * @param environment will set the environment variables read in from @filename to this environment
          *
          */
-        void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment);
+        void readFile(ParticleContainer& container, const char* filename, Environment& environment);
 
         /**
          * This method has no use in this class, but needs to be implemented

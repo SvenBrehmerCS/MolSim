@@ -97,6 +97,11 @@ private:
      */
     CalculatorType calc = LJ_FULL;
 
+    /**
+     * Store the radius beyond which force calculation is cut off.
+     */
+    double r_cutoff = 3.0;
+
 public:
     /**
      * Create a standard environment with all arguments being initialized to their default. The input file name will be null.
@@ -186,6 +191,12 @@ public:
      */
     CalculatorType get_calculator_type() const;
 
+    /**
+     * Get the cutoff radius beyond which forces no longer affect particles.
+     *
+     * @return The radius.
+     */
+    double get_r_cutoff() const;
 
     /**
      * Set the end time (duration) of the simulation.
@@ -248,4 +259,11 @@ public:
      * @param calculator_type The calculator type.
      */
     void set_calculator_type(const CalculatorType calculator_type);
+
+    /**
+     * Set the cutoff radius beyond which forces no longer affect particles.
+     *
+     * @param r_cutoff The radius.
+     */
+    void set_r_cutoff(const double r_cutoff);
 };

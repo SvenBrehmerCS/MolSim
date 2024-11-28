@@ -34,13 +34,12 @@
 // this tests if the non default values given in the xml file, are set correctly
 TEST(XMLTreeReader, TestNonDefaultValues) {
     const char* xml = "../tests/res/testNonDefault.xml";
-    const char* xsd_schema = "../tests/res/input.xsd";
 
     Environment environment;
     InfContainer container;
     inputReader::XMLTreeReader reader;
 
-    reader.readFile(container, xml, xsd_schema, environment);
+    reader.readFile(container, xml, environment);
     EXPECT_EQ(container.size(), 0);
     EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
     EXPECT_EQ(environment.get_output_file_format(), XYZ);

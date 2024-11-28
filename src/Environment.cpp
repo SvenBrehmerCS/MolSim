@@ -424,6 +424,8 @@ FileFormat Environment::get_output_file_format() const { return format; }
 
 CalculatorType Environment::get_calculator_type() const { return calc; }
 
+double Environment::get_r_cutoff() const { return r_cutoff; }
+
 void Environment::set_delta_t(const double delta_t) { this->delta_t = delta_t; }
 
 void Environment::set_sigma(const double sigma) { this->sigma = sigma; }
@@ -440,7 +442,4 @@ void Environment::set_calculator_type(const CalculatorType calculator_type) { th
 
 void Environment::set_output_file_format(const FileFormat format) { this->format = format; }
 
-
-
-
-
+void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
