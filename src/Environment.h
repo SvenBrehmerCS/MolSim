@@ -11,7 +11,7 @@
  *
  * @brief The enum describes the different file formats used by this program.
  */
-enum FileFormat : int {
+enum FileFormat {
     /**
      * Define the no output format.
      */
@@ -33,16 +33,16 @@ enum FileFormat : int {
  *
  * @brief This enum describes the different calculators used by this program.
  */
-enum CalculatorType : int {
+enum CalculatorType {
     /**
      * Define the gravity calculation type.
      */
-    GRAVITY = 1,
+    GRAVITY = 0,
 
     /**
      * Define the lenard jones calculation type without range cut-offs.
      */
-    LJ_FULL = 2,
+    LJ_FULL = 1,
 };
 
 /**
@@ -243,9 +243,9 @@ public:
 
 
     /**
-    * Set the calculator type which should be used for the force calculations.
-    *
-    * @param calculator_type The calculator type.
-    */
+     * Set the calculator type which should be used for the force calculations.
+     *
+     * @param calculator_type The calculator type.
+     */
     void set_calculator_type(const CalculatorType calculator_type);
 };

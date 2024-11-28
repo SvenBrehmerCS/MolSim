@@ -107,6 +107,14 @@ output_t::frequency_type output_t::frequency_default_value() { return frequency_
 // param_t
 //
 
+const param_t::calc_type& param_t::calc() const { return this->calc_.get(); }
+
+param_t::calc_type& param_t::calc() { return this->calc_.get(); }
+
+void param_t::calc(const calc_type& x) { this->calc_.set(x); }
+
+void param_t::calc(::std::unique_ptr<calc_type> x) { this->calc_.set(std::move(x)); }
+
 const param_t::epsilon_type& param_t::epsilon() const { return this->epsilon_.get(); }
 
 param_t::epsilon_type& param_t::epsilon() { return this->epsilon_.get(); }
@@ -300,6 +308,31 @@ format::format(const format& v, ::xml_schema::flags f, ::xml_schema::container* 
 
 format& format::operator=(value v) {
     static_cast<::xml_schema::string&>(*this) = ::xml_schema::string(_xsd_format_literals_[v]);
+
+    return *this;
+}
+
+
+// calc
+//
+
+calc::calc(value v)
+    : ::xml_schema::string(_xsd_calc_literals_[v]) { }
+
+calc::calc(const char* v)
+    : ::xml_schema::string(v) { }
+
+calc::calc(const ::std::string& v)
+    : ::xml_schema::string(v) { }
+
+calc::calc(const ::xml_schema::string& v)
+    : ::xml_schema::string(v) { }
+
+calc::calc(const calc& v, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(v, f, c) { }
+
+calc& calc::operator=(value v) {
+    static_cast<::xml_schema::string&>(*this) = ::xml_schema::string(_xsd_calc_literals_[v]);
 
     return *this;
 }
@@ -520,9 +553,10 @@ output_t::~output_t() { }
 // param_t
 //
 
-param_t::param_t(const epsilon_type& epsilon, const sigma_type& sigma, const delta_t_type& delta_t, const t_end_type& t_end,
+param_t::param_t(const calc_type& calc, const epsilon_type& epsilon, const sigma_type& sigma, const delta_t_type& delta_t, const t_end_type& t_end,
     const dimensions_type& dimensions, const r_cutoff_type& r_cutoff)
     : ::xml_schema::type()
+    , calc_(calc, this)
     , epsilon_(epsilon, this)
     , sigma_(sigma, this)
     , delta_t_(delta_t, this)
@@ -532,6 +566,7 @@ param_t::param_t(const epsilon_type& epsilon, const sigma_type& sigma, const del
 
 param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c)
+    , calc_(x.calc_, f, this)
     , epsilon_(x.epsilon_, f, this)
     , sigma_(x.sigma_, f, this)
     , delta_t_(x.delta_t_, f, this)
@@ -541,6 +576,7 @@ param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::containe
 
 param_t::param_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c)
+    , calc_(this)
     , epsilon_(this)
     , sigma_(this)
     , delta_t_(this)
@@ -557,6 +593,17 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
     for (; p.more_content(); p.next_content(false)) {
         const ::xercesc::DOMElement& i(p.cur_element());
         const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
+
+        // calc
+        //
+        if (n.name() == "calc" && n.namespace_().empty()) {
+            ::std::unique_ptr<calc_type> r(calc_traits::create(i, f, this));
+
+            if (!calc_.present()) {
+                this->calc_.set(::std::move(r));
+                continue;
+            }
+        }
 
         // epsilon
         //
@@ -617,6 +664,10 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
         break;
     }
 
+    if (!calc_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("calc", "");
+    }
+
     if (!epsilon_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("epsilon", "");
     }
@@ -647,6 +698,7 @@ param_t* param_t::_clone(::xml_schema::flags f, ::xml_schema::container* c) cons
 param_t& param_t::operator=(const param_t& x) {
     if (this != &x) {
         static_cast<::xml_schema::type&>(*this) = x;
+        this->calc_ = x.calc_;
         this->epsilon_ = x.epsilon_;
         this->sigma_ = x.sigma_;
         this->delta_t_ = x.delta_t_;
@@ -1096,6 +1148,41 @@ format::value format::_xsd_format_convert() const {
 const char* const format::_xsd_format_literals_[3] = { "NO_OUT", "VTK", "XYZ" };
 
 const format::value format::_xsd_format_indexes_[3] = { ::format::NO_OUT, ::format::VTK, ::format::XYZ };
+
+// calc
+//
+
+calc::calc(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(e, f, c) {
+    _xsd_calc_convert();
+}
+
+calc::calc(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(a, f, c) {
+    _xsd_calc_convert();
+}
+
+calc::calc(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(s, e, f, c) {
+    _xsd_calc_convert();
+}
+
+calc* calc::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class calc(*this, f, c); }
+
+calc::value calc::_xsd_calc_convert() const {
+    ::xsd::cxx::tree::enum_comparator<char> c(_xsd_calc_literals_);
+    const value* i(::std::lower_bound(_xsd_calc_indexes_, _xsd_calc_indexes_ + 2, *this, c));
+
+    if (i == _xsd_calc_indexes_ + 2 || _xsd_calc_literals_[*i] != *this) {
+        throw ::xsd::cxx::tree::unexpected_enumerator<char>(*this);
+    }
+
+    return *i;
+}
+
+const char* const calc::_xsd_calc_literals_[2] = { "GRAVITY", "LJ_FULL" };
+
+const calc::value calc::_xsd_calc_indexes_[2] = { ::calc::GRAVITY, ::calc::LJ_FULL };
 
 // dimensions
 //

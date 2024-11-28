@@ -101,6 +101,16 @@
         </xs:annotation>
 
         <xs:sequence>
+            <!-- TODO documentation -->
+            <xs:element name="calc">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="GRAVITY"></xs:enumeration>
+                        <xs:enumeration value="LJ_FULL"></xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
             <xs:element name="epsilon" type="xs:double" default="5.0">
                 <xs:annotation>
                     <xs:documentation> The depth of the potential well of the Lennard-Jones
@@ -154,7 +164,7 @@
 
     <xs:complexType name="particle_t">
         <xs:annotation>
-            <xs:documentation> # TODO </xs:documentation>
+            <xs:documentation> # TODO documentation </xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element name="pos_x" type="xs:double">
@@ -197,7 +207,7 @@
 
     <xs:complexType name="cuboid_t">
         <xs:annotation>
-            <xs:documentation> #TODO </xs:documentation>
+            <xs:documentation> #TODO documentation </xs:documentation>
         </xs:annotation>
 
         <xs:sequence>

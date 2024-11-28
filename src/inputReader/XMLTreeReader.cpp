@@ -45,7 +45,7 @@ namespace inputReader {
         CustomErrorHandler errHandler;
 
         // read in the simulation data
-        std::unique_ptr<sim_t> sim = simulation(filename);
+        const std::unique_ptr<sim_t> sim = simulation(filename);
 
         if (!sim) {
             spdlog::critical("Could not open file {}", filename);
@@ -65,23 +65,14 @@ namespace inputReader {
         const char* output_file_name = sim->output().name().c_str();
         environment.set_output_file_name(output_file_name);
 
-        output_t::format_type temp = sim->output().format();
-        switch (temp) {
-        case NO_OUT:
-            environment.set_output_file_format(NO_OUT);
-            break;
-        case VTK:
-            environment.set_output_file_format(VTK);
-            break;
-        case XYZ:
-            environment.set_output_file_format(XYZ);
-            break;
-        default:
-            std::exit(EXIT_FAILURE);
-        }
+        const output_t::format_type form = sim->output().format();
+        environment.set_output_file_format(static_cast<FileFormat>(static_cast<int>(form)));
 
-        int write_frequency = sim->output().frequency();
+        const int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
+
+        const param_t::calc_type::value calc = sim->param().calc();
+        environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));
 
         const double epsilon = sim->param().epsilon();
         environment.set_epsilon(epsilon);
@@ -122,7 +113,6 @@ namespace inputReader {
         // initialize all the particles from the XML file into the container
         int i = 0;
         for (const auto& particle : particles) {
-
             if (particle.m() <= 0) {
                 spdlog::critical("Invalid particle mass: {}", particle.m());
                 std::exit(EXIT_FAILURE);
@@ -143,7 +133,6 @@ namespace inputReader {
 
         // initialize all the cuboids into the container
         for (const auto& cuboid : cuboids) {
-
             if (cuboid.n_x() <= 0 || cuboid.n_y() <= 0 || cuboid.n_z() <= 0) {
                 spdlog::critical("Invalid cuboid dimensions in simulation file {}", filename);
                 std::exit(EXIT_FAILURE);

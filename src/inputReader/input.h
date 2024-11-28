@@ -566,6 +566,7 @@ class param_t;
 class particle_t;
 class cuboid_t;
 class format;
+class calc;
 class dimensions;
 
 #include <algorithm> // std::binary_search
@@ -1209,6 +1210,60 @@ protected:
 class param_t : public ::xml_schema::type {
 public:
     /**
+     * @name calc
+     *
+     * @brief Accessor and modifier functions for the %calc
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::calc calc_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<calc_type, char> calc_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const calc_type& calc() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    calc_type& calc();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void calc(const calc_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void calc(::std::unique_ptr<calc_type> p);
+
+    //@}
+
+    /**
      * @name epsilon
      *
      * @brief Accessor and modifier functions for the %epsilon
@@ -1547,7 +1602,8 @@ public:
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    param_t(const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&, const dimensions_type&, const r_cutoff_type&);
+    param_t(const calc_type&, const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&, const dimensions_type&,
+        const r_cutoff_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -1609,6 +1665,7 @@ protected:
     void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
 protected:
+    ::xsd::cxx::tree::one<calc_type> calc_;
     ::xsd::cxx::tree::one<epsilon_type> epsilon_;
     ::xsd::cxx::tree::one<sigma_type> sigma_;
     ::xsd::cxx::tree::one<delta_t_type> delta_t_;
@@ -1622,7 +1679,7 @@ protected:
 /**
  * @brief Class corresponding to the %particle_t schema type.
  *
- * # TODO
+ * # TODO documentation
  *
  * @nosubgrouping
  */
@@ -2035,7 +2092,7 @@ protected:
 /**
  * @brief Class corresponding to the %cuboid_t schema type.
  *
- * #TODO
+ * #TODO documentation
  *
  * @nosubgrouping
  */
@@ -2818,6 +2875,132 @@ protected:
 public:
     static const char* const _xsd_format_literals_[3];
     static const value _xsd_format_indexes_[3];
+
+    //@endcond
+};
+
+/**
+ * @brief Enumeration class corresponding to the %calc
+ * schema type.
+ */
+class calc : public ::xml_schema::string {
+public:
+    /**
+     * @brief Underlying enum type.
+     */
+    enum value { GRAVITY, LJ_FULL };
+
+    /**
+     * @brief Create an instance from the underlying enum value.
+     *
+     * @param v A enum value.
+     */
+    calc(value v);
+
+    /**
+     * @brief Create an instance from a C string.
+     *
+     * @param v A string value.
+     */
+    calc(const char* v);
+
+    /**
+     * @brief Create an instance from a string.
+     *
+     * @param v A string value.
+     */
+    calc(const ::std::string& v);
+
+    /**
+     * @brief Create an instance from the base value.
+     *
+     * @param v A base value.
+     */
+    calc(const ::xml_schema::string& v);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    calc(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    calc(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    calc(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    calc(const calc& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+#ifdef XSD_CXX11
+    calc& operator=(const calc&) = default;
+#endif
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual calc* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    /**
+     * @brief Assign the underlying enum value.
+     *
+     * @param v A enum value.
+     * @return A refernce to the instance.
+     */
+    calc& operator=(value v);
+
+    /**
+     * @brief Implicit conversion operator to the underlying
+     * enum value.
+     *
+     * @return A enum value.
+     */
+    virtual operator value() const { return _xsd_calc_convert(); }
+
+    //@cond
+
+protected:
+    value _xsd_calc_convert() const;
+
+public:
+    static const char* const _xsd_calc_literals_[2];
+    static const value _xsd_calc_indexes_[2];
 
     //@endcond
 };

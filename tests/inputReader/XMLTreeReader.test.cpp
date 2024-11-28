@@ -15,9 +15,9 @@
  * (Sven)
  * Empty XML
  * Error on restricted types(enumerations/dimensions)(isValid)
- * no value(pos_x) => error (isValid)(Sven)
- * Wrong value types (isValid)
- *
+ *      static_assert(std::is_same<std::underlying_type_t<CalculatorType>, std::underlying_type_t<param_t::calc_type::value>>::value, "EnumTypeA and
+ *      EnumTypeB must have the same underlying type.");
+ * no value(pos_x) => error (isValid)(Sven) Wrong value types (isValid)
  *
  * (Fred)
  * Non default values = non default values
