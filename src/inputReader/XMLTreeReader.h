@@ -40,16 +40,7 @@ namespace inputReader {
          * @param environment will set the environment variables read in from @filename to this environment
          *
          */
-        void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment) ;
-
-        /**
-         * checks if the filename is a validXML
-         *
-         * @param filename the specified file
-         *
-         */
-        bool isValidXML(const char* filename, const char* xsdfile);
-
+        void readFile(ParticleContainer& container, const char* filename, const char* xsdfile, Environment& environment);
 
         /**
          * This method has no use in this class, but needs to be implemented
@@ -57,42 +48,8 @@ namespace inputReader {
          * @param filename
          */
         void readFile(ParticleContainer& container, const char* filename) override {
-            spdlog::info("This function is of no use in this class XMLTreeReader but needs to be overridden, use the other function and specify the parameters accordingly");
+            spdlog::info("This function is of no use in this class XMLTreeReader but needs to be overridden, use the other function and specify the "
+                         "parameters accordingly");
         }
-
-
-        /**
-         * A struct to initalize the XML Utils, supports RAII memory deallocation.
-         *
-         */
-        struct XMLInitializer {
-            XMLInitializer() { XMLPlatformUtils::Initialize(); }
-            ~XMLInitializer() { XMLPlatformUtils::Terminate(); }
-        };
-
-
-        /**
-         * A custom ErrorHandler
-         */
-        class CustomErrorHandler : public HandlerBase {
-        public:
-            void fatalError(const SAXParseException& e) override {
-                char* message = XMLString::transcode(e.getMessage());
-                spdlog::error("fatal error: {}", message);
-                XMLString::release(&message);
-            }
-
-            void error(const SAXParseException& e) override {
-                char* message = XMLString::transcode(e.getMessage());
-                spdlog::error("error: {}", message);
-                XMLString::release(&message);
-            }
-
-            void warning(const SAXParseException& e) override {
-                char* message = XMLString::transcode(e.getMessage());
-                spdlog::warn("warning: {}", message);
-                XMLString::release(&message);
-            }
-        };
     };
 }

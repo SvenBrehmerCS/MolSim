@@ -1214,6 +1214,8 @@ public:
      *
      * @brief Accessor and modifier functions for the %calc
      * required element.
+     *
+     * The desired force calculator to be used.
      */
     //@{
 
@@ -1688,7 +1690,10 @@ protected:
 /**
  * @brief Class corresponding to the %particle_t schema type.
  *
- * # TODO documentation
+ * This complex type represents a single particle to be simulated.
+ * @details This complex type consists of all parameters needed to define
+ * a particle,
+ * such as position, velocity, and mass.
  *
  * @nosubgrouping
  */
@@ -2101,7 +2106,12 @@ protected:
 /**
  * @brief Class corresponding to the %cuboid_t schema type.
  *
- * #TODO documentation
+ * This complex type represents an cuboid arrangement of particles in
+ * the simulation. @details This complex type consists of all the
+ * parameters needed to
+ * define a cuboid of particles, such as position of base particle,
+ * amount of particles
+ * in each direction, distance between particles, and more.
  *
  * @nosubgrouping
  */
@@ -2891,13 +2901,27 @@ public:
 /**
  * @brief Enumeration class corresponding to the %calc
  * schema type.
+ *
+ * This simple type represents the calculator used by the
+ * simulation.
  */
 class calc : public ::xml_schema::string {
 public:
     /**
      * @brief Underlying enum type.
      */
-    enum value { GRAVITY, LJ_FULL };
+    enum value {
+        /**
+         * @brief Calculates the gravity forces between mass
+         * points.
+         */
+        GRAVITY,
+        /**
+         * @brief Calculates the Lennard-Jones forces
+         * between particles.
+         */
+        LJ_FULL
+    };
 
     /**
      * @brief Create an instance from the underlying enum value.

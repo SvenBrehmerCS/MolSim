@@ -21,42 +21,28 @@ namespace inputReader {
 
     void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema, Environment& environment) {
         std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
-        if (xsd_schema == nullptr || strlen(xsd_schema) == 0) {
-            spdlog::error("Invalid XSD schema provided.");
-            std::exit(EXIT_FAILURE);
-        }
 
-        spdlog::info("The XML-File {} is valid, starting to read now", filename);
+        // TODO spdlog::info("The XML-File {} is valid, starting to read now", filename);
 
         std::ifstream XMLFile(filename);
-
         if (!XMLFile.is_open()) {
             spdlog::error("Could not open file {}", filename);
             std::exit(EXIT_FAILURE);
         }
 
-
-        // function checks if XML is valid, is defined below
-        if (!isValidXML(filename, xsd_schema)) {
-            spdlog::error("Invalid XML file {}", filename);
-            std::exit(EXIT_FAILURE);
-        }
-
-        CustomErrorHandler errHandler;
-
         // read in the simulation data
-        const std::unique_ptr<sim_t> sim = simulation(filename);
-
-        if (!sim) {
-            spdlog::critical("Could not open file {}", filename);
+        std::unique_ptr<sim_t> sim;
+        try {
+            sim = simulation(filename);
+        } catch (const xml_schema::exception& e) {
+            spdlog::error("XML validation error: ", e.what());
+            std::exit(EXIT_FAILURE);
+        } catch (const std::exception& e) {
+            spdlog::error("Error: ", e.what());
             std::exit(EXIT_FAILURE);
         }
 
-        if (sim->output().name().empty() || sim->output().frequency() <= 0) {
-            spdlog::critical("Invalid output data in simulation file {}", filename);
-            std::exit(EXIT_FAILURE);
-        }
-
+        // TODO rest and maybe move restrictions into the xsd
         if (sim->param().t_end() <= 0 || sim->param().delta_t() <= 0) {
             spdlog::critical("Invalid simulation parameters in file {}", filename);
             std::exit(EXIT_FAILURE);
@@ -90,7 +76,6 @@ namespace inputReader {
 
         // const double r_cutoff = sim->param().r_cutoff();
         // environment.set_r_cutoff(r_cutoff); TODO Don't forget to implement this function
-        // TODO implement calculator type parsing
 
         size_t t = sim->particle().size();
         if (t > INT_MAX) {
@@ -155,48 +140,5 @@ namespace inputReader {
 
             num_particles += cuboid.n_x() * cuboid.n_y() * cuboid.n_z();
         }
-    }
-
-    bool XMLTreeReader::isValidXML(const char* filename, const char* xsd_schema) {
-        try {
-            // initializes xerces-c, RAII like
-            XMLInitializer xmlInitializer;
-
-            // create a Parser
-            auto parser = std::make_shared<XercesDOMParser>();
-
-            // TODO Take a look at parser->setExternalNoNamespaceSchemaLocation() and find a way xml is correct
-
-            parser->setValidationScheme(XercesDOMParser::Val_Always);
-            parser->setDoNamespaces(true);
-            parser->setDoSchema(true);
-            parser->setValidationConstraintFatal(true);
-            // parser->setValidationSchemaFullChecking(true);
-
-            auto error_handler = std::make_shared<CustomErrorHandler>();
-            parser->setErrorHandler(error_handler.get());
-            parser->parse(filename);
-
-            if (parser->getErrorCount() > 0) {
-                spdlog::error("Error parsing file {}", filename);
-                return false;
-            }
-
-        } catch (const XMLException& e) {
-            char* message = XMLString::transcode(e.getMessage());
-            spdlog::error("XMLException: {}", message);
-            XMLString::release(&message);
-            return false;
-
-        } catch (const SAXParseException& e) {
-            char* message = XMLString::transcode(e.getMessage());
-            spdlog::error("SAXParseException: {}", message);
-            XMLString::release(&message);
-            return false;
-        } catch (...) {
-            spdlog::error("Unknown exception occured");
-            return false;
-        }
-        return true;
     }
 }

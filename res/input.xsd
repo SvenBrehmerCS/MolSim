@@ -101,12 +101,29 @@
         </xs:annotation>
 
         <xs:sequence>
-            <!-- TODO documentation -->
             <xs:element name="calc" default="LJ_FULL">
+                <xs:annotation>
+                    <xs:documentation> The desired force calculator to be used. </xs:documentation>
+                </xs:annotation>
+
                 <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation> This simple type represents the calculator used by the
+                            simulation. </xs:documentation>
+                    </xs:annotation>
                     <xs:restriction base="xs:string">
-                        <xs:enumeration value="GRAVITY"></xs:enumeration>
-                        <xs:enumeration value="LJ_FULL"></xs:enumeration>
+                        <xs:enumeration value="GRAVITY">
+                            <xs:annotation>
+                                <xs:documentation> @brief Calculates the gravity forces between mass
+                                    points. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="LJ_FULL">
+                            <xs:annotation>
+                                <xs:documentation> @brief Calculates the Lennard-Jones forces
+                                    between particles. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -164,7 +181,9 @@
 
     <xs:complexType name="particle_t">
         <xs:annotation>
-            <xs:documentation> # TODO documentation </xs:documentation>
+            <xs:documentation> This complex type represents a single particle to be simulated.
+                @details This complex type consists of all parameters needed to define a particle,
+                such as position, velocity, and mass. </xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element name="pos_x" type="xs:double">
@@ -207,7 +226,10 @@
 
     <xs:complexType name="cuboid_t">
         <xs:annotation>
-            <xs:documentation> #TODO documentation </xs:documentation>
+            <xs:documentation> This complex type represents an cuboid arrangement of particles in
+                the simulation. @details This complex type consists of all the parameters needed to
+                define a cuboid of particles, such as position of base particle, amount of particles
+                in each direction, distance between particles, and more. </xs:documentation>
         </xs:annotation>
 
         <xs:sequence>
