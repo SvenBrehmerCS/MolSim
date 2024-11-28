@@ -31,6 +31,10 @@ public:
 
     size_t get_cell_index(size_t x, size_t y, size_t z);
 
+    bool in_cell(std::array<double, 3> pos, size_t x, size_t y, size_t z);
+
+    std::array<double, 3> get_corner_vector();
+
     void create_list(std::vector<Particle>& particles);
 
     void iterate_boundary_cells(std::function<index_it> iterator);
@@ -39,7 +43,11 @@ public:
 
     void iterate_halo_cells(std::function<index_it> iterator);
 
+    void clear_halo_cells();
+
     void loop_cell_pairs(std::function<particle_pair_it> iterator, std::vector<Particle>& particles);
+
+    void move_particles(const std::vector<Particle>& particles);
 
     double getRC();
 };
@@ -59,9 +67,7 @@ public:
 
     void add_particle(size_t add);
 
-    void add_particles(std::list<size_t>& add);
-
-    void remove_particles(std::list<size_t>& remove);
+    void remove_particle(size_t remove);
 
     void iterate_particle_indicies(std::function<index_it> iterator);
 
@@ -70,4 +76,6 @@ public:
     std::list<size_t>::iterator begin();
 
     std::list<size_t>::iterator end();
+
+    void clear();
 };

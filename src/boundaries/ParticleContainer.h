@@ -18,6 +18,7 @@ enum Boundary : int {
     HALO,
     HARD,
     PERIODIC,
+    OUTFLOW,
 };
 
 /**

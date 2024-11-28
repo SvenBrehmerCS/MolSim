@@ -51,6 +51,30 @@ void CellList::create_list(std::vector<Particle>& particles) {
 
 size_t CellList::get_cell_index(size_t x, size_t y, size_t z) { return z + y * n_z + x * n_y * n_z; }
 
+bool CellList::in_cell(std::array<double, 3> pos, size_t x, size_t y, size_t z) {
+    if (pos[0] < x * rc || pos[0] >= (x + 1) * rc) {
+        return false;
+    }
+
+    if (pos[1] < y * rc || pos[1] >= (y + 1) * rc) {
+        return false;
+    }
+
+    if (pos[2] < z * rc || pos[2] >= (z + 1) * rc) {
+        return false;
+    }
+
+    return true;
+}
+
+std::array<double, 3> CellList::get_corner_vector() {
+    return {
+        rc * n_x,
+        rc * n_y,
+        rc * n_z,
+    };
+}
+
 void CellList::iterate_boundary_cells(std::function<index_it> iterator) {
     // x = 1
     for (size_t j = 1; j < n_y - 1; j++) {
@@ -65,7 +89,6 @@ void CellList::iterate_boundary_cells(std::function<index_it> iterator) {
             cells[get_cell_index(n_x - 1, j, k)].iterate_particle_indicies(iterator);
         }
     }
-
 
     // y = 1
     for (size_t i = 2; i < n_x - 2; i++) {
@@ -109,7 +132,7 @@ void CellList::loop_boundary_cells(std::function<particle_it> iterator, std::vec
     // x = n_x - 1
     for (size_t j = 1; j < n_y - 1; j++) {
         for (size_t k = 1; k < n_z - 1; k++) {
-            for (size_t idx : cells[get_cell_index(n_x - 1, j, k)]) {
+            for (size_t idx : cells[get_cell_index(n_x - 2, j, k)]) {
                 iterator(particles[idx]);
             }
         }
@@ -128,7 +151,7 @@ void CellList::loop_boundary_cells(std::function<particle_it> iterator, std::vec
     // y = n_y - 1
     for (size_t i = 2; i < n_x - 2; i++) {
         for (size_t k = 1; k < n_z - 1; k++) {
-            for (size_t idx : cells[get_cell_index(i, n_y - 1, k)]) {
+            for (size_t idx : cells[get_cell_index(i, n_y - 2, k)]) {
                 iterator(particles[idx]);
             }
         }
@@ -146,7 +169,7 @@ void CellList::loop_boundary_cells(std::function<particle_it> iterator, std::vec
     // z = n_z - 1
     for (size_t i = 2; i < n_x - 2; i++) {
         for (size_t j = 2; j < n_y - 2; j++) {
-            for (size_t idx : cells[get_cell_index(i, j, n_z - 1)]) {
+            for (size_t idx : cells[get_cell_index(i, j, n_z - 2)]) {
                 iterator(particles[idx]);
             }
         }
@@ -154,7 +177,105 @@ void CellList::loop_boundary_cells(std::function<particle_it> iterator, std::vec
 }
 
 void CellList::iterate_halo_cells(std::function<index_it> iterator) {
-    // TODO: Loop through the six planes
+    // x = 0
+    for (size_t j = 0; j < n_y; j++) {
+        for (size_t k = 0; k < n_z; k++) {
+            for (size_t idx : cells[get_cell_index(0, j, k)]) {
+                iterator(idx);
+            }
+        }
+    }
+
+    // x = n_x - 1
+    for (size_t j = 0; j < n_y; j++) {
+        for (size_t k = 0; k < n_z; k++) {
+            for (size_t idx : cells[get_cell_index(n_x - 1, j, k)]) {
+                iterator(idx);
+            }
+        }
+    }
+
+
+    // y = 0
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t k = 0; k < n_z; k++) {
+            for (size_t idx : cells[get_cell_index(i, 0, k)]) {
+                iterator(idx);
+            }
+        }
+    }
+
+    // y = n_y - 1
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t k = 0; k < n_z; k++) {
+            for (size_t idx : cells[get_cell_index(i, n_y - 1, k)]) {
+                iterator(idx);
+            }
+        }
+    }
+
+    // z = 0
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            for (size_t idx : cells[get_cell_index(i, j, 0)]) {
+                iterator(idx);
+            }
+        }
+    }
+
+    // z = n_z - 1
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            for (size_t idx : cells[get_cell_index(i, j, n_z - 1)]) {
+                iterator(idx);
+            }
+        }
+    }
+}
+
+void CellList::clear_halo_cells() {
+    // x = 0
+    for (size_t j = 0; j < n_y; j++) {
+        for (size_t k = 0; k < n_z; k++) {
+            cells[get_cell_index(0, j, k)].clear();
+        }
+    }
+
+    // x = n_x - 1
+    for (size_t j = 0; j < n_y; j++) {
+        for (size_t k = 0; k < n_z; k++) {
+            cells[get_cell_index(n_x - 1, j, k)].clear();
+        }
+    }
+
+
+    // y = 0
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t k = 0; k < n_z; k++) {
+            cells[get_cell_index(i, 0, k)].clear();
+        }
+    }
+
+    // y = n_y - 1
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t k = 0; k < n_z; k++) {
+            cells[get_cell_index(i, n_y - 1, k)].clear();
+        }
+    }
+
+    // z = 0
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            cells[get_cell_index(i, j, 0)].clear();
+        }
+    }
+
+    // z = n_z - 1
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            cells[get_cell_index(i, j, n_z - 1)].clear();
+        }
+    }
 }
 
 void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::vector<Particle>& particles) {
@@ -185,7 +306,7 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
                         }
                     }
 
-                    // TODO: Don't loop if not required (50% less loops)
+                    // TODO: Don't loop if not required (~50% less loops)
                     for (size_t m : cells[get_cell_index(i + 1, j + 1, k)]) {
                         if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
                             iterator(particles[l], particles[m]);
@@ -209,6 +330,48 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
     }
 }
 
+void CellList::move_particles(const std::vector<Particle>& particles) {
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            for (size_t k = 1; k < n_z - 1; k++) {
+                for (size_t idx : cells[get_cell_index(i, j, k)]) {
+                    if (in_cell(particles[idx].getX(), i, j, k)) {
+                        continue;
+                    }
+
+                    double cutoff = rc;
+                    double x = std::modf(particles[idx].getX()[0], &cutoff);
+                    cutoff = rc;
+                    double y = std::modf(particles[idx].getX()[1], &cutoff);
+                    cutoff = rc;
+                    double z = std::modf(particles[idx].getX()[2], &cutoff);
+
+                    // TODO: Is round correct here?
+                    size_t a = std::round(x), b = std::round(y), c = std::round(z);
+
+                    if (a < 0 || a >= n_x) {
+                        spdlog::critical("Tried to add a particle out of bounds.");
+                        std::exit(EXIT_FAILURE);
+                    }
+
+                    if (b < 0 || b >= n_y) {
+                        spdlog::critical("Tried to add a particle out of bounds.");
+                        std::exit(EXIT_FAILURE);
+                    }
+
+                    if (c < 0 || c >= n_z) {
+                        spdlog::critical("Tried to add a particle out of bounds.");
+                        std::exit(EXIT_FAILURE);
+                    }
+
+                    cells[get_cell_index(a, b, c)].add_particle(idx);
+                    cells[get_cell_index(i, j, k)].remove_particle(idx);
+                }
+            }
+        }
+    }
+}
+
 double CellList::getRC() { return rc; }
 
 Cell::Cell() = default;
@@ -224,19 +387,7 @@ Cell::~Cell() = default;
 
 void Cell::add_particle(size_t add) { list.push_back(add); }
 
-void Cell::add_particles(std::list<size_t>& add) { list.merge(add); }
-
-void Cell::remove_particles(std::list<size_t>& remove) {
-    list.remove_if([this, remove](size_t elem) {
-        for (size_t r : remove) {
-            if (elem == r) {
-                return true;
-            }
-        }
-
-        return false;
-    });
-}
+void Cell::remove_particle(size_t remove) { list.remove(remove); }
 
 void Cell::iterate_particle_indicies(std::function<index_it> iterator) {
     for (size_t i : list) {
@@ -257,3 +408,5 @@ void Cell::iterate_particle_pairs(std::function<particle_pair_it> iterator, std:
 std::list<size_t>::iterator Cell::begin() { return list.begin(); }
 
 std::list<size_t>::iterator Cell::end() { return list.end(); }
+
+void Cell::clear() { list.clear(); }
