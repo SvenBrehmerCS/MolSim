@@ -102,7 +102,7 @@
 
         <xs:sequence>
             <!-- TODO documentation -->
-            <xs:element name="calc">
+            <xs:element name="calc" default="LJ_FULL">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:enumeration value="GRAVITY"></xs:enumeration>

@@ -7,6 +7,7 @@
         <frequency>10</frequency>
     </output>
     <param>
+        <calc>LJ_FULL</calc>
         <epsilon>5.0</epsilon>
         <sigma>1.0</sigma>
         <delta_t>0.014</delta_t>
