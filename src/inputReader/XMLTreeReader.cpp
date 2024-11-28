@@ -93,6 +93,9 @@ namespace inputReader {
         double h;
         double brownian_motion;
 
+        std::array<double, 3> disc_center = { 0.0, 0.0, 0.0 };
+        std::array<double, 3> disc_velocity = { 0.0, 0.0, 0.0 };
+
         container.resize(num_particles);
 
         const auto& particles = sim->particle();
@@ -141,6 +144,16 @@ namespace inputReader {
             generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
 
             num_particles += cuboid.n_x() * cuboid.n_y() * cuboid.n_z();
+        }
+
+        const auto& discs = sim->disc();
+        for (const auto& disc : discs) {
+            disc_center= {disc.c_x(), disc.c_y(), disc.c_z()};
+            disc_velocity = {disc.vel_x(), disc.vel_y(), disc.vel_z()};
+
+            int particles_added = generator.generateDisc(container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), disc.b_motion(), num_dimensions);
+
+            num_particles += particles_added;
         }
     }
 }

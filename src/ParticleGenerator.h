@@ -40,5 +40,5 @@ public:
     void generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> y, double m,
         std::array<int, 3> N, double h, double b_m, int num_dimensions);
 
-    void generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity, double mass, double radius, double h, double b_m, int dim);
+    int generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity, double mass, double radius, double h, double b_m, int dim);
 };
