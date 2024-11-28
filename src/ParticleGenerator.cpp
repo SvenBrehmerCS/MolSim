@@ -36,3 +36,26 @@ void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_par
         }
     }
 }
+
+void ParticleGenerator::generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity,
+    double mass, double radius, double h, double b_m, int dim) {
+
+    double radius_distance = radius * h;
+    std::array<double, 3> boltz_v;
+
+    auto particle = container.begin();
+    particle += num_particles;
+
+    for (double x = -radius_distance; x <= radius_distance; x += h) {
+        for (double y = -radius_distance; y <= radius_distance; y += h) {
+            if (x * x + y * y <= radius_distance * radius_distance) {
+                particle->setX({ center[0] + x, center[1] + y, center[2] });
+
+                boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
+                particle->setV(velocity + boltz_v);
+                particle->setM(mass);
+                particle++;
+            }
+        }
+    }
+}

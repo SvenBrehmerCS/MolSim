@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="input.xsd">
+    <output>
+        <name>MD_vtk</name>
+        <format>VTK</format>
+        <frequency>10</frequency>
+    </output>
+    <param>
+        <calc>LJ_FULL</calc>
+        <epsilon>5.0</epsilon>
+        <sigma>1.0</sigma>
+        <delta_t>0.014</delta_t>
+        <t_end>1000.0</t_end>
+        <dimensions>3</dimensions>
+        <r_cutoff>3.0</r_cutoff>
+    </param>
+    <particle>
+        <pos_x>0.1</pos_x>
+        <pos_y>0.2</pos_y>
+        <pos_z>0.3</pos_z>
+        <vel_x>1.0</vel_x>
+        <vel_y>1.5</vel_y>
+        <vel_z>1.7</vel_z>
+        <m>0.01</m>
+    </particle>
+</simulation>
