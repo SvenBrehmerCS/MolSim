@@ -20,9 +20,7 @@ namespace inputReader {
 
 
     void XMLTreeReader::readFile(ParticleContainer& container, const char* filename, const char* xsd_schema, Environment& environment) {
-        std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
-
-        // TODO spdlog::info("The XML-File {} is valid, starting to read now", filename);
+        spdlog::debug("Reading XML input {}", filename);
 
         std::ifstream XMLFile(filename);
         if (!XMLFile.is_open()) {
@@ -35,10 +33,10 @@ namespace inputReader {
         try {
             sim = simulation(filename);
         } catch (const xml_schema::exception& e) {
-            spdlog::error("XML validation error: ", e.what());
+            spdlog::error("XML validation error: {}", e.what());
             std::exit(EXIT_FAILURE);
         } catch (const std::exception& e) {
-            spdlog::error("Error: ", e.what());
+            spdlog::error("Error: {}", e.what());
             std::exit(EXIT_FAILURE);
         }
 
@@ -47,6 +45,8 @@ namespace inputReader {
             spdlog::critical("Invalid simulation parameters in file {}", filename);
             std::exit(EXIT_FAILURE);
         }
+
+        spdlog::debug("Setting up simulation environment");
 
         const char* output_file_name = sim->output().name().c_str();
         environment.set_output_file_name(output_file_name);
@@ -76,6 +76,8 @@ namespace inputReader {
 
         // const double r_cutoff = sim->param().r_cutoff();
         // environment.set_r_cutoff(r_cutoff); TODO Don't forget to implement this function
+
+        spdlog::debug("Generating particles");
 
         size_t t = sim->particle().size();
         if (t > INT_MAX) {
