@@ -1261,6 +1261,14 @@ public:
      */
     void calc(::std::unique_ptr<calc_type> p);
 
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const calc_type& calc_default_value();
+
     //@}
 
     /**
@@ -1666,6 +1674,7 @@ protected:
 
 protected:
     ::xsd::cxx::tree::one<calc_type> calc_;
+    static const calc_type calc_default_value_;
     ::xsd::cxx::tree::one<epsilon_type> epsilon_;
     ::xsd::cxx::tree::one<sigma_type> sigma_;
     ::xsd::cxx::tree::one<delta_t_type> delta_t_;

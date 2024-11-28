@@ -7,28 +7,6 @@
 #pragma once
 
 /**
- * @enum FileFormat
- *
- * @brief The enum describes the different file formats used by this program.
- */
-enum FileFormat {
-    /**
-     * Define the no output format.
-     */
-    NO_OUT = 0,
-
-    /**
-     * Define the ascii based vtk file format.
-     */
-    VTK = 1,
-
-    /**
-     * Define the ascii based xyz file format.
-     */
-    XYZ = 2,
-};
-
-/**
  * @enum CalculatorType
  *
  * @brief This enum describes the different calculators used by this program.
@@ -37,12 +15,34 @@ enum CalculatorType {
     /**
      * Define the gravity calculation type.
      */
-    GRAVITY = 0,
+    GRAVITY,
 
     /**
      * Define the lenard jones calculation type without range cut-offs.
      */
-    LJ_FULL = 1,
+    LJ_FULL,
+};
+
+/**
+ * @enum FileFormat
+ *
+ * @brief The enum describes the different file formats used by this program.
+ */
+enum FileFormat {
+    /**
+     * Define the no output format.
+     */
+    NO_OUT,
+
+    /**
+     * Define the ascii based vtk file format.
+     */
+    VTK,
+
+    /**
+     * Define the ascii based xyz file format.
+     */
+    XYZ
 };
 
 /**

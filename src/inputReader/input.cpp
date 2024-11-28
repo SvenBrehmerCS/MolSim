@@ -115,6 +115,8 @@ void param_t::calc(const calc_type& x) { this->calc_.set(x); }
 
 void param_t::calc(::std::unique_ptr<calc_type> x) { this->calc_.set(std::move(x)); }
 
+const param_t::calc_type& param_t::calc_default_value() { return calc_default_value_; }
+
 const param_t::epsilon_type& param_t::epsilon() const { return this->epsilon_.get(); }
 
 param_t::epsilon_type& param_t::epsilon() { return this->epsilon_.get(); }
@@ -552,6 +554,8 @@ output_t::~output_t() { }
 
 // param_t
 //
+
+const param_t::calc_type param_t::calc_default_value_("LJ_FULL");
 
 param_t::param_t(const calc_type& calc, const epsilon_type& epsilon, const sigma_type& sigma, const delta_t_type& delta_t, const t_end_type& t_end,
     const dimensions_type& dimensions, const r_cutoff_type& r_cutoff)
