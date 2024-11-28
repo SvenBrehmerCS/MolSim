@@ -29,25 +29,24 @@
  * -----------------------------
  * (?num elements > size_t?)
  */
-TEST(XMLTreeReader, Test1) {
-    const char* xml = "../res/input.xml";
-    const char* xsd_schema = "../res/input.xsd";
+
+// this tests if the non default values given in the xml file, are set correctly
+TEST(XMLTreeReader, TestNonDefaultValues) {
+    const char* xml = "../tests/res/testNonDefault.xml";
+    const char* xsd_schema = "../tests/res/input.xsd";
+
     Environment environment;
     ParticleContainer container;
-    std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
-
-    std::ifstream file(xml);
-
-    if (!file.is_open()) {
-        std::cout << "File not found" << std::endl;
-    }
-    std::ifstream xsd(xsd_schema);
-    if (!xsd.is_open()) {
-        std::cout << "File not found" << std::endl;
-    }
-
     inputReader::XMLTreeReader reader;
+
     reader.readFile(container, xml, xsd_schema, environment);
-    EXPECT_EQ(environment.get_delta_t(), 0.014);
-    EXPECT_EQ(environment.get_t_end(), 1000);
+    EXPECT_EQ(container.size(), 0);
+    EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
+    EXPECT_EQ(environment.get_output_file_format(), XYZ);
+    EXPECT_EQ(environment.get_print_step(), 5);
+    EXPECT_EQ(environment.get_calculator_type(), GRAVITY);
+    EXPECT_EQ(environment.get_epsilon(), 10);
+    EXPECT_EQ(environment.get_sigma(), 2.0);
+    EXPECT_EQ(environment.get_delta_t(), 0.5);
+    EXPECT_EQ(environment.get_t_end(), 500);
 }

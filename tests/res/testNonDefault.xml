@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="input.xsd">
+    <output>
+        <name>TestNonDefault</name>
+        <format>XYZ</format>
+        <frequency>5</frequency>
+    </output>
+    <param>
+        <calc>GRAVITY</calc>
+        <epsilon>10</epsilon>
+        <sigma>2.0</sigma>
+        <delta_t>0.5</delta_t>
+        <t_end>500</t_end>
+        <dimensions>2</dimensions>
+        <r_cutoff>2.0</r_cutoff>
+    </param>
+</simulation>
