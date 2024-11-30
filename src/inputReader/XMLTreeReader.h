@@ -50,5 +50,6 @@ namespace inputReader {
             spdlog::info("This function is of no use in this class XMLTreeReader but needs to be overridden, use the other function and specify the "
                          "parameters accordingly");
         }
+        int num_particles_added(double h, double r);
     };
 }

@@ -148,12 +148,33 @@ namespace inputReader {
 
         const auto& discs = sim->disc();
         for (const auto& disc : discs) {
-            disc_center= {disc.c_x(), disc.c_y(), disc.c_z()};
-            disc_velocity = {disc.vel_x(), disc.vel_y(), disc.vel_z()};
+            disc_center = { disc.c_x(), disc.c_y(), disc.c_z() };
+            disc_velocity = { disc.vel_x(), disc.vel_y(), disc.vel_z() };
 
-            int particles_added = generator.generateDisc(container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), disc.b_motion(), num_dimensions);
+            int particles_future_added = num_particles_added(disc.h(), disc.r());
+
+            container.resize(num_particles + particles_future_added);
+
+
+            int particles_added = generator.generateDisc(
+                container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), disc.b_motion(), num_dimensions);
 
             num_particles += particles_added;
         }
     }
+    int XMLTreeReader::num_particles_added(double h, double r) {
+
+        int particles_future_added = 0;
+
+        int radius_distance = h * r;
+        for (double x = -radius_distance; x <= radius_distance; x += h) {
+            for (double y = -radius_distance; y <= radius_distance; y += h) {
+                if (x * x + y * y <= radius_distance * radius_distance) {
+                    particles_future_added++;
+                }
+            }
+        }
+        return particles_future_added;
+    }
+
 }
