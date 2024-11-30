@@ -168,3 +168,55 @@ TEST(ParticleGenerator, GenerateCuboidNoMotion) {
     EXPECT_EQ(container[1].getV()[1], particle1.getV()[1]);
     EXPECT_EQ(container[1].getV()[2], particle1.getV()[2]);
 }
+
+TEST(ParticleGenerator, generateDisc) {
+    ParticleGenerator generator;
+    InfContainer container;
+    std::array<double, 3> x = { 0.0, 0.0, 0.0 };
+    std::array<double, 3> x1 = { -1, 0.0, 0.0 };
+    std::array<double, 3> x2 = { 0.0, -1, 0.0 };
+    std::array<double, 3> x3 = { 0.0, 0.0, 0.0 };
+    std::array<double, 3> x4 = { 0.0, 1, 0.0 };
+    std::array<double, 3> x5 = { 1, 0.0, 0.0 };
+    std::array<double, 3> v = { 1.0, 1.0, 1.0 };
+    double mass = 1.0;
+    double h = 1.0;
+    double brownian_motion = 0.0;
+    int dimension = 2;
+    int num_particles = 0;
+    double r = 1.0;
+
+    int particles_future_added = 0;
+
+    int radius_distance = h * r;
+    for (double x = -radius_distance; x <= radius_distance; x += h) {
+        for (double y = -radius_distance; y <= radius_distance; y += h) {
+            if (x * x + y * y <= radius_distance * radius_distance) {
+                particles_future_added++;
+            }
+        }
+    }
+    container.resize(num_particles + particles_future_added);
+
+    int particles_added = generator.generateDisc(container, num_particles, x, v, mass, r, h, brownian_motion, dimension);
+
+    num_particles += particles_added;
+
+    ASSERT_EQ(container.size(), 5);
+    ASSERT_EQ(container.size(), num_particles);
+    EXPECT_EQ(container[0].getX(), x1);
+    EXPECT_EQ(container[1].getX(), x2);
+    EXPECT_EQ(container[2].getX(), x3);
+    EXPECT_EQ(container[3].getX(), x4);
+    EXPECT_EQ(container[4].getX(), x5);
+    EXPECT_EQ(container[0].getM(), mass);
+    EXPECT_EQ(container[1].getM(), mass);
+    EXPECT_EQ(container[2].getM(), mass);
+    EXPECT_EQ(container[3].getM(), mass);
+    EXPECT_EQ(container[4].getM(), mass);
+    EXPECT_EQ(container[0].getV(), v);
+    EXPECT_EQ(container[1].getV(), v);
+    EXPECT_EQ(container[2].getV(), v);
+    EXPECT_EQ(container[3].getV(), v);
+    EXPECT_EQ(container[4].getV(), v);
+}
