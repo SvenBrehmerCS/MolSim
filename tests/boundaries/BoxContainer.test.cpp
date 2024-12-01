@@ -14,7 +14,7 @@ TEST(BoxContainer, IteratePairs) {
         Particle({ 3.5, 3.25, 0.5 }, {}, 1.0, 8),
     };
 
-    BoxContainer box = BoxContainer(particles, 1.0, 5, 5, 1);
+    BoxContainer box = BoxContainer(particles, 1.0, { 5.0, 5.0, 1.0 });
 
     std::list<std::tuple<int, int>> pairs = {
         { 1, 2 },
@@ -49,9 +49,11 @@ TEST(BoxContainer, Constructor) {
         Particle({ 0.0, -1.3, -2.0 }, { 1.0, 2.2, -3.2 }, 3.0, 1),
     };
 
-    BoxContainer box(particles, 2.1, 5, 6, 5);
+    BoxContainer box(particles, 2.1, { 10.5, 12.2, 10.5 });
+    const std::array<double, 3> domain = { 10.5, 12.2, 10.5 };
 
     EXPECT_EQ(box.getRC(), 2.1) << "The getter for the cutoff distance returned a wrong value";
+    EXPECT_TRUE(box.get_corner_vector() == domain) << "The getter for the domain returned a wrong value";
 
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(particles[i] == box[i]) << "The particles must maintain their provided order, and all particles must be available.";
@@ -67,7 +69,7 @@ TEST(BoxContainer, UpdatePosition) {
         Particle({ 19.0, 19.0, 0.0 }, {}, 1.0, 4),
     };
 
-    BoxContainer box = BoxContainer(particles, 2.0, 20, 20, 5);
+    BoxContainer box = BoxContainer(particles, 2.0, { 40.0, 40.0, 10.0 });
 
     box.iterate_pairs([](Particle& p1, Particle& p2) { EXPECT_TRUE(false) << "All particles are spread out in the initial condition."; });
 

@@ -26,7 +26,15 @@ public:
      *
      * @param new_particles The particles vector.
      */
-    InfContainer(std::vector<Particle> new_particles);
+    InfContainer(const std::vector<Particle>& new_particles);
+
+    /**
+     * Define the infinity container constructor, using a particle vector.
+     *
+     * @param new_particles The particles vector.
+     * @param new_domain The new domain size.
+     */
+    InfContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain);
 
     /**
      * Define the default infinity container constructor.

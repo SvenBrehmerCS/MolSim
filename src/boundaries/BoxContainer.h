@@ -30,7 +30,7 @@ public:
      * @param n_y The number of cells in the y dimension.
      * @param n_z The number of cells in the z dimension.
      */
-    BoxContainer(std::vector<Particle>& new_particles, const double rc, const size_t n_x, const size_t n_y, const size_t n_z);
+    BoxContainer(std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain);
 
     /**
      * Define the default destructor for a box container.

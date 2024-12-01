@@ -4,6 +4,11 @@ ParticleContainer::ParticleContainer() = default;
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles) { particles = new_particles; }
 
+ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain) {
+    particles = new_particles;
+    domain = new_domain;
+}
+
 ParticleContainer::~ParticleContainer() = default;
 
 Particle& ParticleContainer::operator[](const size_t idx) { return particles[idx]; }

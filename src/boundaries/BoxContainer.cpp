@@ -1,8 +1,10 @@
+#include <cmath>
+
 #include "BoxContainer.h"
 
-BoxContainer::BoxContainer(std::vector<Particle>& new_particles, const double rc, const size_t n_x, const size_t n_y, const size_t n_z)
-    : ParticleContainer(new_particles) {
-    cells = CellList(rc, n_x, n_y, n_z);
+BoxContainer::BoxContainer(std::vector<Particle>& new_particles, const double rc, const std::array<double, 3> &new_domain)
+    : ParticleContainer(new_particles, new_domain) {
+    cells = CellList(rc, std::ceil(domain[0] / rc), std::ceil(domain[1] / rc), std::ceil(domain[2] / rc));
     cells.create_list(particles);
 };
 

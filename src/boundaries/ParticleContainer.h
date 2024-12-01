@@ -76,6 +76,14 @@ public:
     ParticleContainer(const std::vector<Particle>& new_particles);
 
     /**
+     * Create a particle container from a vector of particles.
+     *
+     * @param new_particles The particles which should be stored.
+     * @param new_domain The new domain size.
+     */
+    ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain);
+
+    /**
      * Destroy all particles.
      */
     ~ParticleContainer();
@@ -148,7 +156,6 @@ public:
      * @param domain The size of the domain.
      */
     void remove_particles_out_of_domain();
-
 
     /**
      * Update the particle positions in their cells.
