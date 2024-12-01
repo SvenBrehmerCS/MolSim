@@ -32,7 +32,7 @@ namespace inputReader {
 
         spdlog::debug("Setting up simulation environment");
 
-        const char* output_file_name = sim->output().name().c_str();
+        std::string output_file_name = sim->output().name();
         environment.set_output_file_name(output_file_name);
 
         const output_t::format_type form = sim->output().format();

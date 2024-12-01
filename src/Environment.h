@@ -109,7 +109,7 @@ private:
     /**
      * Store the beginning of the name of the output file. The default is MD_vtk. The output file name looks like this: <name>_<iteration>.<vtu | xyz>
      */
-    const char* output_file = "MD_vtk";
+    std::string output_file = "MD_vtk";
 
     /**
      * Store the output file format. it can either be vtk or xyz, with vtk being the default.
@@ -285,7 +285,7 @@ public:
      *
      * @param output_file_name The file name of the output file.
      */
-    void set_output_file_name(const char* output_file_name);
+    void set_output_file_name(std::string& output_file_name);
 
     /**
      * Set the format of the the output file.

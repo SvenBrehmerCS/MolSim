@@ -384,16 +384,13 @@ Environment::Environment(const int argc, const char* argv[]) {
 
     const char* temp = input_file + std::strlen(input_file) - 3;
     // Read the input file
-    if (std::strcmp(temp, "txt")) {
+    if (!(std::strcmp(temp, "txt"))) {
         input_format = TXT;
-    } else if (std::strcmp(temp, "xml")) {
+    } else if (!(std::strcmp(temp, "xml"))) {
         input_format = XML;
     } else {
         panic_exit("Unsupported input file type.");
     }
-
-    // TODO
-    std::exit(EXIT_SUCCESS);
 
     spdlog::debug("The program was executed using the command line arguments.");
     spdlog::debug("    t_end = {} ({})", t_end, btos(default_end));
@@ -437,7 +434,7 @@ const char* Environment::get_input_file_name() const { return input_file; }
 
 InputFormat Environment::get_input_file_format() const { return input_format; }
 
-const char* Environment::get_output_file_name() const { return output_file; }
+const char* Environment::get_output_file_name() const { return output_file.c_str(); }
 
 OutputFormat Environment::get_output_file_format() const { return output_format; }
 
@@ -457,7 +454,7 @@ void Environment::set_epsilon(const double epsilon) { this->epsilon = epsilon; }
 
 void Environment::set_print_step(const int print_step) { this->print_step = print_step; }
 
-void Environment::set_output_file_name(const char* output_file_name) { this->output_file = output_file_name; }
+void Environment::set_output_file_name(std::string& output_file_name) { this->output_file = output_file_name; }
 
 void Environment::set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
 
