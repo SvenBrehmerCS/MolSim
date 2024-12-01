@@ -17,7 +17,7 @@ CellList::CellList(const double rc, const size_t n_x, const size_t n_y, const si
 }
 
 void CellList::create_list(std::vector<Particle>& particles) {
-    for (std::list<size_t> l : cells) {
+    for (std::list<size_t>& l : cells) {
         l.clear();
     }
 
@@ -49,9 +49,9 @@ size_t CellList::get_cell_index(const size_t x, const size_t y, const size_t z) 
 
 std::array<double, 3> CellList::get_corner_vector() {
     return {
-        rc * (n_x - 1),
-        rc * (n_y - 1),
-        rc * (n_z - 1),
+        rc * (n_x - 2),
+        rc * (n_y - 2),
+        rc * (n_z - 2),
     };
 }
 
@@ -72,9 +72,8 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
                     }
                 }
 
-
                 // Loop through the direct neighbors
-                for (size_t l : cells[get_cell_index(i, j, k)]) {
+                for (size_t l : cells[idx]) {
                     for (size_t m : cells[get_cell_index(i + 1, j, k)]) {
                         if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
                             iterator(particles[l], particles[m]);
@@ -94,6 +93,7 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
                     }
 
                     // TODO: Don't loop if not required (~50% less loops)
+                    // Loop through the neighbors with shared edge
                     for (size_t m : cells[get_cell_index(i + 1, j + 1, k)]) {
                         if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
                             iterator(particles[l], particles[m]);
@@ -112,6 +112,7 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
                         }
                     }
 
+                    // Loop through the neighbors with shared corners
                     for (size_t m : cells[get_cell_index(i + 1, j + 1, k + 1)]) {
                         if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
                             iterator(particles[l], particles[m]);

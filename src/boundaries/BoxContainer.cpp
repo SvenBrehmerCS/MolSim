@@ -1,9 +1,6 @@
 #include "BoxContainer.h"
 
-BoxContainer::BoxContainer(const double rc, const size_t n_x, const size_t n_y, const size_t n_z)
-    : ParticleContainer() { }
-
-BoxContainer::BoxContainer(std::vector<Particle> new_particles, const double rc, const size_t n_x, const size_t n_y, const size_t n_z)
+BoxContainer::BoxContainer(std::vector<Particle>& new_particles, const double rc, const size_t n_x, const size_t n_y, const size_t n_z)
     : ParticleContainer(new_particles) {
     cells = CellList(rc, n_x, n_y, n_z);
     cells.create_list(particles);

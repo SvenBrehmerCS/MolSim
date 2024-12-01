@@ -386,7 +386,8 @@ TEST(Calculator, UpdateF2) {
 
 //         // Test if the new positions is correct
 //         EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - exp[i].getX()), error_margin)
-//             << "The positions was not correct. (expected: " << ArrayUtils::to_string(exp[i].getX()) << ", got: " << ArrayUtils::to_string(pi->getX())
+//             << "The positions was not correct. (expected: " << ArrayUtils::to_string(exp[i].getX()) << ", got: " <<
+//             ArrayUtils::to_string(pi->getX())
 //             << ")";
 
 //         // Test if the new velocity is correct
@@ -569,7 +570,8 @@ TEST(Calculator, UpdateF2) {
 //     }
 // }
 
-// // Test if step works for an analytical solution using two bodies dancing around a shared center of mass, while the center of mass is moving. The two
+// // Test if step works for an analytical solution using two bodies dancing around a shared center of mass, while the center of mass is moving. The
+// two
 // // bodies have different masses and therefore a different circle radius
 // TEST(GravityCalculator, Analytical4) {
 //     // Set the margin for the maximum floatingpoint error
