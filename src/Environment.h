@@ -6,7 +6,41 @@
 
 #pragma once
 
-#include "boundaries/ParticleContainer.h"
+#include "utils/ArrayUtils.h"
+
+#include <string>
+
+/**
+ * @enum Boundary
+ *
+ * @brief Define the different options for a boundary condition.
+ */
+enum Boundary : int {
+    /**
+     * Define the old square algorithm which does not require any boundaries.
+     */
+    INF_CONT,
+
+    /**
+     * Define the linked cell algorithm with a reflective boundary, using ghost particles.
+     */
+    HALO,
+
+    /**
+     * Define the linked cell algorithm with a reflective boundary, using hard reflection.
+     */
+    HARD,
+
+    /**
+     * Define the linked cell algorithm with periodic boundaries.
+     */
+    PERIODIC,
+
+    /**
+     * Define the linked cell algorithm with outflow boundaries.
+     */
+    OUTFLOW,
+};
 
 /**
  * @enum CalculatorType
@@ -72,31 +106,6 @@ enum InputFormat {
 class Environment {
 private:
     /**
-     * Store the end time. By default it is initialized to 1000.0.
-     */
-    double t_end = 1000.0;
-
-    /**
-     * Store the time delta. By default it is initialized to 0.014.
-     */
-    double delta_t = 0.014;
-
-    /**
-     * Store the epsilon used for the Lenard-Jones calculation. By default it is initialized to 5.0.
-     */
-    double epsilon = 5.0;
-
-    /**
-     * Store the sigma used for the Lenard-Jones calculation. By default it is initialized to 1.0.
-     */
-    double sigma = 1.0;
-
-    /**
-     * Store after how many steps the simulation state should be saved. By default it is initialized to 10.
-     */
-    int print_step = 10;
-
-    /**
      * Store the input file, which provides the initial simulation state.
      */
     const char* input_file = nullptr;
@@ -117,6 +126,11 @@ private:
     OutputFormat output_format = VTK;
 
     /**
+     * Store after how many steps the simulation state should be saved. By default it is initialized to 10.
+     */
+    int print_step = 10;
+
+    /**
      * Store which calculator should be used for the force calculations.
      */
     CalculatorType calc = LJ_FULL;
@@ -127,9 +141,38 @@ private:
     Boundary boundary_type = INF_CONT;
 
     /**
+     * Store the epsilon used for the Lenard-Jones calculation. By default it is initialized to 5.0.
+     */
+    double epsilon = 5.0;
+
+    /**
+     * Store the sigma used for the Lenard-Jones calculation. By default it is initialized to 1.0.
+     */
+    double sigma = 1.0;
+    /**
+     * Store the time delta. By default it is initialized to 0.014.
+     */
+    double delta_t = 0.014;
+
+    /**
+     * Store the end time. By default it is initialized to 1000.0.
+     */
+    double t_end = 1000.0;
+
+    /**
      * Store the radius beyond which force calculation is cut off.
      */
     double r_cutoff = 3.0;
+
+    /**
+     * Store the total size of the simulation domain.
+     */
+    std::array<double, 3> domain_size = { 180.0, 90.0, 1.0 };
+
+    /**
+     * Store the particle offset for certain boundary conditions.
+     */
+    std::array<double, 3> particle_offset = { 0.0, 0.0, 0.0 };
 
 public:
     /**
@@ -243,6 +286,10 @@ public:
      */
     double get_r_cutoff() const;
 
+    std::array<double, 3> get_domain_size() const;
+
+    std::array<double, 3> get_particle_offset() const;
+
     // Setter methods
 
     /**
@@ -314,4 +361,8 @@ public:
      * @param r_cutoff The radius.
      */
     void set_r_cutoff(const double r_cutoff);
+
+    void set_domain_size(const std::array<double, 3> domain_size);
+
+    void set_particle_offset(const std::array<double, 3> particle_offset);
 };

@@ -420,16 +420,6 @@ Environment::Environment(const Environment& env) {
 
 Environment::~Environment() = default;
 
-double Environment::get_t_end() const { return t_end; }
-
-double Environment::get_delta_t() const { return delta_t; }
-
-double Environment::get_sigma() const { return sigma; }
-
-double Environment::get_epsilon() const { return epsilon; }
-
-int Environment::get_print_step() const { return print_step; }
-
 const char* Environment::get_input_file_name() const { return input_file; }
 
 InputFormat Environment::get_input_file_format() const { return input_format; }
@@ -442,7 +432,21 @@ CalculatorType Environment::get_calculator_type() const { return calc; }
 
 Boundary Environment::get_boundary_type() const { return boundary_type; }
 
+int Environment::get_print_step() const { return print_step; }
+
+double Environment::get_sigma() const { return sigma; }
+
+double Environment::get_epsilon() const { return epsilon; }
+
+double Environment::get_delta_t() const { return delta_t; }
+
+double Environment::get_t_end() const { return t_end; }
+
 double Environment::get_r_cutoff() const { return r_cutoff; }
+
+std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
+
+std::array<double, 3> Environment::get_particle_offset() const { return particle_offset; }
 
 void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
 
@@ -463,3 +467,7 @@ void Environment::set_calculator_type(const CalculatorType calculator_type) { th
 void Environment::set_boundary_type(const Boundary boundary_type) { this->boundary_type = boundary_type; }
 
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
+
+void Environment::set_domain_size(const std::array<double, 3> domain_size) { this->domain_size = domain_size; }
+
+void Environment::set_particle_offset(const std::array<double, 3> particle_offset) { this->particle_offset = particle_offset; }

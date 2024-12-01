@@ -45,6 +45,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     EXPECT_EQ(environment.get_output_file_format(), XYZ);
     EXPECT_EQ(environment.get_print_step(), 5);
     EXPECT_EQ(environment.get_calculator_type(), GRAVITY);
+    EXPECT_EQ(environment.get_boundary_type(), HALO);
     EXPECT_EQ(environment.get_epsilon(), 10);
     EXPECT_EQ(environment.get_sigma(), 2.0);
     EXPECT_EQ(environment.get_delta_t(), 0.5);

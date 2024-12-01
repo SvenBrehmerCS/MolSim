@@ -38,6 +38,7 @@
                     <xs:documentation> The information needed to generate a cuboid of particles. </xs:documentation>
                 </xs:annotation>
             </xs:element>
+
             <xs:element name="disc" type="disc_t" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation> The information needed to generate a disc of particles</xs:documentation>
@@ -89,10 +90,16 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="frequency" type="xs:int" default="10">
+            <xs:element name="frequency" default="10">
                 <xs:annotation>
                     <xs:documentation> The number of time steps between outputs. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:positiveInteger">
+                        <xs:maxInclusive value="1000000" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -133,29 +140,73 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="epsilon" type="xs:double" default="5.0">
+            <xs:element name="bound" default="INF_CONT">
+                <!-- TODO -->
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation></xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="INF_CONT"></xs:enumeration>
+                        <xs:enumeration value="HALO"></xs:enumeration>
+                        <xs:enumeration value="HARD"></xs:enumeration>
+                        <xs:enumeration value="PERIODIC"></xs:enumeration>
+                        <xs:enumeration value="OUTFLOW"></xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="epsilon" default="5.0">
                 <xs:annotation>
                     <xs:documentation> The depth of the potential well of the Lennard-Jones
                         potential. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="sigma" type="xs:double" default="1.0">
+            <xs:element name="sigma" default="1.0">
                 <xs:annotation>
                     <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="delta_t" type="xs:double" default="0.014">
+            <xs:element name="delta_t" default="0.014">
                 <xs:annotation>
                     <xs:documentation> Amount of time passing between simulation steps. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="t_end" type="xs:double" default="1000.0">
+            <xs:element name="t_end" default="1000.0">
                 <xs:annotation>
                     <xs:documentation> Amount of time the simulate. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
             <xs:element name="dimensions" default="3">
@@ -175,10 +226,28 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="r_cutoff" type="xs:double" default="3.0">
+            <xs:element name="r_cutoff" default="3.0">
                 <xs:annotation>
                     <xs:documentation> The distance to after which the force calculation is to be
                         neglected. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="domain" type="pdvector">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <!-- TODO -->
+            <xs:element name="p_offset" type="dvector">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
@@ -190,41 +259,30 @@
                 @details This complex type consists of all parameters needed to define a particle,
                 such as position, velocity, and mass. </xs:documentation>
         </xs:annotation>
+
         <xs:sequence>
-            <xs:element name="pos_x" type="xs:double">
+            <xs:element name="position" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The x coordinate of the particle. </xs:documentation>
+                    <xs:documentation> The position of the particle. </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="pos_y" type="xs:double">
+
+            <xs:element name="velocity" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The y coordinate of the particle. </xs:documentation>
+                    <xs:documentation> The velocity of the particle. </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="pos_z" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The z coordinate of the particle. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="vel_x" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The velocity of the particle in x direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="vel_y" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The velocity of the particle in y direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="vel_z" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The velocity of the particle in z direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="m" type="xs:double">
+
+            <xs:element name="m">
                 <xs:annotation>
                     <xs:documentation> The mass of the particle. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -238,147 +296,238 @@
         </xs:annotation>
 
         <xs:sequence>
-            <xs:element name="pos_x" type="xs:double">
+            <xs:element name="position" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The x coordinate of the base particle. </xs:documentation>
+                    <xs:documentation> The position of the base particle. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="pos_y" type="xs:double">
+            <xs:element name="velocity" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The y coordinate of the base particle. </xs:documentation>
+                    <xs:documentation> The rough velocity of the cuboid. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="pos_z" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The z coordinate of the base particle </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="vel_x" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The rough velocity of the cuboid in x direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="vel_y" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The rough velocity of the cuboid in y direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="vel_z" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The rough velocity of the cuboid in z direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="m" type="xs:double">
+            <xs:element name="m">
                 <xs:annotation>
                     <xs:documentation> The mass of the particles in the cuboid. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="n_x" type="xs:int">
+            <xs:element name="count" type="uivector">
                 <xs:annotation>
-                    <xs:documentation> The amount of particles in x direction. </xs:documentation>
+                    <xs:documentation> The amount of particles in each direction. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="n_y" type="xs:int">
-                <xs:annotation>
-                    <xs:documentation> The amount of particles in y direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="n_z" type="xs:int">
-                <xs:annotation>
-                    <xs:documentation> The amount of particles in z direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="h" type="xs:double">
+            <xs:element name="h">
                 <xs:annotation>
                     <xs:documentation> The distance between the particles. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="b_motion" type="xs:double">
+            <xs:element name="b_motion" default="0.0">
                 <xs:annotation>
                     <xs:documentation> The average brownian motion in the cuboid. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="disc_t">
         <xs:annotation>
-            <xs:documentation> This complex type represents a disc, which is an arrangement of particles in
-                the simulation. @details This complex type consists of all the parameters needed to
-                define a disc of particles, such as the position of the center of the disc , the velocity of the disc, distance between particles, and more. </xs:documentation>
+            <xs:documentation> This complex type represents a disc, which is an arrangement of
+                particles in the simulation. @details This complex type consists of all the
+                parameters needed to define a disc of particles, such as the position of the center
+                of the disc , the velocity of the disc, distance between particles, and more. </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="c_x" type="xs:double">
+            <xs:element name="center" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The x coordinate of the center of the disc. </xs:documentation>
+                    <xs:documentation> The position of the center of the disc. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="c_y" type="xs:double">
+            <xs:element name="velocity" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The y coordinate of the center of the disc. </xs:documentation>
+                    <xs:documentation> The rough velocity of the disc. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="c_z" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The z coordinate of the center of the disc </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="vel_x" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The rough velocity of the disc in x direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="vel_y" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The rough velocity of the disc in y direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="vel_z" type="xs:double">
-                <xs:annotation>
-                    <xs:documentation> The rough velocity of the disc in z direction. </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-
-            <xs:element name="m" type="xs:double">
+            <xs:element name="m">
                 <xs:annotation>
                     <xs:documentation> The mass of the particles in the disc. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="r" type="xs:double">
+            <xs:element name="r">
                 <xs:annotation>
-                    <xs:documentation> The radius in terms of the number of molecules along the radius. </xs:documentation>
+                    <xs:documentation> The radius in terms of the number of molecules along the
+                        radius. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="h" type="xs:double">
+            <xs:element name="h">
                 <xs:annotation>
                     <xs:documentation> The distance between the particles. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
-            <xs:element name="b_motion" type="xs:double" default="0.1">
+            <xs:element name="b_motion" default="0.0">
                 <xs:annotation>
                     <xs:documentation> The average brownian motion in the disc. </xs:documentation>
                 </xs:annotation>
-            </xs:element>
 
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="dvector">
+        <xs:annotation>
+            <xs:documentation> This complex type represents a three value vector of doubles.
+                @details This complex type consists of three double variables which are used as
+                displacement or velocity in direction of the three coordinate axis. </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="vx" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The value of the X variable. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="vy" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The value of the Y variable. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="vz" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The value of the Z variable. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pdvector">
+        <xs:annotation>
+            <xs:documentation> This complex type represents a three value vector of positive
+                doubles. @details This complex type consists of three double variables which are
+                used as particle offset in direction of the three coordinate axis. </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="vx">
+                <xs:annotation>
+                    <xs:documentation> The value of the X variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="vy">
+                <xs:annotation>
+                    <xs:documentation> The value of the Y variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="vz">
+                <xs:annotation>
+                    <xs:documentation> The value of the Z variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="uivector">
+        <xs:annotation>
+            <xs:documentation> This complex type represents a three value vector of integers.
+                @details This complex type consists of three integer variables which are used as
+                number of particles in direction of the three coordinate axis. </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="vx">
+                <xs:annotation>
+                    <xs:documentation> The value of the X variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="vy">
+                <xs:annotation>
+                    <xs:documentation> The value of the Y variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="vz">
+                <xs:annotation>
+                    <xs:documentation> The value of the Z variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minInclusive value="0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

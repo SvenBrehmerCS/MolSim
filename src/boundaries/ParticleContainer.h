@@ -14,38 +14,6 @@
 #include <vector>
 
 /**
- * @enum Boundary
- *
- * @brief Define the different options for a boundary condition.
- */
-enum Boundary : int {
-    /**
-     * Define the old square algorithm which does not require any boundaries.
-     */
-    INF_CONT,
-
-    /**
-     * Define the linked cell algorithm with a reflective boundary, using ghost particles.
-     */
-    HALO,
-
-    /**
-     * Define the linked cell algorithm with a reflective boundary, using hard reflection.
-     */
-    HARD,
-
-    /**
-     * Define the linked cell algorithm with periodic boundaries.
-     */
-    PERIODIC,
-
-    /**
-     * Define the linked cell algorithm with outflow boundaries.
-     */
-    OUTFLOW,
-};
-
-/**
  * @class ParticleContainer
  *
  * @brief Store all the particles during the simulation.
