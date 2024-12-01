@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "boundaries/ParticleContainer.h"
+
 /**
  * @enum CalculatorType
  *
@@ -28,7 +30,7 @@ enum CalculatorType {
  *
  * @brief The enum describes the different file formats used by this program.
  */
-enum FileFormat {
+enum OutputFormat {
     /**
      * Define the no output format.
      */
@@ -42,7 +44,24 @@ enum FileFormat {
     /**
      * Define the ascii based xyz file format.
      */
-    XYZ
+    XYZ,
+};
+
+/**
+ * @enum InputFormat
+ *
+ * @brief The enum describes the type of input file used.
+ */
+enum InputFormat {
+    /**
+     * Define a standard text file format.
+     */
+    TXT,
+
+    /**
+     * Define the XML file format.
+     */
+    XML,
 };
 
 /**
@@ -83,6 +102,11 @@ private:
     const char* input_file = nullptr;
 
     /**
+     * Store the input file format. Automatically set based on input file.
+     */
+    InputFormat input_format;
+
+    /**
      * Store the beginning of the name of the output file. The default is MD_vtk. The output file name looks like this: <name>_<iteration>.<vtu | xyz>
      */
     const char* output_file = "MD_vtk";
@@ -90,12 +114,17 @@ private:
     /**
      * Store the output file format. it can either be vtk or xyz, with vtk being the default.
      */
-    FileFormat format = VTK;
+    OutputFormat output_format = VTK;
 
     /**
      * Store which calculator should be used for the force calculations.
      */
     CalculatorType calc = LJ_FULL;
+
+    /**
+     * Store the boundary condition used. Has effects on Particle container and stepper.
+     */
+    Boundary boundary_type = INF_CONT;
 
     /**
      * Store the radius beyond which force calculation is cut off.
@@ -127,6 +156,8 @@ public:
      * Destroy a simulation environment.
      */
     ~Environment();
+
+    // Getter methods
 
     /**
      * Get the end time (duration) of the simulation.
@@ -171,6 +202,13 @@ public:
     const char* get_input_file_name() const;
 
     /**
+     * Get the format of the the output file. Used to determine needed reader.
+     *
+     * @return The file format of the input file.
+     */
+    InputFormat get_input_file_format() const;
+
+    /**
      * Get the beginning of the name of the output file. All output files will start with this name.
      *
      * @return The file name of the output file.
@@ -182,7 +220,7 @@ public:
      *
      * @return The file format of the output file.
      */
-    FileFormat get_output_file_format() const;
+    OutputFormat get_output_file_format() const;
 
     /**
      * Get the calculator type which should be used for the force calculations.
@@ -192,11 +230,20 @@ public:
     CalculatorType get_calculator_type() const;
 
     /**
+     * Get the Boundary type used in the simulation.
+     *
+     * @return The boundary type.
+     */
+    Boundary get_boundary_type() const;
+
+    /**
      * Get the cutoff radius beyond which forces no longer affect particles.
      *
      * @return The radius.
      */
     double get_r_cutoff() const;
+
+    // Setter methods
 
     /**
      * Set the end time (duration) of the simulation.
@@ -205,7 +252,6 @@ public:
      */
     void set_t_end(const double t_end);
 
-
     /**
      * Set the amount of time simulated by a single step.
      *
@@ -213,13 +259,12 @@ public:
      */
     void set_delta_t(const double delta_t);
 
-
     /**
-     * Get the sigma used for lenard jones simulations.
+     * Set the sigma used for lenard jones simulations.
+     *
      * @param sigma The sigma for force calculation.
      */
     void set_sigma(const double sigma);
-
 
     /**
      * Set the epsilon used for lenard jones simulations.
@@ -228,14 +273,12 @@ public:
      */
     void set_epsilon(const double epsilon);
 
-
     /**
      * Set how often the simulation output file should be generated.
      *
      * @param print_step An integer indicating which simulation steps should be saved.
      */
     void set_print_step(const int print_step);
-
 
     /**
      * Set the beginning of the name of the output file. All output files will start with this name.
@@ -244,14 +287,12 @@ public:
      */
     void set_output_file_name(const char* output_file_name);
 
-
     /**
      * Set the format of the the output file.
      *
      * @param format The file format of the output file.
      */
-    void set_output_file_format(const FileFormat format);
-
+    void set_output_file_format(const OutputFormat format);
 
     /**
      * Set the calculator type which should be used for the force calculations.
@@ -259,6 +300,13 @@ public:
      * @param calculator_type The calculator type.
      */
     void set_calculator_type(const CalculatorType calculator_type);
+
+    /**
+     * Set the boundary type used in the simulation.
+     *
+     * @param boundary_type The boundary type.
+     */
+    void set_boundary_type(const Boundary boundary_type);
 
     /**
      * Set the cutoff radius beyond which forces no longer affect particles.

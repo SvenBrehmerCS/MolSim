@@ -17,25 +17,21 @@ namespace physicsCalculator {
 
     Calculator::Calculator() = default;
 
-    Calculator::Calculator(const Environment& new_env) {
-        env = new_env;
-
-        // Read the input file
-        std::unique_ptr<inputReader::Reader> fileReader { new inputReader::FileReader() };
-        fileReader->readFile(*container, env.get_input_file_name());
-    }
+    Calculator::Calculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
+        : env { new_env }
+        , cont { new_cont } { }
 
     Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles) {
         env = new_env;
-        container.reset(new InfContainer(particles));
+        cont.reset(new InfContainer(particles));
     }
 
-    ParticleContainer& Calculator::get_container() { return *container; }
+    ParticleContainer& Calculator::get_container() { return *cont; }
 
     const Environment& Calculator::get_env() const { return env; }
 
     void Calculator::calculateOldF() {
-        for (Particle& p : *container) {
+        for (Particle& p : *cont) {
             p.setOldF(p.getF());
             p.setF({ 0.0, 0.0, 0.0 });
         }
@@ -44,7 +40,7 @@ namespace physicsCalculator {
     }
 
     void Calculator::calculateX() {
-        for (Particle& p : *container) {
+        for (Particle& p : *cont) {
             p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
         }
 
@@ -52,7 +48,7 @@ namespace physicsCalculator {
     }
 
     void Calculator::calculateF() {
-        container->iterate_pairs([this](Particle& i, Particle& j) {
+        cont->iterate_pairs([this](Particle& i, Particle& j) {
             const double force = this->calculateFAbs(i, j);
 
             // Update the forces for both particles
@@ -64,7 +60,7 @@ namespace physicsCalculator {
     }
 
     void Calculator::calculateV() {
-        for (Particle& p : *container) {
+        for (Particle& p : *cont) {
             p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
         }
 

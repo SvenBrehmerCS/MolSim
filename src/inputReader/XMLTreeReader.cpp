@@ -4,7 +4,11 @@ using namespace xml_schema;
 
 namespace inputReader {
 
-    XMLTreeReader::XMLTreeReader(const char* filename) {
+    XMLTreeReader::XMLTreeReader() = default;
+
+    XMLTreeReader::~XMLTreeReader() = default;
+
+    void XMLTreeReader::readFile(const char* filename, Environment& environment, ParticleContainer& container) {
         spdlog::debug("Reading XML input {}", filename);
 
         // Test if filename is correct
@@ -15,6 +19,7 @@ namespace inputReader {
         }
 
         // read in the simulation data
+        std::unique_ptr<sim_t> sim;
         try {
             sim = simulation(filename);
         } catch (const xml_schema::exception& e) {
@@ -24,10 +29,7 @@ namespace inputReader {
             spdlog::error("Error: {}", e.what());
             std::exit(EXIT_FAILURE);
         }
-    }
-    XMLTreeReader::~XMLTreeReader() = default;
 
-    void XMLTreeReader::readEnvironment(Environment& environment) {
         spdlog::debug("Setting up simulation environment");
 
         const char* output_file_name = sim->output().name().c_str();
@@ -56,9 +58,7 @@ namespace inputReader {
 
         const double r_cutoff = sim->param().r_cutoff();
         environment.set_r_cutoff(r_cutoff);
-    }
 
-    void XMLTreeReader::readParticles(ParticleContainer& container) {
         // TODO rest and maybe move restrictions into the xsd
         // if (sim->param().t_end() <= 0 || sim->param().delta_t() <= 0) {
         //     spdlog::critical("Invalid simulation parameters in file {}", filename);

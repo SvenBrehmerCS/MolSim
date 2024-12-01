@@ -24,9 +24,10 @@ namespace physicsCalculator {
         /**
          * Initialize a simple calculator using a simulation environment.
          *
-         * @param new_env THe simulation environment that should be used for initialization.
+         * @param new_env The simulation environment that should be used for initialization.
+         * @param new_cont The container storing the particles that should be used throughout the simulation.
          */
-        GravityCalculator(const Environment& new_env);
+        GravityCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont);
 
         /**
          * Provide a constructor that allows the construction of a calculator using a particle container
@@ -48,7 +49,7 @@ namespace physicsCalculator {
          * Get the force absolute and sign direction between two particles.
          */
         virtual double calculateFAbs(const Particle& p1, const Particle& p2);
-        
+
         /**
          * Get the force absolute and sign direction between two particles.
          */

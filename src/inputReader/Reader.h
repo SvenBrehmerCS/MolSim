@@ -28,19 +28,12 @@ namespace inputReader {
         virtual ~Reader() {};
 
         /**
-         * Imports the simulation arguments from the given input file
+         * Imports the simulation arguments from the given input file.
          *
-         * @param environment data structure for holding the simulation parameters
-         * @param filename file path to input file.
-         */
-        virtual void readEnvironment(Environment& environment) = 0;
-
-        /**
-         * Imports the particles from the given input file
-         *
+         * @param environment data structure for holding the simulation parameters.
          * @param particles data structure for holding the particles.
          * @param filename file path to input file.
          */
-        virtual void readParticles(ParticleContainer& container) = 0;
+        virtual void readFile(const char* file, Environment& environment, ParticleContainer& container) = 0;
     };
 } // namespace inputReader
