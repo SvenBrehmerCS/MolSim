@@ -30,19 +30,6 @@ namespace physicsCalculator {
         container.reset(new InfContainer(particles));
     }
 
-    void Calculator::step() {
-        spdlog::debug("Started a simulation step.");
-
-        // calculate new x
-        calculateX();
-        // update the old f
-        calculateOldF();
-        // calculate new f
-        calculateF();
-        // calculate new v
-        calculateV();
-    }
-
     ParticleContainer& Calculator::get_container() { return *container; }
 
     const Environment& Calculator::get_env() const { return env; }

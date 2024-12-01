@@ -35,6 +35,6 @@ namespace outputWriter {
          * @param iteration The number of the current iteration,
          *        which is used to generate an unique filename
          */
-        virtual void plotParticles(const ParticleContainer& container, const std::string& filename, int iteration) = 0;
+        virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration) = 0;
     };
 } // namespace outputWriter

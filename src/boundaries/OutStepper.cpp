@@ -8,8 +8,8 @@ void OutStepper::step(physicsCalculator::Calculator& calc) {
     // calculate new x
     calc.calculateX();
     // Update the cells to contain the correct arguments
+    container.remove_particles_out_of_domain();
     container.update_positions();
-    container.clear_halo_cells();
     // update the old f
     calc.calculateOldF();
     // calculate new f
