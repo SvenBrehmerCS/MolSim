@@ -59,12 +59,6 @@ namespace inputReader {
         const double r_cutoff = sim->param().r_cutoff();
         environment.set_r_cutoff(r_cutoff);
 
-        // TODO rest and maybe move restrictions into the xsd
-        // if (sim->param().t_end() <= 0 || sim->param().delta_t() <= 0) {
-        //     spdlog::critical("Invalid simulation parameters in file {}", filename);
-        //     std::exit(EXIT_FAILURE);
-        // }
-
         spdlog::debug("Generating particles");
 
         const int num_dimensions = sim->param().dimensions();
@@ -93,17 +87,8 @@ namespace inputReader {
         // initialize all the particles from the XML file into the container
         int i = 0;
         for (const auto& particle : particles) {
-            if (particle.m() <= 0) { // TODO
-                spdlog::critical("Invalid particle mass: {}", particle.m());
-                std::exit(EXIT_FAILURE);
-            }
-            if (std::isnan(particle.pos_x()) || std::isnan(particle.pos_y()) || std::isnan(particle.pos_z())) {
-                spdlog::critical("Invalid particle position. Position cant be NaN.");
-                std::exit(EXIT_FAILURE);
-            }
-
-            container[i].setX({ particle.pos_x(), particle.pos_y(), particle.pos_z() });
-            container[i].setV({ particle.vel_x(), particle.vel_y(), particle.vel_z() });
+            container[i].setX({ particle.position().vx(), particle.position().vy(), particle.position().vz() });
+            container[i].setV({ particle.velocity().vx(), particle.velocity().vy(), particle.velocity().vz() });
             container[i].setM(particle.m());
             i++;
         }
@@ -113,33 +98,24 @@ namespace inputReader {
 
         // initialize all the cuboids into the container
         for (const auto& cuboid : cuboids) {
-            if (cuboid.n_x() <= 0 || cuboid.n_y() <= 0 || cuboid.n_z() <= 0) { // TODO
-                spdlog::critical("Invalid cuboid dimensions in simulation file {}");
-                std::exit(EXIT_FAILURE);
-            }
-            if (cuboid.m() <= 0) {
-                spdlog::critical("Invalid cuboid mass in simulation file {}");
-                std::exit(EXIT_FAILURE);
-            }
-
-            x = { cuboid.pos_x(), cuboid.pos_y(), cuboid.pos_z() };
-            v = { cuboid.vel_x(), cuboid.vel_y(), cuboid.vel_z() };
-            N = { cuboid.n_x(), cuboid.n_y(), cuboid.n_z() };
+            x = { cuboid.position().vx(), cuboid.position().vy(), cuboid.position().vz() };
+            v = { cuboid.velocity().vx(), cuboid.velocity().vy(), cuboid.velocity().vz() };
+            N = { cuboid.count().vx(), cuboid.count().vy(), cuboid.count().vz() };
             m = cuboid.m();
             h = cuboid.h();
             brownian_motion = cuboid.b_motion();
 
-            container.resize(num_particles + cuboid.n_x() * cuboid.n_y() * cuboid.n_z());
+            container.resize(num_particles + cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz());
 
             generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
 
-            num_particles += cuboid.n_x() * cuboid.n_y() * cuboid.n_z();
+            num_particles += cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz();
         }
 
         const auto& discs = sim->disc();
         for (const auto& disc : discs) {
-            disc_center = { disc.c_x(), disc.c_y(), disc.c_z() };
-            disc_velocity = { disc.vel_x(), disc.vel_y(), disc.vel_z() };
+            disc_center = { disc.center().vx(), disc.center().vy(), disc.center().vz() };
+            disc_velocity = { disc.velocity().vx(), disc.velocity().vy(), disc.velocity().vz() };
 
             int particles_future_added = num_particles_added(disc.h(), disc.r());
 
