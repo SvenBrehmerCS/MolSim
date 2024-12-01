@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "utils/ArrayUtils.h"
+
 #include <string>
 
 /**
