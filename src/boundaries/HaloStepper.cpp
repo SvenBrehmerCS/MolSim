@@ -13,14 +13,14 @@ void HaloStepper::step(physicsCalculator::Calculator& calc) {
     calc.calculateOldF();
     // calculate new f
     calc.calculateF();
+
+    const double scale = std::pow(2.0, 1.0 / 6.0);
+    const std::array<double, 3> c2 = calc.get_container().get_corner_vector();
+    const double r = calc.get_env().get_sigma() * scale;
+
     // Create halo particles if required
     for (Particle& p : calc.get_container()) {
-        const double scale = std::pow(2.0, 1.0 / 6.0);
-
         std::array<double, 3> f = { 0.0, 0.0, 0.0 };
-        const std::array<double, 3> c2 = calc.get_container().get_corner_vector();
-
-        const double r = calc.get_env().get_sigma() * scale;
 
         if (p.getX()[0] < 0) {
             f[0] = calc.calculateFDist(p.getX()[0]);

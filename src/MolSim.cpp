@@ -2,6 +2,7 @@
 #include "MolSim.h"
 #include "boundaries/BoxContainer.h"
 #include "boundaries/HaloStepper.h"
+#include "boundaries/HardStepper.h"
 #include "boundaries/InfContainer.h"
 #include "boundaries/InfStepper.h"
 #include "boundaries/OutStepper.h"
@@ -81,8 +82,7 @@ int main(const int argc, const char* argv[]) {
         stepper.reset(new HaloStepper());
         break;
     case HARD:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
+        stepper.reset(new HardStepper());
         break;
     case OUTFLOW:
         stepper.reset(new OutStepper());
@@ -120,11 +120,6 @@ int main(const int argc, const char* argv[]) {
 
         // End the iteration
         spdlog::info("Iteration {} finished.", iteration);
-    }
-
-    // Store the particles to an output file if it is the last iteration
-    if (iteration % env.get_print_step() != 0) {
-        writer->plotParticles(calculator->get_container(), out_name, iteration);
     }
 
     spdlog::info("output written. Terminating...");
