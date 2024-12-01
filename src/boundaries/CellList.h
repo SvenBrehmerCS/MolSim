@@ -13,35 +13,11 @@
 #include <vector>
 
 /**
- * @typedef index_it
- *
- * The index iterator type is a method only taking a single int.
- */
-typedef void(index_it)(size_t);
-
-/**
- * @typedef index_pair_it
- *
- * The index pair iterator type is a method taking two integers.
- */
-typedef void(index_pair_it)(size_t, size_t);
-
-/**
- * @typedef particle_it
- *
- * The particle iterator type is a method taking a single particle reference.
- */
-typedef void(particle_it)(Particle&);
-
-/**
  * @typedef particle_pair_it
  *
  * The particle pair iterator type is a method taking two particle references.
  */
 typedef void(particle_pair_it)(Particle&, Particle&);
-
-// Forward define the cell class.
-class Cell;
 
 /**
  * @class CellList
@@ -69,7 +45,7 @@ public:
     /**
      * Define the default constructor.
      */
-    CellList();
+    CellList() = default;
 
     /**
      * Define a constructor for a cell list.
@@ -84,7 +60,7 @@ public:
     /**
      * Define the default destructor.
      */
-    ~CellList();
+    ~CellList() = default;
 
     /**
      * Get the index of the given coordinates within the flat out cell list.
@@ -93,17 +69,7 @@ public:
      * @param y The y coordinate.
      * @param z The z coordinate.
      */
-    size_t get_cell_index(size_t x, size_t y, size_t z);
-
-    /**
-     * Test if a position is within a given cell.
-     *
-     * @param pos The position vector
-     * @param x The x position of the cell
-     * @param y The y position of the cell
-     * @param z The z position of the cell
-     */
-    bool in_cell(std::array<double, 3> pos, size_t x, size_t y, size_t z);
+    size_t get_cell_index(const size_t x, const size_t y, const size_t z);
 
     /**
      * Get the corner vector of the front up right corner.

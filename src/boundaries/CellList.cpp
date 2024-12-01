@@ -7,8 +7,6 @@
 
 #include <spdlog/spdlog.h>
 
-CellList::CellList() = default;
-
 CellList::CellList(const double rc, const size_t n_x, const size_t n_y, const size_t n_z) {
     this->rc = rc;
     this->n_x = n_x + 2;
@@ -18,13 +16,10 @@ CellList::CellList(const double rc, const size_t n_x, const size_t n_y, const si
     cells.resize(this->n_x * this->n_y * this->n_z);
 }
 
-CellList::~CellList() = default;
-
 void CellList::create_list(std::vector<Particle>& particles) {
     for (std::list<size_t> l : cells) {
         l.clear();
     }
-
 
     for (size_t i = 0; i < particles.size(); i++) {
         size_t x = std::floor(particles[i].getX()[0] / rc) + 1;
@@ -50,23 +45,7 @@ void CellList::create_list(std::vector<Particle>& particles) {
     }
 }
 
-size_t CellList::get_cell_index(size_t x, size_t y, size_t z) { return z + y * n_z + x * n_y * n_z; }
-
-bool CellList::in_cell(std::array<double, 3> pos, size_t x, size_t y, size_t z) {
-    if (pos[0] < x * rc || pos[0] >= (x + 1) * rc) {
-        return false;
-    }
-
-    if (pos[1] < y * rc || pos[1] >= (y + 1) * rc) {
-        return false;
-    }
-
-    if (pos[2] < z * rc || pos[2] >= (z + 1) * rc) {
-        return false;
-    }
-
-    return true;
-}
+size_t CellList::get_cell_index(const size_t x, const size_t y, const size_t z) { return z + y * n_z + x * n_y * n_z; }
 
 std::array<double, 3> CellList::get_corner_vector() {
     return {
@@ -84,7 +63,9 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
                 const size_t idx = get_cell_index(i, j, k);
 
                 for (std::list<size_t>::iterator l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
-                    for (std::list<size_t>::iterator l2_it = l1_it; l2_it != cells[idx].end(); l2_it++) {
+                    std::list<size_t>::iterator l2_it = l1_it;
+                    l2_it++;
+                    for (; l2_it != cells[idx].end(); l2_it++) {
                         if (ArrayUtils::L2Norm(particles[*l1_it].getX() - particles[*l2_it].getX()) <= rc) {
                             iterator(particles[*l1_it], particles[*l2_it]);
                         }

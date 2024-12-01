@@ -41,13 +41,6 @@ public:
     virtual void iterate_pairs(std::function<particle_pair_it> iterator);
 
     /**
-     * Iterate over all particles.
-     *
-     * @param iterator The particle iterator.
-     */
-    virtual void iterate_inner_particles(std::function<particle_it> iterator);
-
-    /**
      * Update the particle positions in their cells.
      */
     virtual void update_positions();
