@@ -18,4 +18,29 @@ size_t ParticleContainer::size() const { return particles.size(); }
 
 void ParticleContainer::resize(size_t new_size) { particles.resize(new_size); }
 
+void ParticleContainer::remove_particles_out_of_domain() {
+    for (size_t i = 0; i < particles.size(); i++) {
+        bool removed = true;
 
+        while (removed) {
+            if (particles[i].getX()[0] < 0.0 || particles[i].getX()[0] >= domain[0]) {
+                particles[i] = particles[particles.size() - 1];
+                continue;
+            }
+
+            if (particles[i].getX()[1] < 0.0 || particles[i].getX()[1] >= domain[1]) {
+                particles[i] = particles[particles.size() - 1];
+                continue;
+            }
+
+            if (particles[i].getX()[2] < 0.0 || particles[i].getX()[2] >= domain[2]) {
+                particles[i] = particles[particles.size() - 1];
+                continue;
+            }
+
+            removed = false;
+        }
+    }
+}
+
+const std::array<double, 3>& ParticleContainer::get_corner_vector() const { return domain; }

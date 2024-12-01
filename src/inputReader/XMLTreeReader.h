@@ -60,5 +60,6 @@ namespace inputReader {
          * @param filename file path to input file.
          */
         virtual void readParticles(ParticleContainer& container);
+        int num_particles_added(double h, double r);
     };
 }

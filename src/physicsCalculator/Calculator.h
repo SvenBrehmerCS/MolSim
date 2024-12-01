@@ -90,11 +90,6 @@ namespace physicsCalculator {
         void calculateV();
 
         /**
-         * Perform a single simulation step, assuming that the leap frog method is being used.
-         */
-        void step();
-
-        /**
          * Get a reference to the particle container.
          *
          * @return A reference to the particle container.

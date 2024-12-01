@@ -4,7 +4,7 @@ InfContainer::InfContainer()
     : ParticleContainer() { }
 
 InfContainer::InfContainer(std::vector<Particle> new_particles)
-    : ParticleContainer(new_particles) {};
+    : ParticleContainer(new_particles) { }
 
 InfContainer::~InfContainer() = default;
 
@@ -16,3 +16,5 @@ void InfContainer::iterate_pairs(std::function<particle_pair_it> iterator) {
         }
     }
 }
+
+void InfContainer::update_positions() { }

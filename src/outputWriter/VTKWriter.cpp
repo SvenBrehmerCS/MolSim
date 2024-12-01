@@ -97,11 +97,11 @@ namespace outputWriter {
         pointsIterator->push_back(p.getX()[2]);
     }
 
-    void VTKWriter::plotParticles(const ParticleContainer& container, const std::string& filename, int iteration) {
+    void VTKWriter::plotParticles(ParticleContainer& container, const std::string& filename, int iteration) {
         initializeOutput(container.size());
 
-        for (const auto& p : container) {
-            plotParticle(p);
+        for (const Particle& p : container) {
+            this->plotParticle(p);
         }
 
         writeFile(filename, iteration);

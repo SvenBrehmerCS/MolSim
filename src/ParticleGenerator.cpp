@@ -37,8 +37,9 @@ void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_par
     }
 }
 
-void ParticleGenerator::generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity,
+int ParticleGenerator::generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity,
     double mass, double radius, double h, double b_m, int dim) {
+    int num_particles_added = 0;
 
     double radius_distance = radius * h;
     std::array<double, 3> boltz_v;
@@ -54,8 +55,10 @@ void ParticleGenerator::generateDisc(ParticleContainer& container, int num_parti
                 boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
                 particle->setV(velocity + boltz_v);
                 particle->setM(mass);
-                particle++;
+                ++particle;
+                ++num_particles_added;
             }
         }
     }
+    return num_particles_added;
 }

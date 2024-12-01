@@ -38,6 +38,11 @@
                     <xs:documentation> The information needed to generate a cuboid of particles. </xs:documentation>
                 </xs:annotation>
             </xs:element>
+            <xs:element name="disc" type="disc_t" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation> The information needed to generate a disc of particles</xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -304,6 +309,76 @@
                     <xs:documentation> The average brownian motion in the cuboid. </xs:documentation>
                 </xs:annotation>
             </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="disc_t">
+        <xs:annotation>
+            <xs:documentation> This complex type represents a disc, which is an arrangement of particles in
+                the simulation. @details This complex type consists of all the parameters needed to
+                define a disc of particles, such as the position of the center of the disc , the velocity of the disc, distance between particles, and more. </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="c_x" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The x coordinate of the center of the disc. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c_y" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The y coordinate of the center of the disc. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c_z" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The z coordinate of the center of the disc </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="vel_x" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The rough velocity of the disc in x direction. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="vel_y" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The rough velocity of the disc in y direction. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="vel_z" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The rough velocity of the disc in z direction. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="m" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The mass of the particles in the disc. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="r" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The radius in terms of the number of molecules along the radius. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="h" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation> The distance between the particles. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="b_motion" type="xs:double" default="0.1">
+                <xs:annotation>
+                    <xs:documentation> The average brownian motion in the disc. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

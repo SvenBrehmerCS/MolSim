@@ -13,12 +13,6 @@ BoxContainer::~BoxContainer() = default;
 
 void BoxContainer::iterate_pairs(std::function<particle_pair_it> iterator) { cells.loop_cell_pairs(iterator, particles); }
 
-void BoxContainer::iterate_boundary_cells(std::function<particle_it> iterator) { cells.loop_boundary_cells(iterator, particles); }
-
-void BoxContainer::update_positions() { cells.move_particles(particles); }
+void BoxContainer::update_positions() { cells.create_list(particles); }
 
 double BoxContainer::getRC() { return cells.getRC(); }
-
-std::array<double, 3> BoxContainer::get_corner_vector() { return cells.get_corner_vector(); }
-
-void BoxContainer::clear_halo_cells() { cells.clear_halo_cells(); }
