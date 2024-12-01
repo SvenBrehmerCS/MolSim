@@ -35,6 +35,3 @@ TEST(InfContainer, IteratePairs) {
 
     EXPECT_TRUE(pairs.size() == 0) << "The pair size should be 0 but it was " << pairs.size();
 }
-
-// TODO: Test constructor
-// TODO: Test update position

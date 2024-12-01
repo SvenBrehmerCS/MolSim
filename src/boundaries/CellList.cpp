@@ -126,7 +126,7 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
                         }
                     }
 
-                    // TODO: Insert at the right place:
+                    // Loop backwards particles
                     for (size_t m : cells[get_cell_index(i + 1, j - 1, k)]) {
                         spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
                         if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
@@ -148,7 +148,7 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
                         }
                     }
 
-
+                    // Loop sidewards particles
                     for (size_t m : cells[get_cell_index(i - 1, j - 1, k + 1)]) {
                         spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
                         if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {

@@ -58,4 +58,46 @@ TEST(BoxContainer, Constructor) {
     }
 }
 
-// TODO: Test update positions
+// Test if update position works correctly
+TEST(BoxContainer, UpdatePosition) {
+    std::vector<Particle> particles = {
+        Particle({ 1.0, 1.0, 0.0 }, {}, 1.0, 1),
+        Particle({ 19.0, 1.0, 0.0 }, {}, 1.0, 2),
+        Particle({ 1.0, 19.0, 0.0 }, {}, 1.0, 3),
+        Particle({ 19.0, 19.0, 0.0 }, {}, 1.0, 4),
+    };
+
+    BoxContainer box = BoxContainer(particles, 2.0, 20, 20, 5);
+
+    box.iterate_pairs([](Particle& p1, Particle& p2) { EXPECT_TRUE(false) << "All particles are spread out in the initial condition."; });
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 2, 3 },
+        { 2, 4 },
+        { 3, 4 },
+    };
+
+    box[0] = Particle({ 9.9, 9.9, 0.0 }, {}, 1.0, 1);
+    box[1] = Particle({ 10.1, 9.9, 0.0 }, {}, 1.0, 2);
+    box[2] = Particle({ 9.9, 10.1, 0.0 }, {}, 1.0, 3);
+    box[3] = Particle({ 10.1, 10.1, 0.0 }, {}, 1.0, 4);
+
+    box.update_positions();
+
+    box.iterate_pairs([&pairs](Particle& p1, Particle& p2) {
+        std::tuple<int, int> rm = {
+            static_cast<int>(std::min(p1.getType(), p2.getType())),
+            static_cast<int>(std::max(p1.getType(), p2.getType())),
+        };
+
+        EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+            << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+        pairs.remove(rm);
+    });
+
+    EXPECT_TRUE(pairs.size() == 0) << "The pair size should be 0 but it was " << pairs.size();
+}
