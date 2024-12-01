@@ -24,14 +24,15 @@ namespace physicsCalculator {
     class Calculator {
     protected:
         /**
-         * Store the particles used throughout the simulation.
-         */
-        std::unique_ptr<ParticleContainer> container;
-
-        /**
          * Store the simulation environment used throughout the simulation.
          */
+        // TODO Copy?(shared_ptr)
         Environment env;
+
+        /**
+         * Store the particles used throughout the simulation.
+         */
+        std::shared_ptr<ParticleContainer> cont;
 
     public:
         /**
@@ -42,9 +43,10 @@ namespace physicsCalculator {
         /**
          * Construct a calculator using the provided calculator.
          *
-         * @param new_env THe simulation environment that should be used.
+         * @param new_env The simulation environment that should be used.
+         * @param new_cont The container storing the particles that should be used throughout the simulation.
          */
-        Calculator(const Environment& new_env);
+        Calculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont);
 
         /**
          * Create a calculator from an environment and a particle vector. This method should only be used for debugging.

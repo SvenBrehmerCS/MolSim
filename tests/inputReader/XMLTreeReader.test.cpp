@@ -39,7 +39,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     InfContainer container;
     inputReader::XMLTreeReader reader;
 
-    reader.readFile(container, xml, environment);
+    reader.readFile(xml, environment, container);
     EXPECT_EQ(container.size(), 0);
     EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
     EXPECT_EQ(environment.get_output_file_format(), XYZ);
@@ -51,7 +51,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     EXPECT_EQ(environment.get_t_end(), 500);
 }
 
-//test of the particles are inserted correctly
+// test of the particles are inserted correctly
 TEST(XMLTreeReader, TestParticles) {
     const char* xml = "../tests/res/testParticles.xml";
 
@@ -60,11 +60,11 @@ TEST(XMLTreeReader, TestParticles) {
     inputReader::XMLTreeReader reader;
     std::array<double, 3> x = { 0.1, 0.2, 0.3 };
     std::array<double, 3> v = { 1.0, 1.5, 1.7 };
-    double m=0.01;
+    double m = 0.01;
 
     container.resize(1);
 
-    reader.readFile(container, xml, environment);
+    reader.readFile(xml, environment, container);
 
     ASSERT_EQ(container.size(), 1);
     EXPECT_EQ(container[0].getX(), x);
@@ -72,7 +72,7 @@ TEST(XMLTreeReader, TestParticles) {
     EXPECT_EQ(container[0].getM(), m);
 }
 
-//test if the cuboid is generated correctly
+// test if the cuboid is generated correctly
 TEST(XMLTreeReader, TestXMLCuboid) {
 
     const char* xml = "../tests/res/testCuboids.xml";
@@ -89,7 +89,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
 
     container.resize(4);
 
-    reader.readFile(container, xml, environment);
+    reader.readFile(xml, environment, container);
     ASSERT_EQ(container.size(), 4);
     EXPECT_EQ(container[0].getX(), x0);
     EXPECT_EQ(container[1].getX(), x1);
@@ -105,7 +105,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
     EXPECT_EQ(container[3].getM(), 2.5);
 }
 
-//test if the disc is generated correctly
+// test if the disc is generated correctly
 TEST(XMLTreeReader, TestXMLDisc) {
     const char* xml = "../tests/res/testDisc.xml";
     Environment environment;
@@ -121,7 +121,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
 
     container.resize(5);
 
-    reader.readFile(container, xml, environment);
+    reader.readFile(xml, environment, container);
 
     ASSERT_EQ(container.size(), 5);
     EXPECT_EQ(container[0].getX(), x1);
@@ -141,7 +141,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
     EXPECT_EQ(container[4].getM(), 2.5);
 }
 
-//test of everything combined has the correct value
+// test of everything combined has the correct value
 
 TEST(XMLTreeReader, TestXMLCombined) {
     const char* xml = "../tests/res/testCombined.xml";
@@ -169,7 +169,7 @@ TEST(XMLTreeReader, TestXMLCombined) {
 
     container.resize(10);
 
-    reader.readFile(container, xml, environment);
+    reader.readFile(xml, environment, container);
 
     ASSERT_EQ(container.size(), 10);
 

@@ -29,32 +29,18 @@ namespace inputReader {
      */
     class FileReader : public Reader {
 
-    private:
-        /**
-         * Stream used to parse the input file
-         */
-        std::ifstream input_file;
-
     public:
-        FileReader(const char* filename);
+        FileReader();
 
         virtual ~FileReader();
 
         /**
          * Imports the simulation arguments from the given input file
          *
-         * @param environment data structure for holding the simulation parameters
-         * @param filename file path to input file.
-         */
-        virtual void readEnvironment(Environment& environment);
-
-        /**
-         * Imports the particles from the given input file
-         *
+         * @param environment data structure for holding the simulation parameters.
          * @param particles data structure for holding the particles.
          * @param filename file path to input file.
          */
-        virtual void readParticles(ParticleContainer& container);
+        virtual void readFile(const char* filename, Environment& environment, ParticleContainer& container);
     };
-
 } // namespace inputReader

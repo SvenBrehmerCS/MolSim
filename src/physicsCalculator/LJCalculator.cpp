@@ -5,8 +5,8 @@
 #include "boundaries/InfContainer.h"
 
 namespace physicsCalculator {
-    LJCalculator::LJCalculator(const Environment& new_env)
-        : Calculator(new_env) {
+    LJCalculator::LJCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
+        : Calculator(new_env, new_cont) {
         // Initialize the forces
         calculateF();
     }
@@ -17,7 +17,7 @@ namespace physicsCalculator {
 
         switch (type) {
         case INF_CONT:
-            container.reset(new InfContainer(particles));
+            cont.reset(new InfContainer(particles));
             break;
 
         default:
