@@ -10,6 +10,16 @@
 
 #include "Reader.h"
 
+#include "Environment.h"
+#include "ParticleGenerator.h"
+#include "boundaries/InfContainer.h"
+#include "spdlog/spdlog.h"
+
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
 namespace inputReader {
 
     /**
@@ -19,18 +29,32 @@ namespace inputReader {
      */
     class FileReader : public Reader {
 
+    private:
+        /**
+         * Stream used to parse the input file
+         */
+        std::ifstream input_file;
+
     public:
-        FileReader();
+        FileReader(const char* filename);
 
         virtual ~FileReader();
 
         /**
-         * Imports a particle system from the given input file
+         * Imports the simulation arguments from the given input file
+         *
+         * @param environment data structure for holding the simulation parameters
+         * @param filename file path to input file.
+         */
+        virtual void readEnvironment(Environment& environment);
+
+        /**
+         * Imports the particles from the given input file
          *
          * @param particles data structure for holding the particles.
          * @param filename file path to input file.
          */
-        virtual void readFile(ParticleContainer& container, const char* filename);
+        virtual void readParticles(ParticleContainer& container);
     };
 
 } // namespace inputReader

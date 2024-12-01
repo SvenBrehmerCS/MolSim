@@ -1,13 +1,22 @@
+/**
+ * @file
+ *
+ * @brief Handles the reading of a XML input file
+ */
+
 #pragma once
 
 #include "Reader.h"
+
+#include "Environment.h"
+#include "ParticleGenerator.h"
+#include "boundaries/ParticleContainer.h"
+#include "input.h"
 #include "spdlog/spdlog.h"
 
-#include <Environment.h>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
 
 
 /**
@@ -15,7 +24,6 @@
  *
  * @brief Handles the reading of a xml file
  */
-using namespace xercesc;
 namespace inputReader {
 
 
@@ -25,30 +33,32 @@ namespace inputReader {
      * @brief A Reader to read a xml file, and parse it into Objects.
      */
     class XMLTreeReader : public Reader {
+
+    private:
+        /**
+         * Stores a tree structure representing the XML file parsed from the input.
+         */
+        std::unique_ptr<sim_t> sim;
+
     public:
-        using Reader::readFile;
+        XMLTreeReader(const char* filename);
 
-        XMLTreeReader();
-        ~XMLTreeReader();
-
-        /**
-         * Imports a particle system from the given xml input file
-         *
-         * @param container data structure for holding the particles.
-         * @param filename file path to xml input file.
-         * @param environment will set the environment variables read in from @filename to this environment
-         *
-         */
-        void readFile(ParticleContainer& container, const char* filename, Environment& environment);
+        virtual ~XMLTreeReader();
 
         /**
-         * This method has no use in this class, but needs to be implemented
-         * @param container
-         * @param filename
+         * Imports the simulation arguments from the given input file
+         *
+         * @param environment data structure for holding the simulation parameters
+         * @param filename file path to input file.
          */
-        void readFile(ParticleContainer& container, const char* filename) override {
-            spdlog::info("This function is of no use in this class XMLTreeReader but needs to be overridden, use the other function and specify the "
-                         "parameters accordingly");
-        }
+        virtual void readEnvironment(Environment& environment);
+
+        /**
+         * Imports the particles from the given input file
+         *
+         * @param particles data structure for holding the particles.
+         * @param filename file path to input file.
+         */
+        virtual void readParticles(ParticleContainer& container);
     };
 }
