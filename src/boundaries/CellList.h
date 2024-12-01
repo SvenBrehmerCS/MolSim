@@ -81,7 +81,7 @@ public:
      *
      * @param particles The vector of particles, that should be used for the simulation.
      */
-    void create_list(std::vector<Particle>& particles);
+    void create_list(const std::vector<Particle>& particles);
 
     /**
      * Loop through the particle pairs within the domain and halo.
