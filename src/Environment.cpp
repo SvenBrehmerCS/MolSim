@@ -474,12 +474,12 @@ void Environment::set_output_file_format(const OutputFormat output_format) { thi
 void Environment::set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
 
 void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_type) {
-    xy_near = boundary_type[0];
+    yz_near = boundary_type[0];
     xz_near = boundary_type[1];
-    yz_near = boundary_type[2];
-    xy_far = boundary_type[3];
+    xy_near = boundary_type[2];
+    yz_far = boundary_type[3];
     xz_far = boundary_type[4];
-    yz_far = boundary_type[5];
+    xy_far = boundary_type[5];
 }
 
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }

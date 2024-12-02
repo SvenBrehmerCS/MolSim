@@ -18,14 +18,10 @@
 #include <iostream>
 #include <string>
 
-
 /**
- * @file
- *
- * @brief Handles the reading of a xml file
+ * @brief Collection of readers for different input types
  */
 namespace inputReader {
-
 
     /**
      * @class XMLTreeReader
@@ -48,17 +44,23 @@ namespace inputReader {
         /**
          * Imports the simulation arguments from the input file.
          *
-         * @param environment data structure for holding the simulation parameters.
+         * @param environment Data structure for holding the simulation parameters.
          */
         virtual void readArguments(Environment& environment);
 
         /**
          * Imports the particles from the input file.
          *
-         * @param particles data structure for holding the particles.
+         * @param particles Data structure for holding the particles.
          */
         virtual void readParticle(ParticleContainer& container);
 
+        /**
+         * Calculates the number of particles generated when creating a disc of particles.
+         *
+         * @param h Distance between particles inside the disc.
+         * @param r Radius of the disc.
+         */
         int num_particles_added(double h, double r);
     };
-}
+} // namespace inputReader

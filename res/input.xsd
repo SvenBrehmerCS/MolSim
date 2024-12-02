@@ -151,12 +151,12 @@
                     </xs:annotation>
 
                     <xs:sequence>
-                        <xs:element name="boundary_xy_near" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_xz_near" type="bound" default="INF_CONT"></xs:element>
                         <xs:element name="boundary_yz_near" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_xy_far" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_xz_far" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_xz_near" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_xy_near" type="bound" default="INF_CONT"></xs:element>
                         <xs:element name="boundary_yz_far" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_xz_far" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_xy_far" type="bound" default="INF_CONT"></xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

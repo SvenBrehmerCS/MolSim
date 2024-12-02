@@ -11,6 +11,7 @@
 namespace inputReader {
 
     FileReader::FileReader(const char* filename) {
+        // Check for valid input file and open it.
         input_file = std::ifstream(filename);
         if (!input_file.is_open()) {
             spdlog::error("Could not open file {}", filename);
@@ -23,6 +24,7 @@ namespace inputReader {
     void FileReader::readArguments(Environment& environment) { }
 
     void FileReader::readParticle(ParticleContainer& container) {
+
         std::array<double, 3> x;
         std::array<double, 3> v;
         std::array<int, 3> N;

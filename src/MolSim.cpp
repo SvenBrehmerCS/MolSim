@@ -18,17 +18,14 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <string>
-#include <chrono>
 
 /**
  * The main entry point for the program.
  */
 int main(const int argc, const char* argv[]) {
-    auto start = std::chrono::high_resolution_clock::now();
-
     namespace fs = std::filesystem;
 
-    // Initialize the simulation environment, readers and writers.
+    // Initialize the simulation environment.
     Environment env { argc, argv };
 
     spdlog::info("Started {}", argv[0]);
@@ -51,6 +48,7 @@ int main(const int argc, const char* argv[]) {
 
     reader->readArguments(env);
 
+    // Initialize the particle container.
     bool isinf = true;
     std::array<BoundaryType, 6> bound_t = env.get_boundary_type();
     std::array<Boundary*, 6> boundaries {};
@@ -96,7 +94,7 @@ int main(const int argc, const char* argv[]) {
 
     reader.reset(nullptr);
 
-    // Initialize the calculator
+    // Initialize the calculator.
     std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
 
     switch (env.get_calculator_type()) {
@@ -112,7 +110,7 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
-    // Initialize the writer
+    // Initialize the writer.
     std::unique_ptr<outputWriter::Writer> writer { nullptr };
 
     switch (env.get_output_file_format()) {
@@ -131,10 +129,10 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
-    // Initialize the stepper
+    // Initialize the stepper.
     Stepper stepper(boundaries, isinf);
 
-    // Initialize the simulation environment
+    // Initialize the simulation environment.
     double current_time = 0.0;
     int iteration = 0;
 
@@ -153,22 +151,15 @@ int main(const int argc, const char* argv[]) {
         // Store the particles to an output file
         if (iteration % env.get_print_step() == 0) {
             writer->plotParticles(*cont, out_name, iteration);
+            spdlog::info("Iteration {} finished.", iteration);
         }
-
-        // End the iteration
-        spdlog::info("Iteration {} finished.", iteration);
     }
 
-    spdlog::info("output written. Terminating...");
+    spdlog::info("Output written. Terminating...");
 
-    // Feeing allocated memory
+    // Freeing allocated memory
     for (auto b : boundaries) {
         delete b;
     }
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    std::cout << "Dauer: " << duration.count() << " Mikrosekunden" << std::endl;
-
     return 0;
 }

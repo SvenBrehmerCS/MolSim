@@ -12,7 +12,6 @@
 
 #include "Environment.h"
 #include "ParticleGenerator.h"
-#include "boundaries/InfContainer.h"
 #include "spdlog/spdlog.h"
 
 #include <cstdlib>
@@ -20,6 +19,9 @@
 #include <iostream>
 #include <sstream>
 
+/**
+ * @brief Collection of readers for different input types
+ */
 namespace inputReader {
 
     /**
@@ -43,14 +45,14 @@ namespace inputReader {
         /**
          * Imports the simulation arguments from the input file.
          *
-         * @param environment data structure for holding the simulation parameters.
+         * @param environment Data structure for holding the simulation parameters.
          */
         virtual void readArguments(Environment& environment);
 
         /**
          * Imports the particles from the input file.
          *
-         * @param particles data structure for holding the particles.
+         * @param particles Data structure for holding the particles.
          */
         virtual void readParticle(ParticleContainer& container);
     };
