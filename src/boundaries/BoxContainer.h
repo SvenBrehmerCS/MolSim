@@ -2,6 +2,7 @@
  * @file BoxContainer.h
  *
  * @brief Define the box container.
+ *
  */
 
 #pragma once
@@ -15,6 +16,7 @@
  * @brief Define a container for the particles, which are located in a boxs.
  *
  * The graph shows the time required to simulate the force calculation for an increasing number of particles.
+ * \image html performance.png "PerformanceTest"
  */
 class BoxContainer : public ParticleContainer {
 private:
