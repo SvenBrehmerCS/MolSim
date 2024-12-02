@@ -34,20 +34,20 @@ void ParticleContainer::remove_particles_out_of_domain() {
         while (removed) {
             if (particles[i].getX()[0] < 0.0 || particles[i].getX()[0] >= domain[0]) {
                 particles[i] = particles[particles.size() - 1];
-                continue;
-            }
-
-            if (particles[i].getX()[1] < 0.0 || particles[i].getX()[1] >= domain[1]) {
+                particles.resize(particles.size() - 1);
+            } else if (particles[i].getX()[1] < 0.0 || particles[i].getX()[1] >= domain[1]) {
                 particles[i] = particles[particles.size() - 1];
-                continue;
-            }
-
-            if (particles[i].getX()[2] < 0.0 || particles[i].getX()[2] >= domain[2]) {
+                particles.resize(particles.size() - 1);
+            } else if (particles[i].getX()[2] < 0.0 || particles[i].getX()[2] >= domain[2]) {
                 particles[i] = particles[particles.size() - 1];
-                continue;
+                particles.resize(particles.size() - 1);
+            } else {
+                removed = false;
             }
 
-            removed = false;
+            if (particles.size() == i) {
+                return;
+            }
         }
     }
 }

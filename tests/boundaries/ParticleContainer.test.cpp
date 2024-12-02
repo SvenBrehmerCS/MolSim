@@ -20,8 +20,17 @@ public:
      *
      * @param new_particles The particles vector.
      */
-    TestContainer(std::vector<Particle> new_particles)
+    TestContainer(const std::vector<Particle>& new_particles)
         : ParticleContainer(new_particles) { }
+
+    /**
+     * Define the infinity container constructor, using a particle vector and a domain size.
+     *
+     * @param new_particles The particles vector.
+     * @param new_domain The new domain.
+     */
+    TestContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain)
+        : ParticleContainer(new_particles, new_domain) { }
 
     /**
      * Define the default infinity container constructor.
@@ -217,4 +226,29 @@ TEST(ParticleContainerResize, CorrectResize) {
     }
 }
 
-// TODO: Test remove outside domain.
+// Test if remove outside domain works correctly for a particle container.
+TEST(ParticleContainer, RemoveOutsideDomain) {
+    const std::vector<Particle> particles = {
+        Particle({ 1.0, 3.0, 1.0 }, {}, 2.0, 1),
+        Particle({ -2.0, 7.0, 3.0 }, {}, 2.0, 2),
+        Particle({ 6.0, 25.0, 3.0 }, {}, 2.0, 3),
+        Particle({ 7.0, 7.0, -1.0 }, {}, 2.0, 4),
+        Particle({ 21.0, 17.0, 1.0 }, {}, 2.0, 5),
+        Particle({ 6.0, 11.0, 5.0 }, {}, 2.0, 6),
+    };
+
+    TestContainer container(particles, { 10.0, 20.0, 10.0 });
+
+    std::list<int> expected = { 1, 6 };
+
+    container.remove_particles_out_of_domain();
+
+    for (Particle& p : container) {
+        EXPECT_TRUE(std::find(expected.begin(), expected.end(), p.getType()) != expected.end())
+            << "Iterated over an illegal particle: (" << p.getType() << ")";
+
+        expected.remove(p.getType());
+    }
+
+    EXPECT_TRUE(expected.size() == 0) << "The pair size should be 0 but it was " << expected.size();
+}
