@@ -26,7 +26,7 @@ public:
     /**
      * Define a default destructor for a hard boundary.
      */
-    ~HardBoundary() = default;
+    virtual ~HardBoundary();
 
     /**
      * Define which calculations should be performed after calling updateF.

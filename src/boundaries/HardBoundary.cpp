@@ -3,6 +3,8 @@
 HardBoundary::HardBoundary(const double new_pos, const int new_dim)
     : Boundary(new_pos, new_dim) { }
 
+HardBoundary::~HardBoundary() = default;
+
 void HardBoundary::postF(Particle& particle, physicsCalculator::Calculator& calc) { }
 
 void HardBoundary::postX(Particle& particle) {

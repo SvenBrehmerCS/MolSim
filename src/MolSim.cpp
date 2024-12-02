@@ -81,7 +81,6 @@ int main(const int argc, const char* argv[]) {
         }
     }
 
-
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
     if (isinf) {
@@ -161,7 +160,7 @@ int main(const int argc, const char* argv[]) {
 
     // Feeing allocated memory
     for (auto b : boundaries) {
-        free(b);
+        delete b;
     }
 
     return 0;

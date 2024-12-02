@@ -38,7 +38,7 @@ public:
     /**
      * Define a default destructor for a boundary.
      */
-    ~Boundary() = default;
+    virtual ~Boundary() {};
 
     /**
      * Define which calculations should be performed after calling updateF.
