@@ -9,9 +9,9 @@
 #include "boundaries/Boundary.h"
 
 /**
- * @class GhostBoundary
+ * @class NoBoundary
  *
- * @brief Define the infinite domain boundary calculations.
+ * @brief Define the infinite domain / outflow boundary calculations.
  */
 class NoBoundary : public Boundary {
 public:
