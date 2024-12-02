@@ -3,7 +3,7 @@
     xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
         <name>Two_Body</name>
-        <format>VTK</format>
+        <format>NO_OUT</format>
         <frequency>100</frequency>
     </output>
     <param>
