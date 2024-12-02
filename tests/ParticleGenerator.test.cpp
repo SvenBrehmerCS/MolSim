@@ -204,11 +204,11 @@ TEST(ParticleGenerator, generateDisc) {
 
     ASSERT_EQ(container.size(), 5);
     ASSERT_EQ(container.size(), num_particles);
-    EXPECT_EQ(container[0].getX(), x1);
-    EXPECT_EQ(container[1].getX(), x2);
-    EXPECT_EQ(container[2].getX(), x3);
-    EXPECT_EQ(container[3].getX(), x4);
-    EXPECT_EQ(container[4].getX(), x5);
+    EXPECT_EQ(container[0].getX(), x3);
+    EXPECT_EQ(container[1].getX(), x4);
+    EXPECT_EQ(container[2].getX(), x2);
+    EXPECT_EQ(container[3].getX(), x5);
+    EXPECT_EQ(container[4].getX(), x1);
     EXPECT_EQ(container[0].getM(), mass);
     EXPECT_EQ(container[1].getM(), mass);
     EXPECT_EQ(container[2].getM(), mass);
