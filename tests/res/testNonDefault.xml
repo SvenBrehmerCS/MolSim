@@ -27,10 +27,5 @@
             <vy>25</vy>
             <vz>25</vz>
         </domain>
-        <p_offset>
-            <vx>1</vx>
-            <vy>1</vy>
-            <vz>1</vz>
-        </p_offset>
     </param>
 </simulation>

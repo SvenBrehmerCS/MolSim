@@ -455,8 +455,6 @@ double Environment::get_r_cutoff() const { return r_cutoff; }
 
 std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
 
-std::array<double, 3> Environment::get_particle_offset() const { return particle_offset; }
-
 void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
 
 void Environment::set_delta_t(const double delta_t) { this->delta_t = delta_t; }
@@ -485,5 +483,3 @@ void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_t
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
 
 void Environment::set_domain_size(const std::array<double, 3> domain_size) { this->domain_size = domain_size; }
-
-void Environment::set_particle_offset(const std::array<double, 3> particle_offset) { this->particle_offset = particle_offset; }

@@ -190,11 +190,6 @@ private:
      */
     std::array<double, 3> domain_size = { 180.0, 90.0, 1.0 };
 
-    /**
-     * Store the particle offset for certain boundary conditions.
-     */
-    std::array<double, 3> particle_offset = { 0.0, 0.0, 0.0 };
-
 public:
     /**
      * Create a standard environment with all arguments being initialized to their default. The input file name will be null.
@@ -308,8 +303,7 @@ public:
     double get_r_cutoff() const;
 
     std::array<double, 3> get_domain_size() const;
-
-    std::array<double, 3> get_particle_offset() const;
+    // TODO
 
     // Setter methods
 
@@ -384,6 +378,5 @@ public:
     void set_r_cutoff(const double r_cutoff);
 
     void set_domain_size(const std::array<double, 3> domain_size);
-
-    void set_particle_offset(const std::array<double, 3> particle_offset);
+    // TODO
 };

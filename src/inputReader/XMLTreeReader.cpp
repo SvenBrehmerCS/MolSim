@@ -83,13 +83,6 @@ namespace inputReader {
         };
         environment.set_domain_size(domain_size);
 
-        const std::array<double, 3> particle_offset = {
-            sim->param().p_offset().vx(),
-            sim->param().p_offset().vy(),
-            sim->param().p_offset().vz(),
-        };
-        environment.set_particle_offset(particle_offset);
-
         spdlog::trace("...Finished setting up simulation environment");
     }
 

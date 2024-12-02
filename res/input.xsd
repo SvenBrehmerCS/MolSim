@@ -142,21 +142,51 @@
 
             <xs:element name="boundaries">
                 <xs:annotation>
-                    <xs:documentation> </xs:documentation>
+                    <xs:documentation> The desired boundary conditions. </xs:documentation>
                 </xs:annotation>
-                <!-- TODO -->
+
                 <xs:complexType>
                     <xs:annotation>
-                        <xs:documentation> </xs:documentation>
+                        <xs:documentation> This complex type represents what will happen if a
+                            particle leaves the simulation domain at a certain boundary.@detail The
+                            boundaries are defined by the axes spanning them and whether they touch
+                            the origin or are located further away. </xs:documentation>
                     </xs:annotation>
 
                     <xs:sequence>
-                        <xs:element name="boundary_yz_near" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_xz_near" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_xy_near" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_yz_far" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_xz_far" type="bound" default="INF_CONT"></xs:element>
-                        <xs:element name="boundary_xy_far" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_yz_near" type="bound" default="INF_CONT">
+                            <xs:annotation>
+                                <xs:documentation> The boundary pierced by the x-axis at the origin. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="boundary_xz_near" type="bound" default="INF_CONT">
+                            <xs:annotation>
+                                <xs:documentation> The boundary pierced by the y-axis at the origin. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="boundary_xy_near" type="bound" default="INF_CONT">
+                            <xs:annotation>
+                                <xs:documentation> The boundary pierced by the z-axis at the origin. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="boundary_yz_far" type="bound" default="INF_CONT">
+                            <xs:annotation>
+                                <xs:documentation> The boundary pierced by the x-axis some distance
+                                    away. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="boundary_xz_far" type="bound" default="INF_CONT">
+                            <xs:annotation>
+                                <xs:documentation> The boundary pierced by the x-axis some distance
+                                    away. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="boundary_xy_far" type="bound" default="INF_CONT">
+                            <xs:annotation>
+                                <xs:documentation> The boundary pierced by the x-axis some distance
+                                    away. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -200,7 +230,7 @@
 
             <xs:element name="t_end" default="1000.0">
                 <xs:annotation>
-                    <xs:documentation> Amount of time the simulate. </xs:documentation>
+                    <xs:documentation> Amount of time to simulate. </xs:documentation>
                 </xs:annotation>
 
                 <xs:simpleType>
@@ -242,13 +272,7 @@
 
             <xs:element name="domain" type="pdvector">
                 <xs:annotation>
-                    <xs:documentation></xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <!-- TODO -->
-            <xs:element name="p_offset" type="dvector">
-                <xs:annotation>
-                    <xs:documentation></xs:documentation>
+                    <xs:documentation> Size of the simulation domain in each direction. </xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
@@ -425,16 +449,41 @@
     </xs:complexType>
 
     <xs:simpleType name="bound">
-        <!-- TODO -->
         <xs:annotation>
-            <xs:documentation></xs:documentation>
+            <xs:documentation>The simple type represents a enum encoding the different types of
+                boundary conditions.@details INF_CONT represents ne boundaries at all. Hard and Halo
+                are both reflective boundaries with different implementations, while OUTFLOW simply
+                deletes particles trying to leave the domain. PERIODIC will allow you to simulate an
+                infinite number of identical domain connected to each other. </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-            <xs:enumeration value="INF_CONT"></xs:enumeration>
-            <xs:enumeration value="HALO"></xs:enumeration>
-            <xs:enumeration value="HARD"></xs:enumeration>
-            <xs:enumeration value="PERIODIC"></xs:enumeration>
-            <xs:enumeration value="OUTFLOW"></xs:enumeration>
+            <xs:enumeration value="INF_CONT">
+                <xs:annotation>
+                    <xs:documentation> @brief Simulates as if no boundary is present. </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HALO">
+                <xs:annotation>
+                    <xs:documentation> @brief Simulates a reflective boundary with halo particles. </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="HARD">
+                <xs:annotation>
+                    <xs:documentation> @brief Simulates a reflective boundary which inverts forces
+                        and velocities. </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PERIODIC">
+                <xs:annotation>
+                    <xs:documentation> @brief Simulates the boundary as if a cloned domain were
+                        present behind it. </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OUTFLOW">
+                <xs:annotation>
+                    <xs:documentation> @brief Simulates a boundary that deletes all lost particles. </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
 
