@@ -383,11 +383,12 @@ Environment::Environment(const int argc, const char* argv[]) {
     }
 
     const char* temp = input_file + std::strlen(input_file) - 3;
-    // Read the input file
+    // Read the input file type to determine correct reader
     if (!(std::strcmp(temp, "txt"))) {
         input_format = TXT;
     } else if (!(std::strcmp(temp, "xml"))) {
         input_format = XML;
+        return;
     } else {
         panic_exit("Unsupported input file type.");
     }

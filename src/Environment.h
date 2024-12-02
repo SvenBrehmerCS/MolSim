@@ -302,8 +302,12 @@ public:
      */
     double get_r_cutoff() const;
 
+    /**
+     * Get the domain size of the simulation in form of a vector representing the size in {x, y, z} direction.
+     *
+     * @return The vector representing the size of the domain.
+     */
     std::array<double, 3> get_domain_size() const;
-    // TODO
 
     // Setter methods
 
@@ -377,6 +381,10 @@ public:
      */
     void set_r_cutoff(const double r_cutoff);
 
+    /**
+     * Set the domain size at whichs end the boundaries are located.
+     *
+     * @param domain_size Vector of domain size along the axes.
+     */
     void set_domain_size(const std::array<double, 3> domain_size);
-    // TODO
 };
