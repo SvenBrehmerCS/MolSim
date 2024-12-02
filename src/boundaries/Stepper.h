@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "boundaries/Boundary.h"
 #include "physicsCalculator/Calculator.h"
 
 /**
@@ -14,18 +15,25 @@
  * @brief Define the default stepper interface.
  */
 class Stepper {
-public:
+private:
     /**
-     * Create the default stepper constructor.
+     * An array storing the domain size.
      */
-    Stepper() = default;
+    std::array<Boundary*, 6> bc;
 
     /**
-     * Create the default copy constructor for a stepper.
-     *
-     * @param stepper The stepper that should be copied.
+     * A boolean indicating if the simulation has an infinite domain.
      */
-    Stepper(const Stepper& stepper) = delete;
+    bool inf;
+
+public:
+    /**
+     * Create a stepper.
+     *
+     * @param boundaries The boundaries of the simulation.
+     * @param is_inf A boolean indicating if the simulation is an infinite domain.
+     */
+    Stepper(const std::array<Boundary*, 6>& boundaries, const bool is_inf);
 
     /**
      * Provide a default destructor for a stepper.
@@ -37,5 +45,5 @@ public:
      *
      * @param calc The calculator that should be used for the step.
      */
-    virtual void step(physicsCalculator::Calculator& calc) = 0;
+    void step(physicsCalculator::Calculator& calc);
 };

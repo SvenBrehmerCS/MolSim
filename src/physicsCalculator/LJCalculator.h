@@ -38,7 +38,7 @@ namespace physicsCalculator {
          * @param init_forces Define wether the forces should be initialized.
          */
         LJCalculator(
-            const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const Boundary type = INF_CONT);
+            const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const BoundaryType type = INF_CONT);
 
         /**
          * Define a constructor for a Lenard Jones calculator.

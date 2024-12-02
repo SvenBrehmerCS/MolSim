@@ -430,7 +430,7 @@ OutputFormat Environment::get_output_file_format() const { return output_format;
 
 CalculatorType Environment::get_calculator_type() const { return calc; }
 
-Boundary Environment::get_boundary_type() const { return boundary_type; }
+BoundaryType Environment::get_boundary_type() const { return boundary_type; }
 
 int Environment::get_print_step() const { return print_step; }
 
@@ -464,7 +464,7 @@ void Environment::set_output_file_format(const OutputFormat output_format) { thi
 
 void Environment::set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
 
-void Environment::set_boundary_type(const Boundary boundary_type) { this->boundary_type = boundary_type; }
+void Environment::set_boundary_type(const BoundaryType boundary_type) { this->boundary_type = boundary_type; }
 
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
 

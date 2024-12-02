@@ -11,11 +11,11 @@
 #include <string>
 
 /**
- * @enum Boundary
+ * @enum BoundaryType
  *
  * @brief Define the different options for a boundary condition.
  */
-enum Boundary : int {
+enum BoundaryType : int {
     /**
      * Define the old square algorithm which does not require any boundaries.
      */
@@ -138,7 +138,7 @@ private:
     /**
      * Store the boundary condition used. Has effects on Particle container and stepper.
      */
-    Boundary boundary_type = INF_CONT;
+    BoundaryType boundary_type = INF_CONT;
 
     /**
      * Store the epsilon used for the Lenard-Jones calculation. By default it is initialized to 5.0.
@@ -277,7 +277,7 @@ public:
      *
      * @return The boundary type.
      */
-    Boundary get_boundary_type() const;
+    BoundaryType get_boundary_type() const;
 
     /**
      * Get the cutoff radius beyond which forces no longer affect particles.
@@ -353,7 +353,7 @@ public:
      *
      * @param boundary_type The boundary type.
      */
-    void set_boundary_type(const Boundary boundary_type);
+    void set_boundary_type(const BoundaryType boundary_type);
 
     /**
      * Set the cutoff radius beyond which forces no longer affect particles.
