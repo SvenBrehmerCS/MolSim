@@ -9,12 +9,12 @@
     <param>
         <calc></calc>
         <boundaries>
-            <boundary_xy_near></boundary_xy_near>
-            <boundary_xz_near></boundary_xz_near>
             <boundary_yz_near></boundary_yz_near>
-            <boundary_xy_far></boundary_xy_far>
-            <boundary_xz_far></boundary_xz_far>
+            <boundary_xz_near></boundary_xz_near>
+            <boundary_xy_near></boundary_xy_near>
             <boundary_yz_far></boundary_yz_far>
+            <boundary_xz_far></boundary_xz_far>
+            <boundary_xy_far></boundary_xy_far>
         </boundaries>
         <epsilon></epsilon>
         <sigma></sigma>

@@ -9,12 +9,12 @@
     <param>
         <calc>LJ_FULL</calc>
         <boundaries>
-            <boundary_xy_near>INF_CONT</boundary_xy_near>
-            <boundary_xz_near>INF_CONT</boundary_xz_near>
             <boundary_yz_near>INF_CONT</boundary_yz_near>
-            <boundary_xy_far>INF_CONT</boundary_xy_far>
-            <boundary_xz_far>INF_CONT</boundary_xz_far>
+            <boundary_xz_near>INF_CONT</boundary_xz_near>
+            <boundary_xy_near>INF_CONT</boundary_xy_near>
             <boundary_yz_far>INF_CONT</boundary_yz_far>
+            <boundary_xz_far>INF_CONT</boundary_xz_far>
+            <boundary_xy_far>INF_CONT</boundary_xy_far>
         </boundaries>
         <epsilon>5.0</epsilon>
         <sigma>1.0</sigma>
