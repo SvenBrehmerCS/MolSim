@@ -9,7 +9,7 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
     calc.calculateX();
 
     for (Particle& p : calc.get_container()) {
-        for (int i = 0; i < bc.size(); i++) {
+        for (size_t i = 0; i < bc.size(); i++) {
             bc[i]->postX(p);
         }
     }
@@ -22,7 +22,7 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
     calc.calculateF();
 
     for (Particle& p : calc.get_container()) {
-        for (int i = 0; i < bc.size(); i++) {
+        for (size_t i = 0; i < bc.size(); i++) {
             bc[i]->postF(p, calc);
         }
     }
