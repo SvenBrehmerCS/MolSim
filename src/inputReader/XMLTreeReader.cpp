@@ -159,10 +159,10 @@ namespace inputReader {
     }
 
     int XMLTreeReader::num_particles_added(double h, double r) {
-
+        // TODO Make this and ParticleGenerator::generateDisc symmetrical
         int particles_future_added = 0;
 
-        int radius_distance = h * r;
+        double radius_distance = h * r;
         for (double x = -radius_distance; x <= radius_distance; x += h) {
             for (double y = -radius_distance; y <= radius_distance; y += h) {
                 if (x * x + y * y <= radius_distance * radius_distance) {
@@ -172,5 +172,4 @@ namespace inputReader {
         }
         return particles_future_added;
     }
-
 }
