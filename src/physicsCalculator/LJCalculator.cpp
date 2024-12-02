@@ -2,6 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
+#include "boundaries/BoxContainer.h"
 #include "boundaries/InfContainer.h"
 
 namespace physicsCalculator {
@@ -11,18 +12,14 @@ namespace physicsCalculator {
         calculateF();
     }
 
-    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const BoundaryType type) {
+    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const bool is_infinite) {
         spdlog::warn("Called a LJCalculator constructor which should only be used for testing.");
         env = new_env;
 
-        switch (type) {
-        case INF_CONT:
-            cont.reset(new InfContainer(particles));
-            break;
-
-        default:
-            spdlog::critical("Tried to create a simulation with an illegal particle type: {}", static_cast<int>(type));
-            break;
+        if (is_infinite) {
+            cont.reset(new InfContainer(particles, env.get_domain_size()));
+        } else {
+            cont.reset(new BoxContainer(particles, env.get_r_cutoff(), env.get_domain_size()));
         }
 
         // Initialize the forces

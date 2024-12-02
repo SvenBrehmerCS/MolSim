@@ -37,7 +37,7 @@ public:
      * @param rc The cutoff distance used for the simulation.
      * @param new_domain Vector of the number of cells in each direction.
      */
-    BoxContainer(std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain);
+    BoxContainer(const std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain);
 
     /**
      * Define the default destructor for a box container.
