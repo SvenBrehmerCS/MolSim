@@ -9,12 +9,12 @@
     <param>
         <calc>LJ_FULL</calc>
         <boundaries>
-            <boundary_xy_near>HARD</boundary_xy_near>
-            <boundary_xz_near>HARD</boundary_xz_near>
             <boundary_yz_near>HARD</boundary_yz_near>
-            <boundary_xy_far>HARD</boundary_xy_far>
-            <boundary_xz_far>HARD</boundary_xz_far>
+            <boundary_xz_near>HARD</boundary_xz_near>
+            <boundary_xy_near>HARD</boundary_xy_near>
             <boundary_yz_far>HARD</boundary_yz_far>
+            <boundary_xz_far>HARD</boundary_xz_far>
+            <boundary_xy_far>HARD</boundary_xy_far>
         </boundaries>
         <epsilon>5</epsilon>
         <sigma>1</sigma>
@@ -27,11 +27,6 @@
             <vy>50</vy>
             <vz>1</vz>
         </domain>
-        <p_offset>
-            <vx>0</vx>
-            <vy>0</vy>
-            <vz>0</vz>
-        </p_offset>
     </param>
     <disc>
         <center>
