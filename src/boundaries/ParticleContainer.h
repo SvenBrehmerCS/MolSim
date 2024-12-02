@@ -46,6 +46,13 @@ public:
     /**
      * Create a particle container from a vector of particles.
      *
+     * @param new_domain The new domain size.
+     */
+    ParticleContainer(const std::array<double, 3>& new_domain);
+
+    /**
+     * Create a particle container from a vector of particles.
+     *
      * @param new_particles The particles which should be stored.
      * @param new_domain The new domain size.
      */

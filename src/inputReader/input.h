@@ -566,13 +566,14 @@ class param_t;
 class particle_t;
 class cuboid_t;
 class disc_t;
+class bound;
 class dvector;
 class pdvector;
 class uivector;
 class format;
 class frequency;
 class calc;
-class bound;
+class boundaries;
 class epsilon;
 class sigma;
 class delta_t;
@@ -1369,9 +1370,9 @@ public:
     //@}
 
     /**
-     * @name bound
+     * @name boundaries
      *
-     * @brief Accessor and modifier functions for the %bound
+     * @brief Accessor and modifier functions for the %boundaries
      * required element.
      *
      */
@@ -1380,26 +1381,26 @@ public:
     /**
      * @brief Element type.
      */
-    typedef ::bound bound_type;
+    typedef ::boundaries boundaries_type;
 
     /**
      * @brief Element traits type.
      */
-    typedef ::xsd::cxx::tree::traits<bound_type, char> bound_traits;
+    typedef ::xsd::cxx::tree::traits<boundaries_type, char> boundaries_traits;
 
     /**
      * @brief Return a read-only (constant) reference to the element.
      *
      * @return A constant reference to the element.
      */
-    const bound_type& bound() const;
+    const boundaries_type& boundaries() const;
 
     /**
      * @brief Return a read-write reference to the element.
      *
      * @return A reference to the element.
      */
-    bound_type& bound();
+    boundaries_type& boundaries();
 
     /**
      * @brief Set the element value.
@@ -1409,7 +1410,7 @@ public:
      * This function makes a copy of its argument and sets it as
      * the new value of the element.
      */
-    void bound(const bound_type& x);
+    void boundaries(const boundaries_type& x);
 
     /**
      * @brief Set the element value without copying.
@@ -1419,15 +1420,7 @@ public:
      * This function will try to use the passed value directly
      * instead of making a copy.
      */
-    void bound(::std::unique_ptr<bound_type> p);
-
-    /**
-     * @brief Return the default value for the element.
-     *
-     * @return A read-only (constant) reference to the element's
-     * default value.
-     */
-    static const bound_type& bound_default_value();
+    void boundaries(::std::unique_ptr<boundaries_type> p);
 
     //@}
 
@@ -1930,7 +1923,7 @@ public:
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    param_t(const calc_type&, const bound_type&, const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&,
+    param_t(const calc_type&, const boundaries_type&, const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&,
         const dimensions_type&, const r_cutoff_type&, const domain_type&, const p_offset_type&);
 
     /**
@@ -1941,7 +1934,7 @@ public:
      * This constructor will try to use the passed values directly
      * instead of making copies.
      */
-    param_t(const calc_type&, const bound_type&, const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&,
+    param_t(const calc_type&, ::std::unique_ptr<boundaries_type>, const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&,
         const dimensions_type&, const r_cutoff_type&, ::std::unique_ptr<domain_type>, ::std::unique_ptr<p_offset_type>);
 
     /**
@@ -2006,8 +1999,7 @@ protected:
 protected:
     ::xsd::cxx::tree::one<calc_type> calc_;
     static const calc_type calc_default_value_;
-    ::xsd::cxx::tree::one<bound_type> bound_;
-    static const bound_type bound_default_value_;
+    ::xsd::cxx::tree::one<boundaries_type> boundaries_;
     ::xsd::cxx::tree::one<epsilon_type> epsilon_;
     ::xsd::cxx::tree::one<sigma_type> sigma_;
     ::xsd::cxx::tree::one<delta_t_type> delta_t_;
@@ -3188,6 +3180,133 @@ protected:
 };
 
 /**
+ * @brief Enumeration class corresponding to the %bound
+ * schema type.
+ *
+ */
+class bound : public ::xml_schema::string {
+public:
+    /**
+     * @brief Underlying enum type.
+     */
+    enum value { INF_CONT, HALO, HARD, PERIODIC, OUTFLOW };
+
+    /**
+     * @brief Create an instance from the underlying enum value.
+     *
+     * @param v A enum value.
+     */
+    bound(value v);
+
+    /**
+     * @brief Create an instance from a C string.
+     *
+     * @param v A string value.
+     */
+    bound(const char* v);
+
+    /**
+     * @brief Create an instance from a string.
+     *
+     * @param v A string value.
+     */
+    bound(const ::std::string& v);
+
+    /**
+     * @brief Create an instance from the base value.
+     *
+     * @param v A base value.
+     */
+    bound(const ::xml_schema::string& v);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    bound(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    bound(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    bound(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    bound(const bound& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+#ifdef XSD_CXX11
+    bound& operator=(const bound&) = default;
+#endif
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual bound* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    /**
+     * @brief Assign the underlying enum value.
+     *
+     * @param v A enum value.
+     * @return A refernce to the instance.
+     */
+    bound& operator=(value v);
+
+    /**
+     * @brief Implicit conversion operator to the underlying
+     * enum value.
+     *
+     * @return A enum value.
+     */
+    virtual operator value() const { return _xsd_bound_convert(); }
+
+    //@cond
+
+protected:
+    value _xsd_bound_convert() const;
+
+public:
+    static const char* const _xsd_bound_literals_[5];
+    static const value _xsd_bound_indexes_[5];
+
+    //@endcond
+};
+
+/**
  * @brief Class corresponding to the %dvector schema type.
  *
  * This complex type represents a three value vector of doubles.
@@ -4298,44 +4417,396 @@ public:
 };
 
 /**
- * @brief Enumeration class corresponding to the %bound
- * schema type.
+ * @brief Class corresponding to the %boundaries schema type.
  *
+ *
+ * @nosubgrouping
  */
-class bound : public ::xml_schema::string {
+class boundaries : public ::xml_schema::type {
 public:
     /**
-     * @brief Underlying enum type.
+     * @name boundary_xy_near
+     *
+     * @brief Accessor and modifier functions for the %boundary_xy_near
+     * required element.
      */
-    enum value { INF_CONT, HALO, HARD, PERIODIC, OUTFLOW };
+    //@{
 
     /**
-     * @brief Create an instance from the underlying enum value.
-     *
-     * @param v A enum value.
+     * @brief Element type.
      */
-    bound(value v);
+    typedef ::bound boundary_xy_near_type;
 
     /**
-     * @brief Create an instance from a C string.
-     *
-     * @param v A string value.
+     * @brief Element traits type.
      */
-    bound(const char* v);
+    typedef ::xsd::cxx::tree::traits<boundary_xy_near_type, char> boundary_xy_near_traits;
 
     /**
-     * @brief Create an instance from a string.
+     * @brief Return a read-only (constant) reference to the element.
      *
-     * @param v A string value.
+     * @return A constant reference to the element.
      */
-    bound(const ::std::string& v);
+    const boundary_xy_near_type& boundary_xy_near() const;
 
     /**
-     * @brief Create an instance from the base value.
+     * @brief Return a read-write reference to the element.
      *
-     * @param v A base value.
+     * @return A reference to the element.
      */
-    bound(const ::xml_schema::string& v);
+    boundary_xy_near_type& boundary_xy_near();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void boundary_xy_near(const boundary_xy_near_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void boundary_xy_near(::std::unique_ptr<boundary_xy_near_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const boundary_xy_near_type& boundary_xy_near_default_value();
+
+    //@}
+
+    /**
+     * @name boundary_xz_near
+     *
+     * @brief Accessor and modifier functions for the %boundary_xz_near
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::bound boundary_xz_near_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<boundary_xz_near_type, char> boundary_xz_near_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const boundary_xz_near_type& boundary_xz_near() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    boundary_xz_near_type& boundary_xz_near();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void boundary_xz_near(const boundary_xz_near_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void boundary_xz_near(::std::unique_ptr<boundary_xz_near_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const boundary_xz_near_type& boundary_xz_near_default_value();
+
+    //@}
+
+    /**
+     * @name boundary_yz_near
+     *
+     * @brief Accessor and modifier functions for the %boundary_yz_near
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::bound boundary_yz_near_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<boundary_yz_near_type, char> boundary_yz_near_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const boundary_yz_near_type& boundary_yz_near() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    boundary_yz_near_type& boundary_yz_near();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void boundary_yz_near(const boundary_yz_near_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void boundary_yz_near(::std::unique_ptr<boundary_yz_near_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const boundary_yz_near_type& boundary_yz_near_default_value();
+
+    //@}
+
+    /**
+     * @name boundary_xy_far
+     *
+     * @brief Accessor and modifier functions for the %boundary_xy_far
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::bound boundary_xy_far_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<boundary_xy_far_type, char> boundary_xy_far_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const boundary_xy_far_type& boundary_xy_far() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    boundary_xy_far_type& boundary_xy_far();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void boundary_xy_far(const boundary_xy_far_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void boundary_xy_far(::std::unique_ptr<boundary_xy_far_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const boundary_xy_far_type& boundary_xy_far_default_value();
+
+    //@}
+
+    /**
+     * @name boundary_xz_far
+     *
+     * @brief Accessor and modifier functions for the %boundary_xz_far
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::bound boundary_xz_far_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<boundary_xz_far_type, char> boundary_xz_far_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const boundary_xz_far_type& boundary_xz_far() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    boundary_xz_far_type& boundary_xz_far();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void boundary_xz_far(const boundary_xz_far_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void boundary_xz_far(::std::unique_ptr<boundary_xz_far_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const boundary_xz_far_type& boundary_xz_far_default_value();
+
+    //@}
+
+    /**
+     * @name boundary_yz_far
+     *
+     * @brief Accessor and modifier functions for the %boundary_yz_far
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::bound boundary_yz_far_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<boundary_yz_far_type, char> boundary_yz_far_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const boundary_yz_far_type& boundary_yz_far() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    boundary_yz_far_type& boundary_yz_far();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void boundary_yz_far(const boundary_yz_far_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void boundary_yz_far(::std::unique_ptr<boundary_yz_far_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const boundary_yz_far_type& boundary_yz_far_default_value();
+
+    //@}
+
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    boundaries(const boundary_xy_near_type&, const boundary_xz_near_type&, const boundary_yz_near_type&, const boundary_xy_far_type&,
+        const boundary_xz_far_type&, const boundary_yz_far_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -4345,28 +4816,7 @@ public:
      * @param c A pointer to the object that will contain the new
      * instance.
      */
-    bound(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a DOM attribute.
-     *
-     * @param a A DOM attribute to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    bound(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a string fragment.
-     *
-     * @param s A string fragment to extract the data from.
-     * @param e A pointer to DOM element containing the string fragment.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    bound(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    boundaries(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy constructor.
@@ -4377,11 +4827,7 @@ public:
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    bound(const bound& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-#ifdef XSD_CXX11
-    bound& operator=(const bound&) = default;
-#endif
+    boundaries(const boundaries& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy the instance polymorphically.
@@ -4394,32 +4840,46 @@ public:
      * used for copying and should be used for polymorphic object
      * models instead of the copy constructor.
      */
-    virtual bound* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+    virtual boundaries* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
 
     /**
-     * @brief Assign the underlying enum value.
+     * @brief Copy assignment operator.
      *
-     * @param v A enum value.
-     * @return A refernce to the instance.
+     * @param x An instance to make a copy of.
+     * @return A reference to itself.
+     *
+     * For polymorphic object models use the @c _clone function instead.
      */
-    bound& operator=(value v);
+    boundaries& operator=(const boundaries& x);
+
+    //@}
 
     /**
-     * @brief Implicit conversion operator to the underlying
-     * enum value.
-     *
-     * @return A enum value.
+     * @brief Destructor.
      */
-    virtual operator value() const { return _xsd_bound_convert(); }
+    virtual ~boundaries();
+
+    // Implementation.
+    //
 
     //@cond
 
 protected:
-    value _xsd_bound_convert() const;
+    void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
-public:
-    static const char* const _xsd_bound_literals_[5];
-    static const value _xsd_bound_indexes_[5];
+protected:
+    ::xsd::cxx::tree::one<boundary_xy_near_type> boundary_xy_near_;
+    static const boundary_xy_near_type boundary_xy_near_default_value_;
+    ::xsd::cxx::tree::one<boundary_xz_near_type> boundary_xz_near_;
+    static const boundary_xz_near_type boundary_xz_near_default_value_;
+    ::xsd::cxx::tree::one<boundary_yz_near_type> boundary_yz_near_;
+    static const boundary_yz_near_type boundary_yz_near_default_value_;
+    ::xsd::cxx::tree::one<boundary_xy_far_type> boundary_xy_far_;
+    static const boundary_xy_far_type boundary_xy_far_default_value_;
+    ::xsd::cxx::tree::one<boundary_xz_far_type> boundary_xz_far_;
+    static const boundary_xz_far_type boundary_xz_far_default_value_;
+    ::xsd::cxx::tree::one<boundary_yz_far_type> boundary_yz_far_;
+    static const boundary_yz_far_type boundary_yz_far_default_value_;
 
     //@endcond
 };

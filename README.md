@@ -64,3 +64,43 @@ This would run a simulation lasting for 10 time units, printing every 20th itera
 `./MolSim -delta_t=1 -out_name=MD -calc=gravity ./path/to/input.txt`
 
 This would run a simulation with an update increment of 1 time unit, printing to output files of the format `MD_<iteration>.vtu`. The gravity force model would be used for simulating based on the initial state, given in the file input.txt. Every other parameter would have the default value.
+
+## XML File Input
+
+You can specify a XML File as input on the command line, when passing a XML File over the command line, be sure to follow these steps:
+1. Set the input.xsd Schema as the NoNameSpaceLocation of your XML File.
+Initialize the Tags in the XML File, the values will be used to run the simulation. 
+2. You can specify any number of single particles, cuboids or discs, apart from that do not leave a Tag empty, if there is no default value for that element.
+3. See the table of Elements in the file below
+
+# Elements of the XSD Schema
+
+| Element/Type      | Description                                                                      | Attributes                               |
+|-------------------|----------------------------------------------------------------------------------|-----------------------------------------|
+| **simulation**    | Represents the entire simulation.                                               | `type="sim_t"`                          |
+| **output**        | Parameters for generating the output file.                                      | `type="output_t"`                       |
+| **param**         | Parameters describing how the simulation will be executed.                      | `type="param_t"`                        |
+| **particle**      | Information needed to generate a single particle.                               | `type="particle_t", minOccurs="0", maxOccurs="unbounded"` |
+| **cuboid**        | Information needed to generate a cuboid of particles.                           | `type="cuboid_t", minOccurs="0", maxOccurs="unbounded"` |
+| **disc**          | Information needed to generate a disc of particles.                             | `type="disc_t", minOccurs="0", maxOccurs="unbounded"` |
+| **name**          | Desired name prefix for the output file.                                        | `type="xs:string", default="MD_vtk"`    |
+| **format**        | Desired output format.                                                          | `default="VTK"`                         |
+| **frequency**     | Number of time steps between outputs.                                           | `default="10"`                          |
+| **calc**          | Force calculation mode (e.g., Lennard-Jones).                                   | `default="LJ_FULL"`                     |
+| **bound**         | Boundary condition for the simulation.                                          | `default="INF_CONT"`                    |
+| **epsilon**       | Depth of the Lennard-Jones potential well.                                      | `default="5.0"`                         |
+| **sigma**         | Zero-crossing of the Lennard-Jones potential.                                   | `default="1.0"`                         |
+| **delta_t**       | Simulation time step.                                                           | `default="0.014"`                       |
+| **t_end**         | End time for the simulation.                                                    | `default="1000.0"`                      |
+| **dimensions**    | Number of coordinates affected by Brownian motion.                              | `default="3"`                           |
+| **r_cutoff**      | Distance beyond which force calculations are neglected.                         | `default="3.0"`                         |
+| **position**      | Position of the particle or object.                                             | `type="dvector"`                        |
+| **velocity**      | Velocity of the particle or object.                                             | `type="dvector"`                        |
+| **m**             | Mass of the particle.                                                           | `type="xs:double"`                      |
+| **count**         | Number of particles in each direction for cuboids.                              | `type="uivector"`                       |
+| **h**             | Distance between particles in cuboids or discs.                                 | `type="xs:double"`                      |
+| **b_motion**      | Average Brownian motion in the cuboid or disc.                                  | `default="0.0"`                         |
+| **center**        | Center position of the disc.                                                    | `type="dvector"`                        |
+| **r**             | Radius of the disc in terms of molecules along the radius.                      | `type="xs:double"`                      |
+
+

@@ -2,12 +2,16 @@
 
 ParticleContainer::ParticleContainer() = default;
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles) { particles = new_particles; }
+ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles)
+    : particles { new_particles } { }
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain) {
-    particles = new_particles;
-    domain = new_domain;
-}
+ParticleContainer::ParticleContainer(const std::array<double, 3>& new_domain)
+    : domain { new_domain } { }
+
+ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain)
+    : particles { new_particles }
+    , domain { new_domain } { }
+
 
 ParticleContainer::~ParticleContainer() = default;
 

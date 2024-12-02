@@ -26,9 +26,16 @@ public:
      * Define the box container.
      *
      * @param rc The cutoff distance used for the simulation.
-     * @param n_x The number of cells in the x dimension.
-     * @param n_y The number of cells in the y dimension.
-     * @param n_z The number of cells in the z dimension.
+     * @param new_domain Vector of the number of cells in each direction.
+     */
+    BoxContainer(const double rc, const std::array<double, 3>& new_domain);
+
+    /**
+     * Define the box container.
+     *
+     * @param new_particles Vector of test particles.
+     * @param rc The cutoff distance used for the simulation.
+     * @param new_domain Vector of the number of cells in each direction.
      */
     BoxContainer(std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain);
 

@@ -136,9 +136,30 @@ private:
     CalculatorType calc = LJ_FULL;
 
     /**
-     * Store the boundary condition used. Has effects on Particle container and stepper.
+     * Store the condition of the XY boundary at the origin:
      */
-    BoundaryType boundary_type = INF_CONT;
+    BoundaryType xy_near = INF_CONT;
+    /**
+     * Store the condition of the XZ boundary at the origin:
+     */
+    BoundaryType xz_near = INF_CONT;
+    /**
+     * Store the condition of the YZ boundary at the origin:
+     */
+    BoundaryType yz_near = INF_CONT;
+    /**
+     * Store the condition of the XY boundary away from the origin:
+     */
+    BoundaryType xy_far = INF_CONT;
+    /**
+     * Store the condition of the XZ boundary away from the origin:
+     */
+    BoundaryType xz_far = INF_CONT;
+    /**
+     * Store the condition of the YZ boundary away from the origin:
+     */
+    BoundaryType yz_far = INF_CONT;
+
 
     /**
      * Store the epsilon used for the Lenard-Jones calculation. By default it is initialized to 5.0.
@@ -275,9 +296,9 @@ public:
     /**
      * Get the Boundary type used in the simulation.
      *
-     * @return The boundary type.
+     * @return The boundary type. Will be in form {yz_near, xz_near, xy_near, yz_far, xz_far, xy_far}
      */
-    BoundaryType get_boundary_type() const;
+    std::array<BoundaryType, 6> get_boundary_type() const;
 
     /**
      * Get the cutoff radius beyond which forces no longer affect particles.
@@ -353,7 +374,7 @@ public:
      *
      * @param boundary_type The boundary type.
      */
-    void set_boundary_type(const BoundaryType boundary_type);
+    void set_boundary_type(const std::array<BoundaryType, 6> boundary_type);
 
     /**
      * Set the cutoff radius beyond which forces no longer affect particles.

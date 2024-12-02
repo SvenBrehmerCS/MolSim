@@ -125,15 +125,13 @@ void param_t::calc(::std::unique_ptr<calc_type> x) { this->calc_.set(std::move(x
 
 const param_t::calc_type& param_t::calc_default_value() { return calc_default_value_; }
 
-const param_t::bound_type& param_t::bound() const { return this->bound_.get(); }
+const param_t::boundaries_type& param_t::boundaries() const { return this->boundaries_.get(); }
 
-param_t::bound_type& param_t::bound() { return this->bound_.get(); }
+param_t::boundaries_type& param_t::boundaries() { return this->boundaries_.get(); }
 
-void param_t::bound(const bound_type& x) { this->bound_.set(x); }
+void param_t::boundaries(const boundaries_type& x) { this->boundaries_.set(x); }
 
-void param_t::bound(::std::unique_ptr<bound_type> x) { this->bound_.set(std::move(x)); }
-
-const param_t::bound_type& param_t::bound_default_value() { return bound_default_value_; }
+void param_t::boundaries(::std::unique_ptr<boundaries_type> x) { this->boundaries_.set(std::move(x)); }
 
 const param_t::epsilon_type& param_t::epsilon() const { return this->epsilon_.get(); }
 
@@ -348,6 +346,31 @@ void disc_t::b_motion(::std::unique_ptr<b_motion_type> x) { this->b_motion_.set(
 disc_t::b_motion_type disc_t::b_motion_default_value() { return b_motion_type(.0); }
 
 
+// bound
+//
+
+bound::bound(value v)
+    : ::xml_schema::string(_xsd_bound_literals_[v]) { }
+
+bound::bound(const char* v)
+    : ::xml_schema::string(v) { }
+
+bound::bound(const ::std::string& v)
+    : ::xml_schema::string(v) { }
+
+bound::bound(const ::xml_schema::string& v)
+    : ::xml_schema::string(v) { }
+
+bound::bound(const bound& v, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(v, f, c) { }
+
+bound& bound::operator=(value v) {
+    static_cast<::xml_schema::string&>(*this) = ::xml_schema::string(_xsd_bound_literals_[v]);
+
+    return *this;
+}
+
+
 // dvector
 //
 
@@ -480,29 +503,68 @@ calc& calc::operator=(value v) {
 }
 
 
-// bound
+// boundaries
 //
 
-bound::bound(value v)
-    : ::xml_schema::string(_xsd_bound_literals_[v]) { }
+const boundaries::boundary_xy_near_type& boundaries::boundary_xy_near() const { return this->boundary_xy_near_.get(); }
 
-bound::bound(const char* v)
-    : ::xml_schema::string(v) { }
+boundaries::boundary_xy_near_type& boundaries::boundary_xy_near() { return this->boundary_xy_near_.get(); }
 
-bound::bound(const ::std::string& v)
-    : ::xml_schema::string(v) { }
+void boundaries::boundary_xy_near(const boundary_xy_near_type& x) { this->boundary_xy_near_.set(x); }
 
-bound::bound(const ::xml_schema::string& v)
-    : ::xml_schema::string(v) { }
+void boundaries::boundary_xy_near(::std::unique_ptr<boundary_xy_near_type> x) { this->boundary_xy_near_.set(std::move(x)); }
 
-bound::bound(const bound& v, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::string(v, f, c) { }
+const boundaries::boundary_xy_near_type& boundaries::boundary_xy_near_default_value() { return boundary_xy_near_default_value_; }
 
-bound& bound::operator=(value v) {
-    static_cast<::xml_schema::string&>(*this) = ::xml_schema::string(_xsd_bound_literals_[v]);
+const boundaries::boundary_xz_near_type& boundaries::boundary_xz_near() const { return this->boundary_xz_near_.get(); }
 
-    return *this;
-}
+boundaries::boundary_xz_near_type& boundaries::boundary_xz_near() { return this->boundary_xz_near_.get(); }
+
+void boundaries::boundary_xz_near(const boundary_xz_near_type& x) { this->boundary_xz_near_.set(x); }
+
+void boundaries::boundary_xz_near(::std::unique_ptr<boundary_xz_near_type> x) { this->boundary_xz_near_.set(std::move(x)); }
+
+const boundaries::boundary_xz_near_type& boundaries::boundary_xz_near_default_value() { return boundary_xz_near_default_value_; }
+
+const boundaries::boundary_yz_near_type& boundaries::boundary_yz_near() const { return this->boundary_yz_near_.get(); }
+
+boundaries::boundary_yz_near_type& boundaries::boundary_yz_near() { return this->boundary_yz_near_.get(); }
+
+void boundaries::boundary_yz_near(const boundary_yz_near_type& x) { this->boundary_yz_near_.set(x); }
+
+void boundaries::boundary_yz_near(::std::unique_ptr<boundary_yz_near_type> x) { this->boundary_yz_near_.set(std::move(x)); }
+
+const boundaries::boundary_yz_near_type& boundaries::boundary_yz_near_default_value() { return boundary_yz_near_default_value_; }
+
+const boundaries::boundary_xy_far_type& boundaries::boundary_xy_far() const { return this->boundary_xy_far_.get(); }
+
+boundaries::boundary_xy_far_type& boundaries::boundary_xy_far() { return this->boundary_xy_far_.get(); }
+
+void boundaries::boundary_xy_far(const boundary_xy_far_type& x) { this->boundary_xy_far_.set(x); }
+
+void boundaries::boundary_xy_far(::std::unique_ptr<boundary_xy_far_type> x) { this->boundary_xy_far_.set(std::move(x)); }
+
+const boundaries::boundary_xy_far_type& boundaries::boundary_xy_far_default_value() { return boundary_xy_far_default_value_; }
+
+const boundaries::boundary_xz_far_type& boundaries::boundary_xz_far() const { return this->boundary_xz_far_.get(); }
+
+boundaries::boundary_xz_far_type& boundaries::boundary_xz_far() { return this->boundary_xz_far_.get(); }
+
+void boundaries::boundary_xz_far(const boundary_xz_far_type& x) { this->boundary_xz_far_.set(x); }
+
+void boundaries::boundary_xz_far(::std::unique_ptr<boundary_xz_far_type> x) { this->boundary_xz_far_.set(std::move(x)); }
+
+const boundaries::boundary_xz_far_type& boundaries::boundary_xz_far_default_value() { return boundary_xz_far_default_value_; }
+
+const boundaries::boundary_yz_far_type& boundaries::boundary_yz_far() const { return this->boundary_yz_far_.get(); }
+
+boundaries::boundary_yz_far_type& boundaries::boundary_yz_far() { return this->boundary_yz_far_.get(); }
+
+void boundaries::boundary_yz_far(const boundary_yz_far_type& x) { this->boundary_yz_far_.set(x); }
+
+void boundaries::boundary_yz_far(::std::unique_ptr<boundary_yz_far_type> x) { this->boundary_yz_far_.set(std::move(x)); }
+
+const boundaries::boundary_yz_far_type& boundaries::boundary_yz_far_default_value() { return boundary_yz_far_default_value_; }
 
 
 // epsilon
@@ -798,14 +860,12 @@ output_t::~output_t() { }
 
 const param_t::calc_type param_t::calc_default_value_("LJ_FULL");
 
-const param_t::bound_type param_t::bound_default_value_("INF_CONT");
-
-param_t::param_t(const calc_type& calc, const bound_type& bound, const epsilon_type& epsilon, const sigma_type& sigma, const delta_t_type& delta_t,
-    const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, const domain_type& domain,
+param_t::param_t(const calc_type& calc, const boundaries_type& boundaries, const epsilon_type& epsilon, const sigma_type& sigma,
+    const delta_t_type& delta_t, const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, const domain_type& domain,
     const p_offset_type& p_offset)
     : ::xml_schema::type()
     , calc_(calc, this)
-    , bound_(bound, this)
+    , boundaries_(boundaries, this)
     , epsilon_(epsilon, this)
     , sigma_(sigma, this)
     , delta_t_(delta_t, this)
@@ -815,12 +875,12 @@ param_t::param_t(const calc_type& calc, const bound_type& bound, const epsilon_t
     , domain_(domain, this)
     , p_offset_(p_offset, this) { }
 
-param_t::param_t(const calc_type& calc, const bound_type& bound, const epsilon_type& epsilon, const sigma_type& sigma, const delta_t_type& delta_t,
-    const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, ::std::unique_ptr<domain_type> domain,
-    ::std::unique_ptr<p_offset_type> p_offset)
+param_t::param_t(const calc_type& calc, ::std::unique_ptr<boundaries_type> boundaries, const epsilon_type& epsilon, const sigma_type& sigma,
+    const delta_t_type& delta_t, const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff,
+    ::std::unique_ptr<domain_type> domain, ::std::unique_ptr<p_offset_type> p_offset)
     : ::xml_schema::type()
     , calc_(calc, this)
-    , bound_(bound, this)
+    , boundaries_(std::move(boundaries), this)
     , epsilon_(epsilon, this)
     , sigma_(sigma, this)
     , delta_t_(delta_t, this)
@@ -833,7 +893,7 @@ param_t::param_t(const calc_type& calc, const bound_type& bound, const epsilon_t
 param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c)
     , calc_(x.calc_, f, this)
-    , bound_(x.bound_, f, this)
+    , boundaries_(x.boundaries_, f, this)
     , epsilon_(x.epsilon_, f, this)
     , sigma_(x.sigma_, f, this)
     , delta_t_(x.delta_t_, f, this)
@@ -846,7 +906,7 @@ param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::containe
 param_t::param_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c)
     , calc_(this)
-    , bound_(this)
+    , boundaries_(this)
     , epsilon_(this)
     , sigma_(this)
     , delta_t_(this)
@@ -877,13 +937,13 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
             }
         }
 
-        // bound
+        // boundaries
         //
-        if (n.name() == "bound" && n.namespace_().empty()) {
-            ::std::unique_ptr<bound_type> r(bound_traits::create(i, f, this));
+        if (n.name() == "boundaries" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundaries_type> r(boundaries_traits::create(i, f, this));
 
-            if (!bound_.present()) {
-                this->bound_.set(::std::move(r));
+            if (!boundaries_.present()) {
+                this->boundaries_.set(::std::move(r));
                 continue;
             }
         }
@@ -983,8 +1043,8 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
         throw ::xsd::cxx::tree::expected_element<char>("calc", "");
     }
 
-    if (!bound_.present()) {
-        throw ::xsd::cxx::tree::expected_element<char>("bound", "");
+    if (!boundaries_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundaries", "");
     }
 
     if (!epsilon_.present()) {
@@ -1026,7 +1086,7 @@ param_t& param_t::operator=(const param_t& x) {
     if (this != &x) {
         static_cast<::xml_schema::type&>(*this) = x;
         this->calc_ = x.calc_;
-        this->bound_ = x.bound_;
+        this->boundaries_ = x.boundaries_;
         this->epsilon_ = x.epsilon_;
         this->sigma_ = x.sigma_;
         this->delta_t_ = x.delta_t_;
@@ -1469,6 +1529,41 @@ disc_t& disc_t::operator=(const disc_t& x) {
 
 disc_t::~disc_t() { }
 
+// bound
+//
+
+bound::bound(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(e, f, c) {
+    _xsd_bound_convert();
+}
+
+bound::bound(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(a, f, c) {
+    _xsd_bound_convert();
+}
+
+bound::bound(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(s, e, f, c) {
+    _xsd_bound_convert();
+}
+
+bound* bound::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class bound(*this, f, c); }
+
+bound::value bound::_xsd_bound_convert() const {
+    ::xsd::cxx::tree::enum_comparator<char> c(_xsd_bound_literals_);
+    const value* i(::std::lower_bound(_xsd_bound_indexes_, _xsd_bound_indexes_ + 5, *this, c));
+
+    if (i == _xsd_bound_indexes_ + 5 || _xsd_bound_literals_[*i] != *this) {
+        throw ::xsd::cxx::tree::unexpected_enumerator<char>(*this);
+    }
+
+    return *i;
+}
+
+const char* const bound::_xsd_bound_literals_[5] = { "INF_CONT", "HALO", "HARD", "PERIODIC", "OUTFLOW" };
+
+const bound::value bound::_xsd_bound_indexes_[5] = { ::bound::HALO, ::bound::HARD, ::bound::INF_CONT, ::bound::OUTFLOW, ::bound::PERIODIC };
+
 // dvector
 //
 
@@ -1840,40 +1935,171 @@ const char* const calc::_xsd_calc_literals_[2] = { "GRAVITY", "LJ_FULL" };
 
 const calc::value calc::_xsd_calc_indexes_[2] = { ::calc::GRAVITY, ::calc::LJ_FULL };
 
-// bound
+// boundaries
 //
 
-bound::bound(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::string(e, f, c) {
-    _xsd_bound_convert();
+const boundaries::boundary_xy_near_type boundaries::boundary_xy_near_default_value_("INF_CONT");
+
+const boundaries::boundary_xz_near_type boundaries::boundary_xz_near_default_value_("INF_CONT");
+
+const boundaries::boundary_yz_near_type boundaries::boundary_yz_near_default_value_("INF_CONT");
+
+const boundaries::boundary_xy_far_type boundaries::boundary_xy_far_default_value_("INF_CONT");
+
+const boundaries::boundary_xz_far_type boundaries::boundary_xz_far_default_value_("INF_CONT");
+
+const boundaries::boundary_yz_far_type boundaries::boundary_yz_far_default_value_("INF_CONT");
+
+boundaries::boundaries(const boundary_xy_near_type& boundary_xy_near, const boundary_xz_near_type& boundary_xz_near,
+    const boundary_yz_near_type& boundary_yz_near, const boundary_xy_far_type& boundary_xy_far, const boundary_xz_far_type& boundary_xz_far,
+    const boundary_yz_far_type& boundary_yz_far)
+    : ::xml_schema::type()
+    , boundary_xy_near_(boundary_xy_near, this)
+    , boundary_xz_near_(boundary_xz_near, this)
+    , boundary_yz_near_(boundary_yz_near, this)
+    , boundary_xy_far_(boundary_xy_far, this)
+    , boundary_xz_far_(boundary_xz_far, this)
+    , boundary_yz_far_(boundary_yz_far, this) { }
+
+boundaries::boundaries(const boundaries& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c)
+    , boundary_xy_near_(x.boundary_xy_near_, f, this)
+    , boundary_xz_near_(x.boundary_xz_near_, f, this)
+    , boundary_yz_near_(x.boundary_yz_near_, f, this)
+    , boundary_xy_far_(x.boundary_xy_far_, f, this)
+    , boundary_xz_far_(x.boundary_xz_far_, f, this)
+    , boundary_yz_far_(x.boundary_yz_far_, f, this) { }
+
+boundaries::boundaries(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c)
+    , boundary_xy_near_(this)
+    , boundary_xz_near_(this)
+    , boundary_yz_near_(this)
+    , boundary_xy_far_(this)
+    , boundary_xz_far_(this)
+    , boundary_yz_far_(this) {
+    if ((f & ::xml_schema::flags::base) == 0) {
+        ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+        this->parse(p, f);
+    }
 }
 
-bound::bound(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::string(a, f, c) {
-    _xsd_bound_convert();
-}
+void boundaries::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+    for (; p.more_content(); p.next_content(false)) {
+        const ::xercesc::DOMElement& i(p.cur_element());
+        const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
 
-bound::bound(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::string(s, e, f, c) {
-    _xsd_bound_convert();
-}
+        // boundary_xy_near
+        //
+        if (n.name() == "boundary_xy_near" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundary_xy_near_type> r(boundary_xy_near_traits::create(i, f, this));
 
-bound* bound::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class bound(*this, f, c); }
+            if (!boundary_xy_near_.present()) {
+                this->boundary_xy_near_.set(::std::move(r));
+                continue;
+            }
+        }
 
-bound::value bound::_xsd_bound_convert() const {
-    ::xsd::cxx::tree::enum_comparator<char> c(_xsd_bound_literals_);
-    const value* i(::std::lower_bound(_xsd_bound_indexes_, _xsd_bound_indexes_ + 5, *this, c));
+        // boundary_xz_near
+        //
+        if (n.name() == "boundary_xz_near" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundary_xz_near_type> r(boundary_xz_near_traits::create(i, f, this));
 
-    if (i == _xsd_bound_indexes_ + 5 || _xsd_bound_literals_[*i] != *this) {
-        throw ::xsd::cxx::tree::unexpected_enumerator<char>(*this);
+            if (!boundary_xz_near_.present()) {
+                this->boundary_xz_near_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // boundary_yz_near
+        //
+        if (n.name() == "boundary_yz_near" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundary_yz_near_type> r(boundary_yz_near_traits::create(i, f, this));
+
+            if (!boundary_yz_near_.present()) {
+                this->boundary_yz_near_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // boundary_xy_far
+        //
+        if (n.name() == "boundary_xy_far" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundary_xy_far_type> r(boundary_xy_far_traits::create(i, f, this));
+
+            if (!boundary_xy_far_.present()) {
+                this->boundary_xy_far_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // boundary_xz_far
+        //
+        if (n.name() == "boundary_xz_far" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundary_xz_far_type> r(boundary_xz_far_traits::create(i, f, this));
+
+            if (!boundary_xz_far_.present()) {
+                this->boundary_xz_far_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // boundary_yz_far
+        //
+        if (n.name() == "boundary_yz_far" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundary_yz_far_type> r(boundary_yz_far_traits::create(i, f, this));
+
+            if (!boundary_yz_far_.present()) {
+                this->boundary_yz_far_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        break;
     }
 
-    return *i;
+    if (!boundary_xy_near_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundary_xy_near", "");
+    }
+
+    if (!boundary_xz_near_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundary_xz_near", "");
+    }
+
+    if (!boundary_yz_near_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundary_yz_near", "");
+    }
+
+    if (!boundary_xy_far_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundary_xy_far", "");
+    }
+
+    if (!boundary_xz_far_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundary_xz_far", "");
+    }
+
+    if (!boundary_yz_far_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundary_yz_far", "");
+    }
 }
 
-const char* const bound::_xsd_bound_literals_[5] = { "INF_CONT", "HALO", "HARD", "PERIODIC", "OUTFLOW" };
+boundaries* boundaries::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class boundaries(*this, f, c); }
 
-const bound::value bound::_xsd_bound_indexes_[5] = { ::bound::HALO, ::bound::HARD, ::bound::INF_CONT, ::bound::OUTFLOW, ::bound::PERIODIC };
+boundaries& boundaries::operator=(const boundaries& x) {
+    if (this != &x) {
+        static_cast<::xml_schema::type&>(*this) = x;
+        this->boundary_xy_near_ = x.boundary_xy_near_;
+        this->boundary_xz_near_ = x.boundary_xz_near_;
+        this->boundary_yz_near_ = x.boundary_yz_near_;
+        this->boundary_xy_far_ = x.boundary_xy_far_;
+        this->boundary_xz_far_ = x.boundary_xz_far_;
+        this->boundary_yz_far_ = x.boundary_yz_far_;
+    }
+
+    return *this;
+}
+
+boundaries::~boundaries() { }
 
 // epsilon
 //

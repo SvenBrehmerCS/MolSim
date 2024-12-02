@@ -1,7 +1,10 @@
 
 #include "MolSim.h"
 #include "boundaries/BoxContainer.h"
+#include "boundaries/GhostBoundary.h"
+#include "boundaries/HardBoundary.h"
 #include "boundaries/InfContainer.h"
+#include "boundaries/NoBoundary.h"
 #include "boundaries/Stepper.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/XMLTreeReader.h"
@@ -22,10 +25,8 @@
 int main(const int argc, const char* argv[]) {
     namespace fs = std::filesystem;
 
-    // TODO: Use the correct containers.
-
     // Initialize the simulation environment, readers and writers.
-    Environment env(argc, argv);
+    Environment env { argc, argv };
 
     spdlog::info("Started {}", argv[0]);
 
@@ -34,10 +35,10 @@ int main(const int argc, const char* argv[]) {
 
     switch (env.get_input_file_format()) {
     case TXT:
-        reader.reset(new inputReader::FileReader());
+        reader.reset(new inputReader::FileReader(env.get_input_file_name()));
         break;
     case XML:
-        reader.reset(new inputReader::XMLTreeReader());
+        reader.reset(new inputReader::XMLTreeReader(env.get_input_file_name()));
         break;
     default:
         spdlog::critical("Error: Illegal input file format specifier.");
@@ -45,35 +46,53 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
-    std::shared_ptr<ParticleContainer> cont { nullptr };
+    reader->readArguments(env);
 
-    switch (INF_CONT) {
-    case INF_CONT:
-        cont.reset(new InfContainer());
-        break;
-    case HALO:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
-        break;
-    case HARD:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
-        break;
-    case PERIODIC:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
-        break;
-    case OUTFLOW:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
-        break;
-    default:
-        spdlog::critical("Error: Illegal Boundary condition specifier.");
-        std::exit(EXIT_FAILURE);
-        break;
+    bool isinf = true;
+    std::array<BoundaryType, 6> bound_t = env.get_boundary_type();
+    std::array<Boundary*, 6> boundaries {};
+    for (size_t i = 0; i < 6; i++) {
+        const double pos = i < 3 ? 0.0 : env.get_domain_size()[i % 3];
+        switch (bound_t[i]) {
+        case INF_CONT:
+            boundaries[i] = new NoBoundary(pos, i % 3);
+            break;
+        case HALO:
+            boundaries[i] = new GhostBoundary(pos, i % 3);
+            isinf = false;
+            break;
+        case HARD:
+            boundaries[i] = new HardBoundary(pos, i % 3);
+            isinf = false;
+            break;
+        case PERIODIC:
+            spdlog::warn("Not yet iimplemented.");
+            std::exit(EXIT_FAILURE);
+            isinf = false;
+            break;
+        case OUTFLOW:
+            boundaries[i] = new NoBoundary(pos, i % 3);
+            isinf = false;
+            break;
+        default:
+            spdlog::critical("Unsupported boundary type.");
+            std::exit(EXIT_FAILURE);
+            break;
+        }
     }
 
-    reader->readFile(env.get_input_file_name(), env, *cont);
+
+    std::shared_ptr<ParticleContainer> cont { nullptr };
+
+    if (isinf) {
+        cont.reset(new InfContainer(env.get_domain_size()));
+    } else {
+        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
+    }
+
+    reader->readParticle(*cont);
+
+    reader.reset(nullptr);
 
     // Initialize the calculator
     std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
@@ -111,8 +130,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper
-    // TODO: Boundary conditions
-    Stepper stepper({}, false);
+    Stepper stepper(boundaries, isinf);
 
     // Initialize the simulation environment
     double current_time = 0.0;
@@ -140,5 +158,11 @@ int main(const int argc, const char* argv[]) {
     }
 
     spdlog::info("output written. Terminating...");
+
+    // Feeing allocated memory
+    for (auto b : boundaries) {
+        free(b);
+    }
+
     return 0;
 }

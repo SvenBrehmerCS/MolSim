@@ -10,18 +10,19 @@
 
 namespace inputReader {
 
-    FileReader::FileReader() = default;
-
-    FileReader::~FileReader() = default;
-
-    void FileReader::readFile(const char* filename, Environment& environment, ParticleContainer& container) {
-
-        std::ifstream input_file = std::ifstream(filename);
+    FileReader::FileReader(const char* filename) {
+        input_file = std::ifstream(filename);
         if (!input_file.is_open()) {
             spdlog::error("Could not open file {}", filename);
             std::exit(EXIT_FAILURE);
         }
+    };
 
+    FileReader::~FileReader() = default;
+
+    void FileReader::readArguments(Environment& environment) { }
+
+    void FileReader::readParticle(ParticleContainer& container) {
         std::array<double, 3> x;
         std::array<double, 3> v;
         std::array<int, 3> N;
