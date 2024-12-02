@@ -11,7 +11,7 @@ namespace physicsCalculator {
         calculateF();
     }
 
-    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const Boundary type) {
+    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const BoundaryType type) {
         spdlog::warn("Called a LJCalculator constructor which should only be used for testing.");
         env = new_env;
 

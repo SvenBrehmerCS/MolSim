@@ -1,11 +1,8 @@
 
 #include "MolSim.h"
 #include "boundaries/BoxContainer.h"
-#include "boundaries/HaloStepper.h"
-#include "boundaries/HardStepper.h"
 #include "boundaries/InfContainer.h"
-#include "boundaries/InfStepper.h"
-#include "boundaries/OutStepper.h"
+#include "boundaries/Stepper.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/XMLTreeReader.h"
 #include "outputWriter/NoWriter.h"
@@ -114,30 +111,8 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper
-    std::unique_ptr<Stepper> stepper { nullptr };
-
-    switch (INF_CONT) {
-    case INF_CONT:
-        stepper.reset(new InfStepper());
-        break;
-    case HALO:
-        stepper.reset(new HaloStepper());
-        break;
-    case HARD:
-        stepper.reset(new HardStepper());
-        break;
-    case OUTFLOW:
-        stepper.reset(new OutStepper());
-        break;
-    case PERIODIC:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
-        break;
-    default:
-        spdlog::critical("Error: Illegal step specifier.");
-        std::exit(EXIT_FAILURE);
-        break;
-    }
+    // TODO: Boundary conditions
+    Stepper stepper({}, false);
 
     // Initialize the simulation environment
     double current_time = 0.0;
@@ -150,7 +125,7 @@ int main(const int argc, const char* argv[]) {
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // Update x, v, f
-        stepper->step(*calculator);
+        stepper.step(*calculator);
 
         iteration++;
         current_time += env.get_delta_t();
