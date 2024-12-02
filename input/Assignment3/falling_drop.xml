@@ -25,14 +25,14 @@
         <domain>
             <vx>120</vx>
             <vy>50</vy>
-            <vz>1</vz>
+            <vz>9</vz>
         </domain>
     </param>
     <disc>
         <center>
             <vx>60</vx>
             <vy>25</vy>
-            <vz>0</vz>
+            <vz>4.5</vz>
         </center>
         <velocity>
             <vx>0</vx>
