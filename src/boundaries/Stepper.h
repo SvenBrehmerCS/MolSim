@@ -12,7 +12,7 @@
 /**
  * @class Stepper
  *
- * @brief Define the default stepper interface.
+ * @brief Define the default stepper.
  */
 class Stepper {
 private:

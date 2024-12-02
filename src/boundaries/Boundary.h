@@ -1,5 +1,5 @@
 /**
- * @file GhostBoundary.h
+ * @file Boundary.h
  *
  * @brief Define the general layout of a boundary condition.
  */
