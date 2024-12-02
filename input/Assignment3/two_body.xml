@@ -25,7 +25,7 @@
         <domain>
             <vx>180.0</vx>
             <vy>90.0</vy>
-            <vz>1.0</vz>
+            <vz>9.0</vz>
         </domain>
         <p_offset>
             <vx>0.0</vx>
@@ -37,7 +37,7 @@
         <position>
             <vx>20</vx>
             <vy>20</vy>
-            <vz>0</vz>
+            <vz>4.5</vz>
         </position>
         <velocity>
             <vx>0</vx>
@@ -57,7 +57,7 @@
         <position>
             <vx>70</vx>
             <vy>60</vy>
-            <vz>0</vz>
+            <vz>4.5</vz>
         </position>
         <velocity>
             <vx>0</vx>
