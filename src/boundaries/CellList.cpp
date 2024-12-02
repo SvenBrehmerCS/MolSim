@@ -74,99 +74,99 @@ void CellList::loop_cell_pairs(std::function<particle_pair_it> iterator, std::ve
 
                 // Loop through the direct neighbors
                 for (size_t l : cells[idx]) {
+                    Particle& self = particles[l];
                     for (size_t m : cells[get_cell_index(i + 1, j, k)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i, j + 1, k)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i, j, k + 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
-                    // TODO: Don't loop if not required (~50% less loops)
                     // Loop through the neighbors with shared edge
                     for (size_t m : cells[get_cell_index(i + 1, j + 1, k)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i + 1, j, k + 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i, j + 1, k + 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     // Loop through the neighbors with shared corners
                     for (size_t m : cells[get_cell_index(i + 1, j + 1, k + 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     // Loop backwards particles
                     for (size_t m : cells[get_cell_index(i + 1, j - 1, k)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i + 1, j, k - 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i + 1, j - 1, k - 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     // Loop sidewards particles
                     for (size_t m : cells[get_cell_index(i - 1, j - 1, k + 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i, j - 1, k + 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
 
                     for (size_t m : cells[get_cell_index(i + 1, j - 1, k + 1)]) {
-                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()));
-                        if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
-                            iterator(particles[l], particles[m]);
+                        spdlog::info("l = {}, m = {}, d = {}", l + 1, m + 1, ArrayUtils::L2Norm(self.getX() - particles[m].getX()));
+                        if (ArrayUtils::L2Norm(self.getX() - particles[m].getX()) <= rc) {
+                            iterator(self, particles[m]);
                         }
                     }
                 }
