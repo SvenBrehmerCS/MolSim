@@ -49,7 +49,7 @@ int main(const int argc, const char* argv[]) {
     reader->readArguments(env);
 
     // Initialize the particle container.
-    bool isinf = true;
+    bool isinf = true, has_inf = false;
     std::array<BoundaryType, 6> bound_t = env.get_boundary_type();
     std::array<Boundary*, 6> boundaries {};
     for (size_t i = 0; i < 6; i++) {
@@ -57,8 +57,14 @@ int main(const int argc, const char* argv[]) {
         switch (bound_t[i]) {
         case INF_CONT:
             boundaries[i] = new NoBoundary(pos, i % 3);
+            has_inf = true;
             break;
         case HALO:
+            if (env.get_calculator_type() != LJ_FULL) {
+                spdlog::critical("Halo boundaries can only be used in combination with lj force calculations.");
+                std::exit(EXIT_FAILURE);
+            }
+
             boundaries[i] = new GhostBoundary(pos, i % 3);
             isinf = false;
             break;
@@ -81,6 +87,12 @@ int main(const int argc, const char* argv[]) {
             break;
         }
     }
+
+    if (!isinf && has_inf) {
+        spdlog::critical("Tried to combine inf and boxed containers.");
+        std::exit(EXIT_FAILURE);
+    }
+
 
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
