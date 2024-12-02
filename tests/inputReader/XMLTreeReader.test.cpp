@@ -37,9 +37,10 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
 
     Environment environment;
     InfContainer container;
-    inputReader::XMLTreeReader reader;
+    inputReader::XMLTreeReader reader(xml);
 
-    reader.readFile(xml, environment, container);
+    reader.readArguments(environment);
+    reader.readParticle(container);
     EXPECT_EQ(container.size(), 0);
     EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
     EXPECT_EQ(environment.get_output_file_format(), XYZ);
@@ -56,16 +57,15 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
 TEST(XMLTreeReader, TestParticles) {
     const char* xml = "../tests/res/testParticles.xml";
 
-    Environment environment;
     InfContainer container;
-    inputReader::XMLTreeReader reader;
+    inputReader::XMLTreeReader reader(xml);
     std::array<double, 3> x = { 0.1, 0.2, 0.3 };
     std::array<double, 3> v = { 1.0, 1.5, 1.7 };
     double m = 0.01;
 
     container.resize(1);
 
-    reader.readFile(xml, environment, container);
+    reader.readParticle(container);
 
     ASSERT_EQ(container.size(), 1);
     EXPECT_EQ(container[0].getX(), x);
@@ -78,9 +78,8 @@ TEST(XMLTreeReader, TestXMLCuboid) {
 
     const char* xml = "../tests/res/testCuboids.xml";
 
-    Environment environment;
     InfContainer container;
-    inputReader::XMLTreeReader reader;
+    inputReader::XMLTreeReader reader(xml);
 
     std::array<double, 3> x0 = { 0, 0, 0 };
     std::array<double, 3> x1 = { 1, 0, 0 };
@@ -90,7 +89,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
 
     container.resize(4);
 
-    reader.readFile(xml, environment, container);
+    reader.readParticle(container);
     ASSERT_EQ(container.size(), 4);
     EXPECT_EQ(container[0].getX(), x0);
     EXPECT_EQ(container[1].getX(), x1);
@@ -109,9 +108,9 @@ TEST(XMLTreeReader, TestXMLCuboid) {
 // test if the disc is generated correctly
 TEST(XMLTreeReader, TestXMLDisc) {
     const char* xml = "../tests/res/testDisc.xml";
-    Environment environment;
+
     InfContainer container;
-    inputReader::XMLTreeReader reader;
+    inputReader::XMLTreeReader reader(xml);
 
     std::array<double, 3> x1 = { -1, 0.0, 0.0 };
     std::array<double, 3> x2 = { 0.0, -1, 0.0 };
@@ -122,7 +121,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
 
     container.resize(5);
 
-    reader.readFile(xml, environment, container);
+    reader.readParticle(container);
 
     ASSERT_EQ(container.size(), 5);
     EXPECT_EQ(container[0].getX(), x1);
@@ -166,11 +165,12 @@ TEST(XMLTreeReader, TestXMLCombined) {
 
     Environment environment;
     InfContainer container;
-    inputReader::XMLTreeReader reader;
+    inputReader::XMLTreeReader reader(xml);
 
     container.resize(10);
 
-    reader.readFile(xml, environment, container);
+    reader.readArguments(environment);
+    reader.readParticle(container);
 
     ASSERT_EQ(container.size(), 10);
 

@@ -25,10 +25,8 @@
 int main(const int argc, const char* argv[]) {
     namespace fs = std::filesystem;
 
-    // TODO: Use the correct containers.
-
     // Initialize the simulation environment, readers and writers.
-    Environment env(argc, argv);
+    Environment env { argc, argv };
 
     spdlog::info("Started {}", argv[0]);
 
@@ -37,10 +35,10 @@ int main(const int argc, const char* argv[]) {
 
     switch (env.get_input_file_format()) {
     case TXT:
-        reader.reset(new inputReader::FileReader());
+        reader.reset(new inputReader::FileReader(env.get_input_file_name()));
         break;
     case XML:
-        reader.reset(new inputReader::XMLTreeReader());
+        reader.reset(new inputReader::XMLTreeReader(env.get_input_file_name()));
         break;
     default:
         spdlog::critical("Error: Illegal input file format specifier.");
@@ -48,27 +46,25 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
+    reader->readArguments(env);
+
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
-    switch (INF_CONT) {
+    switch (env.get_boundary_type()) {
     case INF_CONT:
-        cont.reset(new InfContainer());
+        cont.reset(new InfContainer(env.get_domain_size()));
         break;
     case HALO:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
+        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
         break;
     case HARD:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
+        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
         break;
     case PERIODIC:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
+        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
         break;
     case OUTFLOW:
-        spdlog::warn("Not yet implemented.");
-        std::exit(EXIT_FAILURE);
+        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
         break;
     default:
         spdlog::critical("Error: Illegal Boundary condition specifier.");
@@ -76,7 +72,7 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
-    reader->readFile(env.get_input_file_name(), env, *cont);
+    reader->readParticle(*cont);
 
     // Initialize the calculator
     std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
@@ -116,7 +112,7 @@ int main(const int argc, const char* argv[]) {
     // Initialize the stepper
     std::unique_ptr<Stepper> stepper { nullptr };
 
-    switch (INF_CONT) {
+    switch (env.get_boundary_type()) {
     case INF_CONT:
         stepper.reset(new InfStepper());
         break;

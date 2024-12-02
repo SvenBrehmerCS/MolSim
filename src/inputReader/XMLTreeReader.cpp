@@ -4,13 +4,8 @@ using namespace xml_schema;
 
 namespace inputReader {
 
-    XMLTreeReader::XMLTreeReader() = default;
-
-    XMLTreeReader::~XMLTreeReader() = default;
-
-    void XMLTreeReader::readFile(const char* filename, Environment& environment, ParticleContainer& container) {
-        spdlog::debug("Reading XML input {}", filename);
-
+    XMLTreeReader::XMLTreeReader(const char* filename) {
+        spdlog::debug("Parsing XML input {}", filename);
         // Test if filename is correct
         std::ifstream XMLFile(filename);
         if (!XMLFile.is_open()) {
@@ -19,7 +14,6 @@ namespace inputReader {
         }
 
         // read in the simulation data
-        std::unique_ptr<sim_t> sim;
         try {
             sim = simulation(filename);
         } catch (const xml_schema::exception& e) {
@@ -29,7 +23,11 @@ namespace inputReader {
             spdlog::error("Error: {}", e.what());
             std::exit(EXIT_FAILURE);
         }
+    }
 
+    XMLTreeReader::~XMLTreeReader() = default;
+
+    void XMLTreeReader::readArguments(Environment& environment) {
         spdlog::debug("Setting up simulation environment");
 
         std::string output_file_name = sim->output().name();
@@ -43,6 +41,9 @@ namespace inputReader {
 
         const param_t::calc_type::value calc = sim->param().calc();
         environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));
+
+        const param_t::bound_type::value bound = sim->param().bound();
+        environment.set_boundary_type(static_cast<Boundary>(static_cast<int>(bound)));
 
         const double epsilon = sim->param().epsilon();
         environment.set_epsilon(epsilon);
@@ -59,6 +60,22 @@ namespace inputReader {
         const double r_cutoff = sim->param().r_cutoff();
         environment.set_r_cutoff(r_cutoff);
 
+        const std::array<double, 3> domain_size = {
+            sim->param().domain().vx(),
+            sim->param().domain().vy(),
+            sim->param().domain().vz(),
+        };
+        environment.set_domain_size(domain_size);
+
+        const std::array<double, 3> particle_offset = {
+            sim->param().p_offset().vx(),
+            sim->param().p_offset().vy(),
+            sim->param().p_offset().vz(),
+        };
+        environment.set_particle_offset(particle_offset);
+    }
+
+    void XMLTreeReader::readParticle(ParticleContainer& container) {
         spdlog::debug("Generating particles");
 
         const int num_dimensions = sim->param().dimensions();
@@ -128,6 +145,7 @@ namespace inputReader {
             num_particles += particles_added;
         }
     }
+
     int XMLTreeReader::num_particles_added(double h, double r) {
 
         int particles_future_added = 0;
