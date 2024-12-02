@@ -2683,8 +2683,8 @@ protected:
  * all the
  * parameters needed to define a disc of particles, such as the position
  * of the center
- * of the disc , the velocity of the disc, distance between particles,
- * and more.
+ * of the disc, the velocity of the disc, distance between particles, and
+ * more.
  *
  * @nosubgrouping
  */

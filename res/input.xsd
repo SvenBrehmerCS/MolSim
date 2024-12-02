@@ -382,7 +382,7 @@
             <xs:documentation> This complex type represents a disc, which is an arrangement of
                 particles in the simulation. @details This complex type consists of all the
                 parameters needed to define a disc of particles, such as the position of the center
-                of the disc , the velocity of the disc, distance between particles, and more. </xs:documentation>
+                of the disc, the velocity of the disc, distance between particles, and more. </xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element name="center" type="dvector">

@@ -68,12 +68,13 @@ This would run a simulation with an update increment of 1 time unit, printing to
 ## XML File Input
 
 You can specify a XML File as input on the command line, when passing a XML File over the command line, be sure to follow these steps:
+
 1. Set the input.xsd Schema as the NoNameSpaceLocation of your XML File.
-Initialize the Tags in the XML File, the values will be used to run the simulation. 
+Initialize the Tags in the XML File, the values will be used to run the simulation.
 2. You can specify any number of single particles, cuboids or discs, apart from that do not leave a Tag empty, if there is no default value for that element.
 3. See the table of Elements in the file below
 
-# Elements of the XSD Schema
+### Elements of the XSD Schema
 
 | Element/Type   | Description                                                | Attributes                                                |
 | -------------- | ---------------------------------------------------------- | --------------------------------------------------------- |
@@ -102,5 +103,3 @@ Initialize the Tags in the XML File, the values will be used to run the simulati
 | **b_motion**   | Average Brownian motion in the cuboid or disc.             | `default="0.0"`                                           |
 | **center**     | Center position of the disc.                               | `type="dvector"`                                          |
 | **r**          | Radius of the disc in terms of molecules along the radius. | `type="xs:double"`                                        |
-
-

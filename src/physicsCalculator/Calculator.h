@@ -26,7 +26,6 @@ namespace physicsCalculator {
         /**
          * Store the simulation environment used throughout the simulation.
          */
-        // TODO Copy?(shared_ptr)
         Environment env;
 
         /**
