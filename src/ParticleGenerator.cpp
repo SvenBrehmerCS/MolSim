@@ -5,6 +5,18 @@
 ParticleGenerator::ParticleGenerator() = default;
 ParticleGenerator::~ParticleGenerator() = default;
 
+/**
+ * Generate a cuboid
+ * @param container
+ * @param num_particles
+ * @param x
+ * @param v
+ * @param m
+ * @param N
+ * @param h
+ * @param b_m
+ * @param dim
+ */
 void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> v, double m,
     std::array<int, 3> N, double h, double b_m, int dim) {
 
@@ -37,6 +49,21 @@ void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_par
     }
 }
 
+/**
+ *
+ * Generate a disc
+ *
+ * @param container
+ * @param num_particles
+ * @param center
+ * @param velocity
+ * @param mass
+ * @param radius
+ * @param h
+ * @param b_m
+ * @param dim
+ * @return
+ */
 int ParticleGenerator::generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity,
     double mass, double radius, double h, double b_m, int dim) {
     int num_particles_added = 0;
