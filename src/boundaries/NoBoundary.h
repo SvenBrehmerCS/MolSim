@@ -26,7 +26,7 @@ public:
     /**
      * Define a default destructor for an infinite boundary.
      */
-    ~NoBoundary() = default;
+    virtual ~NoBoundary();
 
     /**
      * Define which calculations should be performed after calling updateF.
