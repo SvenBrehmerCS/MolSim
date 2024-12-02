@@ -11,23 +11,21 @@ void HardBoundary::postF(Particle& particle, physicsCalculator::Calculator& calc
 void HardBoundary::postX(Particle& particle) {
     if (pos == 0.0) {
         if (particle.getX()[dim] < pos) {
-            spdlog::warn("Reflected particle 0");
             std::array<double, 3> v = particle.getV();
             v[dim] *= -1.0;
             particle.setV(v);
             std::array<double, 3> x = particle.getX();
             x[dim] *= -1.0;
-            particle.setV(x);
+            particle.setX(x);
         }
     } else {
         if (particle.getX()[dim] > pos) {
-            spdlog::warn("Reflected particle out");
             std::array<double, 3> v = particle.getV();
             v[dim] *= -1.0;
             particle.setV(v);
             std::array<double, 3> x = particle.getX();
             x[dim] = pos * 2.0 - particle.getX()[dim];
-            particle.setV(x);
+            particle.setX(x);
         }
     }
 }
