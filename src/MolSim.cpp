@@ -18,11 +18,14 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <string>
+#include <chrono>
 
 /**
  * The main entry point for the program.
  */
 int main(const int argc, const char* argv[]) {
+    auto start = std::chrono::high_resolution_clock::now();
+
     namespace fs = std::filesystem;
 
     // Initialize the simulation environment, readers and writers.
@@ -162,6 +165,10 @@ int main(const int argc, const char* argv[]) {
     for (auto b : boundaries) {
         delete b;
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+    std::cout << "Dauer: " << duration.count() << " Mikrosekunden" << std::endl;
 
     return 0;
 }

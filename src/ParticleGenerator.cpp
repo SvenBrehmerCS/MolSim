@@ -47,11 +47,47 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
     auto particle = container.begin();
     particle += num_particles;
 
-    for (double x = -radius_distance; x <= radius_distance; x += h) {
-        for (double y = -radius_distance; y <= radius_distance; y += h) {
-            if (x * x + y * y <= radius_distance * radius_distance) {
-                particle->setX({ center[0] + x, center[1] + y, center[2] });
 
+    double c0 = center[0];
+    double c1 = center[1];
+    double c2 = center[2];
+
+    // Iteration über das erste Viertel der Disk
+    for (double x_offset = 0; x_offset <= radius_distance; x_offset += h) {
+        double max_y_offset = sqrt(radius_distance * radius_distance - x_offset * x_offset);
+        for (double y_offset = 0; y_offset <= max_y_offset; y_offset += h) {
+            // first sector up right
+            particle->setX({ c0 + x_offset, c1 + y_offset, c2 });
+            boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
+            particle->setV(velocity + boltz_v);
+            particle->setM(mass);
+            ++particle;
+            ++num_particles_added;
+
+            // second sector up left
+            if (x_offset != 0) {
+                particle->setX({ c0 - x_offset, c1 + y_offset, c2 });
+                boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
+                particle->setV(velocity + boltz_v);
+                particle->setM(mass);
+                ++particle;
+                ++num_particles_added;
+            }
+
+
+            // molecule is in the fourth sector (y mirrored) bottom right
+            if (y_offset != 0) { // Vermeidung redundanter Punkte entlang der x-Achse
+                particle->setX({ c0 + x_offset, c1 - y_offset, c2 });
+                boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
+                particle->setV(velocity + boltz_v);
+                particle->setM(mass);
+                ++particle;
+                ++num_particles_added;
+            }
+
+            // third sector bottom left
+            if (x_offset != 0 && y_offset != 0) {
+                particle->setX({ c0 - x_offset, c1 - y_offset, c2 });
                 boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
                 particle->setV(velocity + boltz_v);
                 particle->setM(mass);
