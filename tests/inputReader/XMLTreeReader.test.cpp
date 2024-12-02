@@ -125,11 +125,11 @@ TEST(XMLTreeReader, TestXMLDisc) {
     reader.readParticle(container);
 
     ASSERT_EQ(container.size(), 5);
-    EXPECT_EQ(container[0].getX(), x1);
-    EXPECT_EQ(container[1].getX(), x2);
-    EXPECT_EQ(container[2].getX(), x3);
-    EXPECT_EQ(container[3].getX(), x4);
-    EXPECT_EQ(container[4].getX(), x5);
+    EXPECT_EQ(container[0].getX(), x3);
+    EXPECT_EQ(container[1].getX(), x4);
+    EXPECT_EQ(container[2].getX(), x2);
+    EXPECT_EQ(container[3].getX(), x5);
+    EXPECT_EQ(container[4].getX(), x1);
     EXPECT_EQ(container[0].getV(), v);
     EXPECT_EQ(container[1].getV(), v);
     EXPECT_EQ(container[2].getV(), v);
@@ -147,12 +147,12 @@ TEST(XMLTreeReader, TestXMLDisc) {
 TEST(XMLTreeReader, TestXMLCombined) {
     const char* xml = "../tests/res/testCombined.xml";
 
-    std::array<double, 3> x1disc = { -1, 0.0, 0.0 };
-    std::array<double, 3> x2disc = { 0.0, -1, 0.0 };
-    std::array<double, 3> x3disc = { 0.0, 0.0, 0.0 };
-    std::array<double, 3> x4disc = { 0.0, 1, 0.0 };
-    std::array<double, 3> x5disc = { 1, 0.0, 0.0 };
-    std::array<double, 3> vdisc = { 1.0, 1.0, 1.0 };
+    std::array<double, 3> x1disc = { -1.5, 0.0, 0.0 };
+    std::array<double, 3> x2disc = { -0.5, -1, 0.0 };
+    std::array<double, 3> x3disc = { -0.5, 0.0, 0.0 };
+    std::array<double, 3> x4disc = { -0.5, 1, 0.0 };
+    std::array<double, 3> x5disc = { 0.5, 0.0, 0.0 };
+    std::array<double, 3> vdisc = { 0.5, 1.0, 1.0 };
 
 
     std::array<double, 3> x0cuboid = { 0, 0, 0 };
@@ -184,11 +184,11 @@ TEST(XMLTreeReader, TestXMLCombined) {
     EXPECT_EQ(container[3].getX(), x2cuboid);
     EXPECT_EQ(container[4].getX(), x3cuboid);
 
-    EXPECT_EQ(container[5].getX(), x1disc);
-    EXPECT_EQ(container[6].getX(), x2disc);
-    EXPECT_EQ(container[7].getX(), x3disc);
-    EXPECT_EQ(container[8].getX(), x4disc);
-    EXPECT_EQ(container[9].getX(), x5disc);
+    EXPECT_EQ(container[5].getX(), x3disc);
+    EXPECT_EQ(container[6].getX(), x4disc);
+    EXPECT_EQ(container[7].getX(), x2disc);
+    EXPECT_EQ(container[8].getX(), x5disc);
+    EXPECT_EQ(container[9].getX(), x1disc);
 
     EXPECT_EQ(container[1].getV(), vcuboid);
     EXPECT_EQ(container[2].getV(), vcuboid);

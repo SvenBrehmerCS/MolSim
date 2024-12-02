@@ -68,12 +68,12 @@
     </cuboid>
     <disc>
         <center>
-            <vx>0</vx>
+            <vx>-0.5</vx>
             <vy>0</vy>
             <vz>0</vz>
         </center>
         <velocity>
-            <vx>1</vx>
+            <vx>0.5</vx>
             <vy>1</vy>
             <vz>1</vz>
         </velocity>
