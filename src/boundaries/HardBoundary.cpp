@@ -1,4 +1,5 @@
 #include "HardBoundary.h"
+#include <spdlog/spdlog.h>
 
 HardBoundary::HardBoundary(const double new_pos, const int new_dim)
     : Boundary(new_pos, new_dim) { }
@@ -10,6 +11,7 @@ void HardBoundary::postF(Particle& particle, physicsCalculator::Calculator& calc
 void HardBoundary::postX(Particle& particle) {
     if (pos == 0.0) {
         if (particle.getX()[dim] < pos) {
+            spdlog::warn("Reflected particle 0");
             std::array<double, 3> v = particle.getV();
             v[dim] *= -1.0;
             particle.setV(v);
@@ -19,6 +21,7 @@ void HardBoundary::postX(Particle& particle) {
         }
     } else {
         if (particle.getX()[dim] > pos) {
+            spdlog::warn("Reflected particle out");
             std::array<double, 3> v = particle.getV();
             v[dim] *= -1.0;
             particle.setV(v);
