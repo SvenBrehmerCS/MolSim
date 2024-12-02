@@ -430,7 +430,16 @@ OutputFormat Environment::get_output_file_format() const { return output_format;
 
 CalculatorType Environment::get_calculator_type() const { return calc; }
 
-BoundaryType Environment::get_boundary_type() const { return boundary_type; }
+std::array<BoundaryType, 6> Environment::get_boundary_type() const {
+    return std::array<BoundaryType, 6> {
+        yz_near,
+        xz_near,
+        xy_near,
+        yz_far,
+        xz_far,
+        xy_far,
+    };
+}
 
 int Environment::get_print_step() const { return print_step; }
 
@@ -464,7 +473,14 @@ void Environment::set_output_file_format(const OutputFormat output_format) { thi
 
 void Environment::set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
 
-void Environment::set_boundary_type(const BoundaryType boundary_type) { this->boundary_type = boundary_type; }
+void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_type) {
+    xy_near = boundary_type[0];
+    xz_near = boundary_type[1];
+    yz_near = boundary_type[2];
+    xy_far = boundary_type[3];
+    xz_far = boundary_type[4];
+    yz_far = boundary_type[5];
+}
 
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
 

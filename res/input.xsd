@@ -140,24 +140,25 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="bound" default="INF_CONT">
-                <!-- TODO -->
+            <xs:element name="boundaries">
                 <xs:annotation>
-                    <xs:documentation></xs:documentation>
+                    <xs:documentation> </xs:documentation>
                 </xs:annotation>
-
-                <xs:simpleType>
+                <!-- TODO -->
+                <xs:complexType>
                     <xs:annotation>
-                        <xs:documentation></xs:documentation>
+                        <xs:documentation> </xs:documentation>
                     </xs:annotation>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="INF_CONT"></xs:enumeration>
-                        <xs:enumeration value="HALO"></xs:enumeration>
-                        <xs:enumeration value="HARD"></xs:enumeration>
-                        <xs:enumeration value="PERIODIC"></xs:enumeration>
-                        <xs:enumeration value="OUTFLOW"></xs:enumeration>
-                    </xs:restriction>
-                </xs:simpleType>
+
+                    <xs:sequence>
+                        <xs:element name="boundary_xy_near" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_xz_near" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_yz_near" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_xy_far" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_xz_far" type="bound" default="INF_CONT"></xs:element>
+                        <xs:element name="boundary_yz_far" type="bound" default="INF_CONT"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
             </xs:element>
 
             <xs:element name="epsilon" default="5.0">
@@ -422,6 +423,20 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:simpleType name="bound">
+        <!-- TODO -->
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="INF_CONT"></xs:enumeration>
+            <xs:enumeration value="HALO"></xs:enumeration>
+            <xs:enumeration value="HARD"></xs:enumeration>
+            <xs:enumeration value="PERIODIC"></xs:enumeration>
+            <xs:enumeration value="OUTFLOW"></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="dvector">
         <xs:annotation>

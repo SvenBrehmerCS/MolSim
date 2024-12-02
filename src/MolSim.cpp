@@ -1,7 +1,10 @@
 
 #include "MolSim.h"
 #include "boundaries/BoxContainer.h"
+#include "boundaries/GhostBoundary.h"
+#include "boundaries/HardBoundary.h"
 #include "boundaries/InfContainer.h"
+#include "boundaries/NoBoundary.h"
 #include "boundaries/Stepper.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/XMLTreeReader.h"
@@ -45,31 +48,51 @@ int main(const int argc, const char* argv[]) {
 
     reader->readArguments(env);
 
+    bool isinf = true;
+    std::array<BoundaryType, 6> bound_t = env.get_boundary_type();
+    std::array<Boundary*, 6> boundaries {};
+    for (size_t i = 0; i < 6; i++) {
+        const double pos = i < 3 ? 0.0 : env.get_domain_size()[i % 3];
+        switch (bound_t[i]) {
+        case INF_CONT:
+            boundaries[i] = new NoBoundary(pos, i % 3);
+            break;
+        case HALO:
+            boundaries[i] = new GhostBoundary(pos, i % 3);
+            isinf = false;
+            break;
+        case HARD:
+            boundaries[i] = new HardBoundary(pos, i % 3);
+            isinf = false;
+            break;
+        case PERIODIC:
+            spdlog::warn("Not yet iimplemented.");
+            std::exit(EXIT_FAILURE);
+            isinf = false;
+            break;
+        case OUTFLOW:
+            boundaries[i] = new NoBoundary(pos, i % 3);
+            isinf = false;
+            break;
+        default:
+            spdlog::critical("Unsupported boundary type.");
+            std::exit(EXIT_FAILURE);
+            break;
+        }
+    }
+
+
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
-    switch (env.get_boundary_type()) {
-    case INF_CONT:
+    if (isinf) {
         cont.reset(new InfContainer(env.get_domain_size()));
-        break;
-    case HALO:
+    } else {
         cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
-        break;
-    case HARD:
-        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
-        break;
-    case PERIODIC:
-        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
-        break;
-    case OUTFLOW:
-        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
-        break;
-    default:
-        spdlog::critical("Error: Illegal Boundary condition specifier.");
-        std::exit(EXIT_FAILURE);
-        break;
     }
 
     reader->readParticle(*cont);
+
+    reader.reset(nullptr);
 
     // Initialize the calculator
     std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
@@ -107,8 +130,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper
-    // TODO: Boundary conditions
-    Stepper stepper({}, false);
+    Stepper stepper(boundaries, isinf);
 
     // Initialize the simulation environment
     double current_time = 0.0;
@@ -136,5 +158,11 @@ int main(const int argc, const char* argv[]) {
     }
 
     spdlog::info("output written. Terminating...");
+
+    // Feeing allocated memory
+    for (auto b : boundaries) {
+        free(b);
+    }
+
     return 0;
 }

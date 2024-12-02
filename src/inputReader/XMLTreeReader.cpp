@@ -42,8 +42,20 @@ namespace inputReader {
         const param_t::calc_type::value calc = sim->param().calc();
         environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));
 
-        const param_t::bound_type::value bound = sim->param().bound();
-        environment.set_boundary_type(static_cast<Boundary>(static_cast<int>(bound)));
+        const bound::value xy_near = sim->param().boundaries().boundary_xy_near();
+        const bound::value xz_near = sim->param().boundaries().boundary_xz_near();
+        const bound::value yz_near = sim->param().boundaries().boundary_yz_near();
+        const bound::value xy_far = sim->param().boundaries().boundary_xy_far();
+        const bound::value xz_far = sim->param().boundaries().boundary_xz_far();
+        const bound::value yz_far = sim->param().boundaries().boundary_yz_far();
+        environment.set_boundary_type(std::array<BoundaryType, 6> {
+            static_cast<BoundaryType>(static_cast<int>(xy_near)),
+            static_cast<BoundaryType>(static_cast<int>(xz_near)),
+            static_cast<BoundaryType>(static_cast<int>(yz_near)),
+            static_cast<BoundaryType>(static_cast<int>(xy_far)),
+            static_cast<BoundaryType>(static_cast<int>(xz_far)),
+            static_cast<BoundaryType>(static_cast<int>(yz_far)),
+        });
 
         const double epsilon = sim->param().epsilon();
         environment.set_epsilon(epsilon);
