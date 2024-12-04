@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <physicsCalculator/LJCalculator.h>
 
-// Test the ghost boundary in x direction for a single near particle
+// Test the hard boundary in x direction for a single near particle
 TEST(HardBoundary, ParticleReflectCorrectly) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
