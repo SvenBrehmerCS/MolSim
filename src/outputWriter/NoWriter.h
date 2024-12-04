@@ -29,7 +29,7 @@ namespace outputWriter {
          * @param filename The base name of the file to be written.
          * @param iteration The number of the current iteration, which is used to generate an unique filename
          */
-        virtual void plotParticles(const ParticleContainer& container, const std::string& filename, int iteration);
+        virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration);
     };
 
 } // namespace outputWriter

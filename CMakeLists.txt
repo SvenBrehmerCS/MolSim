@@ -101,7 +101,7 @@ gtest_discover_tests(MolTest)
 
 #include the spdlog module
 include(spdlog)
-
+# message(STATUS "Using libxsd from: ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd")
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd

@@ -1,12 +1,58 @@
 
-#include <ParticleContainer.h>
+#include <boundaries/ParticleContainer.h>
 #include <gtest/gtest.h>
+
+/**
+ * @class TestContainer
+ *
+ * @brief Define a particle container that can be used for testing the particle container methods.
+ */
+class TestContainer : public ParticleContainer {
+public:
+    /**
+     * Define the default infinity container constructor.
+     */
+    TestContainer()
+        : ParticleContainer() { }
+
+    /**
+     * Define the infinity container constructor, using a particle vector.
+     *
+     * @param new_particles The particles vector.
+     */
+    TestContainer(const std::vector<Particle>& new_particles)
+        : ParticleContainer(new_particles) { }
+
+    /**
+     * Define the infinity container constructor, using a particle vector and a domain size.
+     *
+     * @param new_particles The particles vector.
+     * @param new_domain The new domain.
+     */
+    TestContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain)
+        : ParticleContainer(new_particles, new_domain) { }
+
+    /**
+     * Define the default infinity container constructor.
+     */
+    ~TestContainer() = default;
+
+    /**
+     * Iterate over all pairs and apply the provided method to both particles of the pair.
+     *
+     * @param iterator The iterator lambda that should loop over all the pairs.
+     */
+    void iterate_pairs(std::function<particle_pair_it> iterator) { (void)iterator; }
+
+    /**
+     * Update the particle positions in their cells.
+     */
+    void update_positions() { }
+};
 
 // Test if the particle container constructor works correctly
 TEST(ParticleContainerConstructor, EmptyInitialization) {
-    ParticleContainer pc;
-
-    ASSERT_NO_THROW(pc = ParticleContainer());
+    TestContainer pc = TestContainer();
 
     ASSERT_TRUE(pc.size() == 0) << "The particle container must be constructed with no particles.";
 }
@@ -21,9 +67,7 @@ TEST(ParticleContainerConstructor, CreateFromVector) {
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
 
-    ParticleContainer pc;
-
-    ASSERT_NO_THROW(pc = ParticleContainer(pv));
+    TestContainer pc = TestContainer(pv);
 
     auto pi = pc.begin();
     for (const auto& p : pv) {
@@ -41,7 +85,7 @@ TEST(ParticleContainerIndexOperator, CorrectAccess) {
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
 
-    ParticleContainer pc = ParticleContainer(pv);
+    TestContainer pc = TestContainer(pv);
 
     ASSERT_NO_THROW(Particle p = pc[0]);
 
@@ -60,7 +104,7 @@ TEST(ParticleContainerIterator, CorrectBegin) {
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
 
-    ParticleContainer pc = ParticleContainer(pv);
+    TestContainer pc = TestContainer(pv);
 
     std::vector<Particle>::iterator pci;
     ASSERT_NO_THROW(pci = pc.begin());
@@ -78,7 +122,7 @@ TEST(ParticleContainerIterator, CorrectEnd) {
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
 
-    ParticleContainer pc = ParticleContainer(pv);
+    TestContainer pc = TestContainer(pv);
 
     std::vector<Particle>::iterator pci;
     ASSERT_NO_THROW(pci = pc.end());
@@ -95,7 +139,7 @@ TEST(ParticleContainerIterator, CorrectIterator) {
         Particle({ 0.0, -1.0, 0.0 }, { -1.0, 0.0, 0.0 }, 1.0, 1),
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
-    ParticleContainer pc = ParticleContainer(pv);
+    TestContainer pc = TestContainer(pv);
 
     std::vector<Particle>::const_iterator pci;
     ASSERT_NO_THROW(pci = pc.end());
@@ -116,7 +160,7 @@ TEST(ParticleContainerIterator, CorrectConstIterator) {
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
 
-    ParticleContainer pc = ParticleContainer(pv);
+    TestContainer pc = TestContainer(pv);
 
     std::vector<Particle>::const_iterator pci;
     ASSERT_NO_THROW(pci = pc.end());
@@ -140,7 +184,7 @@ TEST(ParticleContainerSize, CorrectSize) {
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
 
-    ParticleContainer pc = ParticleContainer(pv);
+    TestContainer pc = TestContainer(pv);
 
     size_t s;
     ASSERT_NO_THROW(s = pc.size());
@@ -157,7 +201,7 @@ TEST(ParticleContainerResize, CorrectResize) {
         Particle({ 0.0, -1.0, 0.0 }, { -1.0, 0.0, 0.0 }, 1.0, 1),
         Particle({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }, 0.75, 2),
     };
-    ParticleContainer pc = ParticleContainer(pv);
+    TestContainer pc = TestContainer(pv);
 
     ASSERT_NO_THROW(pc.resize(5));
 
@@ -180,4 +224,31 @@ TEST(ParticleContainerResize, CorrectResize) {
     for (auto& p : pv) {
         EXPECT_TRUE(*(pi++) == p) << "Resize must expand the data structure correctly";
     }
+}
+
+// Test if remove outside domain works correctly for a particle container.
+TEST(ParticleContainer, RemoveOutsideDomain) {
+    const std::vector<Particle> particles = {
+        Particle({ 1.0, 3.0, 1.0 }, {}, 2.0, 1),
+        Particle({ -2.0, 7.0, 3.0 }, {}, 2.0, 2),
+        Particle({ 6.0, 25.0, 3.0 }, {}, 2.0, 3),
+        Particle({ 7.0, 7.0, -1.0 }, {}, 2.0, 4),
+        Particle({ 21.0, 17.0, 1.0 }, {}, 2.0, 5),
+        Particle({ 6.0, 11.0, 5.0 }, {}, 2.0, 6),
+    };
+
+    TestContainer container(particles, { 10.0, 20.0, 10.0 });
+
+    std::list<int> expected = { 1, 6 };
+
+    container.remove_particles_out_of_domain();
+
+    for (Particle& p : container) {
+        EXPECT_TRUE(std::find(expected.begin(), expected.end(), p.getType()) != expected.end())
+            << "Iterated over an illegal particle: (" << p.getType() << ")";
+
+        expected.remove(p.getType());
+    }
+
+    EXPECT_TRUE(expected.size() == 0) << "The pair size should be 0 but it was " << expected.size();
 }

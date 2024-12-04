@@ -1,5 +1,5 @@
 #include "Analytical.h"
-#include "../utils/ArrayUtils.h"
+#include "utils/ArrayUtils.h"
 
 #include <cmath>
 

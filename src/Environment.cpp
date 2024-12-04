@@ -258,7 +258,7 @@ Environment::Environment(const int argc, const char* argv[]) {
                 panic_exit("The option output_format was provided multiple times. Options may only be provided once.");
             }
 
-            format = NO_OUT;
+            output_format = NO_OUT;
 
             default_file_format = false;
         } else if (std::strcmp(argv[i], "-output_format=vtk") == 0) {
@@ -267,7 +267,7 @@ Environment::Environment(const int argc, const char* argv[]) {
                 panic_exit("The option output_format was provided multiple times. Options may only be provided once.");
             }
 
-            format = VTK;
+            output_format = VTK;
 
             default_file_format = false;
         } else if (std::strcmp(argv[i], "-output_format=xyz") == 0) {
@@ -276,7 +276,7 @@ Environment::Environment(const int argc, const char* argv[]) {
                 panic_exit("The option output_format was provided multiple times. Options may only be provided once.");
             }
 
-            format = XYZ;
+            output_format = XYZ;
 
             default_file_format = false;
         } else if (std::strcmp(argv[i], "-log_level=off") == 0) {
@@ -382,6 +382,17 @@ Environment::Environment(const int argc, const char* argv[]) {
         panic_exit("There was no input file provided.");
     }
 
+    const char* temp = input_file + std::strlen(input_file) - 3;
+    // Read the input file type to determine correct reader
+    if (!(std::strcmp(temp, "txt"))) {
+        input_format = TXT;
+    } else if (!(std::strcmp(temp, "xml"))) {
+        input_format = XML;
+        return;
+    } else {
+        panic_exit("Unsupported input file type.");
+    }
+
     spdlog::debug("The program was executed using the command line arguments.");
     spdlog::debug("    t_end = {} ({})", t_end, btos(default_end));
     spdlog::debug("    delta_t = {} ({})", delta_t, btos(default_delta));
@@ -390,7 +401,7 @@ Environment::Environment(const int argc, const char* argv[]) {
     spdlog::debug("    print_step = {} ({})", print_step, btos(default_print_step));
     spdlog::debug("    input_file = {}", input_file);
     spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
-    spdlog::debug("    format = {} ({})", static_cast<int>(format), btos(default_file_format));
+    spdlog::debug("    format = {} ({})", static_cast<int>(output_format), btos(default_file_format));
     spdlog::debug("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
     spdlog::debug("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
 }
@@ -398,28 +409,78 @@ Environment::Environment(const int argc, const char* argv[]) {
 Environment::Environment(const Environment& env) {
     t_end = env.get_t_end();
     delta_t = env.get_delta_t();
+    epsilon = env.get_epsilon();
+    sigma = env.get_sigma();
     print_step = env.get_print_step();
     input_file = env.get_input_file_name();
     output_file = env.get_output_file_name();
-    format = env.get_output_file_format();
+    output_format = env.get_output_file_format();
+    calc = env.get_calculator_type();
+    r_cutoff = env.get_r_cutoff();
 }
 
 Environment::~Environment() = default;
 
-double Environment::get_t_end() const { return t_end; }
+const char* Environment::get_input_file_name() const { return input_file; }
 
-double Environment::get_delta_t() const { return delta_t; }
+InputFormat Environment::get_input_file_format() const { return input_format; }
+
+const char* Environment::get_output_file_name() const { return output_file.c_str(); }
+
+OutputFormat Environment::get_output_file_format() const { return output_format; }
+
+CalculatorType Environment::get_calculator_type() const { return calc; }
+
+std::array<BoundaryType, 6> Environment::get_boundary_type() const {
+    return std::array<BoundaryType, 6> {
+        yz_near,
+        xz_near,
+        xy_near,
+        yz_far,
+        xz_far,
+        xy_far,
+    };
+}
+
+int Environment::get_print_step() const { return print_step; }
 
 double Environment::get_sigma() const { return sigma; }
 
 double Environment::get_epsilon() const { return epsilon; }
 
-int Environment::get_print_step() const { return print_step; }
+double Environment::get_delta_t() const { return delta_t; }
 
-const char* Environment::get_input_file_name() const { return input_file; }
+double Environment::get_t_end() const { return t_end; }
 
-const char* Environment::get_output_file_name() const { return output_file; }
+double Environment::get_r_cutoff() const { return r_cutoff; }
 
-FileFormat Environment::get_output_file_format() const { return format; }
+std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
 
-CalculatorType Environment::get_calculator_type() const { return calc; }
+void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
+
+void Environment::set_delta_t(const double delta_t) { this->delta_t = delta_t; }
+
+void Environment::set_sigma(const double sigma) { this->sigma = sigma; }
+
+void Environment::set_epsilon(const double epsilon) { this->epsilon = epsilon; }
+
+void Environment::set_print_step(const int print_step) { this->print_step = print_step; }
+
+void Environment::set_output_file_name(std::string& output_file_name) { this->output_file = output_file_name; }
+
+void Environment::set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
+
+void Environment::set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
+
+void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_type) {
+    yz_near = boundary_type[0];
+    xz_near = boundary_type[1];
+    xy_near = boundary_type[2];
+    yz_far = boundary_type[3];
+    xz_far = boundary_type[4];
+    xy_far = boundary_type[5];
+}
+
+void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
+
+void Environment::set_domain_size(const std::array<double, 3> domain_size) { this->domain_size = domain_size; }

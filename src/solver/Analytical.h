@@ -3,7 +3,7 @@
  *
  * @brief Describe analytical solutions for multiple problems.
  */
-#include "../Particle.h"
+#include "Particle.h"
 
 /**
  * @namespace solver

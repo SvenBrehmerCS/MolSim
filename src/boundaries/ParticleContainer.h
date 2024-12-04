@@ -7,6 +7,9 @@
 #pragma once
 
 #include "Particle.h"
+#include "boundaries/CellList.h"
+
+#include <functional>
 #include <iterator>
 #include <vector>
 
@@ -16,11 +19,16 @@
  * @brief Store all the particles during the simulation.
  */
 class ParticleContainer {
-private:
+protected:
     /**
      * Store all the particles required during the simulation.
      */
     std::vector<Particle> particles;
+
+    /**
+     * Store the domain size of the container.
+     */
+    std::array<double, 3> domain = { 0.0, 0.0, 0.0 };
 
 public:
     /**
@@ -34,6 +42,21 @@ public:
      * @param new_particles The particles which should be stored.
      */
     ParticleContainer(const std::vector<Particle>& new_particles);
+
+    /**
+     * Create a particle container from a vector of particles.
+     *
+     * @param new_domain The new domain size.
+     */
+    ParticleContainer(const std::array<double, 3>& new_domain);
+
+    /**
+     * Create a particle container from a vector of particles.
+     *
+     * @param new_particles The particles which should be stored.
+     * @param new_domain The new domain size.
+     */
+    ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain);
 
     /**
      * Destroy all particles.
@@ -94,4 +117,30 @@ public:
      * @param new_size  Number of elements the particle container should contain.
      */
     void resize(size_t new_size);
+
+    /**
+     * Iterate over all pairs and apply the provided method to both particles of the pair.
+     *
+     * @param iterator The iterator lambda that should loop over all the pairs.
+     */
+    virtual void iterate_pairs(std::function<particle_pair_it> iterator) = 0;
+
+    /**
+     * Remove all particles which are out of the domain.
+     *
+     * @param domain The size of the domain.
+     */
+    void remove_particles_out_of_domain();
+
+    /**
+     * Update the particle positions in their cells.
+     */
+    virtual void update_positions() = 0;
+
+    /**
+     * Get the vector pointing to the corner of the domain.
+     *
+     * @return The corner vector.
+     */
+    const std::array<double, 3>& get_corner_vector() const;
 };

@@ -6,6 +6,7 @@
 
 #pragma once
 
+class Environment;
 class ParticleContainer;
 
 /**
@@ -27,11 +28,17 @@ namespace inputReader {
         virtual ~Reader() {};
 
         /**
-         * Imports a particle system from the given input file
+         * Imports the simulation arguments from the input file.
          *
-         * @param particles data structure for holding the particles.
-         * @param filename file path to input file.
+         * @param environment Data structure for holding the simulation parameters.
          */
-        virtual void readFile(ParticleContainer& container, const char* filename) = 0;
+        virtual void readArguments(Environment& environment) = 0;
+
+        /**
+         * Imports the particles from the input file.
+         *
+         * @param particles Data structure for holding the particles.
+         */
+        virtual void readParticle(ParticleContainer& container) = 0;
     };
 } // namespace inputReader

@@ -60,7 +60,7 @@
 
 #include <xsd/cxx/config.hxx>
 
-#if (XSD_INT_VERSION != 4000000L)
+#if (LIBXSD_VERSION!= 400002000000000ULL)
 #error XSD runtime version mismatch
 #endif
 

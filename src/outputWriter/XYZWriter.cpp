@@ -6,7 +6,7 @@
  */
 
 #include "XYZWriter.h"
-#include "../Particle.h"
+#include "Particle.h"
 #include <iomanip>
 #include <sstream>
 
@@ -16,7 +16,7 @@ namespace outputWriter {
 
     XYZWriter::~XYZWriter() = default;
 
-    void XYZWriter::plotParticles(const ParticleContainer& container, const std::string& filename, int iteration) {
+    void XYZWriter::plotParticles(ParticleContainer& container, const std::string& filename, int iteration) {
         std::ofstream file;
         std::stringstream strstr;
         strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".xyz";
@@ -27,7 +27,7 @@ namespace outputWriter {
                 "file format doku."
              << std::endl;
 
-        for (const auto& p : container) {
+        for (const Particle& p : container) {
             std::array<double, 3> x = p.getX();
             file << "Ar ";
             file.setf(std::ios_base::showpoint);
