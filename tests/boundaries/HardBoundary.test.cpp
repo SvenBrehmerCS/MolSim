@@ -55,7 +55,7 @@ TEST(HardBoundary, ParticleReflectCorrectly) {
     }
 }
 
-// Test that post f does not affect the fore calculation
+// Test that post f does not affect the force calculation
 TEST(HardBoundary, ParticleNoFChange) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
