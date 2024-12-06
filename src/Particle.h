@@ -171,6 +171,16 @@ public:
      * @return A string describing the particle.
      */
     std::string toString() const;
+
+    /**
+     *
+     * sets the type of a particle
+     *
+     * @param new_type
+     */
+    void setType(int new_type) {
+        type = new_type;
+    }
 };
 
 /**
