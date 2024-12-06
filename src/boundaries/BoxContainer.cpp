@@ -4,13 +4,13 @@
 
 BoxContainer::BoxContainer(const double rc, const std::array<double, 3>& new_domain)
     : ParticleContainer(new_domain) {
-    cells = CellList(rc, std::ceil(domain[0] / rc), std::ceil(domain[1] / rc), std::ceil(domain[2] / rc));
+    cells = CellList(rc, domain);
     cells.create_list(particles);
 };
 
 BoxContainer::BoxContainer(const std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain)
     : ParticleContainer(new_particles, new_domain) {
-    cells = CellList(rc, std::ceil(domain[0] / rc), std::ceil(domain[1] / rc), std::ceil(domain[2] / rc));
+    cells = CellList(rc, domain);
     cells.create_list(particles);
 };
 

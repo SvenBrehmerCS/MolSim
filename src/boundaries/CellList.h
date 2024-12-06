@@ -39,7 +39,12 @@ private:
     /**
      * Define the cutoff distance.
      */
-    double rc;
+    double rc, rc_squ;
+
+    /**
+     * Define the cell sizes
+     */
+    std::array<double, 3> cell_size;
 
 public:
     /**
@@ -51,11 +56,9 @@ public:
      * Define a constructor for a cell list.
      *
      * @param rc The new cutoff distance.
-     * @param n_x The new x dimension.
-     * @param n_y The new y dimension.
-     * @param n_z The new z dimension.
+     * @param domain The domain size.
      */
-    CellList(const double rc, const size_t n_x, const size_t n_y, const size_t n_z);
+    CellList(const double rc, const std::array<double, 3>& domain);
 
     /**
      * Define the default destructor.

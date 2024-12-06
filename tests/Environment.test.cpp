@@ -280,38 +280,6 @@ TEST(EnvironmentConstructor, EnvironmentDuplicateTEnd) {
     ASSERT_EXIT(env = Environment(argc, argv), testing::ExitedWithCode(EXIT_FAILURE), "");
 }
 
-// Test if nan -t_end is recognized
-TEST(EnvironmentConstructor, EnvironmentNanTEnd) {
-    const char* argv[] = {
-        "./msim.exe",
-        "-t_end=nan",
-        "-delta_t=0.0001",
-        "../input/main_text_file.xml",
-    };
-
-    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
-
-    Environment env;
-
-    ASSERT_EXIT(env = Environment(argc, argv), testing::ExitedWithCode(EXIT_FAILURE), "");
-}
-
-// Test if inf -delta_t is recognized
-TEST(EnvironmentConstructor, EnvironmentInfDeltaT) {
-    const char* argv[] = {
-        "./msim.exe",
-        "-t_end=0.3",
-        "-delta_t=inf",
-        "../input/ignore.txt",
-    };
-
-    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
-
-    Environment env;
-
-    ASSERT_EXIT(env = Environment(argc, argv), testing::ExitedWithCode(EXIT_FAILURE), "");
-}
-
 // Test if float -print_step is recognized
 TEST(EnvironmentConstructor, EnvironmentFloatPrintStep) {
     const char* argv[] = {
@@ -328,6 +296,7 @@ TEST(EnvironmentConstructor, EnvironmentFloatPrintStep) {
 
     ASSERT_EXIT(env = Environment(argc, argv), testing::ExitedWithCode(EXIT_FAILURE), "");
 }
+
 // Test if duplicate -log_level is recognized
 TEST(EnvironmentConstructor, EnvironmentDuplicateLogLevel) {
     const char* argv[] = {

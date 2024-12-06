@@ -10,6 +10,11 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
+# Update the compile options for the release mode
+# TODO: For valgrind profiling -march=native must be disabled.
+# TODO: Additional useful compiler options could be: -march=native, -fprofile-generate, -fprofile-use (+ -fprofile-fix)
+set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
+
 # set Release as the default build type if it is not yet set.
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
@@ -46,7 +51,7 @@ add_executable(MolSim ${MY_SRC})
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
-        PRIVATE
+        PUBLIC
             cxx_std_17
 )
 
@@ -107,3 +112,6 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
 )
 target_link_libraries(MolSim PRIVATE spdlog::spdlog)
+
+# Show the compile commands
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

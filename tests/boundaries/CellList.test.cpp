@@ -5,7 +5,7 @@
 
 // Test if the loop pair method works correctly for a no particles
 TEST(CellList, LoopPairsNoParticle) {
-    CellList cells(1.0, 5, 4, 3);
+    CellList cells(1.0, { 5.0, 4.0, 3.0 });
     std::vector<Particle> particles = {};
 
     ASSERT_NO_THROW(cells.create_list(particles));
@@ -31,7 +31,7 @@ TEST(CellList, LoopPairsNoParticle) {
 
 // Test if the loop pair method works correctly for a single particle
 TEST(CellList, LoopPairsSingleParticle) {
-    CellList cells(1.0, 5, 4, 3);
+    CellList cells(1.0, { 5.0, 4.0, 3.0 });
     std::vector<Particle> particles = {
         Particle({ 2.0, 1.5, 3.25 }, {}, 1.0, 1),
     };
@@ -59,7 +59,7 @@ TEST(CellList, LoopPairsSingleParticle) {
 
 // Test if the loop pair method works correctly for a complex 3D problem
 TEST(CellList, LoopPairs3D) {
-    CellList cells(1.0, 5, 4, 3);
+    CellList cells(1.0, { 5.0, 4.0, 3.0 });
     std::vector<Particle> particles = {
         Particle({ 0.9, 2.9, 0.9 }, {}, 1.0, 1),
         Particle({ 1.1, 2.9, 0.9 }, {}, 1.0, 2),
@@ -143,7 +143,7 @@ TEST(CellList, LoopPairs3D) {
 // Test that the getters and cell constructor work correctly
 TEST(CellList, ConstructorGetter) {
     // Create a cell list with a inner cell count of 10 x 8 x 3
-    CellList cells = CellList(3.0, 10, 8, 3);
+    CellList cells = CellList(3.0, { 30.0, 24.0, 9.0 });
     std::array<double, 3> corner = { 30.0, 24.0, 9.0 };
 
     EXPECT_EQ(cells.get_cell_index(0, 0, 0), 0) << "The index was computed wrong.";
@@ -154,7 +154,7 @@ TEST(CellList, ConstructorGetter) {
 
 // Test that the create list method works correctly
 TEST(CellList, CreateList) {
-    CellList cells(2.0, 20, 15, 15);
+    CellList cells(2.0, { 40.0, 30.0, 31.0 });
     std::vector<Particle> particles = {
         Particle({ 1.0, 1.0, 1.0 }, {}, 1.0, 1),
         Particle({ 25.0, 1.0, 1.0 }, {}, 1.0, 2),

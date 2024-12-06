@@ -859,7 +859,6 @@ TEST(Stepper, MultipleBoundaries) {
     env.set_r_cutoff(2.0);
     env.set_domain_size({ 10.0, 10.0, 10.0 });
 
-
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles, false, false);
 
