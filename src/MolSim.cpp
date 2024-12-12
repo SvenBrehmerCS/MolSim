@@ -141,7 +141,7 @@ int main(const int argc, const char* argv[]) {
         break;
     case CHECKPOINT:
         // TODO es wird ein Checkpoint am Ende des laufes geschrieben, zwischen drin nicht
-        writer.reset(new outputWriter::NoWriter());
+        writer.reset(new outputWriter::CheckpointWriter());
         break;
     default:
         spdlog::critical("Error: Illegal file format specifier.");

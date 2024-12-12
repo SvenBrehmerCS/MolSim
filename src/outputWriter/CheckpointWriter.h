@@ -7,17 +7,15 @@
 #include "Environment.h"
 #include "Writer.h"
 
+#pragma once
 
 namespace outputWriter {
 
 
-    class CheckpointWriter {
+    class CheckpointWriter : public Writer {
     public:
         CheckpointWriter() = default;
-
         virtual ~CheckpointWriter() = default;
-
-
         /**
          *
          * Function plots the entire state of the current simulation, all particles and environment variables
@@ -27,6 +25,7 @@ namespace outputWriter {
          * @param filename the name of the File the simulation will be written to.
          */
         void plot(ParticleContainer& container, Environment& env, const char* filename);
+        virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration);
     };
 
 

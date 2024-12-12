@@ -5,13 +5,14 @@
 #ifndef CHECKPOINTREADER_H
 #define CHECKPOINTREADER_H
 #include "Environment.h"
+#include "Reader.h"
 #include "boundaries/ParticleContainer.h"
 
 namespace inputReader {
     /**
      * This class reads in the Simulation
      */
-    class CheckpointReader {
+    class CheckpointReader{
     public:
         CheckpointReader() = default;
 
