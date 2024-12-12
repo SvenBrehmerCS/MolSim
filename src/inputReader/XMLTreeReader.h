@@ -36,6 +36,8 @@ namespace inputReader {
          */
         std::unique_ptr<sim_t> sim;
 
+        Environment env;
+
     public:
         XMLTreeReader(const char* filename);
 

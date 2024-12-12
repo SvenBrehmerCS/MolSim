@@ -26,7 +26,7 @@ namespace outputWriter {
          * @param env
          * @param filename the name of the File the simulation will be written to.
          */
-        void plot(ParticleContainer& container, Environment& env, const char* filename);
+        void plot(ParticleContainer& container, Environment& env, const char* filename, size_t iteration_number);
     };
 
 

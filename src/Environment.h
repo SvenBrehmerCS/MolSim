@@ -79,6 +79,11 @@ enum OutputFormat {
      * Define the ascii based xyz file format.
      */
     XYZ,
+
+    /**
+     * Define the checkpoint file format
+     */
+    CHECKPOINT,
 };
 
 /**
@@ -190,6 +195,11 @@ private:
      */
     std::array<double, 3> domain_size = { 180.0, 90.0, 1.0 };
 
+
+    /**
+     * specifies the name of the input_file_checkpoint
+     */
+    std::string checkpoint_file_name;
 public:
     /**
      * Create a standard environment with all arguments being initialized to their default. The input file name will be null.
@@ -387,4 +397,17 @@ public:
      * @param domain_size Vector of domain size along the axes.
      */
     void set_domain_size(const std::array<double, 3> domain_size);
+
+
+    /**
+     *
+     * get the checkpoint file name
+     */
+    const char* get_checkpoint_file_name() const;
+
+    /**
+     * set the checkpoint_file_name
+     * @param checkpoint_file_name
+     */
+    void set_checkpoint_file_name(std::string& checkpoint_file_name);
 };

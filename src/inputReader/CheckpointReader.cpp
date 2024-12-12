@@ -9,7 +9,7 @@
 #include <fstream>
 
 
-void inputReader::CheckpointReader::readSimulation(ParticleContainer& container, Environment& env, const char* filename) {
+void inputReader::CheckpointReader::readSimulation(ParticleContainer& container, Environment& env, const char* filename, int new_particles) {
     std::ifstream inputFile(filename);
 
     if (!inputFile.is_open()) {
@@ -18,7 +18,7 @@ void inputReader::CheckpointReader::readSimulation(ParticleContainer& container,
     }
     double delta_t, t_end, sigma, r_cutoff, epsilon, domain_size0, domain_size1, domain_size2;
     int print_step;
-    size_t num_particles;
+    size_t num_particles, iteration_number;
     std::string output_file_name, output_file_format, input_file_name, input_file_format, calculator_type;
     std::string boundary_type_yz_near, boundary_type_xz_near, boundary_type_xy_near, boundary_type_yz_far, boundary_type_xz_far, boundary_type_xy_far;
 
@@ -76,14 +76,16 @@ void inputReader::CheckpointReader::readSimulation(ParticleContainer& container,
         getBoundaryType(boundary_type_xz_far),
         getBoundaryType(boundary_type_xy_far),
     });
+    inputFile >> iteration_number;
 
     inputFile >> num_particles;
-    container.resize(num_particles);
+    container.resize(new_particles + num_particles);
+    spdlog::debug("Reading num_particles from CheckPoint {} and read {} particles from the xml ", num_particles, new_particles);
 
     double x, y, z, vx, vy, vz, fx, fy, fz, m;
     int type;
 
-    for (size_t i = 0; i < num_particles; i++) {
+    for (size_t i = new_particles; i < num_particles + new_particles; i++) {
         inputFile >> x >> y >> z >> vx >> vy >> vz >> type >> fx >> fy >> fz >> m;
 
         container[i].setX({ x, y, z });

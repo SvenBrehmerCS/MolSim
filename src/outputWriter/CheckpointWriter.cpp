@@ -4,6 +4,7 @@
 
 #include "CheckpointWriter.h"
 
+#include "spdlog/fmt/bundled/xchar.h"
 #include "spdlog/spdlog.h"
 
 #include <fstream>
@@ -17,7 +18,7 @@ template <typename T> std::ostream& operator<<(std::ostream& os, const std::vect
 }
 
 
-void outputWriter::CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename) {
+void outputWriter::CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename, size_t iteration_number) {
     std::ofstream outputFile(filename);
 
     if (!outputFile.is_open()) {
@@ -38,7 +39,9 @@ void outputWriter::CheckpointWriter::plot(ParticleContainer& container, Environm
     outputFile << env.get_calculator_type() << std::endl;
     outputFile << env.get_boundary_type()[0] << " " << env.get_boundary_type()[1] << " " << env.get_boundary_type()[2] << " "
                << env.get_boundary_type()[3] << " " << env.get_boundary_type()[4] << " " << env.get_boundary_type()[5] << std::endl;
-    outputFile << container.size();
+    outputFile << iteration_number << std::endl;
+    outputFile << container.size() << " " << std::endl;
+    spdlog::info("container size: {}", container.size());
 
     //TODO evtl. noch dimension einlesen
 

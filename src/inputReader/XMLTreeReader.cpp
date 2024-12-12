@@ -1,5 +1,7 @@
 #include "XMLTreeReader.h"
 
+#include "CheckpointReader.h"
+
 namespace inputReader {
 
     XMLTreeReader::XMLTreeReader(const char* filename) {
@@ -83,6 +85,14 @@ namespace inputReader {
         };
         environment.set_domain_size(domain_size);
 
+        if (sim->checkpoint().present()) {
+            spdlog::trace("Checkpointing...");
+            environment.set_checkpoint_file_name(sim->checkpoint().get());
+        }
+
+        //TODO check whether this is necesarry, environment is needed for checkpointing in readParticles
+        this->env = environment;
+
         spdlog::trace("...Finished setting up simulation environment");
     }
 
@@ -158,6 +168,11 @@ namespace inputReader {
                 container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), disc.b_motion(), num_dimensions);
 
             num_particles += particles_added;
+        }
+        if (sim->checkpoint().present()) {
+            spdlog::trace("Checkpoint...");
+            CheckpointReader checkpoint_reader;
+            checkpoint_reader.readSimulation(container, env, sim->checkpoint().get().data(), num_particles);
         }
 
         spdlog::trace("...Finished generating particles");

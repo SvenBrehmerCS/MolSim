@@ -13,9 +13,9 @@ namespace inputReader {
      */
     class CheckpointReader {
     public:
-        CheckpointReader();
+        CheckpointReader() = default;
 
-        ~CheckpointReader();
+        ~CheckpointReader()= default;
 
         BoundaryType getBoundaryType(const std::string& boundary) {
             if (boundary == "INF_CONT") {
@@ -41,7 +41,7 @@ namespace inputReader {
          * @param environment
          * @param filename
          */
-        void readSimulation(ParticleContainer& container, Environment& environment, const char* filename);
+        void readSimulation(ParticleContainer& container, Environment& environment, const char* filename, int new_particles);
     };
 }
 

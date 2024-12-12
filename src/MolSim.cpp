@@ -8,6 +8,7 @@
 #include "boundaries/Stepper.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/XMLTreeReader.h"
+#include "outputWriter/CheckpointWriter.h"
 #include "outputWriter/NoWriter.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
@@ -135,6 +136,10 @@ int main(const int argc, const char* argv[]) {
     case XYZ:
         writer.reset(new outputWriter::XYZWriter());
         break;
+    case CHECKPOINT:
+        //TODO es wird ein Checkpoint am Ende des laufes geschrieben, zwischen drin nicht
+        writer.reset(new outputWriter::NoWriter());
+        break;
     default:
         spdlog::critical("Error: Illegal file format specifier.");
         std::exit(EXIT_FAILURE);
@@ -146,6 +151,7 @@ int main(const int argc, const char* argv[]) {
 
     // Initialize the simulation environment.
     double current_time = 0.0;
+    //TODO iteration number nach checkpoint evtl setzen.
     int iteration = 0;
 
     // Write step 0
@@ -165,6 +171,13 @@ int main(const int argc, const char* argv[]) {
             writer->plotParticles(*cont, out_name, iteration);
             spdlog::info("Iteration {} finished.", iteration);
         }
+    }
+    // TODO hier Simulation checkpoint setzen wenn outputformat = checkpoint gesetzt
+    if (env.get_output_file_format() == CHECKPOINT) {
+        spdlog::info("Checkpoint written.");
+        outputWriter::CheckpointWriter checkpoint_writer;
+        const char* filename = env.get_output_file_name();
+        checkpoint_writer.plot(*cont, env, filename, iteration);
     }
 
     spdlog::info("Output written. Terminating...");

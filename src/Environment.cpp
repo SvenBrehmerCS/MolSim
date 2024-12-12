@@ -417,6 +417,7 @@ Environment::Environment(const Environment& env) {
     output_format = env.get_output_file_format();
     calc = env.get_calculator_type();
     r_cutoff = env.get_r_cutoff();
+    checkpoint_file_name = env.get_checkpoint_file_name();
 }
 
 Environment::~Environment() = default;
@@ -484,3 +485,8 @@ void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_t
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
 
 void Environment::set_domain_size(const std::array<double, 3> domain_size) { this->domain_size = domain_size; }
+
+const char* Environment::get_checkpoint_file_name() const { return checkpoint_file_name.c_str(); }
+
+void Environment::set_checkpoint_file_name(std::string& checkpoint_file_name) { this->checkpoint_file_name = checkpoint_file_name; }
+
