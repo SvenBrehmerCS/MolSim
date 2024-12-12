@@ -19,7 +19,7 @@ template <typename T> std::ostream& operator<<(std::ostream& os, const std::vect
 
 
 void outputWriter::CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename) {
-    std::ofstream outputFile(filename);
+    std::ofstream outputFile(filename, std::ios::binary);
 
     if (!outputFile.is_open()) {
         spdlog::error("Error opening output file {}", filename);

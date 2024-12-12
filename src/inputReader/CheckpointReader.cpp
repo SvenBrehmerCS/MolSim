@@ -10,7 +10,7 @@
 
 
 void inputReader::CheckpointReader::readSimulation(ParticleContainer& container, const char* filename) {
-    std::ifstream inputFile(filename);
+    std::ifstream inputFile(filename, std::ios::binary);
 
     if (!inputFile.is_open()) {
         spdlog::error("Could not open file {}", filename);
@@ -27,7 +27,7 @@ void inputReader::CheckpointReader::readSimulation(ParticleContainer& container,
     int type;
 
     for (size_t i = new_particles; i < num_particles + new_particles; i++) {
-        //inputFile >> x >> y >> z >> vx >> vy >> vz >> type >> fx >> fy >> fz >> m;
+        // inputFile >> x >> y >> z >> vx >> vy >> vz >> type >> fx >> fy >> fz >> m;
 
         inputFile.read(reinterpret_cast<char*>(&x), sizeof(double));
         inputFile.read(reinterpret_cast<char*>(&y), sizeof(double));
