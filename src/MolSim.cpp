@@ -1,5 +1,6 @@
 
 #include "MolSim.h"
+#include "Thermostat.h"
 #include "boundaries/BoxContainer.h"
 #include "boundaries/GhostBoundary.h"
 #include "boundaries/HardBoundary.h"
@@ -36,10 +37,12 @@ int main(const int argc, const char* argv[]) {
 
     switch (env.get_input_file_format()) {
     case TXT:
-        reader.reset(new inputReader::FileReader(env.get_input_file_name()));
+        reader = std::make_unique<inputReader::FileReader>(env.get_input_file_name());
+        // REMOVE reader.reset(new inputReader::FileReader(env.get_input_file_name()));
         break;
     case XML:
-        reader.reset(new inputReader::XMLTreeReader(env.get_input_file_name()));
+        reader = std::make_unique<inputReader::XMLTreeReader>(env.get_input_file_name());
+        // REMOVE reader.reset(new inputReader::XMLTreeReader(env.get_input_file_name()));
         break;
     default:
         spdlog::critical("Error: Illegal input file format specifier.");
@@ -137,7 +140,7 @@ int main(const int argc, const char* argv[]) {
         writer.reset(new outputWriter::XYZWriter());
         break;
     case CHECKPOINT:
-        //TODO es wird ein Checkpoint am Ende des laufes geschrieben, zwischen drin nicht
+        // TODO es wird ein Checkpoint am Ende des laufes geschrieben, zwischen drin nicht
         writer.reset(new outputWriter::NoWriter());
         break;
     default:
@@ -147,11 +150,15 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper(boundaries, isinf);
+    Stepper stepper { boundaries, isinf };
+    // Initialize the thermostat.
+    // TODO Move up
+    Thermostat thermostat { env.get_dimensions(), env.get_temp_target(), env.get_max_delta_temp(), cont };
 
     // Initialize the simulation environment.
     double current_time = 0.0;
-    //TODO iteration number nach checkpoint evtl setzen.
+    // TODO iteration number nach checkpoint evtl setzen.
+    // TODO size_t?
     int iteration = 0;
 
     // Write step 0
@@ -165,6 +172,10 @@ int main(const int argc, const char* argv[]) {
 
         iteration++;
         current_time += env.get_delta_t();
+
+        // Apply thermostat
+        if (iteration % env.get_temp_frequency() == 0)
+            thermostat.regulate_Temperature();
 
         // Store the particles to an output file
         if (iteration % env.get_print_step() == 0) {

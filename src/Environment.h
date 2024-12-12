@@ -15,7 +15,7 @@
  *
  * @brief Define the different options for a boundary condition.
  */
-enum BoundaryType : int {
+enum BoundaryType {
     /**
      * Define the old square algorithm which does not require any boundaries.
      */
@@ -186,6 +186,11 @@ private:
     double t_end = 1000.0;
 
     /**
+     * Specifies the number of dimensions of the simulation.
+     */
+    int dimensions = 3;
+
+    /**
      * Store the radius beyond which force calculation is cut off.
      */
     double r_cutoff = 3.0;
@@ -195,11 +200,32 @@ private:
      */
     std::array<double, 3> domain_size = { 180.0, 90.0, 1.0 };
 
-
     /**
-     * specifies the name of the input_file_checkpoint
+     * Specifies the name of the input_file_checkpoint.
      */
     std::string checkpoint_file_name;
+
+    // REMOVE probably
+    /**
+     * Specifies the initial temperature of the simulation.
+     */
+    // double T_init = 40.0;
+
+    /**
+     * Specifies the target temperature of the simulation.
+     */
+    double temp_target = 40.0;
+
+    /**
+     * Specifies the number of steps between thermometer applications.
+     */
+    int temp_frequency = 1000;
+
+    /**
+     * Specifies the maximal absolute temperature change per thermostat application.
+     */
+    double max_delta_temp = std::numeric_limits<double>::infinity();
+
 public:
     /**
      * Create a standard environment with all arguments being initialized to their default. The input file name will be null.
@@ -319,6 +345,34 @@ public:
      */
     std::array<double, 3> get_domain_size() const;
 
+    /**
+     * Get the number of dimensions of the simulation.
+     *
+     * @return The number of dimensions.
+     */
+    int get_dimensions() const;
+
+    /**
+     * Get the target temperature of the simulation.
+     *
+     * @return The target temperature.
+     */
+    double get_temp_target() const;
+
+    /**
+     * Get the number of steps between thermometer applications.
+     *
+     * @return The application frequency.
+     */
+    int get_temp_frequency() const;
+
+    /**
+     * Get the maximal absolute temperature change per thermostat application.
+     *
+     * @return The maximal absolute delta temperature.
+     */
+    double get_max_delta_temp() const;
+
     // Setter methods
 
     /**
@@ -410,4 +464,32 @@ public:
      * @param checkpoint_file_name
      */
     void set_checkpoint_file_name(std::string& checkpoint_file_name);
+
+    /**
+     * Set the number of dimensions of the simulation.
+     *
+     * @param dimensions The number of dimensions.
+     */
+    void set_dimensions(const int dimensions);
+
+    /**
+     * Set the target temperature of the simulation.
+     *
+     * @param temp_target The target temperature.
+     */
+    void set_temp_target(const double temp_target);
+
+    /**
+     * Set the number of steps between thermometer applications.
+     *
+     * @param temp_frequency The application frequency.
+     */
+    void set_temp_frequency(const int temp_frequency);
+
+    /**
+     * Set the maximal absolute temperature change per thermostat application.
+     *
+     * @param max_delta_temp The maximal absolute delta temperature.
+     */
+    void set_max_delta_temp(double max_delta_temp);
 };

@@ -80,7 +80,7 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The default force model is lj." << std::endl;
             std::cout << std::endl;
             std::cout << "Each argument may only be provided once. If no argument is provided the default" << std::endl;
-            std::cout << "value is being used. There may not be any blank spaces seperating the option" << std::endl;
+            std::cout << "value is being used. There may not be any blank spaces separating the option" << std::endl;
             std::cout << "and its value. The output files will be placed in the folder, from where the" << std::endl;
             std::cout << "program is executed." << std::endl;
             std::cout << std::endl;
@@ -457,6 +457,14 @@ double Environment::get_r_cutoff() const { return r_cutoff; }
 
 std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
 
+int Environment::get_dimensions() const { return dimensions; }
+
+double Environment::get_temp_target() const { return temp_target; }
+
+int Environment::get_temp_frequency() const { return temp_frequency; }
+
+double Environment::get_max_delta_temp() const { return max_delta_temp; }
+
 void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
 
 void Environment::set_delta_t(const double delta_t) { this->delta_t = delta_t; }
@@ -490,3 +498,10 @@ const char* Environment::get_checkpoint_file_name() const { return checkpoint_fi
 
 void Environment::set_checkpoint_file_name(std::string& checkpoint_file_name) { this->checkpoint_file_name = checkpoint_file_name; }
 
+void Environment::set_dimensions(const int dimensions) { this->dimensions = dimensions; }
+
+void Environment::set_temp_target(const double temp_target) { this->temp_target = temp_target; }
+
+void Environment::set_temp_frequency(const int temp_frequency) { this->temp_frequency = temp_frequency; }
+
+void Environment::set_max_delta_temp(double max_delta_temp) { this->max_delta_temp = max_delta_temp; }

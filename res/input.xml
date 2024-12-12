@@ -27,6 +27,8 @@
             <vy>50.0</vy>
             <vz>50.0</vz>
         </domain>
+        <T_init>40.0</T_init>
+        <T_frequency>1000</T_frequency>
     </param>
     <particle>
         <position>

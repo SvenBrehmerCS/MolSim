@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="../../res/input.xsd">
+    xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
         <name>EquilibriumDatei</name>
         <format>CHECKPOINT</format>
@@ -27,6 +27,8 @@
             <vy>90.0</vy>
             <vz>9.0</vz>
         </domain>
+        <T_init>40.0</T_init>
+        <T_frequency>1000</T_frequency>
     </param>
     <cuboid>
         <position>

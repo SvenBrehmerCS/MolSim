@@ -90,7 +90,22 @@ namespace inputReader {
             environment.set_checkpoint_file_name(sim->checkpoint().get());
         }
 
-        //TODO check whether this is necesarry, environment is needed for checkpointing in readParticles
+        if (sim->param().T_target().present()) {
+            environment.set_temp_target(sim->param().T_target().get());
+        } else {
+            environment.set_temp_target(sim->param().T_init());
+        }
+
+        environment.set_temp_frequency(sim->param().T_frequency());
+
+        if (sim->param().max_delta_T().present()) {
+            environment.set_max_delta_temp(sim->param().max_delta_T().get());
+        } else {
+            environment.set_max_delta_temp(std::numeric_limits<double>::infinity());
+        }
+
+
+        // TODO check whether this is necesarry, environment is needed for checkpointing in readParticles
         this->env = environment;
 
         spdlog::trace("...Finished setting up simulation environment");

@@ -41,13 +41,14 @@
 
             <xs:element name="disc" type="disc_t" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
-                    <xs:documentation> The information needed to generate a disc of particles</xs:documentation>
+                    <xs:documentation> The information needed to generate a disc of particles. </xs:documentation>
                 </xs:annotation>
             </xs:element>
+
             <xs:element name="checkpoint" type="xs:string" minOccurs="0" maxOccurs="1">
                 <!-- TODO add regex -->
                 <xs:annotation>
-                    <xs:documentation> The checkpoint file used as INPUT</xs:documentation>
+                    <xs:documentation> The checkpoint file used as INPUT. </xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
@@ -108,7 +109,7 @@
 
                 <xs:simpleType>
                     <xs:restriction base="xs:positiveInteger">
-                        <xs:maxInclusive value="1000000" />
+                        <xs:maxInclusive value="2147483647" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -285,6 +286,55 @@
                 <xs:annotation>
                     <xs:documentation> Size of the simulation domain in each direction. </xs:documentation>
                 </xs:annotation>
+            </xs:element>
+
+            <xs:element name="T_init" default="40.0">
+                <xs:annotation>
+                    <xs:documentation> Initial temperature of the simulation. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="T_target" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> Target temperature of the simulation. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="T_frequency" default="10000">
+                <xs:annotation>
+                    <xs:documentation> Number of steps between thermostat applications. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:positiveInteger">
+                        <xs:maxInclusive value="2147483647" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="max_delta_T" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> Maximal absolute temperature change per thermostat
+                        application. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
