@@ -187,7 +187,7 @@ namespace inputReader {
         if (sim->checkpoint().present()) {
             spdlog::trace("Checkpoint...");
             CheckpointReader checkpoint_reader;
-            checkpoint_reader.readSimulation(container, env, sim->checkpoint().get().data(), num_particles);
+            checkpoint_reader.readSimulation(container, env, sim->checkpoint().get().data());
         }
 
         spdlog::trace("...Finished generating particles");

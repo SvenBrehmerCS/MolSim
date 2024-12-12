@@ -187,7 +187,7 @@ int main(const int argc, const char* argv[]) {
         spdlog::info("Checkpoint written.");
         outputWriter::CheckpointWriter checkpoint_writer;
         const char* filename = env.get_output_file_name();
-        checkpoint_writer.plot(*cont, env, filename, iteration);
+        checkpoint_writer.plot(*cont, env, filename);
     }
 
     spdlog::info("Output written. Terminating...");

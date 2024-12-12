@@ -18,29 +18,16 @@ template <typename T> std::ostream& operator<<(std::ostream& os, const std::vect
 }
 
 
-void outputWriter::CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename, size_t iteration_number) {
+void outputWriter::CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename) {
     std::ofstream outputFile(filename);
 
     if (!outputFile.is_open()) {
         spdlog::error("Error opening output file {}", filename);
         std::exit(EXIT_FAILURE);
     }
-    outputFile << env.get_delta_t() << std::endl;
-    outputFile << env.get_t_end() << std::endl;
-    outputFile << env.get_sigma() << std::endl;
-    outputFile << env.get_r_cutoff() << std::endl;
-    outputFile << env.get_print_step() << std::endl;
-    outputFile << env.get_output_file_name() << std::endl;
-    outputFile << env.get_output_file_format() << std::endl;
-    outputFile << env.get_input_file_name() << std::endl;
-    outputFile << env.get_input_file_format() << std::endl;
-    outputFile << env.get_epsilon() << std::endl;
-    outputFile << env.get_domain_size()[0] << " " << env.get_domain_size()[1] << " " << env.get_domain_size()[2] << std::endl;
-    outputFile << env.get_calculator_type() << std::endl;
-    outputFile << env.get_boundary_type()[0] << " " << env.get_boundary_type()[1] << " " << env.get_boundary_type()[2] << " "
-               << env.get_boundary_type()[3] << " " << env.get_boundary_type()[4] << " " << env.get_boundary_type()[5] << std::endl;
-    outputFile << iteration_number << std::endl;
-    outputFile << container.size() << " " << std::endl;
+    size_t numParticles = container.size();
+    outputFile.write((char*)&numParticles, sizeof(size_t));
+    //outputFile << container.size();
     spdlog::info("container size: {}", container.size());
 
     //TODO evtl. noch dimension einlesen
@@ -48,9 +35,20 @@ void outputWriter::CheckpointWriter::plot(ParticleContainer& container, Environm
     auto particle = container.begin();
 
     for (size_t i = 0; i < container.size(); i++) {
-        outputFile << particle->getX()[0] << " " << particle->getX()[1] << " " << particle->getX()[2] << " " << particle->getV()[0] << " "
-                   << particle->getV()[1] << " " << particle->getV()[2] << " " << particle->getType() << " " << particle->getF()[0] << " "
-                   << particle->getF()[1] << " " << particle->getF()[2] << " " << particle->getM() << std::endl;
+        outputFile.write((char*) &particle->getX()[0], sizeof(double));
+        outputFile.write((char*) &particle->getX()[1], sizeof(double));
+        outputFile.write((char*) &particle->getX()[2], sizeof(double));
+        outputFile.write((char*) &particle->getV()[0], sizeof(double));
+        outputFile.write((char*) &particle->getV()[1], sizeof(double));
+        outputFile.write((char*) &particle->getV()[2], sizeof(double));
+        int particle_type = particle->getType();
+        outputFile.write((char*) &particle_type, sizeof(int));
+        outputFile.write((char*) &particle->getF()[0], sizeof(double));
+        outputFile.write((char*) &particle->getF()[1], sizeof(double));
+        outputFile.write((char*) &particle->getF()[2], sizeof(double));
+        double m = particle->getM();
+        outputFile.write((char*) &m, sizeof(double));
+
         ++particle;
     }
 }
