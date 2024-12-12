@@ -152,7 +152,6 @@ int main(const int argc, const char* argv[]) {
     // Initialize the stepper.
     Stepper stepper { boundaries, isinf };
     // Initialize the thermostat.
-    // TODO Move up
     Thermostat thermostat { env.get_dimensions(), env.get_temp_target(), env.get_max_delta_temp(), cont };
 
     // Initialize the simulation environment.
