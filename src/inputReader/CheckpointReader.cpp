@@ -9,7 +9,7 @@
 #include <fstream>
 
 
-void inputReader::CheckpointReader::readSimulation(ParticleContainer& container, Environment& env, const char* filename) {
+void inputReader::CheckpointReader::readSimulation(ParticleContainer& container, const char* filename) {
     std::ifstream inputFile(filename);
 
     if (!inputFile.is_open()) {

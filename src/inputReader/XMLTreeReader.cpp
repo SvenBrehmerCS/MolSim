@@ -85,10 +85,13 @@ namespace inputReader {
         };
         environment.set_domain_size(domain_size);
 
+        //TODO this is probably unnecessary
+        /*
         if (sim->checkpoint().present()) {
             spdlog::trace("Checkpointing...");
-            environment.set_checkpoint_file_name(sim->checkpoint().get());
+            environment.set_checkpoint_file_name(sim->checkpoint().get().);
         }
+        */
 
         if (sim->param().T_target().present()) {
             environment.set_temp_target(sim->param().T_target().get());
@@ -103,10 +106,6 @@ namespace inputReader {
         } else {
             environment.set_max_delta_temp(std::numeric_limits<double>::infinity());
         }
-
-
-        // TODO check whether this is necesarry, environment is needed for checkpointing in readParticles
-        this->env = environment;
 
         spdlog::trace("...Finished setting up simulation environment");
     }
@@ -187,7 +186,7 @@ namespace inputReader {
         if (sim->checkpoint().present()) {
             spdlog::trace("Checkpoint...");
             CheckpointReader checkpoint_reader;
-            checkpoint_reader.readSimulation(container, env, sim->checkpoint().get().data());
+            checkpoint_reader.readSimulation(container, sim->checkpoint().get().data());
         }
 
         spdlog::trace("...Finished generating particles");

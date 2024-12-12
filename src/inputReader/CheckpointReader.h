@@ -41,7 +41,7 @@ namespace inputReader {
          * @param environment
          * @param filename
          */
-        void readSimulation(ParticleContainer& container, Environment& environment, const char* filename);
+        void readSimulation(ParticleContainer& container, const char* filename);
     };
 }
 
