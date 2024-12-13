@@ -1,4 +1,4 @@
-#include <boundaries/InfContainer.h>
+#include <container/InfContainer.h>
 #include <gtest/gtest.h>
 
 // Test the iterate pairs method for an inf container in a complex simulation setting.

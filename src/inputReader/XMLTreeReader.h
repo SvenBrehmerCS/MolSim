@@ -10,7 +10,7 @@
 
 #include "Environment.h"
 #include "ParticleGenerator.h"
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 #include "input.h"
 #include "spdlog/spdlog.h"
 

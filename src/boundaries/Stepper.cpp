@@ -1,6 +1,6 @@
 #include "Stepper.h"
 
-#include "boundaries/BoxContainer.h"
+#include "container/BoxContainer.h"
 
 Stepper::Stepper(
     const std::array<Boundary*, 6>& boundaries, const std::array<BoundaryType, 6>& bt, const bool is_inf, const std::array<double, 3>& d) {

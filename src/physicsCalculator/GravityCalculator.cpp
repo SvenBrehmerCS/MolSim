@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "boundaries/InfContainer.h"
+#include "container/InfContainer.h"
 
 namespace physicsCalculator {
     GravityCalculator::GravityCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
@@ -36,8 +36,7 @@ namespace physicsCalculator {
     GravityCalculator::~GravityCalculator() = default;
 
     double GravityCalculator::calculateFDist(const double dist, const int t1, const int t2) const {
-        // TODO:
-        return 0.0;
+        return cont->get_type_pair_descriptor(t1, t2).get_mass() / (dist * dist * dist);
     }
 
     double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist) {

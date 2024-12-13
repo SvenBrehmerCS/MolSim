@@ -1,7 +1,7 @@
 #include <ParticleGenerator.h>
 #include <gtest/gtest.h>
 
-#include <boundaries/InfContainer.h>
+#include <container/InfContainer.h>
 
 // test if the Particles are initialized correctly if there are no previous particles in the container
 TEST(ParticleGenerator, GenerateCuboid) {

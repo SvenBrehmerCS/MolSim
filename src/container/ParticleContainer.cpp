@@ -3,14 +3,47 @@
 ParticleContainer::ParticleContainer() = default;
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles)
-    : particles { new_particles } { }
+    : particles { new_particles } {
+    type_pairs.resize(types.size() * types.size());
+
+    for (size_t i = 0; i < types.size(); i++) {
+        for (size_t j = 0; j < i; j++) {
+            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+        }
+    }
+}
 
 ParticleContainer::ParticleContainer(const std::array<double, 3>& new_domain)
-    : domain { new_domain } { }
+    : domain { new_domain } {
+    type_pairs.resize(types.size() * types.size());
+
+    for (size_t i = 0; i < types.size(); i++) {
+        for (size_t j = 0; j < i; j++) {
+            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+        }
+    }
+}
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain)
     : particles { new_particles }
-    , domain { new_domain } { }
+    , domain { new_domain } {
+    type_pairs.resize(types.size() * types.size());
+
+    for (size_t i = 0; i < types.size(); i++) {
+        for (size_t j = 0; j < i; j++) {
+            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+        }
+    }
+}
 
 
 ParticleContainer::~ParticleContainer() = default;

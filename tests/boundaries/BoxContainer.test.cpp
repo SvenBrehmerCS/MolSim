@@ -1,4 +1,4 @@
-#include <boundaries/BoxContainer.h>
+#include <container/BoxContainer.h>
 #include <gtest/gtest.h>
 
 // Test the iterate pairs method for a box container in a complex simulation setting.

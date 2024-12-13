@@ -1,4 +1,4 @@
-#include <boundaries/CellList.h>
+#include <container/CellList.h>
 #include <gtest/gtest.h>
 #include <tuple>
 #include <utils/ArrayUtils.h>
