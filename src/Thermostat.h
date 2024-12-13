@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Environment.h"
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 #include "spdlog/spdlog.h"
 
 #include <math.h>

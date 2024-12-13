@@ -8,7 +8,7 @@
 
 #include "Calculator.h"
 #include "Environment.h"
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
 namespace physicsCalculator {

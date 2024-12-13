@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Particle.h"
-#include "boundaries/CellList.h"
+#include "container/CellList.h"
 
 #include <functional>
 #include <iterator>

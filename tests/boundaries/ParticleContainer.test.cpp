@@ -1,5 +1,5 @@
 
-#include <boundaries/ParticleContainer.h>
+#include <container/ParticleContainer.h>
 #include <gtest/gtest.h>
 
 /**

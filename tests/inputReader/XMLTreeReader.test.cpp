@@ -3,8 +3,8 @@
 //
 #include "inputReader/XMLTreeReader.h"
 #include "Environment.h"
-#include "boundaries/InfContainer.h"
-#include "boundaries/ParticleContainer.h"
+#include "container/InfContainer.h"
+#include "container/ParticleContainer.h"
 
 #include <bits/fs_fwd.h>
 #include <bits/fs_path.h>

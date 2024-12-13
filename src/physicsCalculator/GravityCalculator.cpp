@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "boundaries/InfContainer.h"
+#include "container/InfContainer.h"
 
 namespace physicsCalculator {
     GravityCalculator::GravityCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)

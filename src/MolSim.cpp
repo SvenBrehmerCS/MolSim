@@ -1,10 +1,10 @@
 
 #include "MolSim.h"
 #include "Thermostat.h"
-#include "boundaries/BoxContainer.h"
+#include "container/BoxContainer.h"
 #include "boundaries/GhostBoundary.h"
 #include "boundaries/HardBoundary.h"
-#include "boundaries/InfContainer.h"
+#include "container/InfContainer.h"
 #include "boundaries/NoBoundary.h"
 #include "boundaries/Stepper.h"
 #include "inputReader/FileReader.h"

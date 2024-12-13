@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 #include "physicsCalculator/Calculator.h"
 
 /**

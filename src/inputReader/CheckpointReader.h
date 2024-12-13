@@ -6,7 +6,7 @@
 #define CHECKPOINTREADER_H
 #include "Environment.h"
 #include "Reader.h"
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 
 namespace inputReader {
     /**

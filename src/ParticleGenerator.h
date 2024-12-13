@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Particle.h"
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 

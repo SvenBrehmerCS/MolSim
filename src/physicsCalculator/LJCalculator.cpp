@@ -2,8 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
-#include "boundaries/BoxContainer.h"
-#include "boundaries/InfContainer.h"
+#include "container/BoxContainer.h"
+#include "container/InfContainer.h"
 
 namespace physicsCalculator {
     LJCalculator::LJCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)

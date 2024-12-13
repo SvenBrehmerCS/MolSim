@@ -1,5 +1,5 @@
 #include "Calculator.h"
-#include "boundaries/InfContainer.h"
+#include "container/InfContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/Reader.h"
 #include "utils/ArrayUtils.h"
