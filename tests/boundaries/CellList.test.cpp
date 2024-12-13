@@ -134,10 +134,6 @@ TEST(CellList, LoopPairs3D) {
         particles);
 
     EXPECT_TRUE(pairs.size() == 0) << "The pair size should be 0 but it was " << pairs.size();
-
-    for (auto x : pairs) {
-        std::cout << "(" << std::get<0>(x) << ", " << std::get<1>(x) << ")\n";
-    }
 }
 
 // Test that the getters and cell constructor work correctly
@@ -229,5 +225,86 @@ TEST(CellList, CreateList) {
         },
         particles_new);
 
-    EXPECT_TRUE(pairs.size() == 0) << "The pair size should be 0 but it was " << pairs.size();
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
 }
+
+// TODO: Additional test to loop cell pairs
+
+// Test if the iterator for the halo cells work correctly.
+TEST(CellList, IterateHalo) {
+    CellList cells(2.0, { 12.0, 12.0, 12.0 });
+    std::vector<Particle> particles = {
+        Particle({ -1.0, -1.0, -1.0 }, {}, 1.0, 1),
+        Particle({ 11.0, 2.0, 4.0 }, {}, 1.0, 2),
+        Particle({ 3.0, 13.0, 8.0 }, {}, 1.0, 3),
+        Particle({ 10.0, 13.0, -1.0 }, {}, 1.0, 4),
+        Particle({ 4.0, 6.0, 1.0 }, {}, 1.0, 5),
+        Particle({ 13, 13.0, 13.0 }, {}, 1.0, 6),
+        Particle({ 10.0, 12.0, 6.0 }, {}, 1.0, 7),
+        Particle({ 3.0, 1.0, 5.0 }, {}, 1.0, 8),
+    };
+
+    ASSERT_NO_THROW(cells.create_list(particles));
+
+    std::list<int> indices = { 1, 3, 4, 6, 7 };
+
+    cells.loop_halo(
+        [&indices](Particle& p1) {
+            const int rm = p1.getType();
+            EXPECT_TRUE(std::find(indices.begin(), indices.end(), rm) != indices.end()) << "Iterated over an illegal particle: " << rm;
+            indices.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(indices.size(), 0) << "The indices size should be 0 but it was " << indices.size();
+}
+
+// Test if the iterator for the boundary cells work correctly.
+TEST(CellList, IterateBoundary) {
+    CellList cells(2.5, { 21.0, 21.0, 21.0 });
+    std::vector<Particle> particles = {
+        // TODO:
+    };
+
+    ASSERT_NO_THROW(cells.create_list(particles));
+
+    std::list<int> indices = {
+        // TODO:
+    };
+
+    cells.loop_boundary(
+        [&indices](Particle& p1) {
+            const int rm = p1.getType();
+            EXPECT_TRUE(std::find(indices.begin(), indices.end(), rm) != indices.end()) << "Iterated over an illegal particle: " << rm;
+            indices.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(indices.size(), 0) << "The indices size should be 0 but it was " << indices.size();
+}
+
+// Test if the iterator for the inner cells work correctly.
+TEST(CellList, IterateInner) {
+    CellList cells(2.0, { 21.0, 21.0, 21.0 });
+    std::vector<Particle> particles = {
+        // TODO:
+    };
+
+    ASSERT_NO_THROW(cells.create_list(particles));
+
+    std::list<int> indices = {
+        // TODO:
+    };
+
+    cells.loop_inner(
+        [&indices](Particle& p1) {
+            const int rm = p1.getType();
+            EXPECT_TRUE(std::find(indices.begin(), indices.end(), rm) != indices.end()) << "Iterated over an illegal particle: " << rm;
+            indices.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(indices.size(), 0) << "The indices size should be 0 but it was " << indices.size();
+}
+
+// TODO: Test loop cells

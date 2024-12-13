@@ -53,7 +53,7 @@ public:
      *
      * @param iterator The particle pair iterator.
      */
-    virtual void iterate_pairs(std::function<particle_pair_it> iterator);
+    virtual void iterate_pairs(const std::function<particle_pair_it>& iterator);
 
     /**
      * Update the particle positions in their cells.

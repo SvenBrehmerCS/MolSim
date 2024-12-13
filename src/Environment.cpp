@@ -454,6 +454,8 @@ double Environment::get_t_end() const { return t_end; }
 
 double Environment::get_r_cutoff() const { return r_cutoff; }
 
+double Environment::get_gravity() const { return gravity; }
+
 std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
 
 void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
@@ -484,3 +486,5 @@ void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_t
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
 
 void Environment::set_domain_size(const std::array<double, 3> domain_size) { this->domain_size = domain_size; }
+
+void Environment::set_gravity(const double g) { gravity = g; }

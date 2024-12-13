@@ -123,7 +123,7 @@ public:
      *
      * @param iterator The iterator lambda that should loop over all the pairs.
      */
-    virtual void iterate_pairs(std::function<particle_pair_it> iterator) = 0;
+    virtual void iterate_pairs(const std::function<particle_pair_it>& iterator) = 0;
 
     /**
      * Remove all particles which are out of the domain.

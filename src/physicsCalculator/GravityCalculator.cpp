@@ -35,14 +35,14 @@ namespace physicsCalculator {
 
     GravityCalculator::~GravityCalculator() = default;
 
-    double GravityCalculator::calculateFDist(const double dist) const {
-        spdlog::error("Called calculate abs f on force calculator");
+    double GravityCalculator::calculateFDist(const double dist, const int t1, const int t2) const {
+        // TODO:
         return 0.0;
     }
 
-    double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2) { // Calculate the distance and force experienced by two particles
-        const double distance = ArrayUtils::L2Norm(p2.getX() - p1.getX());
-        return p1.getM() * p2.getM() / (distance * distance * distance);
+    double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist) {
+        // Calculate the distance and force experienced by two particles
+        return calculateFDist(p1.getType(), p2.getType(), dist);
     }
 
 } // namespace physicsCalculator

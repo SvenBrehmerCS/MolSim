@@ -190,6 +190,11 @@ private:
      */
     std::array<double, 3> domain_size = { 180.0, 90.0, 1.0 };
 
+    /**
+     * Store the gravity pulling the atoms down.
+     */
+    double gravity = 0.0;
+
 public:
     /**
      * Create a standard environment with all arguments being initialized to their default. The input file name will be null.
@@ -302,6 +307,14 @@ public:
      */
     double get_r_cutoff() const;
 
+
+    /**
+     * Get the gravity pulling the atoms down.
+     *
+     * @return The gravity.
+     */
+    double get_gravity() const;
+
     /**
      * Get the domain size of the simulation in form of a vector representing the size in {x, y, z} direction.
      *
@@ -387,4 +400,11 @@ public:
      * @param domain_size Vector of domain size along the axes.
      */
     void set_domain_size(const std::array<double, 3> domain_size);
+
+    /**
+     * Set the gravity pulling the atoms down.
+     *
+     * @param g The gravity pulling the atoms down.
+     */
+    void set_gravity(const double g);
 };

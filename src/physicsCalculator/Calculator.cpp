@@ -1,18 +1,12 @@
 #include "Calculator.h"
-
 #include "boundaries/InfContainer.h"
-
 #include "inputReader/FileReader.h"
 #include "inputReader/Reader.h"
-
 #include "utils/ArrayUtils.h"
 
 #include <memory>
 #include <spdlog/spdlog.h>
 
-/**
- * @brief Collection of calculators for different levels of complexity
- */
 namespace physicsCalculator {
 
     Calculator::Calculator() = default;
@@ -33,7 +27,7 @@ namespace physicsCalculator {
     void Calculator::calculateOldF() {
         for (Particle& p : *cont) {
             p.setOldF(p.getF());
-            p.setF({ 0.0, 0.0, 0.0 });
+            p.setF({ 0.0, p.getM() * env.get_gravity(), 0.0 });
         }
 
         spdlog::debug("Updated the old force.");
@@ -49,7 +43,8 @@ namespace physicsCalculator {
 
     void Calculator::calculateF() {
         cont->iterate_pairs([this](Particle& i, Particle& j) {
-            const double force = this->calculateFAbs(i, j);
+            const double dist = ArrayUtils::L2Norm(i.getX() - j.getX());
+            const double force = this->calculateFAbs(i, j, dist);
 
             // Update the forces for both particles
             i.setF(force * (j.getX() - i.getX()) + i.getF());
@@ -66,5 +61,4 @@ namespace physicsCalculator {
 
         spdlog::debug("Updated the velocities.");
     }
-
 }
