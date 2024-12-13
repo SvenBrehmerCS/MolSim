@@ -1,12 +1,9 @@
 
 #include "MolSim.h"
 #include "Thermostat.h"
-#include "container/BoxContainer.h"
-#include "boundaries/GhostBoundary.h"
-#include "boundaries/HardBoundary.h"
-#include "container/InfContainer.h"
-#include "boundaries/NoBoundary.h"
 #include "boundaries/Stepper.h"
+#include "container/BoxContainer.h"
+#include "container/DSContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/XMLTreeReader.h"
 #include "outputWriter/CheckpointWriter.h"
@@ -52,63 +49,17 @@ int main(const int argc, const char* argv[]) {
 
     reader->readArguments(env);
 
-    // Initialize the particle container.
-    bool isinf = true, has_inf = false;
-    std::array<BoundaryType, 6> bound_t = env.get_boundary_type();
-    std::array<Boundary*, 6> boundaries {};
-    for (size_t i = 0; i < 6; i++) {
-        const double pos = i < 3 ? 0.0 : env.get_domain_size()[i % 3];
-        switch (bound_t[i]) {
-        case INF_CONT:
-            boundaries[i] = new NoBoundary(pos, i % 3);
-            has_inf = true;
-            break;
-        case HALO:
-            if (env.get_calculator_type() != LJ_FULL) {
-                spdlog::critical("Halo boundaries can only be used in combination with lj force calculations.");
-                std::exit(EXIT_FAILURE);
-            }
-
-            boundaries[i] = new GhostBoundary(pos, i % 3);
-            isinf = false;
-            break;
-        case HARD:
-            boundaries[i] = new HardBoundary(pos, i % 3);
-            isinf = false;
-            break;
-        case PERIODIC:
-            spdlog::warn("Not yet iimplemented.");
-            std::exit(EXIT_FAILURE);
-            isinf = false;
-            break;
-        case OUTFLOW:
-            boundaries[i] = new NoBoundary(pos, i % 3);
-            isinf = false;
-            break;
-        default:
-            spdlog::critical("Unsupported boundary type.");
-            std::exit(EXIT_FAILURE);
-            break;
-        }
-    }
-
-    if (!isinf && has_inf) {
-        spdlog::critical("Tried to combine inf and boxed containers.");
-        std::exit(EXIT_FAILURE);
-    }
-
-
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
-    if (isinf) {
-        cont.reset(new InfContainer(env.get_domain_size()));
+    if (env.requires_direct_sum()) {
+        cont.reset(new DSContainer(env.get_domain_size()));
     } else {
         cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
     }
 
     reader->readParticle(*cont);
-
-    reader.reset(nullptr);
+    reader.release();
+    env.assert_boundary_conditions();
 
     // Initialize the calculator.
     std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
@@ -140,8 +91,7 @@ int main(const int argc, const char* argv[]) {
         writer.reset(new outputWriter::XYZWriter());
         break;
     case CHECKPOINT:
-        // TODO es wird ein Checkpoint am Ende des laufes geschrieben, zwischen drin nicht
-        writer.reset(new outputWriter::CheckpointWriter());
+        writer.reset(new outputWriter::VTKWriter());
         break;
     default:
         spdlog::critical("Error: Illegal file format specifier.");
@@ -150,19 +100,21 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper { boundaries, bound_t, isinf, calculator->get_env().get_domain_size() };
+    Stepper stepper { env.get_boundary_type(), calculator->get_env().get_domain_size() };
     // Initialize the thermostat.
     Thermostat thermostat { env.get_dimensions(), env.get_temp_target(), env.get_max_delta_temp(), cont };
 
     // Initialize the simulation environment.
     double current_time = 0.0;
-    // TODO iteration number nach checkpoint evtl setzen.
-    // TODO size_t?
     int iteration = 0;
 
     // Write step 0
     const std::string out_name(env.get_output_file_name());
     writer->plotParticles(*cont, out_name, iteration);
+
+    // Get the start time of the simulation
+    const auto start_time = std::chrono::steady_clock::now();
+    spdlog::logger time_logger("Time Logger");
 
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
@@ -182,19 +134,23 @@ int main(const int argc, const char* argv[]) {
             spdlog::info("Iteration {} finished.", iteration);
         }
     }
+
+    // Get the start time of the simulation
+    const auto end_time = std::chrono::steady_clock::now();
+    const auto ms_duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    time_logger.info("The simulation took {} ms. The update time for a single particle was {} ns.", ms_duration.count(),
+        ms_duration.count() / (iteration * cont->size()));
+
     // TODO hier Simulation checkpoint setzen wenn outputformat = checkpoint gesetzt
     if (env.get_output_file_format() == CHECKPOINT) {
         spdlog::info("Checkpoint written.");
         outputWriter::CheckpointWriter checkpoint_writer;
         const char* filename = env.get_output_file_name();
-        checkpoint_writer.plot(*cont, env, filename);
+        checkpoint_writer.plot(*cont, filename);
     }
 
     spdlog::info("Output written. Terminating...");
 
-    // Freeing allocated memory
-    for (auto b : boundaries) {
-        delete b;
-    }
     return 0;
 }

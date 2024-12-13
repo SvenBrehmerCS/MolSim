@@ -1,5 +1,5 @@
 #include "Calculator.h"
-#include "container/InfContainer.h"
+#include "container/DSContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/Reader.h"
 #include "utils/ArrayUtils.h"
@@ -17,7 +17,7 @@ namespace physicsCalculator {
 
     Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles) {
         env = new_env;
-        cont.reset(new InfContainer(particles));
+        cont.reset(new DSContainer(particles));
     }
 
     ParticleContainer& Calculator::get_container() { return *cont; }
@@ -27,7 +27,7 @@ namespace physicsCalculator {
     void Calculator::calculateOldF() {
         for (Particle& p : *cont) {
             p.setOldF(p.getF());
-            p.setF({ 0.0, p.getM() * env.get_gravity(), 0.0 });
+            p.setF(cont->get_type_descriptor(p.getType()).get_G());
         }
 
         spdlog::debug("Updated the old force.");
@@ -35,7 +35,7 @@ namespace physicsCalculator {
 
     void Calculator::calculateX() {
         for (Particle& p : *cont) {
-            p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
+            p.setX(p.getX() + env.get_delta_t() * p.getV() + cont->get_type_descriptor(p.getType()).get_dt_dt_m() * p.getF());
         }
 
         spdlog::debug("Updated the positions.");
@@ -56,7 +56,7 @@ namespace physicsCalculator {
 
     void Calculator::calculateV() {
         for (Particle& p : *cont) {
-            p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
+            p.setV(p.getV() + cont->get_type_descriptor(p.getType()).get_dt_m() * (p.getOldF() + p.getF()));
         }
 
         spdlog::debug("Updated the velocities.");

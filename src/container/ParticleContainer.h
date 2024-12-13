@@ -158,6 +158,13 @@ public:
     const std::array<double, 3>& get_corner_vector() const;
 
     /**
+     * Create a type table using the types.
+     * 
+     * @param A vector of types that should be used for the type creation.
+     */
+    void build_type_table(const std::vector<TypeDesc>& new_types);
+
+    /**
      * Get the descriptor of a particle pair.
      *
      * @param t1 The first type.

@@ -461,6 +461,44 @@ std::array<double, 3> Environment::get_domain_size() const { return domain_size;
 
 int Environment::get_dimensions() const { return dimensions; }
 
+bool Environment::requires_direct_sum() const {
+    for (size_t i = 0; i < 6; i++) {
+        if (get_boundary_type()[i] == INF_CONT) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void Environment::assert_boundary_conditions() {
+    bool has_inf = false;
+    bool has_anti_inf = false;
+    bool has_ghost = false;
+
+    for (size_t i = 0; i < 6; i++) {
+        if (get_boundary_type()[i] == INF_CONT) {
+            has_inf = true;
+        }
+
+        if (get_boundary_type()[i] == OUTFLOW || get_boundary_type()[i] == PERIODIC) {
+            has_anti_inf = true;
+        }
+
+        if (get_boundary_type()[i] == HALO) {
+            has_ghost = true;
+        }
+    }
+
+    if (has_inf && has_anti_inf) {
+        panic_exit("The infinite boundary condition and the outflow condition may not be combined.");
+    }
+
+    if (has_ghost && calc == GRAVITY) {
+        panic_exit("The gravity calculator must not be combined with a ghost particle boundary.");
+    }
+}
+
 double Environment::get_temp_target() const { return temp_target; }
 
 int Environment::get_temp_frequency() const { return temp_frequency; }

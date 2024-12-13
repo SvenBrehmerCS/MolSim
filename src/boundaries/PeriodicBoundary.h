@@ -13,7 +13,7 @@
  *
  * @brief Define the boundary condition allowing for a periodic boundary.
  */
-class PeriodicBoundary : Boundary {
+class PeriodicBoundary : public Boundary {
 private:
 public:
     /**

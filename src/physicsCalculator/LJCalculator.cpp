@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 
 #include "container/BoxContainer.h"
-#include "container/InfContainer.h"
+#include "container/DSContainer.h"
 
 namespace physicsCalculator {
     LJCalculator::LJCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
@@ -17,7 +17,7 @@ namespace physicsCalculator {
         env = new_env;
 
         if (is_infinite) {
-            cont.reset(new InfContainer(particles, env.get_domain_size()));
+            cont.reset(new DSContainer(particles, env.get_domain_size()));
         } else {
             cont.reset(new BoxContainer(particles, env.get_r_cutoff(), env.get_domain_size()));
         }

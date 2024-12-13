@@ -1,12 +1,12 @@
 #include <ParticleGenerator.h>
 #include <gtest/gtest.h>
 
-#include <container/InfContainer.h>
+#include <container/DSContainer.h>
 
 // test if the Particles are initialized correctly if there are no previous particles in the container
 TEST(ParticleGenerator, GenerateCuboid) {
     ParticleGenerator generator;
-    InfContainer container;
+    DSContainer container;
 
     std::array<double, 3> x = { 0.0, 0.0, 0.0 };
     std::array<double, 3> y = { 1.0, 1.0, 1.0 };
@@ -71,7 +71,7 @@ TEST(ParticleGenerator, GenerateCuboid) {
 // changed.
 TEST(ParticleGenerator, GenerateCuboidWithParticles) {
     ParticleGenerator generator;
-    InfContainer container;
+    DSContainer container;
 
     std::array<double, 3> x = { 0.0, 0.0, 0.0 };
     std::array<double, 3> y = { 1.0, 1.0, 1.0 };
@@ -131,7 +131,7 @@ TEST(ParticleGenerator, GenerateCuboidWithParticles) {
 // tests the velocity with a brownian motion of 0
 TEST(ParticleGenerator, GenerateCuboidNoMotion) {
     ParticleGenerator generator;
-    InfContainer container;
+    DSContainer container;
 
     std::array<double, 3> x = { 0.0, 0.0, 0.0 };
     std::array<double, 3> y = { 1.0, 1.0, 1.0 };
@@ -171,7 +171,7 @@ TEST(ParticleGenerator, GenerateCuboidNoMotion) {
 
 TEST(ParticleGenerator, generateDisc) {
     ParticleGenerator generator;
-    InfContainer container;
+    DSContainer container;
     std::array<double, 3> x = { 0.0, 0.0, 0.0 };
     std::array<double, 3> x1 = { -1, 0.0, 0.0 };
     std::array<double, 3> x2 = { 0.0, -1, 0.0 };

@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "container/InfContainer.h"
+#include "container/DSContainer.h"
 
 namespace physicsCalculator {
     GravityCalculator::GravityCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
@@ -18,7 +18,7 @@ namespace physicsCalculator {
 
         switch (type) {
         case INF_CONT:
-            cont.reset(new InfContainer(particles));
+            cont.reset(new DSContainer(particles));
             break;
 
         default:

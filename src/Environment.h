@@ -359,6 +359,18 @@ public:
     std::array<double, 3> get_domain_size() const;
 
     /**
+     * Test if the simulation requires the direct sum implementation.
+     *
+     * @return A boolean indicating if the direct sum implementation is required.
+     */
+    bool requires_direct_sum() const;
+
+    /**
+     * Test if the simulation requires the direct sum implementation.
+     */
+    void assert_boundary_conditions();
+
+    /**
      * Get the number of dimensions of the simulation.
      *
      * @return The number of dimensions.
@@ -464,7 +476,6 @@ public:
      * @param domain_size Vector of domain size along the axes.
      */
     void set_domain_size(const std::array<double, 3> domain_size);
-
 
     /**
      *

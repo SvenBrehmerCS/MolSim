@@ -1,13 +1,47 @@
 #include "Stepper.h"
 
+#include <spdlog/spdlog.h>
+
+#include "boundaries/GhostBoundary.h"
+#include "boundaries/HardBoundary.h"
+#include "boundaries/NoBoundary.h"
+#include "boundaries/PeriodicBoundary.h"
 #include "container/BoxContainer.h"
 
-Stepper::Stepper(
-    const std::array<Boundary*, 6>& boundaries, const std::array<BoundaryType, 6>& bt, const bool is_inf, const std::array<double, 3>& d) {
-    bc = boundaries;
+Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const std::array<double, 3>& new_domain) {
     bound_t = bt;
-    inf = is_inf;
-    domain = d;
+    domain = new_domain;
+
+    // Initialize the particle container.
+    for (size_t i = 0; i < 6; i++) {
+        const double pos = i < 3 ? 0.0 : new_domain[i % 3];
+        switch (bound_t[i]) {
+        case INF_CONT:
+            bc[i] = std::make_unique<NoBoundary>(pos, i % 3);
+            inf = true;
+            break;
+        case HALO:
+            bc[i] = std::make_unique<GhostBoundary>(pos, i % 3);
+            inf = false;
+            break;
+        case HARD:
+            bc[i] = std::make_unique<HardBoundary>(pos, i % 3);
+            inf = false;
+            break;
+        case PERIODIC:
+            bc[i] = std::make_unique<PeriodicBoundary>(pos, i % 3);
+            inf = false;
+            break;
+        case OUTFLOW:
+            bc[i] = std::make_unique<NoBoundary>(pos, i % 3);
+            inf = false;
+            break;
+        default:
+            spdlog::critical("Unsupported boundary type.");
+            std::exit(EXIT_FAILURE);
+            break;
+        }
+    }
 }
 
 void Stepper::step(physicsCalculator::Calculator& calc) {

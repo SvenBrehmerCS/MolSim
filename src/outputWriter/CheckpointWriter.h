@@ -24,7 +24,7 @@ namespace outputWriter {
          * @param env
          * @param filename the name of the File the simulation will be written to.
          */
-        void plot(ParticleContainer& container, Environment& env, const char* filename);
+        void plot(ParticleContainer& container, const char* filename);
         virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration);
     };
 

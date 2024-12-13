@@ -3,18 +3,7 @@
 ParticleContainer::ParticleContainer() = default;
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles)
-    : particles { new_particles } {
-    type_pairs.resize(types.size() * types.size());
-
-    for (size_t i = 0; i < types.size(); i++) {
-        for (size_t j = 0; j < i; j++) {
-            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
-                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
-                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-        }
-    }
-}
+    : particles { new_particles } { }
 
 ParticleContainer::ParticleContainer(const std::array<double, 3>& new_domain)
     : domain { new_domain } {
@@ -44,7 +33,6 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles,
         }
     }
 }
-
 
 ParticleContainer::~ParticleContainer() = default;
 
@@ -86,3 +74,17 @@ void ParticleContainer::remove_particles_out_of_domain() {
 }
 
 const std::array<double, 3>& ParticleContainer::get_corner_vector() const { return domain; }
+
+void ParticleContainer::build_type_table(const std::vector<TypeDesc>& new_types) {
+    types = new_types;
+    type_pairs.resize(types.size() * types.size());
+
+    for (size_t i = 0; i < types.size(); i++) {
+        for (size_t j = 0; j < i; j++) {
+            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
+                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
+        }
+    }
+}
