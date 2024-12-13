@@ -5,36 +5,36 @@
 namespace inputReader {
 
     XMLTreeReader::XMLTreeReader(const char* filename) {
-        spdlog::debug("Parsing XML input {}", filename);
+        SPDLOG_DEBUG("Parsing XML input {}", filename);
         // Testing if filename is correct.
-        spdlog::trace("Verifying file name...");
+        SPDLOG_TRACE("Verifying file name...");
         std::ifstream XMLFile(filename);
         if (!XMLFile.is_open()) {
-            spdlog::critical("Could not open file {}", filename);
+            SPDLOG_CRITICAL("Could not open file {}", filename);
             std::exit(EXIT_FAILURE);
         }
 
         // Validating and parsing the input into tree object.
-        spdlog::trace("Parsing XML file...");
+        SPDLOG_TRACE("Parsing XML file...");
         try {
             sim = simulation(filename);
         } catch (const xml_schema::exception& e) {
-            spdlog::critical("XML validation error: {}", e.what());
+            SPDLOG_CRITICAL("XML validation error: {}", e.what());
             std::exit(EXIT_FAILURE);
         } catch (const std::exception& e) {
-            spdlog::critical("Error: {}", e.what());
+            SPDLOG_CRITICAL("Error: {}", e.what());
             std::exit(EXIT_FAILURE);
         }
 
-        spdlog::trace("...Finished parsing XML input {}", filename);
+        SPDLOG_TRACE("...Finished parsing XML input {}", filename);
     }
 
     XMLTreeReader::~XMLTreeReader() = default;
 
     void XMLTreeReader::readArguments(Environment& environment) {
-        spdlog::debug("Setting up simulation environment");
+        SPDLOG_DEBUG("Setting up simulation environment");
 
-        spdlog::trace("Loading output parameters...");
+        SPDLOG_TRACE("Loading output parameters...");
         std::string output_file_name = sim->output().name();
         environment.set_output_file_name(output_file_name);
 
@@ -44,7 +44,7 @@ namespace inputReader {
         const int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
 
-        spdlog::trace("Loading environment arguments...");
+        SPDLOG_TRACE("Loading environment arguments...");
         const param_t::calc_type::value calc = sim->param().calc();
         environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));
 
@@ -82,7 +82,7 @@ namespace inputReader {
         // TODO this is probably unnecessary
         /*
         if (sim->checkpoint().present()) {
-            spdlog::trace("Checkpointing...");
+            SPDLOG_TRACE("Checkpointing...");
             environment.set_checkpoint_file_name(sim->checkpoint().get().);
         }
         */
@@ -107,17 +107,17 @@ namespace inputReader {
 
         environment.set_gravity(sim->param().g_grav());
 
-        spdlog::trace("...Finished setting up simulation environment");
+        SPDLOG_TRACE("...Finished setting up simulation environment");
     }
 
     void XMLTreeReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
-        spdlog::debug("Generating particles");
+        SPDLOG_DEBUG("Generating particles");
 
         const int num_dimensions = sim->param().dimensions();
 
         size_t t = sim->particle().size();
         if (t > INT_MAX) {
-            spdlog::critical("Particle size too large");
+            SPDLOG_CRITICAL("Particle size too large");
             std::exit(EXIT_FAILURE);
         }
         int num_particles = static_cast<int>(sim->particle().size());
@@ -138,7 +138,7 @@ namespace inputReader {
         std::array<double, 3> disc_velocity = { 0.0, 0.0, 0.0 };
 
         // Initialize all the single particles into the container.
-        spdlog::trace("Single particles...");
+        SPDLOG_TRACE("Single particles...");
         container.resize(num_particles);
 
         const auto& particles = sim->particle();
@@ -156,7 +156,7 @@ namespace inputReader {
         ParticleGenerator generator;
 
         // Initialize all the cuboids into the container.
-        spdlog::trace("Cuboids...");
+        SPDLOG_TRACE("Cuboids...");
         for (const auto& cuboid : cuboids) {
             x = { cuboid.position().vx(), cuboid.position().vy(), cuboid.position().vz() };
             v = { cuboid.velocity().vx(), cuboid.velocity().vy(), cuboid.velocity().vz() };
@@ -177,7 +177,7 @@ namespace inputReader {
         }
 
         // Initialize all the discs into the container.
-        spdlog::trace("Discs...");
+        SPDLOG_TRACE("Discs...");
         const auto& discs = sim->disc();
         for (const auto& disc : discs) {
             disc_center = { disc.center().vx(), disc.center().vy(), disc.center().vz() };
@@ -197,14 +197,14 @@ namespace inputReader {
         }
 
         if (sim->checkpoint().present()) {
-            spdlog::trace("Checkpoint...");
+            SPDLOG_TRACE("Checkpoint...");
             CheckpointReader checkpoint_reader;
             checkpoint_reader.readSimulation(container, sim->checkpoint().get().data());
         }
 
         container.build_type_table(ptypes);
 
-        spdlog::trace("...Finished generating particles");
+        SPDLOG_TRACE("...Finished generating particles");
     }
 
     int XMLTreeReader::num_particles_added(double h, double r) {

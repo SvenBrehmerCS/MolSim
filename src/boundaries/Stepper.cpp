@@ -37,7 +37,7 @@ Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const std::array<double,
             inf = false;
             break;
         default:
-            spdlog::critical("Unsupported boundary type.");
+            SPDLOG_CRITICAL("Unsupported boundary type.");
             std::exit(EXIT_FAILURE);
             break;
         }

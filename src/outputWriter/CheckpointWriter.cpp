@@ -15,13 +15,13 @@ namespace outputWriter {
         std::ofstream outputFile(filename, std::ios::binary);
 
         if (!outputFile.is_open()) {
-            spdlog::error("Error opening output file {}", filename);
+            SPDLOG_ERROR("Error opening output file {}", filename);
             std::exit(EXIT_FAILURE);
         }
         size_t numParticles = container.size();
         outputFile.write((char*)&numParticles, sizeof(size_t));
         // outputFile << container.size();
-        spdlog::info("container size: {}", container.size());
+        SPDLOG_INFO("container size: {}", container.size());
 
         // TODO evtl. noch dimension einlesen
 

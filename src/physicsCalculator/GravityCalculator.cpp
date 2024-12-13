@@ -13,7 +13,7 @@ namespace physicsCalculator {
 
     GravityCalculator::GravityCalculator(
         const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const BoundaryType type) {
-        spdlog::warn("Called a GravityCalculator constructor which should only be used for testing.");
+        SPDLOG_WARN("Called a GravityCalculator constructor which should only be used for testing.");
         env = new_env;
 
         switch (type) {
@@ -22,7 +22,7 @@ namespace physicsCalculator {
             break;
 
         default:
-            spdlog::critical("Tried to create a simulation with an illegal particle type: {}", static_cast<int>(type));
+            SPDLOG_CRITICAL("Tried to create a simulation with an illegal particle type: {}", static_cast<int>(type));
             break;
         }
 

@@ -13,11 +13,11 @@
  * Print an error message and exit immediately with EXIT_FAILURE.
  */
 static void panic_exit(const char* message) {
-    spdlog::critical(message);
+    SPDLOG_CRITICAL(message);
     std::exit(EXIT_FAILURE);
 }
 
-Environment::Environment() { spdlog::trace("Initialized with a standard environment."); }
+Environment::Environment() { SPDLOG_TRACE("Initialized with a standard environment."); }
 
 Environment::Environment(const int argc, const char* argv[]) {
     // Test if there is a request for a help message within all passed arguments
@@ -393,17 +393,17 @@ Environment::Environment(const int argc, const char* argv[]) {
         panic_exit("Unsupported input file type.");
     }
 
-    spdlog::debug("The program was executed using the command line arguments.");
-    spdlog::debug("    t_end = {} ({})", t_end, btos(default_end));
-    spdlog::debug("    delta_t = {} ({})", delta_t, btos(default_delta));
-    spdlog::debug("    sigma = {} ({})", sigma, btos(default_sigma));
-    spdlog::debug("    epsilon = {} ({})", epsilon, btos(default_epsilon));
-    spdlog::debug("    print_step = {} ({})", print_step, btos(default_print_step));
-    spdlog::debug("    input_file = {}", input_file);
-    spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
-    spdlog::debug("    format = {} ({})", static_cast<int>(output_format), btos(default_file_format));
-    spdlog::debug("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
-    spdlog::debug("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
+    SPDLOG_DEBUG("The program was executed using the command line arguments.");
+    SPDLOG_DEBUG("    t_end = {} ({})", t_end, btos(default_end));
+    SPDLOG_DEBUG("    delta_t = {} ({})", delta_t, btos(default_delta));
+    SPDLOG_DEBUG("    sigma = {} ({})", sigma, btos(default_sigma));
+    SPDLOG_DEBUG("    epsilon = {} ({})", epsilon, btos(default_epsilon));
+    SPDLOG_DEBUG("    print_step = {} ({})", print_step, btos(default_print_step));
+    SPDLOG_DEBUG("    input_file = {}", input_file);
+    SPDLOG_DEBUG("    output_file = {} ({})", output_file, btos(default_out_name));
+    SPDLOG_DEBUG("    format = {} ({})", static_cast<int>(output_format), btos(default_file_format));
+    SPDLOG_DEBUG("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
+    SPDLOG_DEBUG("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
 }
 
 Environment::Environment(const Environment& env) {

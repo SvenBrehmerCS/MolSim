@@ -14,7 +14,7 @@ namespace inputReader {
         std::ifstream inputFile(filename, std::ios::binary);
 
         if (!inputFile.is_open()) {
-            spdlog::error("Could not open file {}", filename);
+            SPDLOG_ERROR("Could not open file {}", filename);
             std::exit(EXIT_FAILURE);
         }
         size_t num_particles = 0;
@@ -22,7 +22,7 @@ namespace inputReader {
         inputFile.read(reinterpret_cast<char*>(&num_particles), sizeof(size_t));
         size_t new_particles = container.size();
         container.resize(new_particles + num_particles);
-        spdlog::debug("Reading num_particles from CheckPoint {} and read {} particles from the xml ", num_particles, new_particles);
+        SPDLOG_DEBUG("Reading num_particles from CheckPoint {} and read {} particles from the xml ", num_particles, new_particles);
 
         double x, y, z, vx, vy, vz, fx, fy, fz;
         int type;

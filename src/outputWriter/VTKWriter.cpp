@@ -64,9 +64,9 @@ namespace outputWriter {
 
     void VTKWriter::plotParticle(const Particle& p) {
         if (vtkFile->UnstructuredGrid().present()) {
-            spdlog::debug("UnstructuredGrid is present");
+            SPDLOG_DEBUG("UnstructuredGrid is present");
         } else {
-            spdlog::error("ERROR: No UnstructuredGrid present");
+            SPDLOG_ERROR("ERROR: No UnstructuredGrid present");
         }
 
         PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
