@@ -34,17 +34,17 @@ void CellList::create_list(const std::vector<Particle>& particles) {
         size_t z = std::floor(particles[i].getX()[2] / cell_size[2]) + 1;
 
         if (x < 0 || x >= n_x) [[unlikely]] {
-            spdlog::critical("Tried to add a particle out of bounds.");
+            SPDLOG_CRITICAL("Tried to add a particle out of bounds.");
             std::exit(EXIT_FAILURE);
         }
 
         if (y < 0 || y >= n_y) [[unlikely]] {
-            spdlog::critical("Tried to add a particle out of bounds.");
+            SPDLOG_CRITICAL("Tried to add a particle out of bounds.");
             std::exit(EXIT_FAILURE);
         }
 
         if (z < 0 || z >= n_z) [[unlikely]] {
-            spdlog::critical("Tried to add a particle out of bounds.");
+            SPDLOG_CRITICAL("Tried to add a particle out of bounds.");
             std::exit(EXIT_FAILURE);
         }
 

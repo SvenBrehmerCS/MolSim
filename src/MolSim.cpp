@@ -27,7 +27,7 @@ int main(const int argc, const char* argv[]) {
     // Initialize the simulation environment.
     Environment env { argc, argv };
 
-    spdlog::info("Started {}", argv[0]);
+    SPDLOG_INFO("Started {}", argv[0]);
 
     // Initialize the file reader.
     std::unique_ptr<inputReader::Reader> reader { nullptr };
@@ -42,7 +42,7 @@ int main(const int argc, const char* argv[]) {
         // REMOVE reader.reset(new inputReader::XMLTreeReader(env.get_input_file_name()));
         break;
     default:
-        spdlog::critical("Error: Illegal input file format specifier.");
+        SPDLOG_CRITICAL("Error: Illegal input file format specifier.");
         std::exit(EXIT_FAILURE);
         break;
     }
@@ -72,7 +72,7 @@ int main(const int argc, const char* argv[]) {
         calculator.reset(new physicsCalculator::LJCalculator(env, cont));
         break;
     default:
-        spdlog::critical("Error: Illegal force model specifier.");
+        SPDLOG_CRITICAL("Error: Illegal force model specifier.");
         std::exit(EXIT_FAILURE);
         break;
     }
@@ -94,7 +94,7 @@ int main(const int argc, const char* argv[]) {
         writer.reset(new outputWriter::VTKWriter());
         break;
     default:
-        spdlog::critical("Error: Illegal file format specifier.");
+        SPDLOG_CRITICAL("Error: Illegal file format specifier.");
         std::exit(EXIT_FAILURE);
         break;
     }
@@ -131,7 +131,7 @@ int main(const int argc, const char* argv[]) {
         // Store the particles to an output file
         if (iteration % env.get_print_step() == 0) {
             writer->plotParticles(*cont, out_name, iteration);
-            spdlog::info("Iteration {} finished.", iteration);
+            SPDLOG_INFO("Iteration {} finished.", iteration);
         }
     }
 
@@ -144,13 +144,13 @@ int main(const int argc, const char* argv[]) {
 
     // TODO hier Simulation checkpoint setzen wenn outputformat = checkpoint gesetzt
     if (env.get_output_file_format() == CHECKPOINT) {
-        spdlog::info("Checkpoint written.");
+        SPDLOG_INFO("Checkpoint written.");
         outputWriter::CheckpointWriter checkpoint_writer;
         const char* filename = env.get_output_file_name();
         checkpoint_writer.plot(*cont, filename);
     }
 
-    spdlog::info("Output written. Terminating...");
+    SPDLOG_INFO("Output written. Terminating...");
 
     return 0;
 }

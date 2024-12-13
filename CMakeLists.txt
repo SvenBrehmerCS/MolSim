@@ -113,5 +113,9 @@ target_include_directories(MolSim
 )
 target_link_libraries(MolSim PRIVATE spdlog::spdlog)
 
+# let ccmake and cmake-gui offer the default log levels
+set(LOGLEVEL "INFO" CACHE STRING "Set the log level. This must either be OFF, CRITICAL, ERROR, WARN, INFO, DEBUG or TRACE.") 
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOGLEVEL})
+
 # Show the compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

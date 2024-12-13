@@ -30,7 +30,7 @@ namespace physicsCalculator {
             p.setF(cont->get_type_descriptor(p.getType()).get_G());
         }
 
-        spdlog::debug("Updated the old force.");
+        SPDLOG_DEBUG("Updated the old force.");
     }
 
     void Calculator::calculateX() {
@@ -38,7 +38,7 @@ namespace physicsCalculator {
             p.setX(p.getX() + env.get_delta_t() * p.getV() + cont->get_type_descriptor(p.getType()).get_dt_dt_m() * p.getF());
         }
 
-        spdlog::debug("Updated the positions.");
+        SPDLOG_DEBUG("Updated the positions.");
     }
 
     void Calculator::calculateF() {
@@ -51,7 +51,7 @@ namespace physicsCalculator {
             j.setF(force * (i.getX() - j.getX()) + j.getF());
         });
 
-        spdlog::debug("Calculated the new force.");
+        SPDLOG_DEBUG("Calculated the new force.");
     }
 
     void Calculator::calculateV() {
@@ -59,6 +59,6 @@ namespace physicsCalculator {
             p.setV(p.getV() + cont->get_type_descriptor(p.getType()).get_dt_m() * (p.getOldF() + p.getF()));
         }
 
-        spdlog::debug("Updated the velocities.");
+        SPDLOG_DEBUG("Updated the velocities.");
     }
 }

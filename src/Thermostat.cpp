@@ -21,7 +21,7 @@ void Thermostat::regulate_Temperature() { // TODO Overflow checks?
     if (std::abs(diff) <= max_change) {
         beta = std::sqrt(T_target / T_curr);
         if (isnan(beta)) {
-            spdlog::critical("Temperature scaling factor should never be NaN.");
+            SPDLOG_CRITICAL("Temperature scaling factor should never be NaN.");
             std::exit(EXIT_FAILURE);
         }
     } else if (diff < 0.0) {

@@ -13,7 +13,7 @@ namespace physicsCalculator {
     }
 
     LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const bool is_infinite) {
-        spdlog::warn("Called a LJCalculator constructor which should only be used for testing.");
+        SPDLOG_WARN("Called a LJCalculator constructor which should only be used for testing.");
         env = new_env;
 
         if (is_infinite) {
