@@ -23,9 +23,8 @@ public:
     /** Particle Generator destructor**/
     ~ParticleGenerator();
 
-
     /**
-     * generates the cuboid from the given parameters
+     * Generates the cuboid from the given parameters.
      *
      * @param container the particle container where the particles from the cuboid are stored inside
      * @param num_particles the offset inside the container where the cuboid starts at
@@ -40,5 +39,7 @@ public:
     void generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> y, double m,
         std::array<int, 3> N, double h, double b_m, int num_dimensions);
 
-    int generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity, double mass, double radius, double h, double b_m, int dim);
+    // TODO: Doc
+    int generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity, double mass,
+        double radius, double h, double b_m, int dim);
 };

@@ -37,10 +37,9 @@ namespace physicsCalculator {
 
     double LJCalculator::calculateFDist(const double dist, const int t1, const int t2) const {
         // Calculate the powers of (sigma / distance)
-        const double term = (env.get_sigma() / dist);
-        const double term_to_2 = term * term;
+        const double term_to_2 = (cont->get_type_pair_descriptor(t1, t2).get_sigma_squared() / (dist * dist));
         const double term_to_6 = term_to_2 * term_to_2 * term_to_2;
 
-        return (24.0 * env.get_epsilon() / (dist * dist)) * (term_to_6 - 2.0 * term_to_6 * term_to_6);
+        return (cont->get_type_pair_descriptor(t1, t2).get_scaled_epsilon() / (dist * dist)) * std::fma(-2.0 * term_to_6, term_to_6, term_to_6);
     }
 } // namespace physicsCalculator

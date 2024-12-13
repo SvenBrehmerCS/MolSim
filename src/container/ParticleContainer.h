@@ -8,6 +8,8 @@
 
 #include "Particle.h"
 #include "container/CellList.h"
+#include "container/TypeDesc.h"
+#include "container/TypePairDesc.h"
 
 #include <functional>
 #include <iterator>
@@ -30,12 +32,23 @@ protected:
      */
     std::array<double, 3> domain = { 0.0, 0.0, 0.0 };
 
+    /**
+     * Store the descriptors for the different types.
+     */
+    std::vector<TypeDesc> types;
+
+    /**
+     * Store the descriptors for the different type pairs.
+     */
+    std::vector<TypePairDesc> type_pairs;
+
 public:
     /**
      * Create a particle container with an empty particle vector.
      */
     ParticleContainer();
 
+    // TODO: Pass the type pairs to the constructor
     /**
      * Create a particle container from a vector of particles.
      *
@@ -143,4 +156,23 @@ public:
      * @return The corner vector.
      */
     const std::array<double, 3>& get_corner_vector() const;
+
+    /**
+     * Get the descriptor of a particle pair.
+     *
+     * @param t1 The first type.
+     * @param t1 The second type.
+     *
+     * @return The pair descriptor.
+     */
+    inline const TypePairDesc& get_type_pair_descriptor(const int t1, const int t2) const { return type_pairs[t1 + types.size() * t2]; }
+
+    /**
+     * Get the descriptor of a particle.
+     *
+     * @param t The particle type.
+     *
+     * @return The particle type descriptor.
+     */
+    inline const TypeDesc& get_type_descriptor(const int t) const { return types[t]; }
 };
