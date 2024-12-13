@@ -20,6 +20,13 @@
 typedef void(particle_pair_it)(Particle&, Particle&);
 
 /**
+ * @typedef particle_it
+ *
+ * The particle iterator type is a method taking a particle reference.
+ */
+typedef void(particle_it)(Particle&);
+
+/**
  * @class CellList
  *
  * @brief Define the cell list layout and its utility functions.
@@ -87,12 +94,140 @@ public:
     void create_list(const std::vector<Particle>& particles);
 
     /**
-     * Loop through the particle pairs within the domain and halo.
+     * Loop through the particle pairs within the domain.
      *
      * @param iterator The particle iteration lambda.
      * @param particles The particles vector.
      */
-    void loop_cell_pairs(std::function<particle_pair_it> iterator, std::vector<Particle>& particles);
+    void loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the particles within the halo.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_halo(const std::function<particle_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the particles within the boundary cells.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_boundary(const std::function<particle_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the inner particles (including the boundary particles).
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_inner(const std::function<particle_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the xy boundary plain pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_xy_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the xz boundary plain pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_xz_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the yz boundary plain pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_yz_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the near x-axis pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_x_near(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the far x-axis pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_x_far(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the near y-axis pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_y_near(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the far y-axis pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_y_far(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the near z-axis pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_z_near(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the far z-axis pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_z_far(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the origin corner pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_origin_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the x corner pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_x_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Loop through the y corner pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_y_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+    
+    /**
+     * Loop through the xy corner pairs.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_xy_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
     /**
      * Get the cutoff distance.

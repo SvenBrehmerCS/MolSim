@@ -455,6 +455,8 @@ double Environment::get_t_end() const { return t_end; }
 
 double Environment::get_r_cutoff() const { return r_cutoff; }
 
+double Environment::get_gravity() const { return gravity; }
+
 std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
 
 int Environment::get_dimensions() const { return dimensions; }
@@ -505,3 +507,5 @@ void Environment::set_temp_target(const double temp_target) { this->temp_target 
 void Environment::set_temp_frequency(const int temp_frequency) { this->temp_frequency = temp_frequency; }
 
 void Environment::set_max_delta_temp(double max_delta_temp) { this->max_delta_temp = max_delta_temp; }
+
+void Environment::set_gravity(const double g) { gravity = g; }

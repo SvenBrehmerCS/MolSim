@@ -226,6 +226,11 @@ private:
      */
     double max_delta_temp = std::numeric_limits<double>::infinity();
 
+    /**
+     * Store the gravity pulling the atoms down.
+     */
+    double gravity = 0.0;
+
 public:
     /**
      * Create a standard environment with all arguments being initialized to their default. The input file name will be null.
@@ -337,6 +342,14 @@ public:
      * @return The radius.
      */
     double get_r_cutoff() const;
+
+
+    /**
+     * Get the gravity pulling the atoms down.
+     *
+     * @return The gravity.
+     */
+    double get_gravity() const;
 
     /**
      * Get the domain size of the simulation in form of a vector representing the size in {x, y, z} direction.
@@ -492,4 +505,11 @@ public:
      * @param max_delta_temp The maximal absolute delta temperature.
      */
     void set_max_delta_temp(double max_delta_temp);
+
+    /**
+     * Set the gravity pulling the atoms down.
+     *
+     * @param g The gravity pulling the atoms down.
+     */
+    void set_gravity(const double g);
 };

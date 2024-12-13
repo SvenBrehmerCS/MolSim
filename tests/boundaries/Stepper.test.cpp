@@ -56,7 +56,7 @@ TEST(GravityStepper, Step1) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform a single step
     ASSERT_NO_THROW(stepper.step(calc));
@@ -165,7 +165,7 @@ TEST(LJStepper, Step1) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform a single step
     ASSERT_NO_THROW(stepper.step(calc));
@@ -217,7 +217,7 @@ TEST(Calculator, StepNo) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform a single step
     ASSERT_NO_THROW(stepper.step(calc));
@@ -270,7 +270,7 @@ TEST(GravityStepper, Analytical1) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
@@ -326,7 +326,7 @@ TEST(GravityStepper, Analytical2) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
@@ -402,7 +402,7 @@ TEST(GravityStepper, Analytical3) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 10 time units
     for (size_t i = 0; i <= 100000; i++) {
@@ -487,7 +487,7 @@ TEST(GravityStepper, Analytical4) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
@@ -564,7 +564,7 @@ TEST(LJStepper, Analytical1) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
@@ -622,7 +622,7 @@ TEST(LJStepper, Analytical2) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
@@ -694,7 +694,7 @@ TEST(LJStepper, Analytical3) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
@@ -779,7 +779,7 @@ TEST(LJStepper, Analytical4) {
         new NoBoundary(0, 0),
     };
 
-    Stepper stepper(bc, true);
+    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
 
     // Perform the steps for 20 time units
     for (size_t i = 0; i <= 200000; i++) {
@@ -871,7 +871,7 @@ TEST(Stepper, MultipleBoundaries) {
         new NoBoundary(10.0, 2),
     };
 
-    Stepper stepper(bc, false);
+    Stepper stepper(bc, { HARD, HARD, OUTFLOW, HARD, HARD, OUTFLOW }, false, { 10.0, 10.0, 10.0 });
 
     // Perform the steps for 20000 time units
     for (size_t i = 0; i <= 200000; i++) {
@@ -949,10 +949,10 @@ TEST(Stepper, MultipleReflecting) {
     };
 
     calc.get_container().resize(1000);
-    gen.generateCuboid(calc.get_container(), 0, { 3.0, 3.0, 3.0 }, { 0.0, 0.0, 0.0 }, 1.0, { 10, 10, 10 }, 1.5, 0.1, 3);
+    gen.generateCuboid(calc.get_container(), 0, { 3.0, 3.0, 3.0 }, { 0.0, 0.0, 0.0 }, 1.0, { 10, 10, 10 }, 1.5, 1.0, 3);
     calc.get_container().update_positions();
 
-    Stepper stepper(bc, false);
+    Stepper stepper(bc, { HALO, HALO, HARD, HALO, HALO, HARD }, false, { 21.0, 21.0, 21.0 });
 
     // Perform the steps for 1 time units
     for (size_t i = 0; i <= 1000; i++) {
@@ -978,3 +978,5 @@ TEST(Stepper, MultipleReflecting) {
         delete bp;
     }
 }
+
+// TODO: further analytical stepper tests

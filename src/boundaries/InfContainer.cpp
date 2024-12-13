@@ -14,7 +14,7 @@ InfContainer::InfContainer(const std::vector<Particle>& new_particles, const std
 
 InfContainer::~InfContainer() = default;
 
-void InfContainer::iterate_pairs(std::function<particle_pair_it> iterator) {
+void InfContainer::iterate_pairs(const std::function<particle_pair_it>& iterator) {
     for (auto i = begin(); i < end(); i++) {
         for (auto j = i + 1; j < end(); j++) {
             iterator(*i, *j);

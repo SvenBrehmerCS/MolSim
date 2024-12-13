@@ -150,7 +150,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper { boundaries, isinf };
+    Stepper stepper { boundaries, bound_t, isinf, calculator->get_env().get_domain_size() };
     // Initialize the thermostat.
     Thermostat thermostat { env.get_dimensions(), env.get_temp_target(), env.get_max_delta_temp(), cont };
 

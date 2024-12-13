@@ -42,7 +42,7 @@ public:
      *
      * @param iterator The iterator lambda that should loop over all the pairs.
      */
-    void iterate_pairs(std::function<particle_pair_it> iterator) { (void)iterator; }
+    void iterate_pairs(const std::function<particle_pair_it>& iterator) { (void)iterator; }
 
     /**
      * Update the particle positions in their cells.
@@ -240,6 +240,59 @@ TEST(ParticleContainer, RemoveOutsideDomain) {
     TestContainer container(particles, { 10.0, 20.0, 10.0 });
 
     std::list<int> expected = { 1, 6 };
+
+    container.remove_particles_out_of_domain();
+
+    for (Particle& p : container) {
+        EXPECT_TRUE(std::find(expected.begin(), expected.end(), p.getType()) != expected.end())
+            << "Iterated over an illegal particle: (" << p.getType() << ")";
+
+        expected.remove(p.getType());
+    }
+
+    EXPECT_TRUE(expected.size() == 0) << "The pair size should be 0 but it was " << expected.size();
+}
+
+// Test if remove outside domain works correctly for a particle container, if all particles get removed.
+TEST(ParticleContainer, RemoveOutsideDomainAll) {
+    const std::vector<Particle> particles = {
+        Particle({ 1.0, 3.0, -1.0 }, {}, 2.0, 1),
+        Particle({ -2.0, 7.0, 3.0 }, {}, 2.0, 2),
+        Particle({ 6.0, 9.0, 3.0 }, {}, 2.0, 3),
+        Particle({ 7.0, 7.0, -1.0 }, {}, 2.0, 4),
+        Particle({ 8.0, 13.0, 1.0 }, {}, 2.0, 5),
+        Particle({ 6.0, 11.0, -5.0 }, {}, 2.0, 6),
+        Particle({ 0.0, 2.0, -1.0 }, {}, 2.0, 6),
+    };
+
+    TestContainer container(particles, { 7.0, 5.0, 9.0 });
+
+    std::list<int> expected = {};
+
+    container.remove_particles_out_of_domain();
+
+    for (Particle& p : container) {
+        EXPECT_TRUE(std::find(expected.begin(), expected.end(), p.getType()) != expected.end())
+            << "Iterated over an illegal particle: (" << p.getType() << ")";
+
+        expected.remove(p.getType());
+    }
+
+    EXPECT_TRUE(expected.size() == 0) << "The pair size should be 0 but it was " << expected.size();
+}
+
+// Test if remove outside domain works correctly for a particle container, if no particles get removed.
+TEST(ParticleContainer, RemoveOutsideDomainNo) {
+    const std::vector<Particle> particles = {
+        Particle({ 1.0, 2.0, 1.0 }, { 1.0, -2.0, 1.0 }, 1.0, 1),
+        Particle({ 3.0, 1.0, 2.0 }, { -2.0, 1.0, 1.0 }, 2.0, 2),
+        Particle({ 5.0, 2.0, 4.0 }, { 1.0, 2.0, -3.0 }, 1.0, 3),
+        Particle({ 0.0, 0.0, 0.0 }, { 3.0, -3.0, 2.0 }, 1.0, 4),
+    };
+
+    TestContainer container(particles, { 6.0, 7.0, 5.0 });
+
+    std::list<int> expected = { 1, 2, 3, 4 };
 
     container.remove_particles_out_of_domain();
 
