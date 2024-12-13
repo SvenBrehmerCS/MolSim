@@ -1943,7 +1943,7 @@ public:
      * @name T_init
      *
      * @brief Accessor and modifier functions for the %T_init
-     * required element.
+     * optional element.
      *
      * Initial temperature of the simulation.
      */
@@ -1955,23 +1955,29 @@ public:
     typedef ::T_init T_init_type;
 
     /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<T_init_type> T_init_optional;
+
+    /**
      * @brief Element traits type.
      */
     typedef ::xsd::cxx::tree::traits<T_init_type, char> T_init_traits;
 
     /**
-     * @brief Return a read-only (constant) reference to the element.
+     * @brief Return a read-only (constant) reference to the element
+     * container.
      *
-     * @return A constant reference to the element.
+     * @return A constant reference to the optional container.
      */
-    const T_init_type& T_init() const;
+    const T_init_optional& T_init() const;
 
     /**
-     * @brief Return a read-write reference to the element.
+     * @brief Return a read-write reference to the element container.
      *
-     * @return A reference to the element.
+     * @return A reference to the optional container.
      */
-    T_init_type& T_init();
+    T_init_optional& T_init();
 
     /**
      * @brief Set the element value.
@@ -1984,21 +1990,25 @@ public:
     void T_init(const T_init_type& x);
 
     /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void T_init(const T_init_optional& x);
+
+    /**
      * @brief Set the element value without copying.
      *
      * @param p A new value to use.
      *
-     * This function will try to use the passed value directly
-     * instead of making a copy.
+     * This function will try to use the passed value directly instead
+     * of making a copy.
      */
     void T_init(::std::unique_ptr<T_init_type> p);
-
-    /**
-     * @brief Return the default value for the element.
-     *
-     * @return The element's default value.
-     */
-    static T_init_type T_init_default_value();
 
     //@}
 
@@ -2222,7 +2232,7 @@ public:
      * initializers for required elements and attributes.
      */
     param_t(const calc_type&, const boundaries_type&, const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&,
-        const dimensions_type&, const r_cutoff_type&, const domain_type&, const T_init_type&, const T_frequency_type&);
+        const dimensions_type&, const r_cutoff_type&, const domain_type&, const T_frequency_type&);
 
     /**
      * @brief Create an instance from the ultimate base and
@@ -2233,7 +2243,7 @@ public:
      * instead of making copies.
      */
     param_t(const calc_type&, ::std::unique_ptr<boundaries_type>, const epsilon_type&, const sigma_type&, const delta_t_type&, const t_end_type&,
-        const dimensions_type&, const r_cutoff_type&, ::std::unique_ptr<domain_type>, const T_init_type&, const T_frequency_type&);
+        const dimensions_type&, const r_cutoff_type&, ::std::unique_ptr<domain_type>, const T_frequency_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -2305,7 +2315,7 @@ protected:
     ::xsd::cxx::tree::one<dimensions_type> dimensions_;
     ::xsd::cxx::tree::one<r_cutoff_type> r_cutoff_;
     ::xsd::cxx::tree::one<domain_type> domain_;
-    ::xsd::cxx::tree::one<T_init_type> T_init_;
+    T_init_optional T_init_;
     T_target_optional T_target_;
     ::xsd::cxx::tree::one<T_frequency_type> T_frequency_;
     max_delta_T_optional max_delta_T_;

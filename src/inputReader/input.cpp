@@ -211,15 +211,15 @@ void param_t::domain(const domain_type& x) { this->domain_.set(x); }
 
 void param_t::domain(::std::unique_ptr<domain_type> x) { this->domain_.set(std::move(x)); }
 
-const param_t::T_init_type& param_t::T_init() const { return this->T_init_.get(); }
+const param_t::T_init_optional& param_t::T_init() const { return this->T_init_; }
 
-param_t::T_init_type& param_t::T_init() { return this->T_init_.get(); }
+param_t::T_init_optional& param_t::T_init() { return this->T_init_; }
 
 void param_t::T_init(const T_init_type& x) { this->T_init_.set(x); }
 
-void param_t::T_init(::std::unique_ptr<T_init_type> x) { this->T_init_.set(std::move(x)); }
+void param_t::T_init(const T_init_optional& x) { this->T_init_ = x; }
 
-param_t::T_init_type param_t::T_init_default_value() { return T_init_type(40.0); }
+void param_t::T_init(::std::unique_ptr<T_init_type> x) { this->T_init_.set(std::move(x)); }
 
 const param_t::T_target_optional& param_t::T_target() const { return this->T_target_; }
 
@@ -936,7 +936,7 @@ const param_t::calc_type param_t::calc_default_value_("LJ_FULL");
 
 param_t::param_t(const calc_type& calc, const boundaries_type& boundaries, const epsilon_type& epsilon, const sigma_type& sigma,
     const delta_t_type& delta_t, const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, const domain_type& domain,
-    const T_init_type& T_init, const T_frequency_type& T_frequency)
+    const T_frequency_type& T_frequency)
     : ::xml_schema::type()
     , calc_(calc, this)
     , boundaries_(boundaries, this)
@@ -947,14 +947,14 @@ param_t::param_t(const calc_type& calc, const boundaries_type& boundaries, const
     , dimensions_(dimensions, this)
     , r_cutoff_(r_cutoff, this)
     , domain_(domain, this)
-    , T_init_(T_init, this)
+    , T_init_(this)
     , T_target_(this)
     , T_frequency_(T_frequency, this)
     , max_delta_T_(this) { }
 
 param_t::param_t(const calc_type& calc, ::std::unique_ptr<boundaries_type> boundaries, const epsilon_type& epsilon, const sigma_type& sigma,
     const delta_t_type& delta_t, const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff,
-    ::std::unique_ptr<domain_type> domain, const T_init_type& T_init, const T_frequency_type& T_frequency)
+    ::std::unique_ptr<domain_type> domain, const T_frequency_type& T_frequency)
     : ::xml_schema::type()
     , calc_(calc, this)
     , boundaries_(std::move(boundaries), this)
@@ -965,7 +965,7 @@ param_t::param_t(const calc_type& calc, ::std::unique_ptr<boundaries_type> bound
     , dimensions_(dimensions, this)
     , r_cutoff_(r_cutoff, this)
     , domain_(std::move(domain), this)
-    , T_init_(T_init, this)
+    , T_init_(this)
     , T_target_(this)
     , T_frequency_(T_frequency, this)
     , max_delta_T_(this) { }
@@ -1116,7 +1116,7 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
         if (n.name() == "T_init" && n.namespace_().empty()) {
             ::std::unique_ptr<T_init_type> r(T_init_traits::create(i, f, this));
 
-            if (!T_init_.present()) {
+            if (!this->T_init_) {
                 this->T_init_.set(::std::move(r));
                 continue;
             }
@@ -1192,10 +1192,6 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
 
     if (!domain_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("domain", "");
-    }
-
-    if (!T_init_.present()) {
-        throw ::xsd::cxx::tree::expected_element<char>("T_init", "");
     }
 
     if (!T_frequency_.present()) {
