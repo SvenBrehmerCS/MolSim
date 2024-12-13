@@ -11,7 +11,7 @@
 #include <iostream>
 namespace outputWriter {
     ;
-    void CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename) {
+    void CheckpointWriter::plot(ParticleContainer& container, const char* filename) {
         std::ofstream outputFile(filename, std::ios::binary);
 
         if (!outputFile.is_open()) {

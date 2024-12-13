@@ -91,8 +91,7 @@ int main(const int argc, const char* argv[]) {
         writer.reset(new outputWriter::XYZWriter());
         break;
     case CHECKPOINT:
-        // TODO es wird ein Checkpoint am Ende des laufes geschrieben, zwischen drin nicht
-        writer.reset(new outputWriter::CheckpointWriter());
+        writer.reset(new outputWriter::VTKWriter());
         break;
     default:
         spdlog::critical("Error: Illegal file format specifier.");
@@ -107,8 +106,6 @@ int main(const int argc, const char* argv[]) {
 
     // Initialize the simulation environment.
     double current_time = 0.0;
-    // TODO iteration number nach checkpoint evtl setzen.
-    // TODO size_t?
     int iteration = 0;
 
     // Write step 0
@@ -150,7 +147,7 @@ int main(const int argc, const char* argv[]) {
         spdlog::info("Checkpoint written.");
         outputWriter::CheckpointWriter checkpoint_writer;
         const char* filename = env.get_output_file_name();
-        checkpoint_writer.plot(*cont, env, filename);
+        checkpoint_writer.plot(*cont, filename);
     }
 
     spdlog::info("Output written. Terminating...");

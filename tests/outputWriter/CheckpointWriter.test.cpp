@@ -12,6 +12,6 @@ TEST(CheckpointWriterTest, writeCheckpoint) {
     env.set_delta_t(0.01);
     env.set_t_end(15);
 
-    writer.plot(container, env, "test");
+    writer.plot(container, "test");
     env.set_delta_t(10);
 }
