@@ -37,8 +37,8 @@ namespace physicsCalculator {
          * @param particles The vector storing the particles that should be used throughout the simulation.
          * @param init_forces Define wether the forces should be initialized.
          */
-        GravityCalculator(
-            const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const BoundaryType type = INF_CONT);
+        GravityCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
+            const bool init_forces = true, const BoundaryType type = INF_CONT);
 
         /**
          * Define a constructor for a gravity calculator.
@@ -47,7 +47,7 @@ namespace physicsCalculator {
 
         /**
          * Get the force absolute and sign direction between two particles.
-         * 
+         *
          * @param p1 The first particle.
          * @param p2 The second particle.
          * @param dist THe distance between the particles.

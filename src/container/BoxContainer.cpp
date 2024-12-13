@@ -8,8 +8,9 @@ BoxContainer::BoxContainer(const double rc, const std::array<double, 3>& new_dom
     cells.create_list(particles);
 };
 
-BoxContainer::BoxContainer(const std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain)
-    : ParticleContainer(new_particles, new_domain) {
+BoxContainer::BoxContainer(
+    const std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc)
+    : ParticleContainer(new_particles, new_domain, new_desc) {
     cells = CellList(rc, domain);
     cells.create_list(particles);
 };

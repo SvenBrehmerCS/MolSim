@@ -11,14 +11,14 @@ namespace physicsCalculator {
         calculateF();
     }
 
-    GravityCalculator::GravityCalculator(
-        const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const BoundaryType type) {
+    GravityCalculator::GravityCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
+        const bool init_forces, const BoundaryType type) {
         SPDLOG_WARN("Called a GravityCalculator constructor which should only be used for testing.");
         env = new_env;
 
         switch (type) {
         case INF_CONT:
-            cont.reset(new DSContainer(particles));
+            cont.reset(new DSContainer(particles, new_desc));
             break;
 
         default:

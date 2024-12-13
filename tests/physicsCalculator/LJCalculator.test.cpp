@@ -9,10 +9,15 @@ TEST(Calculator, UpdateX2) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 1.0, 2.0, 3.0 }, { 2.0, 2.0, 0.0 }, 2.0, 0),
-        Particle({ -2.0, -2.0, 1.0 }, { 1.0, -1.0, 2.0 }, 1.0, 1),
-        Particle({ -1.0, -1.0, 2.0 }, { -2.0, 0.0, 1.0 }, 1.0, 1),
-        Particle({ -2.0, 1.0, 1.0 }, { -1.0, -2.0, -1.0 }, 1.0, 2),
+        Particle({ 1.0, 2.0, 3.0 }, { 2.0, 2.0, 0.0 }, 1),
+        Particle({ -2.0, -2.0, 1.0 }, { 1.0, -1.0, 2.0 }, 0),
+        Particle({ -1.0, -1.0, 2.0 }, { -2.0, 0.0, 1.0 }, 0),
+        Particle({ -2.0, 1.0, 1.0 }, { -1.0, -2.0, -1.0 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({ 1.0, -1.0, 2.0 });
@@ -40,7 +45,7 @@ TEST(Calculator, UpdateX2) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
     const std::vector<std::array<double, 3>> expected_x = {
@@ -62,7 +67,8 @@ TEST(Calculator, UpdateX2) {
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the position.";
         EXPECT_TRUE(pi->getF() == particles[i].getF()) << "The force must not change when updating the position.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the position.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the position.";
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+            << "The mass must not change when updating the position.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the position.";
 
         // Test if the new position is correct
@@ -88,7 +94,7 @@ TEST(Calculator, UpdateXNo) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, {}, false);
+    physicsCalculator::LJCalculator calc(env, {}, {}, false);
 
     ASSERT_NO_THROW(calc.calculateX());
 
@@ -102,10 +108,15 @@ TEST(Calculator, UpdateV2) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ -3.0, 2.0, -1.0 }, { 1.0, 2.0, 1.0 }, 1.0, 0),
-        Particle({ 2.0, -1.0, -3.0 }, { 0.0, -1.0, 1.0 }, 2.0, 0),
-        Particle({ 2.0, 2.0, -1.0 }, { 1.0, -2.0, -1.0 }, 1.0, 1),
-        Particle({ 2.0, 0.0, -2.0 }, { -2.0, 1.0, 1.0 }, 1.0, 1),
+        Particle({ -3.0, 2.0, -1.0 }, { 1.0, 2.0, 1.0 }, 0),
+        Particle({ 2.0, -1.0, -3.0 }, { 0.0, -1.0, 1.0 }, 1),
+        Particle({ 2.0, 2.0, -1.0 }, { 1.0, -2.0, -1.0 }, 0),
+        Particle({ 2.0, 0.0, -2.0 }, { -2.0, 1.0, 1.0 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({ 1.0, -2.0, 2.0 });
@@ -133,7 +144,7 @@ TEST(Calculator, UpdateV2) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
     const std::vector<std::array<double, 3>> expected_v = {
@@ -155,7 +166,8 @@ TEST(Calculator, UpdateV2) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the velocity.";
         EXPECT_TRUE(pi->getF() == particles[i].getF()) << "The force must not change when updating the velocity.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the velocity.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the velocity.";
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+            << "The mass must not change when updating the velocity.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the velocity.";
 
         // Test if the new velocity is correct
@@ -181,7 +193,7 @@ TEST(Calculator, UpdateVNo) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, {}, false);
+    physicsCalculator::LJCalculator calc(env, {}, {}, false);
 
     ASSERT_NO_THROW(calc.calculateV());
 
@@ -195,10 +207,16 @@ TEST(Calculator, UpdateOldF2) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, -1.0, -3.0 }, { 2.0, -1.0, -2.0 }, 1.0, 0),
-        Particle({ 3.0, 3.0, -1.0 }, { 1.0, 1.0, -3.0 }, 2.0, 0),
-        Particle({ 1.0, -1.0, 1.0 }, { -2.0, 2.0, -1.0 }, 2.0, 1),
-        Particle({ 2.0, -1.0, 2.0 }, { 3.0, -2.0, 2.0 }, 0.5, 1),
+        Particle({ 2.0, -1.0, -3.0 }, { 2.0, -1.0, -2.0 }, 1),
+        Particle({ 3.0, 3.0, -1.0 }, { 1.0, 1.0, -3.0 }, 2),
+        Particle({ 1.0, -1.0, 1.0 }, { -2.0, 2.0, -1.0 }, 2),
+        Particle({ 2.0, -1.0, 2.0 }, { 3.0, -2.0, 2.0 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 0.5, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({ -2.0, 1.0, 1.0 });
@@ -225,7 +243,7 @@ TEST(Calculator, UpdateOldF2) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Perform a single calculateOldF
     ASSERT_NO_THROW(calc.calculateOldF());
@@ -239,7 +257,8 @@ TEST(Calculator, UpdateOldF2) {
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the old force.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the old force.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the old force.";
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+            << "The mass must not change when updating the old force.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the old force.";
 
         // Test if the new forces are correct
@@ -264,7 +283,7 @@ TEST(Calculator, UpdateOldFNo) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, {}, false);
+    physicsCalculator::LJCalculator calc(env, {}, {}, false);
 
     ASSERT_NO_THROW(calc.calculateOldF());
 
@@ -278,9 +297,15 @@ TEST(LJCalculator, UpdateF1) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 1.0, 2.0, -1.0 }, { 2.0, 3.0, -3.0 }, 2.0),
-        Particle({ 1.0, 4.0, -1.0 }, { 3.0, -2.0, -1.0 }, 3.0),
+        Particle({ 1.0, 2.0, -1.0 }, { 2.0, 3.0, -3.0 }, 1),
+        Particle({ 1.0, 4.0, -1.0 }, { 3.0, -2.0, -1.0 }, 0),
     };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 3.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
+    };
+
 
     // The forces must always be set to zero before calculateF is called.
     particles[0].setF({ 0.0, 0.0, 0.0 });
@@ -303,7 +328,7 @@ TEST(LJCalculator, UpdateF1) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
     const std::vector<std::array<double, 3>> expected_F = {
@@ -323,7 +348,8 @@ TEST(LJCalculator, UpdateF1) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the forces.";
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+            << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
@@ -342,8 +368,13 @@ TEST(LJCalculator, UpdateF2) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 1.0, 1.0, 1.0 }, { 1.0, 2.0, -2.0 }, 4.0),
-        Particle({ 5.0, 1.0, 1.0 }, { 2.0, 2.0, 1.0 }, 2.0),
+        Particle({ 1.0, 1.0, 1.0 }, { 1.0, 2.0, -2.0 }, 0),
+        Particle({ 5.0, 1.0, 1.0 }, { 2.0, 2.0, 1.0 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 4.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     // The forces must always be set to zero before calculateF is called.
@@ -367,7 +398,7 @@ TEST(LJCalculator, UpdateF2) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
     const std::vector<std::array<double, 3>> expected_F = {
@@ -387,7 +418,8 @@ TEST(LJCalculator, UpdateF2) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the forces.";
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+            << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
@@ -406,8 +438,13 @@ TEST(LJCalculator, UpdateF3) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 0.0, 2.0, -1.0 }, { 3.0, 1.0, -2.0 }, 2.0),
-        Particle({ 0.0, 2.0, 0.0 }, { 1.0, 1.0, 0.0 }, 5.0),
+        Particle({ 0.0, 2.0, -1.0 }, { 3.0, 1.0, -2.0 }, 1),
+        Particle({ 0.0, 2.0, 0.0 }, { 1.0, 1.0, 0.0 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 5.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     // The forces must always be set to zero before calculateF is called.
@@ -431,7 +468,7 @@ TEST(LJCalculator, UpdateF3) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
     const std::vector<std::array<double, 3>> expected_F = {
@@ -451,7 +488,8 @@ TEST(LJCalculator, UpdateF3) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the forces.";
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+            << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
@@ -470,8 +508,13 @@ TEST(LJCalculator, UpdateF4) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 1.0, 2.0, 1.0 }, { 3.0, 1.0, -2.0 }, 1.0),
-        Particle({ 2.0, 3.0, 2.0 }, { 2.0, -1.0, 2.0 }, 2.0),
+        Particle({ 1.0, 2.0, 1.0 }, { 3.0, 1.0, -2.0 }, 0),
+        Particle({ 2.0, 3.0, 2.0 }, { 2.0, -1.0, 2.0 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     // The forces must always be set to zero before calculateF is called.
@@ -495,7 +538,7 @@ TEST(LJCalculator, UpdateF4) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
     const std::vector<std::array<double, 3>> expected_F = {
@@ -515,7 +558,8 @@ TEST(LJCalculator, UpdateF4) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(pi->getM(), particles[i].getM()) << "The mass must not change when updating the forces.";
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+            << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
@@ -541,7 +585,7 @@ TEST(LJCalculator, UpdateFNo) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, {}, false);
+    physicsCalculator::LJCalculator calc(env, {}, {}, false);
 
     ASSERT_NO_THROW(calc.calculateF());
 
@@ -555,7 +599,11 @@ TEST(LJCalculator, UpdateFSingle) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, -1.0, 2.0 }, { 3.0, -2.0, 2.0 }, 0.5, 1),
+        Particle({ 2.0, -1.0, 2.0 }, { 3.0, -2.0, 2.0 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 0.5, 1.0, 5.0, 0.1, 0.0 },
     };
 
     // When calling calculateF the current force must be zero
@@ -574,7 +622,7 @@ TEST(LJCalculator, UpdateFSingle) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Perform a single calculateF
     ASSERT_NO_THROW(calc.calculateF());
@@ -587,7 +635,8 @@ TEST(LJCalculator, UpdateFSingle) {
     EXPECT_TRUE(calc.get_container()[0].getX() == particles[0].getX()) << "The position must not change when updating the force.";
     EXPECT_TRUE(calc.get_container()[0].getV() == particles[0].getV()) << "The velocity must not change when updating the force.";
     EXPECT_TRUE(calc.get_container()[0].getOldF() == particles[0].getOldF()) << "The old force must not change when updating the force.";
-    EXPECT_FLOAT_EQ(calc.get_container()[0].getM(), particles[0].getM()) << "The mass must not change when updating the force.";
+    EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(0).get_mass(), ptypes[0].get_mass())
+        << "The mass must not change when updating the force.";
     EXPECT_EQ(calc.get_container()[0].getType(), particles[0].getType()) << "The type must not change when updating the force.";
 
     // Test if the new forces are correct

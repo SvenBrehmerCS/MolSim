@@ -26,7 +26,7 @@ public:
      *
      * @param new_particles The particles vector.
      */
-    DSContainer(const std::vector<Particle>& new_particles);
+    DSContainer(const std::vector<Particle>& new_particles, const std::vector<TypeDesc>& new_desc);
 
     /**
      * Define the infinity container constructor, using a particle vector.
@@ -41,7 +41,7 @@ public:
      * @param new_particles The particles vector.
      * @param new_domain The new domain size.
      */
-    DSContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain);
+    DSContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc);
 
     /**
      * Define the default infinity container constructor.

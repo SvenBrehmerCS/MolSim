@@ -53,7 +53,7 @@ namespace physicsCalculator {
          * @param new_env The simulation environment.
          * @param particles The particles used for testing.
          */
-        Calculator(const Environment& new_env, const std::vector<Particle>& particles);
+        Calculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc);
 
         /**
          * Define the default destructor for every calculator.
@@ -71,7 +71,7 @@ namespace physicsCalculator {
 
         /**
          * Get the force absolute and sign direction between two particles.
-         * 
+         *
          * @param p1 The first particle.
          * @param p2 The second particle.
          * @param dist THe distance between the particles.
