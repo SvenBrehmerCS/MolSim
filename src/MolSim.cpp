@@ -1,12 +1,12 @@
 
 #include "MolSim.h"
 #include "Thermostat.h"
-#include "container/BoxContainer.h"
 #include "boundaries/GhostBoundary.h"
 #include "boundaries/HardBoundary.h"
-#include "container/InfContainer.h"
 #include "boundaries/NoBoundary.h"
 #include "boundaries/Stepper.h"
+#include "container/BoxContainer.h"
+#include "container/InfContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/XMLTreeReader.h"
 #include "outputWriter/CheckpointWriter.h"
@@ -164,6 +164,10 @@ int main(const int argc, const char* argv[]) {
     const std::string out_name(env.get_output_file_name());
     writer->plotParticles(*cont, out_name, iteration);
 
+    // Get the start time of the simulation
+    const auto start_time = std::chrono::steady_clock::now();
+    spdlog::logger time_logger("Time Logger");
+
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // Update x, v, f
@@ -182,6 +186,14 @@ int main(const int argc, const char* argv[]) {
             spdlog::info("Iteration {} finished.", iteration);
         }
     }
+
+    // Get the start time of the simulation
+    const auto end_time = std::chrono::steady_clock::now();
+    const auto ms_duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    time_logger.info("The simulation took {} ms. The update time for a single particle was {} ns.", ms_duration.count(),
+        ms_duration.count() / (iteration * cont->size()));
+
     // TODO hier Simulation checkpoint setzen wenn outputformat = checkpoint gesetzt
     if (env.get_output_file_format() == CHECKPOINT) {
         spdlog::info("Checkpoint written.");
@@ -196,5 +208,6 @@ int main(const int argc, const char* argv[]) {
     for (auto b : boundaries) {
         delete b;
     }
+    
     return 0;
 }
