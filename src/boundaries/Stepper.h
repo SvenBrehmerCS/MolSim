@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "boundaries/Boundary.h"
 #include "physicsCalculator/Calculator.h"
 
@@ -19,7 +21,7 @@ private:
     /**
      * An array storing the boundary conditions.
      */
-    std::array<Boundary*, 6> bc;
+    std::array<std::unique_ptr<Boundary>, 6> bc;
 
     /**
      * An array storing the boundary condition descriptors.
@@ -37,14 +39,13 @@ private:
     bool inf;
 
 public:
-    // TODO: Move the creation of the boundary conditions into the stepper constructor -> cleaner main function.
     /**
      * Create a stepper.
      *
-     * @param boundaries The boundaries of the simulation.
-     * @param is_inf A boolean indicating if the simulation is an infinite domain.
+     * @param bt The boundary types used for the simulation.
+     * @param new_domain The size of the new domain.
      */
-    Stepper(const std::array<Boundary*, 6>& boundaries, const std::array<BoundaryType, 6>& bt, const bool is_inf, const std::array<double, 3>& d);
+    Stepper(const std::array<BoundaryType, 6>& bt, const std::array<double, 3>& new_domain);
 
     /**
      * Provide a default destructor for a stepper.

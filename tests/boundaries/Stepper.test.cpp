@@ -46,17 +46,7 @@ TEST(GravityStepper, Step1) {
 
     // Initialize the Calculator
     physicsCalculator::GravityCalculator calc(env, particles, false);
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
     ASSERT_NO_THROW(stepper.step(calc));
@@ -103,10 +93,6 @@ TEST(GravityStepper, Step1) {
             << ")";
 
         pi++;
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -156,16 +142,7 @@ TEST(LJStepper, Step1) {
     expected[1].setF({ 0.0003857327903, 0.0, 0.0 });
     expected[1].setOldF({ 0.1, 0.0, 0.0 });
 
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
     ASSERT_NO_THROW(stepper.step(calc));
@@ -186,10 +163,6 @@ TEST(LJStepper, Step1) {
 
         pi++;
     }
-
-    for (Boundary* bp : bc) {
-        delete bp;
-    }
 }
 
 // Test if step works for an empty particle container
@@ -207,26 +180,12 @@ TEST(Calculator, StepNo) {
 
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, {}, false);
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
     ASSERT_NO_THROW(stepper.step(calc));
 
     EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the velocity on an empty container should not add a particle.";
-
-    for (Boundary* bp : bc) {
-        delete bp;
-    }
 }
 
 // ==================================================================================================
@@ -261,16 +220,7 @@ TEST(GravityStepper, Analytical1) {
     physicsCalculator::GravityCalculator calc(env, particles);
     double total_time = 0.0;
 
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
@@ -281,10 +231,6 @@ TEST(GravityStepper, Analytical1) {
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -316,17 +262,7 @@ TEST(GravityStepper, Analytical2) {
     double total_time = 0.0;
     double time_mod_two_pi = 0.0;
     constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
@@ -355,10 +291,6 @@ TEST(GravityStepper, Analytical2) {
         if (time_mod_two_pi >= two_pi) {
             time_mod_two_pi -= two_pi;
         }
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -392,17 +324,7 @@ TEST(GravityStepper, Analytical3) {
     double total_time = 0.0;
     double time_mod_two_pi = 0.0;
     constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 10 time units
     for (size_t i = 0; i <= 100000; i++) {
@@ -440,10 +362,6 @@ TEST(GravityStepper, Analytical3) {
             time_mod_two_pi -= two_pi;
         }
     }
-
-    for (Boundary* bp : bc) {
-        delete bp;
-    }
 }
 
 // Test if step works for an analytical solution using two bodies dancing around a shared center of mass, while the center of mass is moving. The
@@ -477,17 +395,7 @@ TEST(GravityStepper, Analytical4) {
     double total_time = 0.0;
     double time_mod_two_pi = 0.0;
     constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
@@ -516,10 +424,6 @@ TEST(GravityStepper, Analytical4) {
         if (time_mod_two_pi >= two_pi) {
             time_mod_two_pi -= two_pi;
         }
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -554,17 +458,7 @@ TEST(LJStepper, Analytical1) {
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles);
     double total_time = 0.0;
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
@@ -576,10 +470,6 @@ TEST(LJStepper, Analytical1) {
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -612,17 +502,7 @@ TEST(LJStepper, Analytical2) {
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles);
     double total_time = 0.0;
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
@@ -648,10 +528,6 @@ TEST(LJStepper, Analytical2) {
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -684,17 +560,7 @@ TEST(LJStepper, Analytical3) {
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles);
     double total_time = 0.0;
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
@@ -720,10 +586,6 @@ TEST(LJStepper, Analytical3) {
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -769,17 +631,7 @@ TEST(LJStepper, Analytical4) {
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles);
     double total_time = 0.0;
-
-    std::array<Boundary*, 6> bc = {
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-        new NoBoundary(0, 0),
-    };
-
-    Stepper stepper(bc, { INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, true, {});
+    Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform the steps for 20 time units
     for (size_t i = 0; i <= 200000; i++) {
@@ -814,10 +666,6 @@ TEST(LJStepper, Analytical4) {
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 
@@ -861,17 +709,7 @@ TEST(Stepper, MultipleBoundaries) {
 
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles, false, false);
-
-    std::array<Boundary*, 6> bc = {
-        new HardBoundary(0.0, 0),
-        new HardBoundary(0.0, 1),
-        new NoBoundary(0.0, 2),
-        new HardBoundary(10.0, 0),
-        new HardBoundary(10.0, 1),
-        new NoBoundary(10.0, 2),
-    };
-
-    Stepper stepper(bc, { HARD, HARD, OUTFLOW, HARD, HARD, OUTFLOW }, false, { 10.0, 10.0, 10.0 });
+    Stepper stepper({ HARD, HARD, OUTFLOW, HARD, HARD, OUTFLOW }, { 10.0, 10.0, 10.0 });
 
     // Perform the steps for 20000 time units
     for (size_t i = 0; i <= 200000; i++) {
@@ -906,10 +744,6 @@ TEST(Stepper, MultipleBoundaries) {
 
         stepper.step(calc);
     }
-
-    for (Boundary* bp : bc) {
-        delete bp;
-    }
 }
 
 // Test that particles remain within the domain when using a halo reflecting boundary condition, and that there are no loops over particles with
@@ -938,21 +772,11 @@ TEST(Stepper, MultipleReflecting) {
 
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles, false, false);
-
-    std::array<Boundary*, 6> bc = {
-        new GhostBoundary(0.0, 0),
-        new GhostBoundary(0.0, 1),
-        new HardBoundary(0.0, 2),
-        new GhostBoundary(21.0, 0),
-        new GhostBoundary(21.0, 1),
-        new HardBoundary(21.0, 2),
-    };
-
     calc.get_container().resize(1000);
     gen.generateCuboid(calc.get_container(), 0, { 3.0, 3.0, 3.0 }, { 0.0, 0.0, 0.0 }, 1.0, { 10, 10, 10 }, 1.5, 1.0, 3);
     calc.get_container().update_positions();
 
-    Stepper stepper(bc, { HALO, HALO, HARD, HALO, HALO, HARD }, false, { 21.0, 21.0, 21.0 });
+    Stepper stepper({ HALO, HALO, HARD, HALO, HALO, HARD }, { 21.0, 21.0, 21.0 });
 
     // Perform the steps for 1 time units
     for (size_t i = 0; i <= 1000; i++) {
@@ -972,10 +796,6 @@ TEST(Stepper, MultipleReflecting) {
         }
 
         stepper.step(calc);
-    }
-
-    for (Boundary* bp : bc) {
-        delete bp;
     }
 }
 

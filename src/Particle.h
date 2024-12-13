@@ -178,9 +178,7 @@ public:
      *
      * @param new_type
      */
-    void setType(int new_type) {
-        type = new_type;
-    }
+    void setType(int new_type) { type = new_type; }
 };
 
 /**

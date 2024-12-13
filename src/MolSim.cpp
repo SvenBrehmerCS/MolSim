@@ -1,9 +1,6 @@
 
 #include "MolSim.h"
 #include "Thermostat.h"
-#include "boundaries/GhostBoundary.h"
-#include "boundaries/HardBoundary.h"
-#include "boundaries/NoBoundary.h"
 #include "boundaries/Stepper.h"
 #include "container/BoxContainer.h"
 #include "container/DSContainer.h"
@@ -52,63 +49,17 @@ int main(const int argc, const char* argv[]) {
 
     reader->readArguments(env);
 
-    // Initialize the particle container.
-    bool isinf = true, has_inf = false;
-    std::array<BoundaryType, 6> bound_t = env.get_boundary_type();
-    std::array<Boundary*, 6> boundaries {};
-    for (size_t i = 0; i < 6; i++) {
-        const double pos = i < 3 ? 0.0 : env.get_domain_size()[i % 3];
-        switch (bound_t[i]) {
-        case INF_CONT:
-            boundaries[i] = new NoBoundary(pos, i % 3);
-            has_inf = true;
-            break;
-        case HALO:
-            if (env.get_calculator_type() != LJ_FULL) {
-                spdlog::critical("Halo boundaries can only be used in combination with lj force calculations.");
-                std::exit(EXIT_FAILURE);
-            }
-
-            boundaries[i] = new GhostBoundary(pos, i % 3);
-            isinf = false;
-            break;
-        case HARD:
-            boundaries[i] = new HardBoundary(pos, i % 3);
-            isinf = false;
-            break;
-        case PERIODIC:
-            spdlog::warn("Not yet iimplemented.");
-            std::exit(EXIT_FAILURE);
-            isinf = false;
-            break;
-        case OUTFLOW:
-            boundaries[i] = new NoBoundary(pos, i % 3);
-            isinf = false;
-            break;
-        default:
-            spdlog::critical("Unsupported boundary type.");
-            std::exit(EXIT_FAILURE);
-            break;
-        }
-    }
-
-    if (!isinf && has_inf) {
-        spdlog::critical("Tried to combine inf and boxed containers.");
-        std::exit(EXIT_FAILURE);
-    }
-
-
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
-    if (isinf) {
+    if (env.requires_direct_sum()) {
         cont.reset(new DSContainer(env.get_domain_size()));
     } else {
         cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
     }
 
     reader->readParticle(*cont);
-
-    reader.reset(nullptr);
+    reader.release();
+    env.assert_boundary_conditions();
 
     // Initialize the calculator.
     std::unique_ptr<physicsCalculator::Calculator> calculator { nullptr };
@@ -150,7 +101,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper { boundaries, bound_t, isinf, calculator->get_env().get_domain_size() };
+    Stepper stepper { env.get_boundary_type(), calculator->get_env().get_domain_size() };
     // Initialize the thermostat.
     Thermostat thermostat { env.get_dimensions(), env.get_temp_target(), env.get_max_delta_temp(), cont };
 
@@ -203,11 +154,6 @@ int main(const int argc, const char* argv[]) {
     }
 
     spdlog::info("Output written. Terminating...");
-
-    // Freeing allocated memory
-    for (auto b : boundaries) {
-        delete b;
-    }
 
     return 0;
 }
