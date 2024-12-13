@@ -54,7 +54,7 @@ namespace inputReader {
          *
          * @param particles Data structure for holding the particles.
          */
-        virtual void readParticle(ParticleContainer& container);
+        virtual void readParticle(ParticleContainer& container, const double delta_t, const double gravity);
 
         /**
          * Calculates the number of particles generated when creating a disc of particles.

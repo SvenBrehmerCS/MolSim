@@ -8,10 +8,16 @@ TEST(Calculator, UpdateX1) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 0.1, 1.3, -2.0 }, { 7.0, 2.0, -0.5 }, 2.0, 2),
-        Particle({ 2.5, -3.0, -0.5 }, { -3.0, 1.5, -1.5 }, 1.0, 2),
-        Particle({ -2.0, 3.0, 3.5 }, { 1.0, -2.0, 0.5 }, 1.0, 1),
-        Particle({ 0.1, -1.5, 2.0 }, { 3.0, 2.0, -0.5 }, 4.0, 0),
+        Particle({ 0.1, 1.3, -2.0 }, { 7.0, 2.0, -0.5 }, 2),
+        Particle({ 2.5, -3.0, -0.5 }, { -3.0, 1.5, -1.5 }, 1),
+        Particle({ -2.0, 3.0, 3.5 }, { 1.0, -2.0, 0.5 }, 1),
+        Particle({ 0.1, -1.5, 2.0 }, { 3.0, 2.0, -0.5 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 4.0, 1.0, 5.0, 0.1, 1.0 },
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 1.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 1.0 },
     };
 
     particles[0].setF({ -1.0, 2.0, 1.0 });

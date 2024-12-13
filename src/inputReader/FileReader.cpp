@@ -23,7 +23,7 @@ namespace inputReader {
 
     void FileReader::readArguments(Environment& environment) { }
 
-    void FileReader::readParticle(ParticleContainer& container) {
+    void FileReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
 
         std::array<double, 3> x;
         std::array<double, 3> v;
@@ -55,6 +55,8 @@ namespace inputReader {
         container.resize(num_particles);
 
         auto particle = container.begin();
+        std::vector<TypeDesc> ptypes;
+        int ptype = 0;
 
         for (int i = 0; i < num_particles; i++) {
             std::istringstream datastream(tmp_string);
@@ -73,12 +75,13 @@ namespace inputReader {
 
             particle->setX(x);
             particle->setV(v);
-            particle->setM(m);
+            ptypes.push_back(TypeDesc { m, 1.0, 5.0, delta_t, gravity });
+            particle->setType(ptype++);
+
+            particle++;
 
             getline(input_file, tmp_string);
             spdlog::debug("Read line: {}", tmp_string);
-
-            particle++;
         }
 
         // if() clause to also support older text files
@@ -91,6 +94,7 @@ namespace inputReader {
             spdlog::debug("Read line: {}", tmp_string);
 
             ParticleGenerator generator;
+
             for (int i = 0; i < num_cubes; i++) {
                 std::istringstream datastream(tmp_string);
 
@@ -119,7 +123,10 @@ namespace inputReader {
 
                 container.resize(num_particles + (N[0] * N[1] * N[2]));
 
-                generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
+                generator.generateCuboid(container, num_particles, x, v, ptype, N, h, brownian_motion, num_dimensions);
+
+                ptypes.push_back(TypeDesc { m, 1.0, 5.0, delta_t, gravity });
+                particle->setType(ptype++);
 
                 num_particles += (N[0] * N[1] * N[2]);
 
@@ -127,5 +134,7 @@ namespace inputReader {
                 spdlog::debug("Read line: {}", tmp_string);
             }
         }
+
+        container.build_type_table(ptypes);
     }
 } // namespace inputReader

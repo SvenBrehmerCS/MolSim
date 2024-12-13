@@ -54,6 +54,6 @@ namespace inputReader {
          *
          * @param particles Data structure for holding the particles.
          */
-        virtual void readParticle(ParticleContainer& container);
+        virtual void readParticle(ParticleContainer& container, const double delta_t, const double gravity);
     };
 } // namespace inputReader

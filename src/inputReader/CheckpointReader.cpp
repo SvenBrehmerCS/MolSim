@@ -9,6 +9,7 @@
 #include <fstream>
 
 namespace inputReader {
+    // TODO Change for new particles and container (We might lose the mass)
     void inputReader::CheckpointReader::readSimulation(ParticleContainer& container, const char* filename) {
         std::ifstream inputFile(filename, std::ios::binary);
 
@@ -23,7 +24,7 @@ namespace inputReader {
         container.resize(new_particles + num_particles);
         spdlog::debug("Reading num_particles from CheckPoint {} and read {} particles from the xml ", num_particles, new_particles);
 
-        double x, y, z, vx, vy, vz, fx, fy, fz, m;
+        double x, y, z, vx, vy, vz, fx, fy, fz;
         int type;
 
         for (size_t i = new_particles; i < num_particles + new_particles; i++) {
@@ -43,13 +44,10 @@ namespace inputReader {
             inputFile.read(reinterpret_cast<char*>(&fy), sizeof(double));
             inputFile.read(reinterpret_cast<char*>(&fz), sizeof(double));
 
-            inputFile.read(reinterpret_cast<char*>(&m), sizeof(double));
-
             container[i].setX({ x, y, z });
             container[i].setV({ vx, vy, vz });
             container[i].setType(type);
             container[i].setF({ fx, fy, fz });
-            container[i].setM(m);
         }
     }
 }
