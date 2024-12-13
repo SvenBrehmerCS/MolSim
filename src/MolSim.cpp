@@ -6,7 +6,7 @@
 #include "boundaries/NoBoundary.h"
 #include "boundaries/Stepper.h"
 #include "container/BoxContainer.h"
-#include "container/InfContainer.h"
+#include "container/DSContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/XMLTreeReader.h"
 #include "outputWriter/CheckpointWriter.h"
@@ -101,7 +101,7 @@ int main(const int argc, const char* argv[]) {
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
     if (isinf) {
-        cont.reset(new InfContainer(env.get_domain_size()));
+        cont.reset(new DSContainer(env.get_domain_size()));
     } else {
         cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
     }
@@ -208,6 +208,6 @@ int main(const int argc, const char* argv[]) {
     for (auto b : boundaries) {
         delete b;
     }
-    
+
     return 0;
 }

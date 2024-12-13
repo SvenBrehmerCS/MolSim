@@ -1,5 +1,5 @@
 #include "Calculator.h"
-#include "container/InfContainer.h"
+#include "container/DSContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/Reader.h"
 #include "utils/ArrayUtils.h"
@@ -17,7 +17,7 @@ namespace physicsCalculator {
 
     Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles) {
         env = new_env;
-        cont.reset(new InfContainer(particles));
+        cont.reset(new DSContainer(particles));
     }
 
     ParticleContainer& Calculator::get_container() { return *cont; }

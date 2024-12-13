@@ -3,7 +3,7 @@
 //
 #include "inputReader/XMLTreeReader.h"
 #include "Environment.h"
-#include "container/InfContainer.h"
+#include "container/DSContainer.h"
 #include "container/ParticleContainer.h"
 
 #include <bits/fs_fwd.h>
@@ -47,7 +47,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     const char* xml = "../tests/res/testNonDefault.xml";
 
     Environment environment;
-    InfContainer container;
+    DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
     reader.readArguments(environment);
@@ -69,7 +69,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
 TEST(XMLTreeReader, TestParticles) {
     const char* xml = "../tests/res/testParticles.xml";
 
-    InfContainer container;
+    DSContainer container;
     inputReader::XMLTreeReader reader(xml);
     std::array<double, 3> x = { 0.1, 0.2, 0.3 };
     std::array<double, 3> v = { 1.0, 1.5, 1.7 };
@@ -90,7 +90,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
 
     const char* xml = "../tests/res/testCuboids.xml";
 
-    InfContainer container;
+    DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
     std::array<double, 3> x0 = { 0, 0, 0 };
@@ -121,7 +121,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
 TEST(XMLTreeReader, TestXMLDisc) {
     const char* xml = "../tests/res/testDisc.xml";
 
-    InfContainer container;
+    DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
     std::array<double, 3> x1 = { -1, 0.0, 0.0 };
@@ -176,7 +176,7 @@ TEST(XMLTreeReader, TestXMLCombined) {
     std::array<double, 3> vparticle = { 1.0, 1.5, 1.7 };
 
     Environment environment;
-    InfContainer container;
+    DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
     container.resize(10);

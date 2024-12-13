@@ -1,5 +1,5 @@
 /**
- * @file InfContainer.h
+ * @file DSContainer.h
  *
  * @brief Define the infinite container, a container that supports the O(n^2) calculation time.
  */
@@ -9,31 +9,31 @@
 #include "ParticleContainer.h"
 
 /**
- * @class InfContainer
+ * @class DSContainer
  *
  * @brief Define the infinity particle container. This container supports an infinite size domain, but it requires O(n^2) force calculation.
  */
-class InfContainer : public ParticleContainer {
+class DSContainer : public ParticleContainer {
 private:
 public:
     /**
      * Define the default infinity container constructor.
      */
-    InfContainer();
+    DSContainer();
 
     /**
      * Define the infinity container constructor, using a particle vector.
      *
      * @param new_particles The particles vector.
      */
-    InfContainer(const std::vector<Particle>& new_particles);
+    DSContainer(const std::vector<Particle>& new_particles);
 
     /**
      * Define the infinity container constructor, using a particle vector.
      *
      * @param new_domain The new domain size.
      */
-    InfContainer(const std::array<double, 3>& new_domain);
+    DSContainer(const std::array<double, 3>& new_domain);
 
     /**
      * Define the infinity container constructor, using a particle vector.
@@ -41,12 +41,12 @@ public:
      * @param new_particles The particles vector.
      * @param new_domain The new domain size.
      */
-    InfContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain);
+    DSContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain);
 
     /**
      * Define the default infinity container constructor.
      */
-    ~InfContainer();
+    ~DSContainer();
 
     /**
      * Iterate through the particle pairs O(n^2).

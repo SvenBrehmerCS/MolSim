@@ -45,7 +45,6 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles,
     }
 }
 
-
 ParticleContainer::~ParticleContainer() = default;
 
 Particle& ParticleContainer::operator[](const size_t idx) { return particles[idx]; }
