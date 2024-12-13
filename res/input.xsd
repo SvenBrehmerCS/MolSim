@@ -288,7 +288,7 @@
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="T_init" default="40.0">
+            <xs:element name="T_init" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation> Initial temperature of the simulation. </xs:documentation>
                 </xs:annotation>

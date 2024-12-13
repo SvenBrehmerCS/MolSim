@@ -85,7 +85,7 @@ namespace inputReader {
         };
         environment.set_domain_size(domain_size);
 
-        //TODO this is probably unnecessary
+        // TODO this is probably unnecessary
         /*
         if (sim->checkpoint().present()) {
             spdlog::trace("Checkpointing...");
@@ -96,7 +96,11 @@ namespace inputReader {
         if (sim->param().T_target().present()) {
             environment.set_temp_target(sim->param().T_target().get());
         } else {
-            environment.set_temp_target(sim->param().T_init());
+            if (!sim->param().T_init().present()) {
+                SPDLOG_CRITICAL("Target temperature can't be set to nonexistent initial temperature.");
+                std::exit(EXIT_FAILURE);
+            }
+            environment.set_temp_target(sim->param().T_init().get());
         }
 
         environment.set_temp_frequency(sim->param().T_frequency());
@@ -157,7 +161,7 @@ namespace inputReader {
             N = { cuboid.count().vx(), cuboid.count().vy(), cuboid.count().vz() };
             m = cuboid.m();
             h = cuboid.h();
-            brownian_motion = cuboid.b_motion();
+            (sim->param().T_init().present()) ? brownian_motion = (std::sqrt(sim->param().T_init().get() / m)) : brownian_motion = cuboid.b_motion();
 
             container.resize(num_particles + cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz());
 
@@ -172,6 +176,7 @@ namespace inputReader {
         for (const auto& disc : discs) {
             disc_center = { disc.center().vx(), disc.center().vy(), disc.center().vz() };
             disc_velocity = { disc.velocity().vx(), disc.velocity().vy(), disc.velocity().vz() };
+            (sim->param().T_init().present()) ? brownian_motion = (std::sqrt(sim->param().T_init().get() / m)) : brownian_motion = disc.b_motion();
 
             int particles_future_added = num_particles_added(disc.h(), disc.r());
 
@@ -179,7 +184,7 @@ namespace inputReader {
 
 
             int particles_added = generator.generateDisc(
-                container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), disc.b_motion(), num_dimensions);
+                container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), brownian_motion, num_dimensions);
 
             num_particles += particles_added;
         }
