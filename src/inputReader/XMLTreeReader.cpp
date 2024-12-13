@@ -97,7 +97,7 @@ namespace inputReader {
             environment.set_temp_target(sim->param().T_target().get());
         } else {
             if (!sim->param().T_init().present()) {
-                SPDLOG_CRITICAL("Target temperature can't be set to nonexistent initial temperature.");
+                SPDLOG_CRITICAL("Target temperature has to be set if initial temperature is non existent.");
                 std::exit(EXIT_FAILURE);
             }
             environment.set_temp_target(sim->param().T_init().get());
