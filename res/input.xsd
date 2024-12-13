@@ -203,31 +203,6 @@
                 </xs:complexType>
             </xs:element>
 
-            <xs:element name="epsilon" default="5.0">
-                <xs:annotation>
-                    <xs:documentation> The depth of the potential well of the Lennard-Jones
-                        potential. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:double">
-                        <xs:minExclusive value="0.0" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
-            <xs:element name="sigma" default="1.0">
-                <xs:annotation>
-                    <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:double">
-                        <xs:minExclusive value="0.0" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
             <xs:element name="delta_t" default="0.014">
                 <xs:annotation>
                     <xs:documentation> Amount of time passing between simulation steps. </xs:documentation>
@@ -336,6 +311,12 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
+
+            <xs:element name="g_grav" type="xs:double" default="0.0">
+                <xs:annotation>
+                    <xs:documentation> Continuos gravitational acceleration. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -394,6 +375,12 @@
                 </xs:annotation>
             </xs:element>
 
+            <xs:element name="count" type="uivector">
+                <xs:annotation>
+                    <xs:documentation> The amount of particles in each direction. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
             <xs:element name="m">
                 <xs:annotation>
                     <xs:documentation> The mass of the particles in the cuboid. </xs:documentation>
@@ -406,10 +393,29 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="count" type="uivector">
+            <xs:element name="sigma" default="1.0">
                 <xs:annotation>
-                    <xs:documentation> The amount of particles in each direction. </xs:documentation>
+                    <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="epsilon" default="5.0">
+                <xs:annotation>
+                    <xs:documentation> The depth of the potential well of the Lennard-Jones
+                        potential. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
             <xs:element name="h">
@@ -445,6 +451,7 @@
                 parameters needed to define a disc of particles, such as the position of the center
                 of the disc, the velocity of the disc, distance between particles, and more. </xs:documentation>
         </xs:annotation>
+
         <xs:sequence>
             <xs:element name="center" type="dvector">
                 <xs:annotation>
@@ -456,6 +463,19 @@
                 <xs:annotation>
                     <xs:documentation> The rough velocity of the disc. </xs:documentation>
                 </xs:annotation>
+            </xs:element>
+
+            <xs:element name="r">
+                <xs:annotation>
+                    <xs:documentation> The radius in terms of the number of molecules along the
+                        radius. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
             <xs:element name="m">
@@ -470,10 +490,22 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="r">
+            <xs:element name="sigma" default="1.0">
                 <xs:annotation>
-                    <xs:documentation> The radius in terms of the number of molecules along the
-                        radius. </xs:documentation>
+                    <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="epsilon" default="5.0">
+                <xs:annotation>
+                    <xs:documentation> The depth of the potential well of the Lennard-Jones
+                        potential. </xs:documentation>
                 </xs:annotation>
 
                 <xs:simpleType>
