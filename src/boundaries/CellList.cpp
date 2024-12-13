@@ -7,11 +7,18 @@
 
 #include <spdlog/spdlog.h>
 
-CellList::CellList(const double rc, const size_t n_x, const size_t n_y, const size_t n_z) {
+CellList::CellList(const double rc, const std::array<double, 3>& domain) {
     this->rc = rc;
-    this->n_x = n_x + 2;
-    this->n_y = n_y + 2;
-    this->n_z = n_z + 2;
+    rc_squ = rc * rc;
+    n_x = std::ceil(domain[0] / rc) + 2;
+    n_y = std::ceil(domain[1] / rc) + 2;
+    n_z = std::ceil(domain[2] / rc) + 2;
+
+    cell_size = {
+        domain[0] / static_cast<double>(n_x - 2),
+        domain[1] / static_cast<double>(n_y - 2),
+        domain[2] / static_cast<double>(n_z - 2),
+    };
 
     cells.resize(this->n_x * this->n_y * this->n_z);
 }
@@ -22,9 +29,9 @@ void CellList::create_list(const std::vector<Particle>& particles) {
     }
 
     for (size_t i = 0; i < particles.size(); i++) {
-        size_t x = std::floor(particles[i].getX()[0] / rc) + 1;
-        size_t y = std::floor(particles[i].getX()[1] / rc) + 1;
-        size_t z = std::floor(particles[i].getX()[2] / rc) + 1;
+        size_t x = std::floor(particles[i].getX()[0] / cell_size[0]) + 1;
+        size_t y = std::floor(particles[i].getX()[1] / cell_size[1]) + 1;
+        size_t z = std::floor(particles[i].getX()[2] / cell_size[2]) + 1;
 
         if (x < 0 || x >= n_x) [[unlikely]] {
             spdlog::critical("Tried to add a particle out of bounds.");

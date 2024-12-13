@@ -153,7 +153,7 @@ Environment::Environment(const int argc, const char* argv[]) {
                 panic_exit("The option delta_t must only have one floating point number as input.");
             }
 
-            if (t_end <= 0.0) {
+            if (delta_t <= 0.0) {
                 panic_exit("The option delta_t must have a strictly positive value.");
             }
 
