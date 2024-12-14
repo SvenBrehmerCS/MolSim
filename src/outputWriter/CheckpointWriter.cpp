@@ -39,7 +39,7 @@ namespace outputWriter {
             outputFile.write((char*)&particle->getF()[0], sizeof(double));
             outputFile.write((char*)&particle->getF()[1], sizeof(double));
             outputFile.write((char*)&particle->getF()[2], sizeof(double));
-            double m = particle->getM();
+            double m = container.get_type_descriptor(particle->getType()).get_mass();
             outputFile.write((char*)&m, sizeof(double));
 
             ++particle;
