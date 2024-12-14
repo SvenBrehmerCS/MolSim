@@ -62,7 +62,7 @@ namespace outputWriter {
         delete vtkFile;
     }
 
-    void VTKWriter::plotParticle(const Particle& p) {
+    void VTKWriter::plotParticle(const Particle& p, const double mass) {
         if (vtkFile->UnstructuredGrid().present()) {
             SPDLOG_DEBUG("UnstructuredGrid is present");
         } else {
@@ -72,7 +72,7 @@ namespace outputWriter {
         PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
         PointData::DataArray_iterator dataIterator = pointDataSequence.begin();
 
-        dataIterator->push_back(p.getM());
+        dataIterator->push_back(mass);
         // cout << "Appended mass data in: " << dataIterator->Name();
 
         dataIterator++;
@@ -101,7 +101,7 @@ namespace outputWriter {
         initializeOutput(container.size());
 
         for (const Particle& p : container) {
-            this->plotParticle(p);
+            this->plotParticle(p, container.get_type_descriptor(p.getType()).get_mass());
         }
 
         writeFile(filename, iteration);

@@ -15,9 +15,9 @@ namespace physicsCalculator {
         : env { new_env }
         , cont { new_cont } { }
 
-    Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles) {
+    Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc) {
         env = new_env;
-        cont.reset(new DSContainer(particles));
+        cont.reset(new DSContainer(particles, new_desc));
     }
 
     ParticleContainer& Calculator::get_container() { return *cont; }

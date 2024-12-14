@@ -5,7 +5,7 @@
 ParticleGenerator::ParticleGenerator() = default;
 ParticleGenerator::~ParticleGenerator() = default;
 
-void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> v, double m,
+void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> v, int type,
     std::array<int, 3> N, double h, double b_m, int dim) {
 
     int N1 = N[0];
@@ -28,8 +28,7 @@ void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_par
                 // set the velocity add the set velocity and boltzmann velocity
                 particle->setV(v + boltz_v);
 
-                // set mass
-                particle->setM(m);
+                particle->setType(type);
 
                 particle++;
             }
@@ -38,7 +37,7 @@ void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_par
 }
 
 int ParticleGenerator::generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity,
-    double mass, double radius, double h, double b_m, int dim) {
+    int type, double radius, double h, double b_m, int dim) {
     int num_particles_added = 0;
 
     double radius_distance = radius * h;
@@ -59,7 +58,6 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
             particle->setX({ c0 + x_off, c1 + y_off, c2 });
             boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
             particle->setV(velocity + boltz_v);
-            particle->setM(mass);
             ++particle;
             ++num_particles_added;
 
@@ -68,7 +66,6 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
                 particle->setX({ c0 - x_off, c1 + y_off, c2 });
                 boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
                 particle->setV(velocity + boltz_v);
-                particle->setM(mass);
                 ++particle;
                 ++num_particles_added;
             }
@@ -78,7 +75,6 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
                 particle->setX({ c0 + x_off, c1 - y_off, c2 });
                 boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
                 particle->setV(velocity + boltz_v);
-                particle->setM(mass);
                 ++particle;
                 ++num_particles_added;
             }
@@ -88,7 +84,6 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
                 particle->setX({ c0 - x_off, c1 - y_off, c2 });
                 boltz_v = maxwellBoltzmannDistributedVelocity(b_m, dim);
                 particle->setV(velocity + boltz_v);
-                particle->setM(mass);
                 ++particle;
                 ++num_particles_added;
             }

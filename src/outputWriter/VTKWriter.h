@@ -36,7 +36,7 @@ namespace outputWriter {
          *
          * @note: initializeOutput() must have been called before.
          */
-        void plotParticle(const Particle& p);
+        void plotParticle(const Particle& p, const double mass);
 
         /**
          * Writes the final output file.

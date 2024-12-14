@@ -40,11 +40,6 @@ private:
     std::array<double, 3> old_f;
 
     /**
-     * Mass of this particle
-     */
-    double m;
-
-    /**
      * Type of the particle.
      */
     int type;
@@ -69,10 +64,9 @@ public:
      *
      * @param x_arg The position of the particle
      * @param v_arg The velocity of the particle
-     * @param m_arg The mass of the particle
      * @param type Optional: Define the atom type.
      */
-    Particle(const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, const double m_arg, const int type_arg = 0);
+    Particle(const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, const int type_arg = 0);
 
     /**
      * Destroy a particle.
@@ -108,6 +102,13 @@ public:
     const std::array<double, 3>& getOldF() const;
 
     /**
+     * Get the type of the particle.
+     *
+     * @return The type of the particle.
+     */
+    int getType() const;
+
+    /**
      * Set the position of the particle.
      *
      * @param x_new The new position.
@@ -136,25 +137,12 @@ public:
     void setOldF(const std::array<double, 3>& old_f_new);
 
     /**
-     * Set the mass of the particle.
      *
-     * @param m_new The new mass.
-     */
-    void setM(const double m_new);
-
-    /**
-     * Get the mass of the particle.
+     * Sets the type of a particle
      *
-     * @return The mass of the particle.
+     * @param new_type
      */
-    double getM() const;
-
-    /**
-     * Get the type of the particle.
-     *
-     * @return The type of the particle.
-     */
-    int getType() const;
+    void setType(int new_type);
 
     /**
      * Compare if two particles are equal.
@@ -171,14 +159,6 @@ public:
      * @return A string describing the particle.
      */
     std::string toString() const;
-
-    /**
-     *
-     * sets the type of a particle
-     *
-     * @param new_type
-     */
-    void setType(int new_type) { type = new_type; }
 };
 
 /**

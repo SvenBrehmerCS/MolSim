@@ -63,12 +63,6 @@ namespace inputReader {
             static_cast<BoundaryType>(static_cast<int>(xy_far)),
         });
 
-        const double epsilon = sim->param().epsilon();
-        environment.set_epsilon(epsilon);
-
-        const double sigma = sim->param().sigma();
-        environment.set_sigma(sigma);
-
         const double delta_t = sim->param().delta_t();
         environment.set_delta_t(delta_t);
 
@@ -111,10 +105,12 @@ namespace inputReader {
             environment.set_max_delta_temp(std::numeric_limits<double>::infinity());
         }
 
+        environment.set_gravity(sim->param().g_grav());
+
         SPDLOG_TRACE("...Finished setting up simulation environment");
     }
 
-    void XMLTreeReader::readParticle(ParticleContainer& container) {
+    void XMLTreeReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
         SPDLOG_DEBUG("Generating particles");
 
         const int num_dimensions = sim->param().dimensions();
@@ -126,10 +122,15 @@ namespace inputReader {
         }
         int num_particles = static_cast<int>(sim->particle().size());
 
+        std::vector<TypeDesc> ptypes;
+        int ptype = 0;
+
         std::array<double, 3> x = { 0.0, 0.0, 0.0 };
         std::array<double, 3> v = { 0.0, 0.0, 0.0 };
         std::array<int, 3> N = { 0, 0, 0 };
         double m;
+        double s;
+        double e;
         double h;
         double brownian_motion;
 
@@ -146,7 +147,8 @@ namespace inputReader {
         for (const auto& particle : particles) {
             container[i].setX({ particle.position().vx(), particle.position().vy(), particle.position().vz() });
             container[i].setV({ particle.velocity().vx(), particle.velocity().vy(), particle.velocity().vz() });
-            container[i].setM(particle.m());
+            ptypes.push_back(TypeDesc { particle.m(), 1.0, 5.0, delta_t, gravity }); // TODO Implement epsilon and sigma for single
+            container[i].setType(ptype++);
             i++;
         }
 
@@ -160,12 +162,16 @@ namespace inputReader {
             v = { cuboid.velocity().vx(), cuboid.velocity().vy(), cuboid.velocity().vz() };
             N = { cuboid.count().vx(), cuboid.count().vy(), cuboid.count().vz() };
             m = cuboid.m();
+            s = cuboid.sigma();
+            e = cuboid.epsilon();
             h = cuboid.h();
             (sim->param().T_init().present()) ? brownian_motion = (std::sqrt(sim->param().T_init().get() / m)) : brownian_motion = cuboid.b_motion();
 
             container.resize(num_particles + cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz());
 
-            generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
+            ptypes.push_back(TypeDesc { m, s, e, delta_t, gravity });
+
+            generator.generateCuboid(container, num_particles, x, v, ptype++, N, h, brownian_motion, num_dimensions);
 
             num_particles += cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz();
         }
@@ -182,17 +188,21 @@ namespace inputReader {
 
             container.resize(num_particles + particles_future_added);
 
+            ptypes.push_back(TypeDesc { disc.m(), disc.sigma(), disc.epsilon(), delta_t, gravity });
 
             int particles_added = generator.generateDisc(
-                container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), brownian_motion, num_dimensions);
+                container, num_particles, disc_center, disc_velocity, ptype++, disc.r(), disc.h(), brownian_motion, num_dimensions);
 
             num_particles += particles_added;
         }
+
         if (sim->checkpoint().present()) {
             SPDLOG_TRACE("Checkpoint...");
             CheckpointReader checkpoint_reader;
             checkpoint_reader.readSimulation(container, sim->checkpoint().get().data());
         }
+
+        container.build_type_table(ptypes);
 
         SPDLOG_TRACE("...Finished generating particles");
     }

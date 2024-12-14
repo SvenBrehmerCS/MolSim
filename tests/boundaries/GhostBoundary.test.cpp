@@ -6,8 +6,12 @@
 TEST(GhostBoundary, ForceNearBoundary) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 5.0, 5.0, 0.1 }, {}, 1.0, 0),
-        Particle({ 5.0, 9.8, 5.0 }, {}, 1.0, 0),
+        Particle({ 5.0, 5.0, 0.1 }, {}, 0),
+        Particle({ 5.0, 9.8, 5.0 }, {}, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({});
@@ -29,7 +33,7 @@ TEST(GhostBoundary, ForceNearBoundary) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the boundaries
     GhostBoundary boundary_x_near(0.0, 0);
@@ -59,10 +63,15 @@ TEST(GhostBoundary, ForceNearBoundary) {
 TEST(GhostBoundary, ParticleAtCenter) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, 1.0, 2.0 }, { 3.0, -2.0, 2.0 }, 0.5, 0),
-        Particle({ 7.0, 2.0, 4.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
-        Particle({ 13.0, 15.0, 16.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
-        Particle({ 13, 7.0, 9.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
+        Particle({ 2.0, 1.0, 2.0 }, { 3.0, -2.0, 2.0 }, 0),
+        Particle({ 7.0, 2.0, 4.0 }, { -1.0, 2.0, -1.0 }, 1),
+        Particle({ 13.0, 15.0, 16.0 }, { -1.0, 2.0, -1.0 }, 1),
+        Particle({ 13, 7.0, 9.0 }, { -1.0, 2.0, -1.0 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 0.5, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.5, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({ 1.0, 4.0, -1.0 });
@@ -89,7 +98,7 @@ TEST(GhostBoundary, ParticleAtCenter) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
 
     GhostBoundary boundary_x_near(0.0, 0);
@@ -119,10 +128,15 @@ TEST(GhostBoundary, ParticleAtCenter) {
 TEST(GhostBoundary, ParticleUnaffectedX) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, -1.0, -2.0 }, { 3.0, -2.0, 2.0 }, 0.5, 0),
-        Particle({ 7.0, 2.0, 4.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
-        Particle({ 13.0, 15.0, 16.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
-        Particle({ 13, 62.0, 22.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
+        Particle({ 2.0, -1.0, -2.0 }, { 3.0, -2.0, 2.0 }, 0),
+        Particle({ 7.0, 2.0, 4.0 }, { -1.0, 2.0, -1.0 }, 1),
+        Particle({ 13.0, 15.0, 16.0 }, { -1.0, 2.0, -1.0 }, 1),
+        Particle({ 13, 62.0, 22.0 }, { -1.0, 2.0, -1.0 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 0.5, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.5, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({ 1.0, 4.0, -1.0 });

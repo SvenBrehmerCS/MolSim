@@ -2,8 +2,9 @@
 
 ParticleContainer::ParticleContainer() = default;
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles)
-    : particles { new_particles } { }
+ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const std::vector<TypeDesc>& new_desc)
+    : particles { new_particles }
+    , types { new_desc } { }
 
 ParticleContainer::ParticleContainer(const std::array<double, 3>& new_domain)
     : domain { new_domain } {
@@ -19,9 +20,11 @@ ParticleContainer::ParticleContainer(const std::array<double, 3>& new_domain)
     }
 }
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain)
+ParticleContainer::ParticleContainer(
+    const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc)
     : particles { new_particles }
-    , domain { new_domain } {
+    , domain { new_domain }
+    , types { new_desc } {
     type_pairs.resize(types.size() * types.size());
 
     for (size_t i = 0; i < types.size(); i++) {

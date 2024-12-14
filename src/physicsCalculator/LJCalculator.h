@@ -38,8 +38,8 @@ namespace physicsCalculator {
          * @param init_forces Define wether the forces should be initialized.
          * @param is_infinite A boolean indicating if the simulation ahs an infinite domain size.
          */
-        LJCalculator(
-            const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const bool is_infinite = true);
+        LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
+            const bool init_forces = true, const bool is_infinite = true);
 
         /**
          * Define a constructor for a Lenard Jones calculator.

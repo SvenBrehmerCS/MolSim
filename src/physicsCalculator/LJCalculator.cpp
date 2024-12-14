@@ -12,14 +12,15 @@ namespace physicsCalculator {
         calculateF();
     }
 
-    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const bool is_infinite) {
+    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
+        const bool init_forces, const bool is_infinite) {
         SPDLOG_WARN("Called a LJCalculator constructor which should only be used for testing.");
         env = new_env;
 
         if (is_infinite) {
-            cont.reset(new DSContainer(particles, env.get_domain_size()));
+            cont.reset(new DSContainer(particles, env.get_domain_size(), new_desc));
         } else {
-            cont.reset(new BoxContainer(particles, env.get_r_cutoff(), env.get_domain_size()));
+            cont.reset(new BoxContainer(particles, env.get_r_cutoff(), env.get_domain_size(), new_desc));
         }
 
         // Initialize the forces

@@ -48,28 +48,27 @@ public:
      */
     ParticleContainer();
 
-    // TODO: Pass the type pairs to the constructor
     /**
      * Create a particle container from a vector of particles.
      *
      * @param new_particles The particles which should be stored.
      */
-    ParticleContainer(const std::vector<Particle>& new_particles);
+    ParticleContainer(const std::vector<Particle>& new_particles, const std::vector<TypeDesc>& new_desc);
 
     /**
-     * Create a particle container from a vector of particles.
+     * Create a particle container of a certain size.
      *
      * @param new_domain The new domain size.
      */
     ParticleContainer(const std::array<double, 3>& new_domain);
 
     /**
-     * Create a particle container from a vector of particles.
+     * Create a particle container of a certain size from a vector of particles.
      *
      * @param new_particles The particles which should be stored.
      * @param new_domain The new domain size.
      */
-    ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain);
+    ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc);
 
     /**
      * Destroy all particles.
@@ -159,7 +158,7 @@ public:
 
     /**
      * Create a type table using the types.
-     * 
+     *
      * @param A vector of types that should be used for the type creation.
      */
     void build_type_table(const std::vector<TypeDesc>& new_types);

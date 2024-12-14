@@ -57,7 +57,7 @@ int main(const int argc, const char* argv[]) {
         cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
     }
 
-    reader->readParticle(*cont);
+    reader->readParticle(*cont, env.get_delta_t(), env.get_gravity());
     reader.release();
     env.assert_boundary_conditions();
 
