@@ -51,7 +51,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     inputReader::XMLTreeReader reader(xml);
 
     reader.readArguments(environment);
-    reader.readParticle(container);
+    reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
     EXPECT_EQ(container.size(), 0);
     EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
     EXPECT_EQ(environment.get_output_file_format(), XYZ);
@@ -77,12 +77,11 @@ TEST(XMLTreeReader, TestParticles) {
 
     container.resize(1);
 
-    reader.readParticle(container);
+    reader.readParticle(container, 0.0005, 0.0);
 
     ASSERT_EQ(container.size(), 1);
     EXPECT_EQ(container[0].getX(), x);
     EXPECT_EQ(container[0].getV(), v);
-    EXPECT_EQ(container[0].getM(), m);
 }
 
 // test if the cuboid is generated correctly
@@ -101,7 +100,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
 
     container.resize(4);
 
-    reader.readParticle(container);
+    reader.readParticle(container, 0.0005, 0.0);
     ASSERT_EQ(container.size(), 4);
     EXPECT_EQ(container[0].getX(), x0);
     EXPECT_EQ(container[1].getX(), x1);
@@ -111,10 +110,6 @@ TEST(XMLTreeReader, TestXMLCuboid) {
     EXPECT_EQ(container[1].getV(), v);
     EXPECT_EQ(container[2].getV(), v);
     EXPECT_EQ(container[3].getV(), v);
-    EXPECT_EQ(container[0].getM(), 2.5);
-    EXPECT_EQ(container[1].getM(), 2.5);
-    EXPECT_EQ(container[2].getM(), 2.5);
-    EXPECT_EQ(container[3].getM(), 2.5);
 }
 
 // test if the disc is generated correctly
@@ -133,7 +128,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
 
     container.resize(5);
 
-    reader.readParticle(container);
+    reader.readParticle(container, 0.0005, 0.0);
 
     ASSERT_EQ(container.size(), 5);
     EXPECT_EQ(container[0].getX(), x3);
@@ -146,11 +141,6 @@ TEST(XMLTreeReader, TestXMLDisc) {
     EXPECT_EQ(container[2].getV(), v);
     EXPECT_EQ(container[3].getV(), v);
     EXPECT_EQ(container[4].getV(), v);
-    EXPECT_EQ(container[0].getM(), 2.5);
-    EXPECT_EQ(container[1].getM(), 2.5);
-    EXPECT_EQ(container[2].getM(), 2.5);
-    EXPECT_EQ(container[3].getM(), 2.5);
-    EXPECT_EQ(container[4].getM(), 2.5);
 }
 
 // test of everything combined has the correct value
@@ -182,13 +172,12 @@ TEST(XMLTreeReader, TestXMLCombined) {
     container.resize(10);
 
     reader.readArguments(environment);
-    reader.readParticle(container);
+    reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
 
     ASSERT_EQ(container.size(), 10);
 
     EXPECT_EQ(container[0].getX(), xparticle);
     EXPECT_EQ(container[0].getV(), vparticle);
-    EXPECT_EQ(container[0].getM(), 0.01);
 
     EXPECT_EQ(container[1].getX(), x0cuboid);
     EXPECT_EQ(container[2].getX(), x1cuboid);
@@ -211,14 +200,4 @@ TEST(XMLTreeReader, TestXMLCombined) {
     EXPECT_EQ(container[7].getV(), vdisc);
     EXPECT_EQ(container[8].getV(), vdisc);
     EXPECT_EQ(container[9].getV(), vdisc);
-
-    EXPECT_EQ(container[1].getM(), 2.5);
-    EXPECT_EQ(container[2].getM(), 2.5);
-    EXPECT_EQ(container[3].getM(), 2.5);
-    EXPECT_EQ(container[4].getM(), 2.5);
-    EXPECT_EQ(container[5].getM(), 2.5);
-    EXPECT_EQ(container[6].getM(), 2.5);
-    EXPECT_EQ(container[7].getM(), 2.5);
-    EXPECT_EQ(container[8].getM(), 2.5);
-    EXPECT_EQ(container[9].getM(), 2.5);
 }

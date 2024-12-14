@@ -20,9 +20,14 @@ TEST(GravityStepper, Step1) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ -0.1, -0.1, -0.1 }, { 1.0, 1.0, 1.0 }, 2.0, 2),
-        Particle({ 0.895, 0.995, 0.995 }, { 1.0, 0.0, 0.0 }, 1.0, 2),
-        Particle({ -0.895, -0.995, -0.995 }, { -1.0, 0.0, 0.0 }, 1.0, 1),
+        Particle({ -0.1, -0.1, -0.1 }, { 1.0, 1.0, 1.0 }, 1),
+        Particle({ 0.895, 0.995, 0.995 }, { 1.0, 0.0, 0.0 }, 0),
+        Particle({ -0.895, -0.995, -0.995 }, { -1.0, 0.0, 0.0 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({ 0.0, 0.0, 0.0 });
@@ -45,16 +50,21 @@ TEST(GravityStepper, Step1) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::GravityCalculator calc(env, particles, false);
+    physicsCalculator::GravityCalculator calc(env, particles, ptypes, false);
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
     ASSERT_NO_THROW(stepper.step(calc));
 
     std::vector<Particle> exp = {
-        Particle({ 0.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, 2.0, 2),
-        Particle({ 1.0, 1.0, 1.0 }, { 1.028349365, 0.02834936491, 0.02834936491 }, 1.0, 2),
-        Particle({ -1.0, -1.0, -1.0 }, { -1.028349365, -0.02834936491, -0.02834936491 }, 1.0, 1),
+        Particle({ 0.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, 1),
+        Particle({ 1.0, 1.0, 1.0 }, { 1.028349365, 0.02834936491, 0.02834936491 }, 0),
+        Particle({ -1.0, -1.0, -1.0 }, { -1.028349365, -0.02834936491, -0.02834936491 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ext = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     exp[0].setF({ 0.0, 0.0, 0.0 });
@@ -74,7 +84,7 @@ TEST(GravityStepper, Step1) {
 
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(pi->getOldF() == exp[i].getOldF()) << "The old force must not change when updating the force.";
-        EXPECT_FLOAT_EQ(pi->getM(), exp[i].getM()) << "The mass must not change when updating the force.";
+        EXPECT_FLOAT_EQ(ptypes[pi->getType()].get_mass(), ext[exp[i].getType()].get_mass()) << "The mass must not change when updating the force.";
         EXPECT_EQ(pi->getType(), exp[i].getType()) << "The type must not change when updating the force.";
 
         // Test if the new positions is correct
@@ -103,9 +113,11 @@ TEST(LJStepper, Step1) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 4.0, 0.0, 0.0 }, { -1.0, 0.0, 0.0 }, 1.0),
-        Particle({ -4.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0 }, 1.0),
+        Particle({ 4.0, 0.0, 0.0 }, { -1.0, 0.0, 0.0 }, 0),
+        Particle({ -4.0, 0.0, 0.0 }, { 1.0, 0.0, 0.0 }, 0),
     };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = { TypeDesc { 1.0, 1.0, 4.0, 1.0, 0.0 } };
 
     particles[0].setF({ -0.1, 0.0, 0.0 });
     particles[0].setOldF({ 2.0, 1.0, 2.0 });
@@ -128,12 +140,12 @@ TEST(LJStepper, Step1) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
     std::vector<Particle> expected = {
-        Particle({ 2.95, 0.0, 0.0 }, { -1.0501928663952, 0.0, 0.0 }, 1.0),
-        Particle({ -2.95, 0.0, 0.0 }, { 1.0501928663952, 0.0, 0.0 }, 1.0),
+        Particle({ 2.95, 0.0, 0.0 }, { -1.0501928663952, 0.0, 0.0 }, 0),
+        Particle({ -2.95, 0.0, 0.0 }, { 1.0501928663952, 0.0, 0.0 }, 0),
     };
 
     expected[0].setF({ -0.0003857327903, 0.0, 0.0 });
@@ -153,7 +165,7 @@ TEST(LJStepper, Step1) {
     auto pi = calc.get_container().begin();
 
     for (size_t i = 0; i < expected.size(); i++) {
-        EXPECT_FLOAT_EQ(pi->getM(), expected[i].getM()) << "The particle mass must not change.";
+        EXPECT_FLOAT_EQ(ptypes[pi->getType()].get_mass(), 1.0) << "The particle mass must not change.";
         EXPECT_EQ(pi->getType(), expected[i].getType()) << "The particle type must not change.";
 
         EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected[i].getX()), error_margin) << "The particle must have the new position.";
@@ -179,7 +191,7 @@ TEST(Calculator, StepNo) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, {}, false);
+    physicsCalculator::LJCalculator calc(env, {}, {}, false);
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
@@ -201,8 +213,10 @@ TEST(GravityStepper, Analytical1) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 0.5, 2.0, -31.0 }, { 2.0, -0.5, 2.5 }, 2.0),
+        Particle({ 0.5, 2.0, -31.0 }, { 2.0, -0.5, 2.5 }, 0),
     };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = { TypeDesc { 2.0, 1.0, 5.0, 0.0001, 0.0 } };
 
     // Initialize the simulation environment
     const char* argv[] = {
@@ -217,7 +231,7 @@ TEST(GravityStepper, Analytical1) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::GravityCalculator calc(env, particles);
+    physicsCalculator::GravityCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
 
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
@@ -241,9 +255,11 @@ TEST(GravityStepper, Analytical2) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 3.0, 1.0, 3.0 }, { 0.1, 1.0, -0.05 }, 4.0),
-        Particle({ 1.0, 1.0, 3.0 }, { 0.1, -1.0, -0.05 }, 4.0),
+        Particle({ 3.0, 1.0, 3.0 }, { 0.1, 1.0, -0.05 }, 0),
+        Particle({ 1.0, 1.0, 3.0 }, { 0.1, -1.0, -0.05 }, 0),
     };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = { TypeDesc { 4.0, 1.0, 5.0, 0.0001, 0.0 } };
 
     // Initialize the simulation environment
     const char* argv[] = {
@@ -258,7 +274,7 @@ TEST(GravityStepper, Analytical2) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::GravityCalculator calc(env, particles);
+    physicsCalculator::GravityCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
     double time_mod_two_pi = 0.0;
     constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
@@ -302,9 +318,14 @@ TEST(GravityStepper, Analytical3) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, -1.0, 2.0 }, { 0.01, 1.05, -0.05 }, 1.0),
-        Particle({ 0.0, -1.0, 2.0 }, { 0.01, -0.95, -0.05 }, 1.0),
-        Particle({ 1.0, -1.0, 2.0 }, { 0.01, 0.05, -0.05 }, 0.75),
+        Particle({ 2.0, -1.0, 2.0 }, { 0.01, 1.05, -0.05 }, 0),
+        Particle({ 0.0, -1.0, 2.0 }, { 0.01, -0.95, -0.05 }, 0),
+        Particle({ 1.0, -1.0, 2.0 }, { 0.01, 0.05, -0.05 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.0001, 0.0 },
+        TypeDesc { 0.75, 1.0, 5.0, 0.0001, 0.0 },
     };
 
     // Initialize the simulation environment
@@ -320,7 +341,7 @@ TEST(GravityStepper, Analytical3) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::GravityCalculator calc(env, particles);
+    physicsCalculator::GravityCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
     double time_mod_two_pi = 0.0;
     constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
@@ -374,8 +395,13 @@ TEST(GravityStepper, Analytical4) {
     std::vector<Particle> particles = {
         //  1  0  0                 0.1  1  0             18
         // -2  0  0                 0.1 -2  0             9
-        Particle({ 1.0, -2.0, 1.0 }, { 1.05, 0.05, 0.01 }, 18),
-        Particle({ 1.0, -2.0, -2.0 }, { -1.95, 0.05, 0.01 }, 9),
+        Particle({ 1.0, -2.0, 1.0 }, { 1.05, 0.05, 0.01 }, 0),
+        Particle({ 1.0, -2.0, -2.0 }, { -1.95, 0.05, 0.01 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 18.0, 1.0, 5.0, 0.0001, 0.0 },
+        TypeDesc { 9.0, 1.0, 5.0, 0.0001, 0.0 },
     };
 
     // Initialize the simulation environment
@@ -391,7 +417,7 @@ TEST(GravityStepper, Analytical4) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::GravityCalculator calc(env, particles);
+    physicsCalculator::GravityCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
     double time_mod_two_pi = 0.0;
     constexpr double two_pi = static_cast<double>(M_PIl * 2.0L);
@@ -440,8 +466,10 @@ TEST(LJStepper, Analytical1) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 1.0, 10.0, -25.0 }, { 0.5, -0.5, 0.2 }, 3.3),
+        Particle({ 1.0, 10.0, -25.0 }, { 0.5, -0.5, 0.2 }, 0),
     };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = { TypeDesc { 3.3, 1.0, 5.0, 0.0001, 0.0 } };
 
     // Initialize the simulation environment
     const char* argv[] = {
@@ -456,7 +484,7 @@ TEST(LJStepper, Analytical1) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
@@ -481,8 +509,12 @@ TEST(LJStepper, Analytical2) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 6.3, 2.2, -1.5 }, { 0.02, 0.99, 0.03 }, 365346816.0),
-        Particle({ -3.7, 2.2, -1.5 }, { 0.02, -1.01, 0.03 }, 365346816.0),
+        Particle({ 6.3, 2.2, -1.5 }, { 0.02, 0.99, 0.03 }, 0),
+        Particle({ -3.7, 2.2, -1.5 }, { 0.02, -1.01, 0.03 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 365346816.0, 8.0, 244140625.0, 0.0001, 0.0 },
     };
 
     // Initialize the simulation environment
@@ -500,7 +532,7 @@ TEST(LJStepper, Analytical2) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
@@ -539,8 +571,13 @@ TEST(LJStepper, Analytical3) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 0.0, 0.0, 5.0 }, { 0.0, 1.0, 0.0 }, 243564544.0),
-        Particle({ 0.0, 0.0, -10.0 }, { 0.0, -2.0, 0.0 }, 121782272.5),
+        Particle({ 0.0, 0.0, 5.0 }, { 0.0, 1.0, 0.0 }, 0),
+        Particle({ 0.0, 0.0, -10.0 }, { 0.0, -2.0, 0.0 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 243564544.0, 12.0, 244140625.0, 0.0001, 0.0 },
+        TypeDesc { 121782272.5, 12.0, 244140625.0, 0.0001, 0.0 },
     };
 
     // Initialize the simulation environment
@@ -558,7 +595,7 @@ TEST(LJStepper, Analytical3) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
@@ -604,14 +641,19 @@ TEST(LJStepper, Analytical4) {
                 1.1480669497636142554225485204397801807855281376745671279006682579,
             },
             { 0.001, 0.001, -0.002 }, 1.0),
-        Particle({ 1.1, -2.0, 0.5 }, { 0.001, 0.001, -0.002 }, 1.5),
+        Particle({ 1.1, -2.0, 0.5 }, { 0.001, 0.001, -0.002 }, 0),
         Particle(
             {
                 0.4519330502363857445774514795602198192144718623254328720993317420,
                 -2.6480669497636142554225485204397801807855281376745671279006682579,
                 -0.148066949763614255422548520439780180785528137674567127900668257,
             },
-            { 0.001, 0.001, -0.002 }, 2.0),
+            { 0.001, 0.001, -0.002 }, 1),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.5, 1.0012978649056434718130942322111430509313330669648478791579796678, 4.0, 0.0001, 0.0 },
+        TypeDesc { 2.0, 1.0012978649056434718130942322111430509313330669648478791579796678, 4.0, 0.0001, 0.0 },
     };
 
     // Initialize the simulation environment
@@ -629,7 +671,7 @@ TEST(LJStepper, Analytical4) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes);
     double total_time = 0.0;
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
@@ -683,9 +725,13 @@ TEST(Stepper, MultipleBoundaries) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 3.0, 0.0, 5.0 }, { -1.0, -1.0, 0.0 }, 1.0),
-        Particle({ 7.0, 10.0, 5.0 }, { 1.0, 1.0, 0.0 }, 1.0),
-        Particle({ 5.0, 5.0, 5.0 }, { 0.0, 0.0, 1.0 }, 1.0),
+        Particle({ 3.0, 0.0, 5.0 }, { -1.0, -1.0, 0.0 }, 0),
+        Particle({ 7.0, 10.0, 5.0 }, { 1.0, 1.0, 0.0 }, 0),
+        Particle({ 5.0, 5.0, 5.0 }, { 0.0, 0.0, 1.0 }, 0),
+    };
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
     };
 
     particles[0].setF({ 0.0, 0.0, 0.0 });
@@ -708,7 +754,7 @@ TEST(Stepper, MultipleBoundaries) {
     env.set_domain_size({ 10.0, 10.0, 10.0 });
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false, false);
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, false, false);
     Stepper stepper({ HARD, HARD, OUTFLOW, HARD, HARD, OUTFLOW }, { 10.0, 10.0, 10.0 });
 
     // Perform the steps for 20000 time units
@@ -771,7 +817,7 @@ TEST(Stepper, MultipleReflecting) {
     ParticleGenerator gen;
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false, false);
+    physicsCalculator::LJCalculator calc(env, particles, {}, false, false);
     calc.get_container().resize(1000);
     gen.generateCuboid(calc.get_container(), 0, { 3.0, 3.0, 3.0 }, { 0.0, 0.0, 0.0 }, 1.0, { 10, 10, 10 }, 1.5, 1.0, 3);
     calc.get_container().update_positions();

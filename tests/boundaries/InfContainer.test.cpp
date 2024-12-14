@@ -4,13 +4,13 @@
 // Test the iterate pairs method for an inf container in a complex simulation setting.
 TEST(DSContainer, IteratePairs) {
     std::vector<Particle> particles = {
-        Particle({ 0.5, 0.5, 0.5 }, {}, 1.0, 1),
-        Particle({ 1.25, 0.5, 0.5 }, {}, 1.0, 2),
-        Particle({ 0.5, 1.25, 0.5 }, {}, 1.0, 3),
-        Particle({ 1.1, 1.1, 0.5 }, {}, 1.0, 4),
+        Particle({ 0.5, 0.5, 0.5 }, {}, 1),
+        Particle({ 1.25, 0.5, 0.5 }, {}, 2),
+        Particle({ 0.5, 1.25, 0.5 }, {}, 3),
+        Particle({ 1.1, 1.1, 0.5 }, {}, 4),
     };
 
-    DSContainer box = DSContainer(particles);
+    DSContainer box = DSContainer(particles, {});
 
     std::list<std::tuple<int, int>> pairs = {
         { 1, 2 },
