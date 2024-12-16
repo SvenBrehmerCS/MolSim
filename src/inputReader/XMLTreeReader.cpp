@@ -126,7 +126,7 @@ namespace inputReader {
             SPDLOG_CRITICAL("Particle size too large");
             std::exit(EXIT_FAILURE);
         }
-        int num_particles = static_cast<int>(sim->particle().size());
+        int num_particles = static_cast<int>(sim->particle().size()) + container.size();
 
         std::vector<TypeDesc> ptypes = container.get_types();
         int ptype = ptypes.size();
@@ -145,11 +145,11 @@ namespace inputReader {
 
         // Initialize all the single particles into the container.
         SPDLOG_TRACE("Single particles...");
-        container.resize(container.size() + num_particles);
+        int i = container.size();
+        container.resize(num_particles);
 
         const auto& particles = sim->particle();
 
-        int i = 0;
         for (const auto& particle : particles) {
             container[i].setX({ particle.position().vx(), particle.position().vy(), particle.position().vz() });
             container[i].setV({ particle.velocity().vx(), particle.velocity().vy(), particle.velocity().vz() });

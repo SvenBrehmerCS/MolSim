@@ -73,8 +73,6 @@ TEST(XMLTreeReader, TestParticles) {
     std::array<double, 3> v = { 1.0, 1.5, 1.7 };
     double m = 0.01;
 
-    container.resize(1);
-
     reader.readParticle(container, 0.0005, 0.0);
 
     ASSERT_EQ(container.size(), 1);
@@ -95,8 +93,6 @@ TEST(XMLTreeReader, TestXMLCuboid) {
     std::array<double, 3> x2 = { 0, 1, 0 };
     std::array<double, 3> x3 = { 1, 1, 0 };
     std::array<double, 3> v = { 0.5, 0.7, 0.9 };
-
-    container.resize(4);
 
     reader.readParticle(container, 0.0005, 0.0);
     ASSERT_EQ(container.size(), 4);
@@ -123,8 +119,6 @@ TEST(XMLTreeReader, TestXMLDisc) {
     std::array<double, 3> x4 = { 0.0, 1, 0.0 };
     std::array<double, 3> x5 = { 1, 0.0, 0.0 };
     std::array<double, 3> v = { 1.0, 1.0, 1.0 };
-
-    container.resize(5);
 
     reader.readParticle(container, 0.0005, 0.0);
 
@@ -166,8 +160,6 @@ TEST(XMLTreeReader, TestXMLCombined) {
     Environment environment;
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
-
-    container.resize(10);
 
     reader.readArguments(environment);
     reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
