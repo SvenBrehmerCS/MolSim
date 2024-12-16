@@ -15,7 +15,7 @@ void PeriodicBoundary::postX(Particle& particle) {
     std::array<double, 3> arr = particle.getX();
 
     if (arr[dim] < 0.0) {
-        arr[dim] = pos - arr[dim];
+        arr[dim] = pos + arr[dim];
     } else if (arr[dim] >= pos) {
         arr[dim] = arr[dim] - pos;
     }

@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <physicsCalculator/LJCalculator.h>
 
-// Test the no boundary does not affect a particle with post x
+// Test that the no boundary does not affect a particle with post x
 TEST(NoBoundary, ParticleUnaffectedX) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
@@ -12,7 +12,6 @@ TEST(NoBoundary, ParticleUnaffectedX) {
         Particle({ 13, 62.0, 22.0 }, { -1.0, 2.0, -1.0 }, 1),
     };
 
-    // When calling calculateF the current force must be zero
     particles[0].setF({ 1.0, 4.0, -1.0 });
     particles[0].setOldF({ -2.0, 2.0, 2.0 });
     particles[1].setF({ 2.0, -4.0, 1.0 });
@@ -47,7 +46,7 @@ TEST(NoBoundary, ParticleUnaffectedX) {
     }
 }
 
-// Test the no boundary does not affect a particle with post F
+// Test that the no boundary does not affect a particle with post F
 TEST(NoBoundary, ParticleUnaffectedF) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
@@ -57,7 +56,6 @@ TEST(NoBoundary, ParticleUnaffectedF) {
         Particle({ 12, 61.0, 23.0 }, { -21.0, 3.0, 2.0 }, 2),
     };
 
-    // When calling calculateF the current force must be zero
     particles[0].setF({ 1.0, 4.0, 2.0 });
     particles[0].setOldF({ -3.0, 2.0, 2.0 });
     particles[1].setF({ 2.0, -4.0, 1.0 });
