@@ -308,3 +308,5 @@ TEST(CellList, IterateInner) {
 }
 
 // TODO: Test loop cells
+// TODO: Test loop plains
+// TODO: Test loop rest
