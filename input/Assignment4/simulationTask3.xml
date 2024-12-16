@@ -1,54 +1,51 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../res/input.xsd">
+            xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
-        <name>simulation3</name>
+        <name>EquilibriumDatei</name>
         <format>VTK</format>
         <frequency>100</frequency>
     </output>
     <param>
         <calc>LJ_FULL</calc>
         <boundaries>
-            <boundary_yz_near>OUTFLOW</boundary_yz_near>
-            <boundary_xz_near>OUTFLOW</boundary_xz_near>
-            <boundary_xy_near>OUTFLOW</boundary_xy_near>
-            <boundary_yz_far>OUTFLOW</boundary_yz_far>
-            <boundary_xz_far>OUTFLOW</boundary_xz_far>
-            <boundary_xy_far>OUTFLOW</boundary_xy_far>
+            <boundary_yz_near>HARD</boundary_yz_near>
+            <boundary_xz_near>HARD</boundary_xz_near>
+            <boundary_xy_near>HARD</boundary_xy_near>
+            <boundary_yz_far>HARD</boundary_yz_far>
+            <boundary_xz_far>HARD</boundary_xz_far>
+            <boundary_xy_far>HARD</boundary_xy_far>
         </boundaries>
-        <epsilon>5.0</epsilon>
-        <sigma>1.0</sigma>
         <delta_t>0.0005</delta_t>
-        <t_end>15.0</t_end>
+        <t_end>40</t_end>
         <dimensions>2</dimensions>
-        <r_cutoff>3.0</r_cutoff>
+        <r_cutoff>3</r_cutoff>
         <domain>
-            <vx>180.0</vx>
-            <vy>90.0</vy>
+            <vx>303</vx>
+            <vy>180</vy>
             <vz>9.0</vz>
         </domain>
-        <T_init>40.0</T_init>
+        <T_init>0.5</T_init>
         <T_frequency>1000</T_frequency>
+        <g_grav>-12.44</g_grav>
     </param>
-    <cuboid>
-        <position>
-            <vx>20</vx>
-            <vy>20</vy>
+    <disc>
+        <center>
+            <vx>150</vx>
+            <vy>150</vy>
             <vz>4.5</vz>
-        </position>
+        </center>
         <velocity>
             <vx>0</vx>
             <vy>0</vy>
             <vz>0</vz>
         </velocity>
+        <r>20</r>
         <m>1.0</m>
-        <count>
-            <vx>10</vx>
-            <vy>20</vy>
-            <vz>1</vz>
-        </count>
-        <h>1.1225</h>
+        <sigma>1.2</sigma>
+        <epsilon>1.0</epsilon>
+        <h>1.2</h>
         <b_motion>0.0</b_motion>
-    </cuboid>
+    </disc>
     <checkpoint>EquilibriumDatei</checkpoint>
 </simulation>

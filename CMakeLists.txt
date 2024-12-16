@@ -13,7 +13,7 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebIn
 # Update the compile options for the release mode
 # TODO: For valgrind profiling -march=native must be disabled.
 # TODO: Additional useful compiler options could be: -march=native, -fprofile-generate, -fprofile-use (+ -fprofile-fix)
-set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native")
 
 # let ccmake and cmake-gui offer the default log levels TODO:
 set(LOG_LEVEL "INFO" CACHE STRING "Set the log level. This must either be OFF, CRITICAL, ERROR, WARN, INFO, DEBUG or TRACE.") 

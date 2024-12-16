@@ -137,7 +137,7 @@ int main(const int argc, const char* argv[]) {
     const auto end_time = std::chrono::steady_clock::now();
     const auto ms_duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     std::cout << "The simulation took " << ms_duration.count() << " ms. The update time for a single particle was "
-              << (static_cast<double>(ms_duration.count()) / static_cast<double>(iteration * cont->size())) << " ns.";
+              << (static_cast<double>(ms_duration.count()) / static_cast<double>(iteration * cont->size())) << " ns." << std::endl;
 
     // TODO hier Simulation checkpoint setzen wenn outputformat = checkpoint gesetzt
     if (env.get_output_file_format() == CHECKPOINT) {

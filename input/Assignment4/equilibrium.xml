@@ -4,7 +4,7 @@
     <output>
         <name>EquilibriumDatei</name>
         <format>CHECKPOINT</format>
-        <frequency>1</frequency>
+        <frequency>1000</frequency>
     </output>
     <param>
         <calc>LJ_FULL</calc>
@@ -17,7 +17,7 @@
             <boundary_xy_far>HARD</boundary_xy_far>
         </boundaries>
         <delta_t>0.0005</delta_t>
-        <t_end>0.005</t_end>
+        <t_end>1</t_end>
         <dimensions>2</dimensions>
         <r_cutoff>3</r_cutoff>
         <domain>
