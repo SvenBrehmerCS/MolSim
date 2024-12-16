@@ -41,7 +41,7 @@ namespace physicsCalculator {
 
     double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist) {
         // Calculate the distance and force experienced by two particles
-        return calculateFDist(p1.getType(), p2.getType(), dist);
+        return calculateFDist(dist, p1.getType(), p2.getType());
     }
 
 } // namespace physicsCalculator

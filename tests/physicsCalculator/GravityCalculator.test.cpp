@@ -67,7 +67,7 @@ TEST(Calculator, UpdateX1) {
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the position.";
         EXPECT_TRUE(pi->getF() == particles[i].getF()) << "The force must not change when updating the position.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the position.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the position.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the position.";
 
@@ -146,7 +146,7 @@ TEST(Calculator, UpdateV1) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The positions must not change when updating the velocity.";
         EXPECT_TRUE(pi->getF() == particles[i].getF()) << "The force must not change when updating the velocity.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the velocity.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the velocity.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the velocity.";
 
@@ -217,7 +217,7 @@ TEST(Calculator, UpdateOldF1) {
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the old force.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the old force.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the old force.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the old force.";
 
@@ -270,7 +270,7 @@ TEST(GravityCalculator, UpdateF1) {
     EXPECT_TRUE(pi->getX() == particles[0].getX()) << "The positions must not change when updating the force.";
     EXPECT_TRUE(pi->getV() == particles[0].getV()) << "The velocity must not change when updating the force.";
     EXPECT_TRUE(pi->getOldF() == particles[0].getOldF()) << "The old force must not change when updating the force.";
-    EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(0).get_mass(), ptypes[0].get_mass())
+    EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[0].getType()).get_mass(), ptypes[particles[0].getType()].get_mass())
         << "The mass must not change when updating the force.";
     EXPECT_EQ(pi->getType(), particles[0].getType()) << "The type must not change when updating the force.";
 
@@ -338,7 +338,7 @@ TEST(Calculator, UpdateF2) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The positions must not change when updating the force.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the force.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the force.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the force.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the force.";
 

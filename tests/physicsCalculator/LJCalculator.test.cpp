@@ -67,7 +67,7 @@ TEST(Calculator, UpdateX2) {
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the position.";
         EXPECT_TRUE(pi->getF() == particles[i].getF()) << "The force must not change when updating the position.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the position.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the position.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the position.";
 
@@ -166,7 +166,7 @@ TEST(Calculator, UpdateV2) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the velocity.";
         EXPECT_TRUE(pi->getF() == particles[i].getF()) << "The force must not change when updating the velocity.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the velocity.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the velocity.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the velocity.";
 
@@ -257,7 +257,7 @@ TEST(Calculator, UpdateOldF2) {
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the old force.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the old force.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the old force.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the old force.";
 
@@ -348,7 +348,7 @@ TEST(LJCalculator, UpdateF1) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
@@ -373,8 +373,8 @@ TEST(LJCalculator, UpdateF2) {
     };
     // Initialise the list of type descriptors
     std::vector<TypeDesc> ptypes = {
-        TypeDesc { 4.0, 1.0, 5.0, 0.1, 0.0 },
-        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 4.0, 2.0, 4.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 2.0, 4.0, 0.1, 0.0 },
     };
 
     // The forces must always be set to zero before calculateF is called.
@@ -418,7 +418,7 @@ TEST(LJCalculator, UpdateF2) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
@@ -443,8 +443,8 @@ TEST(LJCalculator, UpdateF3) {
     };
     // Initialise the list of type descriptors
     std::vector<TypeDesc> ptypes = {
-        TypeDesc { 5.0, 1.0, 5.0, 0.1, 0.0 },
-        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 5.0, 2.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 2.0, 5.0, 0.1, 0.0 },
     };
 
     // The forces must always be set to zero before calculateF is called.
@@ -488,7 +488,7 @@ TEST(LJCalculator, UpdateF3) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
@@ -513,8 +513,8 @@ TEST(LJCalculator, UpdateF4) {
     };
     // Initialise the list of type descriptors
     std::vector<TypeDesc> ptypes = {
-        TypeDesc { 1.0, 1.0, 5.0, 0.1, 0.0 },
-        TypeDesc { 2.0, 1.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 1.0, 1.0, 3.0, 0.1, 0.0 },
+        TypeDesc { 2.0, 1.0, 3.0, 0.1, 0.0 },
     };
 
     // The forces must always be set to zero before calculateF is called.
@@ -558,7 +558,7 @@ TEST(LJCalculator, UpdateF4) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the forces.";
         EXPECT_TRUE(pi->getV() == particles[i].getV()) << "The velocity must not change when updating the forces.";
         EXPECT_TRUE(pi->getOldF() == particles[i].getOldF()) << "The old force must not change when updating the forces.";
-        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(i).get_mass(), ptypes[i].get_mass())
+        EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[i].getType()).get_mass(), ptypes[particles[i].getType()].get_mass())
             << "The mass must not change when updating the forces.";
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
@@ -635,7 +635,7 @@ TEST(LJCalculator, UpdateFSingle) {
     EXPECT_TRUE(calc.get_container()[0].getX() == particles[0].getX()) << "The position must not change when updating the force.";
     EXPECT_TRUE(calc.get_container()[0].getV() == particles[0].getV()) << "The velocity must not change when updating the force.";
     EXPECT_TRUE(calc.get_container()[0].getOldF() == particles[0].getOldF()) << "The old force must not change when updating the force.";
-    EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(0).get_mass(), ptypes[0].get_mass())
+    EXPECT_FLOAT_EQ(calc.get_container().get_type_descriptor(particles[0].getType()).get_mass(), ptypes[particles[0].getType()].get_mass())
         << "The mass must not change when updating the force.";
     EXPECT_EQ(calc.get_container()[0].getType(), particles[0].getType()) << "The type must not change when updating the force.";
 

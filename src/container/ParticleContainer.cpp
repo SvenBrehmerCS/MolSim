@@ -1,40 +1,21 @@
 #include "ParticleContainer.h"
+#include <iostream>
 
 ParticleContainer::ParticleContainer() = default;
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const std::vector<TypeDesc>& new_desc)
-    : particles { new_particles }
-    , types { new_desc } { }
+    : particles { new_particles } {
+    build_type_table(new_desc);
+}
 
 ParticleContainer::ParticleContainer(const std::array<double, 3>& new_domain)
-    : domain { new_domain } {
-    type_pairs.resize(types.size() * types.size());
-
-    for (size_t i = 0; i < types.size(); i++) {
-        for (size_t j = 0; j < i; j++) {
-            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
-                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
-                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-        }
-    }
-}
+    : domain { new_domain } { }
 
 ParticleContainer::ParticleContainer(
     const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc)
     : particles { new_particles }
-    , domain { new_domain }
-    , types { new_desc } {
-    type_pairs.resize(types.size() * types.size());
-
-    for (size_t i = 0; i < types.size(); i++) {
-        for (size_t j = 0; j < i; j++) {
-            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
-                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
-                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-        }
-    }
+    , domain { new_domain } {
+    build_type_table(new_desc);
 }
 
 ParticleContainer::~ParticleContainer() = default;
@@ -84,10 +65,12 @@ void ParticleContainer::build_type_table(const std::vector<TypeDesc>& new_types)
 
     for (size_t i = 0; i < types.size(); i++) {
         for (size_t j = 0; j < i; j++) {
-            type_pairs[i * type_pairs.size() + j] = TypePairDesc(
+            type_pairs[i * types.size() + j] = TypePairDesc(
                 types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-            type_pairs[j * type_pairs.size() + i] = TypePairDesc(
+            type_pairs[j * types.size() + i] = TypePairDesc(
                 types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
         }
+        type_pairs[i * types.size() + i] = TypePairDesc(
+            types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon());
     }
 }
