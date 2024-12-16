@@ -246,13 +246,6 @@ public:
     Environment(const int argc, const char* argv[]);
 
     /**
-     * Create a copy of an environment object.
-     *
-     * @param env THe environment that should be copied.
-     */
-    Environment(const Environment& env);
-
-    /**
      * Destroy a simulation environment.
      */
     ~Environment();

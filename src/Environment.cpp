@@ -406,20 +406,6 @@ Environment::Environment(const int argc, const char* argv[]) {
     SPDLOG_DEBUG("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
 }
 
-Environment::Environment(const Environment& env) {
-    t_end = env.get_t_end();
-    delta_t = env.get_delta_t();
-    epsilon = env.get_epsilon();
-    sigma = env.get_sigma();
-    print_step = env.get_print_step();
-    input_file = env.get_input_file_name();
-    output_file = env.get_output_file_name();
-    output_format = env.get_output_file_format();
-    calc = env.get_calculator_type();
-    r_cutoff = env.get_r_cutoff();
-    checkpoint_file_name = env.get_checkpoint_file_name();
-}
-
 Environment::~Environment() = default;
 
 const char* Environment::get_input_file_name() const { return input_file; }
