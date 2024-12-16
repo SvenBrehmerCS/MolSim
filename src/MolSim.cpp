@@ -144,7 +144,7 @@ int main(const int argc, const char* argv[]) {
         SPDLOG_INFO("Checkpoint written.");
         outputWriter::CheckpointWriter checkpoint_writer;
         const char* filename = env.get_output_file_name();
-        checkpoint_writer.plot(*cont, filename);
+        checkpoint_writer.plot(*cont,env, filename);
     }
 
     SPDLOG_INFO("Output written. Terminating...");

@@ -11,13 +11,32 @@
 #include <iostream>
 namespace outputWriter {
     ;
-    void CheckpointWriter::plot(ParticleContainer& container, const char* filename) {
+    void CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename) {
         std::ofstream outputFile(filename, std::ios::binary);
 
         if (!outputFile.is_open()) {
             SPDLOG_ERROR("Error opening output file {}", filename);
             std::exit(EXIT_FAILURE);
         }
+        size_t num_types = container.get_types().size();
+        outputFile.write((char*)&num_types, sizeof(size_t));
+
+        auto types = container.get_types();
+        double delta_t = env.get_delta_t();
+        double g = env.get_gravity();
+        double mass, sigma, epsilon;
+        for (auto type : types) {
+            mass = type.get_mass();
+            sigma = type.get_sigma();
+            epsilon = type.get_epsilon();
+
+            outputFile.write((char*)&mass, sizeof(size_t));
+            outputFile.write((char*)&sigma, sizeof(double));
+            outputFile.write((char*)&epsilon, sizeof(double));
+            outputFile.write((char*)&delta_t, sizeof(double));
+            outputFile.write((char*)&g, sizeof(double));
+        }
+
         size_t numParticles = container.size();
         outputFile.write((char*)&numParticles, sizeof(size_t));
         // outputFile << container.size();
