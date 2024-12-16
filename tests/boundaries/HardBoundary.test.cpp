@@ -22,10 +22,10 @@ TEST(HardBoundary, ParticleReflectCorrectly) {
     particles[3].setOldF({ -6.0, 1.0, -6.0 });
 
     std::vector<Particle> reflected = {
-        Particle({ 1.0, 0.0, 2.0 }, { -2.0, 1.0, 1.0 }, 1.0),
-        Particle({ 1.0, 8.0, 2.0 }, { 1.0, 3.0, -2.0 }, 1.0),
-        Particle({ 3.0, 2.0, 7.0 }, { 2.0, -2.0, 1.0 }, 1.0),
-        Particle({ 2.0, 5.0, 2.0 }, { 1.0, 3.0, 2.0 }, 1.0),
+        Particle({ 1.0, 0.0, 2.0 }, { -2.0, 1.0, 1.0 }, 0),
+        Particle({ 1.0, 8.0, 2.0 }, { 1.0, 3.0, -2.0 }, 0),
+        Particle({ 3.0, 2.0, 7.0 }, { 2.0, -2.0, 1.0 }, 0),
+        Particle({ 2.0, 5.0, 2.0 }, { 1.0, 3.0, 2.0 }, 0),
     };
 
     reflected[0].setF({ 1.0, 4.0, 2.0 });
@@ -51,7 +51,8 @@ TEST(HardBoundary, ParticleReflectCorrectly) {
         boundary_x_far.postX(particles[i]);
         boundary_y_far.postX(particles[i]);
         boundary_z_far.postX(particles[i]);
-        EXPECT_TRUE(particles[i] == reflected[i]) << "The particle " << i << " was not reflected correctly.";
+        EXPECT_TRUE(particles[i] == reflected[i]) << "The particle " << i << " was not reflected correctly. (expected: " << reflected[i].toString()
+                                                  << ", got: " << particles[i].toString() << ")";
     }
 }
 

@@ -15,6 +15,10 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebIn
 # TODO: Additional useful compiler options could be: -march=native, -fprofile-generate, -fprofile-use (+ -fprofile-fix)
 set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
 
+# let ccmake and cmake-gui offer the default log levels TODO:
+set(LOG_LEVEL "INFO" CACHE STRING "Set the log level. This must either be OFF, CRITICAL, ERROR, WARN, INFO, DEBUG or TRACE.") 
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})
+
 # set Release as the default build type if it is not yet set.
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
@@ -112,10 +116,6 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
 )
 target_link_libraries(MolSim PRIVATE spdlog::spdlog)
-
-# let ccmake and cmake-gui offer the default log levels
-set(LOGLEVEL "INFO" CACHE STRING "Set the log level. This must either be OFF, CRITICAL, ERROR, WARN, INFO, DEBUG or TRACE.") 
-add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOGLEVEL})
 
 # Show the compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

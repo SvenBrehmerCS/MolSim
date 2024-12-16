@@ -64,13 +64,9 @@ void ParticleContainer::build_type_table(const std::vector<TypeDesc>& new_types)
     type_pairs.resize(types.size() * types.size());
 
     for (size_t i = 0; i < types.size(); i++) {
-        for (size_t j = 0; j < i; j++) {
+        for (size_t j = 0; j < types.size(); j++) {
             type_pairs[i * types.size() + j] = TypePairDesc(
                 types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
-            type_pairs[j * types.size() + i] = TypePairDesc(
-                types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[j].get_mass(), types[j].get_sigma(), types[j].get_epsilon());
         }
-        type_pairs[i * types.size() + i] = TypePairDesc(
-            types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon(), types[i].get_mass(), types[i].get_sigma(), types[i].get_epsilon());
     }
 }

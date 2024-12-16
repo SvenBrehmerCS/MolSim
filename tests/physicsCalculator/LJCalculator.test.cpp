@@ -438,13 +438,13 @@ TEST(LJCalculator, UpdateF3) {
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 0.0, 2.0, -1.0 }, { 3.0, 1.0, -2.0 }, 1),
-        Particle({ 0.0, 2.0, 0.0 }, { 1.0, 1.0, 0.0 }, 0),
+        Particle({ 0.0, 2.0, -1.0 }, { 3.0, 1.0, -2.0 }, 0),
+        Particle({ 0.0, 2.0, 0.0 }, { 1.0, 1.0, 0.0 }, 1),
     };
     // Initialise the list of type descriptors
     std::vector<TypeDesc> ptypes = {
-        TypeDesc { 5.0, 2.0, 5.0, 0.1, 0.0 },
         TypeDesc { 2.0, 2.0, 5.0, 0.1, 0.0 },
+        TypeDesc { 5.0, 2.0, 5.0, 0.1, 0.0 },
     };
 
     // The forces must always be set to zero before calculateF is called.
