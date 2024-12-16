@@ -4,7 +4,7 @@
     <output>
         <name>EquilibriumDatei</name>
         <format>CHECKPOINT</format>
-        <frequency>100</frequency>
+        <frequency>1</frequency>
     </output>
     <param>
         <calc>LJ_FULL</calc>
@@ -16,12 +16,10 @@
             <boundary_xz_far>HARD</boundary_xz_far>
             <boundary_xy_far>HARD</boundary_xy_far>
         </boundaries>
-        <epsilon>1.0</epsilon>
-        <sigma>1.2</sigma>
         <delta_t>0.0005</delta_t>
-        <t_end>15.0</t_end>
+        <t_end>0.005</t_end>
         <dimensions>2</dimensions>
-        <r_cutoff>3.0</r_cutoff>
+        <r_cutoff>3</r_cutoff>
         <domain>
             <vx>303</vx>
             <vy>180</vy>
@@ -29,6 +27,7 @@
         </domain>
         <T_init>0.5</T_init>
         <T_frequency>1000</T_frequency>
+        <g_grav>-12.44</g_grav>
     </param>
     <cuboid>
         <position>
@@ -41,12 +40,14 @@
             <vy>0</vy>
             <vz>0</vz>
         </velocity>
-        <m>1.0</m>
         <count>
-            <vx>20</vx>
-            <vy>10</vy>
+            <vx>250</vx>
+            <vy>50</vy>
             <vz>1</vz>
         </count>
+        <m>1.0</m>
+        <sigma>1.2</sigma>
+        <epsilon>1.0</epsilon>
         <h>1.2</h>
         <b_motion>0.0</b_motion>
     </cuboid>
