@@ -59,6 +59,8 @@ void ParticleContainer::remove_particles_out_of_domain() {
 
 const std::array<double, 3>& ParticleContainer::get_corner_vector() const { return domain; }
 
+std::vector<TypeDesc> ParticleContainer::get_types() const { return types; }
+
 void ParticleContainer::build_type_table(const std::vector<TypeDesc>& new_types) {
     types = new_types;
     type_pairs.resize(types.size() * types.size());
@@ -70,3 +72,5 @@ void ParticleContainer::build_type_table(const std::vector<TypeDesc>& new_types)
         }
     }
 }
+
+void ParticleContainer::set_particle_type(std::vector<TypeDesc> ptypes) { types = ptypes; }

@@ -157,6 +157,13 @@ public:
     const std::array<double, 3>& get_corner_vector() const;
 
     /**
+     * Get the vector representing all types of particles in the container.
+     *
+     * @return The particle types.
+     */
+    std::vector<TypeDesc> get_types() const;
+
+    /**
      * Create a type table using the types.
      *
      * @param A vector of types that should be used for the type creation.
@@ -181,4 +188,11 @@ public:
      * @return The particle type descriptor.
      */
     inline const TypeDesc& get_type_descriptor(const int t) const { return types[t]; }
+
+    /**
+     * Set the particle types
+     *
+     * @param ptypes The particle type.
+     */
+    void set_particle_type(std::vector<TypeDesc> ptypes);
 };

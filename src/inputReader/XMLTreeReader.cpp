@@ -113,6 +113,12 @@ namespace inputReader {
     void XMLTreeReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
         SPDLOG_DEBUG("Generating particles");
 
+        if (sim->checkpoint().present()) {
+            SPDLOG_TRACE("Checkpoint...");
+            CheckpointReader checkpoint_reader;
+            checkpoint_reader.readSimulation(container, sim->checkpoint().get().data());
+        }
+
         const int num_dimensions = sim->param().dimensions();
 
         size_t t = sim->particle().size();
@@ -122,8 +128,8 @@ namespace inputReader {
         }
         int num_particles = static_cast<int>(sim->particle().size());
 
-        std::vector<TypeDesc> ptypes;
-        int ptype = 0;
+        std::vector<TypeDesc> ptypes = container.get_types();
+        int ptype = ptypes.size();
 
         std::array<double, 3> x = { 0.0, 0.0, 0.0 };
         std::array<double, 3> v = { 0.0, 0.0, 0.0 };
@@ -139,7 +145,7 @@ namespace inputReader {
 
         // Initialize all the single particles into the container.
         SPDLOG_TRACE("Single particles...");
-        container.resize(num_particles);
+        container.resize(container.size() + num_particles);
 
         const auto& particles = sim->particle();
 
@@ -194,12 +200,6 @@ namespace inputReader {
                 container, num_particles, disc_center, disc_velocity, ptype++, disc.r(), disc.h(), brownian_motion, num_dimensions);
 
             num_particles += particles_added;
-        }
-
-        if (sim->checkpoint().present()) {
-            SPDLOG_TRACE("Checkpoint...");
-            CheckpointReader checkpoint_reader;
-            checkpoint_reader.readSimulation(container, sim->checkpoint().get().data());
         }
 
         container.build_type_table(ptypes);

@@ -7,7 +7,7 @@
 
 namespace physicsCalculator {
     LJCalculator::LJCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
-        : Calculator(new_env, new_cont) {
+        : Calculator { new_env, new_cont } {
         // Initialize the forces
         calculateF();
     }
