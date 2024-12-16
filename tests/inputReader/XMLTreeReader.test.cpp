@@ -59,8 +59,6 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     EXPECT_EQ(environment.get_calculator_type(), GRAVITY);
     std::array<BoundaryType, 6> boundaries = std::array<BoundaryType, 6> { PERIODIC, HARD, HALO, HARD, HALO, OUTFLOW };
     EXPECT_EQ(environment.get_boundary_type(), boundaries);
-    EXPECT_EQ(environment.get_epsilon(), 10);
-    EXPECT_EQ(environment.get_sigma(), 2.0);
     EXPECT_EQ(environment.get_delta_t(), 0.5);
     EXPECT_EQ(environment.get_t_end(), 500);
 }

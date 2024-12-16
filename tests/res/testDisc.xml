@@ -7,17 +7,15 @@
         <frequency></frequency>
     </output>
     <param>
-        <calc></calc>
+        <calc>GRAVITY</calc>
         <boundaries>
-            <boundary_yz_near></boundary_yz_near>
-            <boundary_xz_near></boundary_xz_near>
-            <boundary_xy_near></boundary_xy_near>
-            <boundary_yz_far></boundary_yz_far>
-            <boundary_xz_far></boundary_xz_far>
-            <boundary_xy_far></boundary_xy_far>
+            <boundary_yz_near>INF_CONT</boundary_yz_near>
+            <boundary_xz_near>INF_CONT</boundary_xz_near>
+            <boundary_xy_near>INF_CONT</boundary_xy_near>
+            <boundary_yz_far>INF_CONT</boundary_yz_far>
+            <boundary_xz_far>INF_CONT</boundary_xz_far>
+            <boundary_xy_far>INF_CONT</boundary_xy_far>
         </boundaries>
-        <epsilon></epsilon>
-        <sigma></sigma>
         <delta_t></delta_t>
         <t_end></t_end>
         <dimensions></dimensions>
@@ -28,6 +26,7 @@
             <vz>25</vz>
         </domain>
         <T_frequency></T_frequency>
+        <g_grav></g_grav>
     </param>
     <disc>
         <center>
@@ -40,8 +39,10 @@
             <vy>1</vy>
             <vz>1</vz>
         </velocity>
-        <m>2.5</m>
         <r>1</r>
+        <m>2.5</m>
+        <sigma></sigma>
+        <epsilon></epsilon>
         <h>1</h>
         <b_motion>0</b_motion>
     </disc>

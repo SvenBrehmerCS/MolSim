@@ -106,7 +106,7 @@ TEST(ParticleGenerator, GenerateCuboidWithParticles) {
     particle2.setType(type);
     particle2.setV({ 1.0, 1.0, 1.0 });
 
-    generator.generateCuboid(container, num_particles, x, v, 0, N, h, brownian_motion, dimension);
+    generator.generateCuboid(container, num_particles, x, v, type, N, h, brownian_motion, dimension);
 
     ASSERT_EQ(container.size(), num_particles + (N[0] * N[1] * N[2]));
     EXPECT_EQ(container[0].getX(), particle0.getX());
