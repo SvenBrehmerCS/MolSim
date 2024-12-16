@@ -1,4 +1,3 @@
-
 #include "MolSim.h"
 #include "Thermostat.h"
 #include "boundaries/Stepper.h"
@@ -58,7 +57,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     reader->readParticle(*cont, env.get_delta_t(), env.get_gravity());
-    reader.release();
+    reader.reset();
     env.assert_boundary_conditions();
 
     // Initialize the calculator.
@@ -100,7 +99,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper { env.get_boundary_type(), calculator->get_env().get_domain_size() };
+    Stepper stepper { env.get_boundary_type(), env.get_domain_size() };
     // Initialize the thermostat.
     Thermostat thermostat { env.get_dimensions(), env.get_temp_target(), env.get_max_delta_temp(), cont };
 
