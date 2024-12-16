@@ -819,7 +819,8 @@ TEST(Stepper, MultipleReflecting) {
     // Initialize the Calculator
     physicsCalculator::LJCalculator calc(env, particles, {}, false, false);
     calc.get_container().resize(1000);
-    gen.generateCuboid(calc.get_container(), 0, { 3.0, 3.0, 3.0 }, { 0.0, 0.0, 0.0 }, 1.0, { 10, 10, 10 }, 1.5, 1.0, 3);
+    gen.generateCuboid(calc.get_container(), 0, { 3.0, 3.0, 3.0 }, { 0.0, 0.0, 0.0 }, 0, { 10, 10, 10 }, 1.5, 1.0, 3);
+    calc.get_container().build_type_table({ TypeDesc { 1.0, 1.0, 5.0, 0.0001, 0.0 } });
     calc.get_container().update_positions();
 
     Stepper stepper({ HALO, HALO, HARD, HALO, HALO, HARD }, { 21.0, 21.0, 21.0 });
