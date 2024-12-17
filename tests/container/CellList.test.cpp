@@ -498,4 +498,35 @@ TEST(CellList, IterateYZPlain) {
     EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
 }
 
+// Test if looping through the near x axis works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateNearXAxis) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_x_near(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
 // TODO: Test loop rest
