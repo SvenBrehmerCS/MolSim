@@ -66,10 +66,11 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
-            xerces-c
+        XercesC::XercesC
 )
 
 # activate all compiler warnings. Clean up your code :P
@@ -82,6 +83,8 @@ target_compile_options(MolSim
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+
+include(FindXercesC)
 
 # Generate the doxygen make option
 include(doxygen)
@@ -103,12 +106,11 @@ target_include_directories(MolTest
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC spdlog::spdlog)
+target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC XercesC::XercesC PUBLIC spdlog::spdlog)
 
 include(GoogleTest)
 gtest_discover_tests(MolTest)
 
-include(xercesc)
 
 #include the spdlog module
 include(spdlog)
