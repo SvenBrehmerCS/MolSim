@@ -77,8 +77,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             const double force = calc.calculateFAbs(p1, p2, dist);
 
             // Update the forces for both particles
-            p1.setF(force * arr + p1.getF());
-            p2.setF(-force * arr + p2.getF());
+            p1.setF(-force * arr + p1.getF());
+            p2.setF(force * arr + p2.getF());
         });
 
         if (bound_t[1] == PERIODIC) {
@@ -88,8 +88,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
-                p1.setF(force * arr + p1.getF());
-                p2.setF(-force * arr + p2.getF());
+                p1.setF(-force * arr + p1.getF());
+                p2.setF(force * arr + p2.getF());
             });
             cont.loop_x_far([this, &calc](Particle& p1, Particle& p2) {
                 const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, -domain[1], domain[2] }) - p2.getX();
@@ -97,8 +97,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
-                p1.setF(force * arr + p1.getF());
-                p2.setF(-force * arr + p2.getF());
+                p1.setF(-force * arr + p1.getF());
+                p2.setF(force * arr + p2.getF());
             });
         }
 
@@ -109,8 +109,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
-                p1.setF(force * arr + p1.getF());
-                p2.setF(-force * arr + p2.getF());
+                p1.setF(-force * arr + p1.getF());
+                p2.setF(force * arr + p2.getF());
             });
             cont.loop_y_far([this, &calc](Particle& p1, Particle& p2) {
                 const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ -domain[0], 0.0, domain[2] }) - p2.getX();
@@ -118,8 +118,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
-                p1.setF(force * arr + p1.getF());
-                p2.setF(-force * arr + p2.getF());
+                p1.setF(-force * arr + p1.getF());
+                p2.setF(force * arr + p2.getF());
             });
         }
     }
@@ -132,8 +132,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             const double force = calc.calculateFAbs(p1, p2, dist);
 
             // Update the forces for both particles
-            p1.setF(force * arr + p1.getF());
-            p2.setF(-force * arr + p2.getF());
+            p1.setF(-force * arr + p1.getF());
+            p2.setF(force * arr + p2.getF());
         });
 
         if (bound_t[2] == PERIODIC) {
@@ -143,8 +143,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
-                p1.setF(force * arr + p1.getF());
-                p2.setF(-force * arr + p2.getF());
+                p1.setF(-force * arr + p1.getF());
+                p2.setF(force * arr + p2.getF());
             });
             cont.loop_z_far([this, &calc](Particle& p1, Particle& p2) {
                 const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ -domain[0], -domain[1], 0.0 }) - p2.getX();
@@ -152,8 +152,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
-                p1.setF(force * arr + p1.getF());
-                p2.setF(-force * arr + p2.getF());
+                p1.setF(-force * arr + p1.getF());
+                p2.setF(force * arr + p2.getF());
             });
         }
     }
@@ -167,8 +167,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             const double force = calc.calculateFAbs(p1, p2, dist);
 
             // Update the forces for both particles
-            p1.setF(force * arr + p1.getF());
-            p2.setF(-force * arr + p2.getF());
+            p1.setF(-force * arr + p1.getF());
+            p2.setF(force * arr + p2.getF());
         });
     }
 
@@ -181,8 +181,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             const double force = calc.calculateFAbs(p1, p2, dist);
 
             // Update the forces for both particles
-            p1.setF(force * arr + p1.getF());
-            p2.setF(-force * arr + p2.getF());
+            p1.setF(-force * arr + p1.getF());
+            p2.setF(force * arr + p2.getF());
         });
 
         cont.loop_x_corner([this, &calc](Particle& p1, Particle& p2) {
@@ -191,8 +191,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             const double force = calc.calculateFAbs(p1, p2, dist);
 
             // Update the forces for both particles
-            p1.setF(force * arr + p1.getF());
-            p2.setF(-force * arr + p2.getF());
+            p1.setF(-force * arr + p1.getF());
+            p2.setF(force * arr + p2.getF());
         });
 
         cont.loop_y_corner([this, &calc](Particle& p1, Particle& p2) {
@@ -201,8 +201,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             const double force = calc.calculateFAbs(p1, p2, dist);
 
             // Update the forces for both particles
-            p1.setF(force * arr + p1.getF());
-            p2.setF(-force * arr + p2.getF());
+            p1.setF(-force * arr + p1.getF());
+            p2.setF(force * arr + p2.getF());
         });
 
         cont.loop_xy_corner([this, &calc](Particle& p1, Particle& p2) {
@@ -211,8 +211,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             const double force = calc.calculateFAbs(p1, p2, dist);
 
             // Update the forces for both particles
-            p1.setF(force * arr + p1.getF());
-            p2.setF(-force * arr + p2.getF());
+            p1.setF(-force * arr + p1.getF());
+            p2.setF(force * arr + p2.getF());
         });
     }
 

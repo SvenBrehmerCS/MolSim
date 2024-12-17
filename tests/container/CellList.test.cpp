@@ -307,8 +307,6 @@ TEST(CellList, IterateInner) {
     EXPECT_EQ(indices.size(), 0) << "The indices size should be 0 but it was " << indices.size();
 }
 
-// TODO: Test loop cells
-
 // Test if looping through the xy plains works correctly. This test tests the cutoff distance, and all possible iteration configurations.
 TEST(CellList, IterateXYPlain) {
     CellList cells(2.0, { 16.0, 16.0, 16.0 });
@@ -555,6 +553,8 @@ TEST(CellList, IterateFarXAxis) {
         Particle({ 4.1, 15.9, 0.1 }, {}, 7),
         Particle({ 7.0, 14.1, 1.9 }, {}, 8),
         Particle({ 9.9, 15.9, 0.1 }, {}, 9),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 10),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 11),
     };
 
     std::list<std::tuple<int, int>> pairs = {
@@ -598,6 +598,8 @@ TEST(CellList, IterateNearYAxis) {
         Particle({ 15.9, 4.1, 15.9 }, {}, 7),
         Particle({ 14.1, 7.0, 14.1 }, {}, 8),
         Particle({ 15.9, 9.9, 15.9 }, {}, 9),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 10),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 11),
     };
 
     std::list<std::tuple<int, int>> pairs = {
@@ -641,6 +643,8 @@ TEST(CellList, IterateFarYAxis) {
         Particle({ 15.9, 4.1, 0.1 }, {}, 7),
         Particle({ 14.1, 7.0, 1.9 }, {}, 8),
         Particle({ 15.9, 9.9, 0.1 }, {}, 9),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 10),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 11),
     };
 
     std::list<std::tuple<int, int>> pairs = {
@@ -684,6 +688,8 @@ TEST(CellList, IterateNearZAxis) {
         Particle({ 15.9, 15.9, 4.1 }, {}, 7),
         Particle({ 14.1, 14.1, 7.0 }, {}, 8),
         Particle({ 15.9, 15.9, 9.9 }, {}, 9),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 10),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 11),
     };
 
     std::list<std::tuple<int, int>> pairs = {
@@ -727,6 +733,8 @@ TEST(CellList, IterateFarZAxis) {
         Particle({ 15.9, 0.1, 4.1 }, {}, 7),
         Particle({ 14.1, 1.9, 7.0 }, {}, 8),
         Particle({ 15.9, 0.1, 9.9 }, {}, 9),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 10),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 11),
     };
 
     std::list<std::tuple<int, int>> pairs = {
@@ -756,4 +764,156 @@ TEST(CellList, IterateFarZAxis) {
     EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
 }
 
-// TODO: Test loop rest
+// Test if looping through the origin cells works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateOriginCell) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 0.1, 0.1, 0.1 }, {}, 1),
+        Particle({ 15.9, 15.9, 15.9 }, {}, 2),
+        Particle({ 15.0, 15.0, 15.0 }, {}, 3),
+        Particle({ 1.0, 1.0, 1.0 }, {}, 4),
+        Particle({ 15.0, 5.0, 15.0 }, {}, 5),
+        Particle({ 15.0, 4.0, 15.0 }, {}, 6),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 2, 4 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_origin_corner(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the x cells works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateXCell) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 15.9, 0.1, 0.1 }, {}, 1),
+        Particle({ 0.1, 15.9, 15.9 }, {}, 2),
+        Particle({ 1.0, 15.0, 15.0 }, {}, 3),
+        Particle({ 15.0, 1.0, 1.0 }, {}, 4),
+        Particle({ 15.0, 5.0, 15.0 }, {}, 5),
+        Particle({ 15.0, 4.0, 15.0 }, {}, 6),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 2, 4 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_x_corner(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the y cells works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateYCell) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 0.1, 15.9, 0.1 }, {}, 1),
+        Particle({ 15.9, 0.1, 15.9 }, {}, 2),
+        Particle({ 15.0, 1.0, 15.0 }, {}, 3),
+        Particle({ 1.0, 15.0, 1.0 }, {}, 4),
+        Particle({ 15.0, 5.0, 15.0 }, {}, 5),
+        Particle({ 15.0, 4.0, 15.0 }, {}, 6),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 2, 4 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_y_corner(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the xy cells works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateXYCell) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 15.9, 15.9, 0.1 }, {}, 1),
+        Particle({ 0.1, 0.1, 15.9 }, {}, 2),
+        Particle({ 1.0, 1.0, 15.0 }, {}, 3),
+        Particle({ 15.0, 15.0, 1.0 }, {}, 4),
+        Particle({ 15.0, 5.0, 15.0 }, {}, 5),
+        Particle({ 15.0, 4.0, 15.0 }, {}, 6),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 2, 4 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_y_corner(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// TODO: Test loop corners
