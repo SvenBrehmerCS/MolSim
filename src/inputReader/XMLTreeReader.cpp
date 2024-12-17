@@ -195,6 +195,7 @@ namespace inputReader {
         for (const auto& disc : discs) {
             disc_center = { disc.center().vx(), disc.center().vy(), disc.center().vz() };
             disc_velocity = { disc.velocity().vx(), disc.velocity().vy(), disc.velocity().vz() };
+            m = disc.m();
 
             if (sim->thermo().present() && sim->thermo().get().T_init().present()) {
                 brownian_motion = std::sqrt(sim->thermo().get().T_init().get() / m);
@@ -206,7 +207,7 @@ namespace inputReader {
 
             container.resize(num_particles + particles_future_added);
 
-            ptypes.push_back(TypeDesc { disc.m(), disc.sigma(), disc.epsilon(), delta_t, gravity });
+            ptypes.push_back(TypeDesc { m, disc.sigma(), disc.epsilon(), delta_t, gravity });
 
             int particles_added = generator.generateDisc(
                 container, num_particles, disc_center, disc_velocity, ptype++, disc.r(), disc.h(), brownian_motion, num_dimensions);
