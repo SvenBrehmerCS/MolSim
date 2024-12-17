@@ -21,7 +21,7 @@ namespace inputReader {
 
     FileReader::~FileReader() = default;
 
-    void FileReader::readArguments(Environment& environment) { }
+    void FileReader::readArguments(Environment& environment, Thermostat& thermostat) { }
 
     void FileReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
 

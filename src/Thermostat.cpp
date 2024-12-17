@@ -1,11 +1,5 @@
 #include "Thermostat.h"
 
-Thermostat::Thermostat(int dimensions, double T_target, double max_change, std::shared_ptr<ParticleContainer> particles)
-    : dimensions { dimensions }
-    , T_target { T_target }
-    , max_change { max_change }
-    , particles { particles } { }
-
 void Thermostat::regulate_Temperature() {
 
     double E_kin = 0.0;

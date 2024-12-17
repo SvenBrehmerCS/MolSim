@@ -12,6 +12,7 @@
 
 #include "Environment.h"
 #include "ParticleGenerator.h"
+#include "Thermostat.h"
 #include "spdlog/spdlog.h"
 
 #include <cstdlib>
@@ -47,7 +48,7 @@ namespace inputReader {
          *
          * @param environment Data structure for holding the simulation parameters.
          */
-        virtual void readArguments(Environment& environment);
+        virtual void readArguments(Environment& environment, Thermostat& thermostat);
 
         /**
          * Imports the particles from the input file.

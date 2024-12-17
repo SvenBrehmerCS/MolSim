@@ -18,6 +18,9 @@
  * @return Array containing the generated velocity vector.
  */
 inline std::array<double, 3> maxwellBoltzmannDistributedVelocity(double averageVelocity, size_t dimensions) {
+    if (averageVelocity == 0.0) {
+        return std::array<double, 3> { 0.0, 0.0, 0.0 };
+    }
     // we use a constant seed for repeatability.
     // random engine needs static lifetime otherwise it would be recreated for every call.
     static std::default_random_engine randomEngine(42);

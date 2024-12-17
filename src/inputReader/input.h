@@ -566,6 +566,7 @@ class param_t;
 class particle_t;
 class cuboid_t;
 class disc_t;
+class thermo_t;
 class bound;
 class dvector;
 class pdvector;
@@ -578,16 +579,16 @@ class delta_t;
 class t_end;
 class dimensions;
 class r_cutoff;
-class T_init;
-class T_target;
-class T_frequency;
-class max_delta_T;
 class m;
 class sigma;
 class epsilon;
 class h;
 class b_motion;
 class r;
+class T_init;
+class T_target;
+class T_frequency;
+class max_delta_T;
 class vx;
 class vy;
 class vz;
@@ -923,6 +924,80 @@ public:
     //@}
 
     /**
+     * @name thermo
+     *
+     * @brief Accessor and modifier functions for the %thermo
+     * optional element.
+     *
+     * The information needed to regulate the simulation
+     * temperature.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::thermo_t thermo_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<thermo_type> thermo_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<thermo_type, char> thermo_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const thermo_optional& thermo() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    thermo_optional& thermo();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void thermo(const thermo_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void thermo(const thermo_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void thermo(::std::unique_ptr<thermo_type> p);
+
+    //@}
+
+    /**
      * @name checkpoint
      *
      * @brief Accessor and modifier functions for the %checkpoint
@@ -1081,6 +1156,7 @@ protected:
     particle_sequence particle_;
     cuboid_sequence cuboid_;
     disc_sequence disc_;
+    thermo_optional thermo_;
     checkpoint_optional checkpoint_;
 
     //@endcond
@@ -1813,289 +1889,6 @@ public:
     //@}
 
     /**
-     * @name T_init
-     *
-     * @brief Accessor and modifier functions for the %T_init
-     * optional element.
-     *
-     * Initial temperature of the simulation.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::T_init T_init_type;
-
-    /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<T_init_type> T_init_optional;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<T_init_type, char> T_init_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
-     *
-     * @return A constant reference to the optional container.
-     */
-    const T_init_optional& T_init() const;
-
-    /**
-     * @brief Return a read-write reference to the element container.
-     *
-     * @return A reference to the optional container.
-     */
-    T_init_optional& T_init();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void T_init(const T_init_type& x);
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void T_init(const T_init_optional& x);
-
-    /**
-     * @brief Set the element value without copying.
-     *
-     * @param p A new value to use.
-     *
-     * This function will try to use the passed value directly instead
-     * of making a copy.
-     */
-    void T_init(::std::unique_ptr<T_init_type> p);
-
-    //@}
-
-    /**
-     * @name T_target
-     *
-     * @brief Accessor and modifier functions for the %T_target
-     * optional element.
-     *
-     * Target temperature of the simulation.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::T_target T_target_type;
-
-    /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<T_target_type> T_target_optional;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<T_target_type, char> T_target_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
-     *
-     * @return A constant reference to the optional container.
-     */
-    const T_target_optional& T_target() const;
-
-    /**
-     * @brief Return a read-write reference to the element container.
-     *
-     * @return A reference to the optional container.
-     */
-    T_target_optional& T_target();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void T_target(const T_target_type& x);
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void T_target(const T_target_optional& x);
-
-    /**
-     * @brief Set the element value without copying.
-     *
-     * @param p A new value to use.
-     *
-     * This function will try to use the passed value directly instead
-     * of making a copy.
-     */
-    void T_target(::std::unique_ptr<T_target_type> p);
-
-    //@}
-
-    /**
-     * @name T_frequency
-     *
-     * @brief Accessor and modifier functions for the %T_frequency
-     * required element.
-     *
-     * Number of steps between thermostat applications.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::T_frequency T_frequency_type;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<T_frequency_type, char> T_frequency_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element.
-     *
-     * @return A constant reference to the element.
-     */
-    const T_frequency_type& T_frequency() const;
-
-    /**
-     * @brief Return a read-write reference to the element.
-     *
-     * @return A reference to the element.
-     */
-    T_frequency_type& T_frequency();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void T_frequency(const T_frequency_type& x);
-
-    /**
-     * @brief Set the element value without copying.
-     *
-     * @param p A new value to use.
-     *
-     * This function will try to use the passed value directly
-     * instead of making a copy.
-     */
-    void T_frequency(::std::unique_ptr<T_frequency_type> p);
-
-    /**
-     * @brief Return the default value for the element.
-     *
-     * @return The element's default value.
-     */
-    static T_frequency_type T_frequency_default_value();
-
-    //@}
-
-    /**
-     * @name max_delta_T
-     *
-     * @brief Accessor and modifier functions for the %max_delta_T
-     * optional element.
-     *
-     * Maximal absolute temperature change per thermostat
-     * application.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::max_delta_T max_delta_T_type;
-
-    /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<max_delta_T_type> max_delta_T_optional;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<max_delta_T_type, char> max_delta_T_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
-     *
-     * @return A constant reference to the optional container.
-     */
-    const max_delta_T_optional& max_delta_T() const;
-
-    /**
-     * @brief Return a read-write reference to the element container.
-     *
-     * @return A reference to the optional container.
-     */
-    max_delta_T_optional& max_delta_T();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void max_delta_T(const max_delta_T_type& x);
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void max_delta_T(const max_delta_T_optional& x);
-
-    /**
-     * @brief Set the element value without copying.
-     *
-     * @param p A new value to use.
-     *
-     * This function will try to use the passed value directly instead
-     * of making a copy.
-     */
-    void max_delta_T(::std::unique_ptr<max_delta_T_type> p);
-
-    //@}
-
-    /**
      * @name g_grav
      *
      * @brief Accessor and modifier functions for the %g_grav
@@ -2158,7 +1951,7 @@ public:
      * initializers for required elements and attributes.
      */
     param_t(const calc_type&, const boundaries_type&, const delta_t_type&, const t_end_type&, const dimensions_type&, const r_cutoff_type&,
-        const domain_type&, const T_frequency_type&, const g_grav_type&);
+        const domain_type&, const g_grav_type&);
 
     /**
      * @brief Create an instance from the ultimate base and
@@ -2169,7 +1962,7 @@ public:
      * instead of making copies.
      */
     param_t(const calc_type&, ::std::unique_ptr<boundaries_type>, const delta_t_type&, const t_end_type&, const dimensions_type&,
-        const r_cutoff_type&, ::std::unique_ptr<domain_type>, const T_frequency_type&, const g_grav_type&);
+        const r_cutoff_type&, ::std::unique_ptr<domain_type>, const g_grav_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -2239,10 +2032,6 @@ protected:
     ::xsd::cxx::tree::one<dimensions_type> dimensions_;
     ::xsd::cxx::tree::one<r_cutoff_type> r_cutoff_;
     ::xsd::cxx::tree::one<domain_type> domain_;
-    T_init_optional T_init_;
-    T_target_optional T_target_;
-    ::xsd::cxx::tree::one<T_frequency_type> T_frequency_;
-    max_delta_T_optional max_delta_T_;
     ::xsd::cxx::tree::one<g_grav_type> g_grav_;
 
     //@endcond
@@ -3672,6 +3461,378 @@ protected:
     ::xsd::cxx::tree::one<epsilon_type> epsilon_;
     ::xsd::cxx::tree::one<h_type> h_;
     ::xsd::cxx::tree::one<b_motion_type> b_motion_;
+
+    //@endcond
+};
+
+/**
+ * @brief Class corresponding to the %thermo_t schema type.
+ *
+ * This complex type represents the thermostat, which regulates the
+ * temperature of the simulation.
+ *
+ * @nosubgrouping
+ */
+class thermo_t : public ::xml_schema::type {
+public:
+    /**
+     * @name T_init
+     *
+     * @brief Accessor and modifier functions for the %T_init
+     * optional element.
+     *
+     * Initial temperature of the simulation.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::T_init T_init_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<T_init_type> T_init_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<T_init_type, char> T_init_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const T_init_optional& T_init() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    T_init_optional& T_init();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void T_init(const T_init_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void T_init(const T_init_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void T_init(::std::unique_ptr<T_init_type> p);
+
+    //@}
+
+    /**
+     * @name T_target
+     *
+     * @brief Accessor and modifier functions for the %T_target
+     * optional element.
+     *
+     * Target temperature of the simulation.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::T_target T_target_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<T_target_type> T_target_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<T_target_type, char> T_target_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const T_target_optional& T_target() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    T_target_optional& T_target();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void T_target(const T_target_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void T_target(const T_target_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void T_target(::std::unique_ptr<T_target_type> p);
+
+    //@}
+
+    /**
+     * @name T_frequency
+     *
+     * @brief Accessor and modifier functions for the %T_frequency
+     * required element.
+     *
+     * Number of steps between thermostat applications.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::T_frequency T_frequency_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<T_frequency_type, char> T_frequency_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const T_frequency_type& T_frequency() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    T_frequency_type& T_frequency();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void T_frequency(const T_frequency_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void T_frequency(::std::unique_ptr<T_frequency_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return The element's default value.
+     */
+    static T_frequency_type T_frequency_default_value();
+
+    //@}
+
+    /**
+     * @name max_delta_T
+     *
+     * @brief Accessor and modifier functions for the %max_delta_T
+     * optional element.
+     *
+     * Maximal absolute temperature change per thermostat
+     * application.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::max_delta_T max_delta_T_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<max_delta_T_type> max_delta_T_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<max_delta_T_type, char> max_delta_T_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const max_delta_T_optional& max_delta_T() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    max_delta_T_optional& max_delta_T();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void max_delta_T(const max_delta_T_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void max_delta_T(const max_delta_T_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void max_delta_T(::std::unique_ptr<max_delta_T_type> p);
+
+    //@}
+
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    thermo_t(const T_frequency_type&);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    thermo_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    thermo_t(const thermo_t& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual thermo_t* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    /**
+     * @brief Copy assignment operator.
+     *
+     * @param x An instance to make a copy of.
+     * @return A reference to itself.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    thermo_t& operator=(const thermo_t& x);
+
+    //@}
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~thermo_t();
+
+    // Implementation.
+    //
+
+    //@cond
+
+protected:
+    void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+protected:
+    T_init_optional T_init_;
+    T_target_optional T_target_;
+    ::xsd::cxx::tree::one<T_frequency_type> T_frequency_;
+    max_delta_T_optional max_delta_T_;
 
     //@endcond
 };
@@ -5784,349 +5945,6 @@ public:
 };
 
 /**
- * @brief Class corresponding to the %T_init schema type.
- *
- * @nosubgrouping
- */
-class T_init
-    : public ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_> {
-public:
-    /**
-     * @name Constructors
-     */
-    //@{
-
-    /**
-     * @brief Create an instance from the ultimate base and
-     * initializers for required elements and attributes.
-     */
-    T_init(const ::xml_schema::double_&);
-
-    /**
-     * @brief Create an instance from a DOM element.
-     *
-     * @param e A DOM element to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_init(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a DOM attribute.
-     *
-     * @param a A DOM attribute to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_init(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a string fragment.
-     *
-     * @param s A string fragment to extract the data from.
-     * @param e A pointer to DOM element containing the string fragment.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_init(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy constructor.
-     *
-     * @param x An instance to make a copy of.
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     *
-     * For polymorphic object models use the @c _clone function instead.
-     */
-    T_init(const T_init& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy the instance polymorphically.
-     *
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     * @return A pointer to the dynamically allocated copy.
-     *
-     * This function ensures that the dynamic type of the instance is
-     * used for copying and should be used for polymorphic object
-     * models instead of the copy constructor.
-     */
-    virtual T_init* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
-
-    //@}
-
-#ifdef XSD_CXX11
-    T_init& operator=(const T_init&) = default;
-#endif
-
-    /**
-     * @brief Destructor.
-     */
-    virtual ~T_init();
-};
-
-/**
- * @brief Class corresponding to the %T_target schema type.
- *
- * @nosubgrouping
- */
-class T_target
-    : public ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_> {
-public:
-    /**
-     * @name Constructors
-     */
-    //@{
-
-    /**
-     * @brief Create an instance from the ultimate base and
-     * initializers for required elements and attributes.
-     */
-    T_target(const ::xml_schema::double_&);
-
-    /**
-     * @brief Create an instance from a DOM element.
-     *
-     * @param e A DOM element to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_target(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a DOM attribute.
-     *
-     * @param a A DOM attribute to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_target(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a string fragment.
-     *
-     * @param s A string fragment to extract the data from.
-     * @param e A pointer to DOM element containing the string fragment.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_target(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy constructor.
-     *
-     * @param x An instance to make a copy of.
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     *
-     * For polymorphic object models use the @c _clone function instead.
-     */
-    T_target(const T_target& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy the instance polymorphically.
-     *
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     * @return A pointer to the dynamically allocated copy.
-     *
-     * This function ensures that the dynamic type of the instance is
-     * used for copying and should be used for polymorphic object
-     * models instead of the copy constructor.
-     */
-    virtual T_target* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
-
-    //@}
-
-#ifdef XSD_CXX11
-    T_target& operator=(const T_target&) = default;
-#endif
-
-    /**
-     * @brief Destructor.
-     */
-    virtual ~T_target();
-};
-
-/**
- * @brief Class corresponding to the %T_frequency schema type.
- *
- * @nosubgrouping
- */
-class T_frequency : public ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type> {
-public:
-    /**
-     * @name Constructors
-     */
-    //@{
-
-    /**
-     * @brief Create an instance from the ultimate base and
-     * initializers for required elements and attributes.
-     */
-    T_frequency(const ::xml_schema::positive_integer&);
-
-    /**
-     * @brief Create an instance from a DOM element.
-     *
-     * @param e A DOM element to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_frequency(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a DOM attribute.
-     *
-     * @param a A DOM attribute to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_frequency(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a string fragment.
-     *
-     * @param s A string fragment to extract the data from.
-     * @param e A pointer to DOM element containing the string fragment.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    T_frequency(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy constructor.
-     *
-     * @param x An instance to make a copy of.
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     *
-     * For polymorphic object models use the @c _clone function instead.
-     */
-    T_frequency(const T_frequency& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy the instance polymorphically.
-     *
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     * @return A pointer to the dynamically allocated copy.
-     *
-     * This function ensures that the dynamic type of the instance is
-     * used for copying and should be used for polymorphic object
-     * models instead of the copy constructor.
-     */
-    virtual T_frequency* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
-
-    //@}
-
-#ifdef XSD_CXX11
-    T_frequency& operator=(const T_frequency&) = default;
-#endif
-
-    /**
-     * @brief Destructor.
-     */
-    virtual ~T_frequency();
-};
-
-/**
- * @brief Class corresponding to the %max_delta_T schema type.
- *
- * @nosubgrouping
- */
-class max_delta_T
-    : public ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_> {
-public:
-    /**
-     * @name Constructors
-     */
-    //@{
-
-    /**
-     * @brief Create an instance from the ultimate base and
-     * initializers for required elements and attributes.
-     */
-    max_delta_T(const ::xml_schema::double_&);
-
-    /**
-     * @brief Create an instance from a DOM element.
-     *
-     * @param e A DOM element to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    max_delta_T(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a DOM attribute.
-     *
-     * @param a A DOM attribute to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    max_delta_T(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Create an instance from a string fragment.
-     *
-     * @param s A string fragment to extract the data from.
-     * @param e A pointer to DOM element containing the string fragment.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    max_delta_T(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy constructor.
-     *
-     * @param x An instance to make a copy of.
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     *
-     * For polymorphic object models use the @c _clone function instead.
-     */
-    max_delta_T(const max_delta_T& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy the instance polymorphically.
-     *
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     * @return A pointer to the dynamically allocated copy.
-     *
-     * This function ensures that the dynamic type of the instance is
-     * used for copying and should be used for polymorphic object
-     * models instead of the copy constructor.
-     */
-    virtual max_delta_T* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
-
-    //@}
-
-#ifdef XSD_CXX11
-    max_delta_T& operator=(const max_delta_T&) = default;
-#endif
-
-    /**
-     * @brief Destructor.
-     */
-    virtual ~max_delta_T();
-};
-
-/**
  * @brief Class corresponding to the %m schema type.
  *
  * @nosubgrouping
@@ -6637,6 +6455,349 @@ public:
      * @brief Destructor.
      */
     virtual ~r();
+};
+
+/**
+ * @brief Class corresponding to the %T_init schema type.
+ *
+ * @nosubgrouping
+ */
+class T_init
+    : public ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_> {
+public:
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    T_init(const ::xml_schema::double_&);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_init(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_init(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_init(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    T_init(const T_init& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual T_init* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    //@}
+
+#ifdef XSD_CXX11
+    T_init& operator=(const T_init&) = default;
+#endif
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~T_init();
+};
+
+/**
+ * @brief Class corresponding to the %T_target schema type.
+ *
+ * @nosubgrouping
+ */
+class T_target
+    : public ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_> {
+public:
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    T_target(const ::xml_schema::double_&);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_target(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_target(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_target(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    T_target(const T_target& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual T_target* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    //@}
+
+#ifdef XSD_CXX11
+    T_target& operator=(const T_target&) = default;
+#endif
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~T_target();
+};
+
+/**
+ * @brief Class corresponding to the %T_frequency schema type.
+ *
+ * @nosubgrouping
+ */
+class T_frequency : public ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type> {
+public:
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    T_frequency(const ::xml_schema::positive_integer&);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_frequency(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_frequency(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    T_frequency(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    T_frequency(const T_frequency& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual T_frequency* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    //@}
+
+#ifdef XSD_CXX11
+    T_frequency& operator=(const T_frequency&) = default;
+#endif
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~T_frequency();
+};
+
+/**
+ * @brief Class corresponding to the %max_delta_T schema type.
+ *
+ * @nosubgrouping
+ */
+class max_delta_T
+    : public ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_> {
+public:
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    max_delta_T(const ::xml_schema::double_&);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    max_delta_T(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    max_delta_T(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    max_delta_T(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    max_delta_T(const max_delta_T& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual max_delta_T* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    //@}
+
+#ifdef XSD_CXX11
+    max_delta_T& operator=(const max_delta_T&) = default;
+#endif
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~max_delta_T();
 };
 
 /**

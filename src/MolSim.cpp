@@ -46,7 +46,10 @@ int main(const int argc, const char* argv[]) {
         break;
     }
 
-    reader->readArguments(env);
+    // Initialize the thermostat.
+    Thermostat thermostat;
+
+    reader->readArguments(env, thermostat);
 
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
@@ -100,8 +103,9 @@ int main(const int argc, const char* argv[]) {
 
     // Initialize the stepper.
     Stepper stepper { env.get_boundary_type(), env.get_domain_size() };
-    // Initialize the thermostat.
-    Thermostat thermostat { env.get_dimensions(), env.get_temp_target(), env.get_max_delta_temp(), cont };
+
+    // Fully initialise Thermostat
+    thermostat.set_particles(cont);
 
     // Initialize the simulation environment.
     double current_time = 0.0;
@@ -123,7 +127,7 @@ int main(const int argc, const char* argv[]) {
         current_time += env.get_delta_t();
 
         // Apply thermostat
-        if (iteration % env.get_temp_frequency() == 0)
+        if (thermostat.get_active() && iteration % env.get_temp_frequency() == 0)
             thermostat.regulate_Temperature();
 
         // Store the particles to an output file
@@ -144,7 +148,7 @@ int main(const int argc, const char* argv[]) {
         SPDLOG_INFO("Checkpoint written.");
         outputWriter::CheckpointWriter checkpoint_writer;
         const char* filename = env.get_output_file_name();
-        checkpoint_writer.plot(*cont,env, filename);
+        checkpoint_writer.plot(*cont, env, filename);
     }
 
     SPDLOG_INFO("Output written. Terminating...");

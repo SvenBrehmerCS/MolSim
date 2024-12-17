@@ -47,10 +47,11 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     const char* xml = "../tests/res/testNonDefault.xml";
 
     Environment environment;
+    Thermostat thermo;
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
-    reader.readArguments(environment);
+    reader.readArguments(environment, thermo);
     reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
     EXPECT_EQ(container.size(), 0);
     EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
@@ -158,10 +159,11 @@ TEST(XMLTreeReader, TestXMLCombined) {
     std::array<double, 3> vparticle = { 1.0, 1.5, 1.7 };
 
     Environment environment;
+    Thermostat thermo;
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
-    reader.readArguments(environment);
+    reader.readArguments(environment, thermo);
     reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
 
     ASSERT_EQ(container.size(), 10);

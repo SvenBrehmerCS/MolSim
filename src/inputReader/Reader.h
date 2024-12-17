@@ -8,6 +8,7 @@
 
 class Environment;
 class ParticleContainer;
+class Thermostat;
 
 /**
  * @brief Collection of readers for different input types
@@ -32,7 +33,7 @@ namespace inputReader {
          *
          * @param environment Data structure for holding the simulation parameters.
          */
-        virtual void readArguments(Environment& environment) = 0;
+        virtual void readArguments(Environment& environment, Thermostat& thermostat) = 0;
 
         /**
          * Imports the particles from the input file.

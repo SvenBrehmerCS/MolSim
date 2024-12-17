@@ -485,11 +485,7 @@ void Environment::assert_boundary_conditions() {
     }
 }
 
-double Environment::get_temp_target() const { return temp_target; }
-
 int Environment::get_temp_frequency() const { return temp_frequency; }
-
-double Environment::get_max_delta_temp() const { return max_delta_temp; }
 
 void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
 
@@ -526,10 +522,6 @@ void Environment::set_checkpoint_file_name(std::string& checkpoint_file_name) { 
 
 void Environment::set_dimensions(const int dimensions) { this->dimensions = dimensions; }
 
-void Environment::set_temp_target(const double temp_target) { this->temp_target = temp_target; }
-
 void Environment::set_temp_frequency(const int temp_frequency) { this->temp_frequency = temp_frequency; }
-
-void Environment::set_max_delta_temp(double max_delta_temp) { this->max_delta_temp = max_delta_temp; }
 
 void Environment::set_gravity(const double g) { gravity = g; }

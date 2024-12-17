@@ -77,6 +77,16 @@ sim_t::disc_sequence& sim_t::disc() { return this->disc_; }
 
 void sim_t::disc(const disc_sequence& s) { this->disc_ = s; }
 
+const sim_t::thermo_optional& sim_t::thermo() const { return this->thermo_; }
+
+sim_t::thermo_optional& sim_t::thermo() { return this->thermo_; }
+
+void sim_t::thermo(const thermo_type& x) { this->thermo_.set(x); }
+
+void sim_t::thermo(const thermo_optional& x) { this->thermo_ = x; }
+
+void sim_t::thermo(::std::unique_ptr<thermo_type> x) { this->thermo_.set(std::move(x)); }
+
 const sim_t::checkpoint_optional& sim_t::checkpoint() const { return this->checkpoint_; }
 
 sim_t::checkpoint_optional& sim_t::checkpoint() { return this->checkpoint_; }
@@ -190,46 +200,6 @@ param_t::domain_type& param_t::domain() { return this->domain_.get(); }
 void param_t::domain(const domain_type& x) { this->domain_.set(x); }
 
 void param_t::domain(::std::unique_ptr<domain_type> x) { this->domain_.set(std::move(x)); }
-
-const param_t::T_init_optional& param_t::T_init() const { return this->T_init_; }
-
-param_t::T_init_optional& param_t::T_init() { return this->T_init_; }
-
-void param_t::T_init(const T_init_type& x) { this->T_init_.set(x); }
-
-void param_t::T_init(const T_init_optional& x) { this->T_init_ = x; }
-
-void param_t::T_init(::std::unique_ptr<T_init_type> x) { this->T_init_.set(std::move(x)); }
-
-const param_t::T_target_optional& param_t::T_target() const { return this->T_target_; }
-
-param_t::T_target_optional& param_t::T_target() { return this->T_target_; }
-
-void param_t::T_target(const T_target_type& x) { this->T_target_.set(x); }
-
-void param_t::T_target(const T_target_optional& x) { this->T_target_ = x; }
-
-void param_t::T_target(::std::unique_ptr<T_target_type> x) { this->T_target_.set(std::move(x)); }
-
-const param_t::T_frequency_type& param_t::T_frequency() const { return this->T_frequency_.get(); }
-
-param_t::T_frequency_type& param_t::T_frequency() { return this->T_frequency_.get(); }
-
-void param_t::T_frequency(const T_frequency_type& x) { this->T_frequency_.set(x); }
-
-void param_t::T_frequency(::std::unique_ptr<T_frequency_type> x) { this->T_frequency_.set(std::move(x)); }
-
-param_t::T_frequency_type param_t::T_frequency_default_value() { return T_frequency_type(10000ULL); }
-
-const param_t::max_delta_T_optional& param_t::max_delta_T() const { return this->max_delta_T_; }
-
-param_t::max_delta_T_optional& param_t::max_delta_T() { return this->max_delta_T_; }
-
-void param_t::max_delta_T(const max_delta_T_type& x) { this->max_delta_T_.set(x); }
-
-void param_t::max_delta_T(const max_delta_T_optional& x) { this->max_delta_T_ = x; }
-
-void param_t::max_delta_T(::std::unique_ptr<max_delta_T_type> x) { this->max_delta_T_.set(std::move(x)); }
 
 const param_t::g_grav_type& param_t::g_grav() const { return this->g_grav_.get(); }
 
@@ -414,6 +384,50 @@ void disc_t::b_motion(const b_motion_type& x) { this->b_motion_.set(x); }
 void disc_t::b_motion(::std::unique_ptr<b_motion_type> x) { this->b_motion_.set(std::move(x)); }
 
 disc_t::b_motion_type disc_t::b_motion_default_value() { return b_motion_type(.0); }
+
+
+// thermo_t
+//
+
+const thermo_t::T_init_optional& thermo_t::T_init() const { return this->T_init_; }
+
+thermo_t::T_init_optional& thermo_t::T_init() { return this->T_init_; }
+
+void thermo_t::T_init(const T_init_type& x) { this->T_init_.set(x); }
+
+void thermo_t::T_init(const T_init_optional& x) { this->T_init_ = x; }
+
+void thermo_t::T_init(::std::unique_ptr<T_init_type> x) { this->T_init_.set(std::move(x)); }
+
+const thermo_t::T_target_optional& thermo_t::T_target() const { return this->T_target_; }
+
+thermo_t::T_target_optional& thermo_t::T_target() { return this->T_target_; }
+
+void thermo_t::T_target(const T_target_type& x) { this->T_target_.set(x); }
+
+void thermo_t::T_target(const T_target_optional& x) { this->T_target_ = x; }
+
+void thermo_t::T_target(::std::unique_ptr<T_target_type> x) { this->T_target_.set(std::move(x)); }
+
+const thermo_t::T_frequency_type& thermo_t::T_frequency() const { return this->T_frequency_.get(); }
+
+thermo_t::T_frequency_type& thermo_t::T_frequency() { return this->T_frequency_.get(); }
+
+void thermo_t::T_frequency(const T_frequency_type& x) { this->T_frequency_.set(x); }
+
+void thermo_t::T_frequency(::std::unique_ptr<T_frequency_type> x) { this->T_frequency_.set(std::move(x)); }
+
+thermo_t::T_frequency_type thermo_t::T_frequency_default_value() { return T_frequency_type(10000ULL); }
+
+const thermo_t::max_delta_T_optional& thermo_t::max_delta_T() const { return this->max_delta_T_; }
+
+thermo_t::max_delta_T_optional& thermo_t::max_delta_T() { return this->max_delta_T_; }
+
+void thermo_t::max_delta_T(const max_delta_T_type& x) { this->max_delta_T_.set(x); }
+
+void thermo_t::max_delta_T(const max_delta_T_optional& x) { this->max_delta_T_ = x; }
+
+void thermo_t::max_delta_T(::std::unique_ptr<max_delta_T_type> x) { this->max_delta_T_.set(std::move(x)); }
 
 
 // bound
@@ -653,22 +667,6 @@ const boundaries::boundary_xy_far_type& boundaries::boundary_xy_far_default_valu
 //
 
 
-// T_init
-//
-
-
-// T_target
-//
-
-
-// T_frequency
-//
-
-
-// max_delta_T
-//
-
-
 // m
 //
 
@@ -690,6 +688,22 @@ const boundaries::boundary_xy_far_type& boundaries::boundary_xy_far_default_valu
 
 
 // r
+//
+
+
+// T_init
+//
+
+
+// T_target
+//
+
+
+// T_frequency
+//
+
+
+// max_delta_T
 //
 
 
@@ -729,6 +743,7 @@ sim_t::sim_t(const output_type& output, const param_type& param)
     , particle_(this)
     , cuboid_(this)
     , disc_(this)
+    , thermo_(this)
     , checkpoint_(this) { }
 
 sim_t::sim_t(::std::unique_ptr<output_type> output, ::std::unique_ptr<param_type> param)
@@ -738,6 +753,7 @@ sim_t::sim_t(::std::unique_ptr<output_type> output, ::std::unique_ptr<param_type
     , particle_(this)
     , cuboid_(this)
     , disc_(this)
+    , thermo_(this)
     , checkpoint_(this) { }
 
 sim_t::sim_t(const sim_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -747,6 +763,7 @@ sim_t::sim_t(const sim_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
     , particle_(x.particle_, f, this)
     , cuboid_(x.cuboid_, f, this)
     , disc_(x.disc_, f, this)
+    , thermo_(x.thermo_, f, this)
     , checkpoint_(x.checkpoint_, f, this) { }
 
 sim_t::sim_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -756,6 +773,7 @@ sim_t::sim_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema
     , particle_(this)
     , cuboid_(this)
     , disc_(this)
+    , thermo_(this)
     , checkpoint_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -817,6 +835,17 @@ void sim_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) 
             continue;
         }
 
+        // thermo
+        //
+        if (n.name() == "thermo" && n.namespace_().empty()) {
+            ::std::unique_ptr<thermo_type> r(thermo_traits::create(i, f, this));
+
+            if (!this->thermo_) {
+                this->thermo_.set(::std::move(r));
+                continue;
+            }
+        }
+
         // checkpoint
         //
         if (n.name() == "checkpoint" && n.namespace_().empty()) {
@@ -850,6 +879,7 @@ sim_t& sim_t::operator=(const sim_t& x) {
         this->particle_ = x.particle_;
         this->cuboid_ = x.cuboid_;
         this->disc_ = x.disc_;
+        this->thermo_ = x.thermo_;
         this->checkpoint_ = x.checkpoint_;
     }
 
@@ -963,8 +993,7 @@ output_t::~output_t() { }
 const param_t::calc_type param_t::calc_default_value_("LJ_FULL");
 
 param_t::param_t(const calc_type& calc, const boundaries_type& boundaries, const delta_t_type& delta_t, const t_end_type& t_end,
-    const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, const domain_type& domain, const T_frequency_type& T_frequency,
-    const g_grav_type& g_grav)
+    const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, const domain_type& domain, const g_grav_type& g_grav)
     : ::xml_schema::type()
     , calc_(calc, this)
     , boundaries_(boundaries, this)
@@ -973,15 +1002,10 @@ param_t::param_t(const calc_type& calc, const boundaries_type& boundaries, const
     , dimensions_(dimensions, this)
     , r_cutoff_(r_cutoff, this)
     , domain_(domain, this)
-    , T_init_(this)
-    , T_target_(this)
-    , T_frequency_(T_frequency, this)
-    , max_delta_T_(this)
     , g_grav_(g_grav, this) { }
 
 param_t::param_t(const calc_type& calc, ::std::unique_ptr<boundaries_type> boundaries, const delta_t_type& delta_t, const t_end_type& t_end,
-    const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, ::std::unique_ptr<domain_type> domain, const T_frequency_type& T_frequency,
-    const g_grav_type& g_grav)
+    const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, ::std::unique_ptr<domain_type> domain, const g_grav_type& g_grav)
     : ::xml_schema::type()
     , calc_(calc, this)
     , boundaries_(std::move(boundaries), this)
@@ -990,10 +1014,6 @@ param_t::param_t(const calc_type& calc, ::std::unique_ptr<boundaries_type> bound
     , dimensions_(dimensions, this)
     , r_cutoff_(r_cutoff, this)
     , domain_(std::move(domain), this)
-    , T_init_(this)
-    , T_target_(this)
-    , T_frequency_(T_frequency, this)
-    , max_delta_T_(this)
     , g_grav_(g_grav, this) { }
 
 param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -1005,10 +1025,6 @@ param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::containe
     , dimensions_(x.dimensions_, f, this)
     , r_cutoff_(x.r_cutoff_, f, this)
     , domain_(x.domain_, f, this)
-    , T_init_(x.T_init_, f, this)
-    , T_target_(x.T_target_, f, this)
-    , T_frequency_(x.T_frequency_, f, this)
-    , max_delta_T_(x.max_delta_T_, f, this)
     , g_grav_(x.g_grav_, f, this) { }
 
 param_t::param_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -1020,10 +1036,6 @@ param_t::param_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_sc
     , dimensions_(this)
     , r_cutoff_(this)
     , domain_(this)
-    , T_init_(this)
-    , T_target_(this)
-    , T_frequency_(this)
-    , max_delta_T_(this)
     , g_grav_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -1113,50 +1125,6 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
             }
         }
 
-        // T_init
-        //
-        if (n.name() == "T_init" && n.namespace_().empty()) {
-            ::std::unique_ptr<T_init_type> r(T_init_traits::create(i, f, this));
-
-            if (!this->T_init_) {
-                this->T_init_.set(::std::move(r));
-                continue;
-            }
-        }
-
-        // T_target
-        //
-        if (n.name() == "T_target" && n.namespace_().empty()) {
-            ::std::unique_ptr<T_target_type> r(T_target_traits::create(i, f, this));
-
-            if (!this->T_target_) {
-                this->T_target_.set(::std::move(r));
-                continue;
-            }
-        }
-
-        // T_frequency
-        //
-        if (n.name() == "T_frequency" && n.namespace_().empty()) {
-            ::std::unique_ptr<T_frequency_type> r(T_frequency_traits::create(i, f, this));
-
-            if (!T_frequency_.present()) {
-                this->T_frequency_.set(::std::move(r));
-                continue;
-            }
-        }
-
-        // max_delta_T
-        //
-        if (n.name() == "max_delta_T" && n.namespace_().empty()) {
-            ::std::unique_ptr<max_delta_T_type> r(max_delta_T_traits::create(i, f, this));
-
-            if (!this->max_delta_T_) {
-                this->max_delta_T_.set(::std::move(r));
-                continue;
-            }
-        }
-
         // g_grav
         //
         if (n.name() == "g_grav" && n.namespace_().empty()) {
@@ -1197,10 +1165,6 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
         throw ::xsd::cxx::tree::expected_element<char>("domain", "");
     }
 
-    if (!T_frequency_.present()) {
-        throw ::xsd::cxx::tree::expected_element<char>("T_frequency", "");
-    }
-
     if (!g_grav_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("g_grav", "");
     }
@@ -1218,10 +1182,6 @@ param_t& param_t::operator=(const param_t& x) {
         this->dimensions_ = x.dimensions_;
         this->r_cutoff_ = x.r_cutoff_;
         this->domain_ = x.domain_;
-        this->T_init_ = x.T_init_;
-        this->T_target_ = x.T_target_;
-        this->T_frequency_ = x.T_frequency_;
-        this->max_delta_T_ = x.max_delta_T_;
         this->g_grav_ = x.g_grav_;
     }
 
@@ -1736,6 +1696,108 @@ disc_t& disc_t::operator=(const disc_t& x) {
 }
 
 disc_t::~disc_t() { }
+
+// thermo_t
+//
+
+thermo_t::thermo_t(const T_frequency_type& T_frequency)
+    : ::xml_schema::type()
+    , T_init_(this)
+    , T_target_(this)
+    , T_frequency_(T_frequency, this)
+    , max_delta_T_(this) { }
+
+thermo_t::thermo_t(const thermo_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c)
+    , T_init_(x.T_init_, f, this)
+    , T_target_(x.T_target_, f, this)
+    , T_frequency_(x.T_frequency_, f, this)
+    , max_delta_T_(x.max_delta_T_, f, this) { }
+
+thermo_t::thermo_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c)
+    , T_init_(this)
+    , T_target_(this)
+    , T_frequency_(this)
+    , max_delta_T_(this) {
+    if ((f & ::xml_schema::flags::base) == 0) {
+        ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+        this->parse(p, f);
+    }
+}
+
+void thermo_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+    for (; p.more_content(); p.next_content(false)) {
+        const ::xercesc::DOMElement& i(p.cur_element());
+        const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
+
+        // T_init
+        //
+        if (n.name() == "T_init" && n.namespace_().empty()) {
+            ::std::unique_ptr<T_init_type> r(T_init_traits::create(i, f, this));
+
+            if (!this->T_init_) {
+                this->T_init_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // T_target
+        //
+        if (n.name() == "T_target" && n.namespace_().empty()) {
+            ::std::unique_ptr<T_target_type> r(T_target_traits::create(i, f, this));
+
+            if (!this->T_target_) {
+                this->T_target_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // T_frequency
+        //
+        if (n.name() == "T_frequency" && n.namespace_().empty()) {
+            ::std::unique_ptr<T_frequency_type> r(T_frequency_traits::create(i, f, this));
+
+            if (!T_frequency_.present()) {
+                this->T_frequency_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // max_delta_T
+        //
+        if (n.name() == "max_delta_T" && n.namespace_().empty()) {
+            ::std::unique_ptr<max_delta_T_type> r(max_delta_T_traits::create(i, f, this));
+
+            if (!this->max_delta_T_) {
+                this->max_delta_T_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        break;
+    }
+
+    if (!T_frequency_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("T_frequency", "");
+    }
+}
+
+thermo_t* thermo_t::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class thermo_t(*this, f, c); }
+
+thermo_t& thermo_t::operator=(const thermo_t& x) {
+    if (this != &x) {
+        static_cast<::xml_schema::type&>(*this) = x;
+        this->T_init_ = x.T_init_;
+        this->T_target_ = x.T_target_;
+        this->T_frequency_ = x.T_frequency_;
+        this->max_delta_T_ = x.max_delta_T_;
+    }
+
+    return *this;
+}
+
+thermo_t::~thermo_t() { }
 
 // bound
 //
@@ -2403,100 +2465,6 @@ r_cutoff* r_cutoff::_clone(::xml_schema::flags f, ::xml_schema::container* c) co
 
 r_cutoff::~r_cutoff() { }
 
-// T_init
-//
-
-T_init::T_init(const ::xml_schema::double_& _xsd_double__base)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(
-          _xsd_double__base) { }
-
-T_init::T_init(const T_init& x, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(x, f, c) { }
-
-T_init::T_init(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(e, f, c) { }
-
-T_init::T_init(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(a, f, c) { }
-
-T_init::T_init(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(s, e, f, c) {
-}
-
-T_init* T_init::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class T_init(*this, f, c); }
-
-T_init::~T_init() { }
-
-// T_target
-//
-
-T_target::T_target(const ::xml_schema::double_& _xsd_double__base)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(
-          _xsd_double__base) { }
-
-T_target::T_target(const T_target& x, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(x, f, c) { }
-
-T_target::T_target(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(e, f, c) { }
-
-T_target::T_target(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(a, f, c) { }
-
-T_target::T_target(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(s, e, f, c) {
-}
-
-T_target* T_target::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class T_target(*this, f, c); }
-
-T_target::~T_target() { }
-
-// T_frequency
-//
-
-T_frequency::T_frequency(const ::xml_schema::positive_integer& _xsd_positive_integer_base)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(_xsd_positive_integer_base) { }
-
-T_frequency::T_frequency(const T_frequency& x, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(x, f, c) { }
-
-T_frequency::T_frequency(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(e, f, c) { }
-
-T_frequency::T_frequency(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(a, f, c) { }
-
-T_frequency::T_frequency(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(s, e, f, c) { }
-
-T_frequency* T_frequency::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class T_frequency(*this, f, c); }
-
-T_frequency::~T_frequency() { }
-
-// max_delta_T
-//
-
-max_delta_T::max_delta_T(const ::xml_schema::double_& _xsd_double__base)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(
-          _xsd_double__base) { }
-
-max_delta_T::max_delta_T(const max_delta_T& x, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(x, f, c) { }
-
-max_delta_T::max_delta_T(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(e, f, c) { }
-
-max_delta_T::max_delta_T(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(a, f, c) { }
-
-max_delta_T::max_delta_T(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(s, e, f, c) {
-}
-
-max_delta_T* max_delta_T::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class max_delta_T(*this, f, c); }
-
-max_delta_T::~max_delta_T() { }
-
 // m
 //
 
@@ -2640,6 +2608,100 @@ r::r(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags
 r* r::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class r(*this, f, c); }
 
 r::~r() { }
+
+// T_init
+//
+
+T_init::T_init(const ::xml_schema::double_& _xsd_double__base)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(
+          _xsd_double__base) { }
+
+T_init::T_init(const T_init& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(x, f, c) { }
+
+T_init::T_init(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(e, f, c) { }
+
+T_init::T_init(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(a, f, c) { }
+
+T_init::T_init(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(s, e, f, c) {
+}
+
+T_init* T_init::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class T_init(*this, f, c); }
+
+T_init::~T_init() { }
+
+// T_target
+//
+
+T_target::T_target(const ::xml_schema::double_& _xsd_double__base)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(
+          _xsd_double__base) { }
+
+T_target::T_target(const T_target& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(x, f, c) { }
+
+T_target::T_target(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(e, f, c) { }
+
+T_target::T_target(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(a, f, c) { }
+
+T_target::T_target(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(s, e, f, c) {
+}
+
+T_target* T_target::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class T_target(*this, f, c); }
+
+T_target::~T_target() { }
+
+// T_frequency
+//
+
+T_frequency::T_frequency(const ::xml_schema::positive_integer& _xsd_positive_integer_base)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(_xsd_positive_integer_base) { }
+
+T_frequency::T_frequency(const T_frequency& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(x, f, c) { }
+
+T_frequency::T_frequency(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(e, f, c) { }
+
+T_frequency::T_frequency(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(a, f, c) { }
+
+T_frequency::T_frequency(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::positive_integer, char, ::xml_schema::simple_type>(s, e, f, c) { }
+
+T_frequency* T_frequency::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class T_frequency(*this, f, c); }
+
+T_frequency::~T_frequency() { }
+
+// max_delta_T
+//
+
+max_delta_T::max_delta_T(const ::xml_schema::double_& _xsd_double__base)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(
+          _xsd_double__base) { }
+
+max_delta_T::max_delta_T(const max_delta_T& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(x, f, c) { }
+
+max_delta_T::max_delta_T(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(e, f, c) { }
+
+max_delta_T::max_delta_T(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(a, f, c) { }
+
+max_delta_T::max_delta_T(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xsd::cxx::tree::fundamental_base<::xml_schema::double_, char, ::xml_schema::simple_type, ::xsd::cxx::tree::schema_type::double_>(s, e, f, c) {
+}
+
+max_delta_T* max_delta_T::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class max_delta_T(*this, f, c); }
+
+max_delta_T::~max_delta_T() { }
 
 // vx
 //

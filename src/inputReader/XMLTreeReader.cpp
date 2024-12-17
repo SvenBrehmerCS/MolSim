@@ -31,7 +31,7 @@ namespace inputReader {
 
     XMLTreeReader::~XMLTreeReader() = default;
 
-    void XMLTreeReader::readArguments(Environment& environment) {
+    void XMLTreeReader::readArguments(Environment& environment, Thermostat& thermostat) {
         SPDLOG_DEBUG("Setting up simulation environment");
 
         SPDLOG_TRACE("Loading output parameters...");
@@ -87,22 +87,22 @@ namespace inputReader {
         }
         */
 
-        if (sim->param().T_target().present()) {
-            environment.set_temp_target(sim->param().T_target().get());
-        } else {
-            if (!sim->param().T_init().present()) {
-                SPDLOG_CRITICAL("Target temperature has to be set if initial temperature is non existent.");
-                std::exit(EXIT_FAILURE);
+        if (sim->thermo().present()) {
+            if (sim->thermo().get().T_target().present()) {
+                thermostat.set_T_target(sim->thermo().get().T_target().get());
+                thermostat.set_active(true);
+            } else if (sim->thermo().get().T_init().present()) {
+                thermostat.set_T_target(sim->thermo().get().T_init().get());
+                thermostat.set_active(true);
+            } else {
+                SPDLOG_WARN("Both target and initial temperature were not given. Proceeding without thermostat.");
             }
-            environment.set_temp_target(sim->param().T_init().get());
-        }
 
-        environment.set_temp_frequency(sim->param().T_frequency());
+            if (sim->thermo().get().max_delta_T().present())
+                thermostat.set_max_change(sim->thermo().get().max_delta_T().get());
 
-        if (sim->param().max_delta_T().present()) {
-            environment.set_max_delta_temp(sim->param().max_delta_T().get());
-        } else {
-            environment.set_max_delta_temp(std::numeric_limits<double>::infinity());
+
+            environment.set_temp_frequency(sim->thermo().get().T_frequency());
         }
 
         environment.set_gravity(sim->param().g_grav());
@@ -171,7 +171,12 @@ namespace inputReader {
             s = cuboid.sigma();
             e = cuboid.epsilon();
             h = cuboid.h();
-            (sim->param().T_init().present()) ? brownian_motion = (std::sqrt(sim->param().T_init().get() / m)) : brownian_motion = cuboid.b_motion();
+
+            if (sim->thermo().present() && sim->thermo().get().T_init().present()) {
+                brownian_motion = std::sqrt(sim->thermo().get().T_init().get() / m);
+            } else {
+                brownian_motion = cuboid.b_motion();
+            }
 
             container.resize(num_particles + cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz());
 
@@ -188,7 +193,12 @@ namespace inputReader {
         for (const auto& disc : discs) {
             disc_center = { disc.center().vx(), disc.center().vy(), disc.center().vz() };
             disc_velocity = { disc.velocity().vx(), disc.velocity().vy(), disc.velocity().vz() };
-            (sim->param().T_init().present()) ? brownian_motion = (std::sqrt(sim->param().T_init().get() / m)) : brownian_motion = disc.b_motion();
+
+            if (sim->thermo().present() && sim->thermo().get().T_init().present()) {
+                brownian_motion = std::sqrt(sim->thermo().get().T_init().get() / m);
+            } else {
+                brownian_motion = disc.b_motion();
+            }
 
             int particles_future_added = num_particles_added(disc.h(), disc.r());
 

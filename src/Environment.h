@@ -205,26 +205,10 @@ private:
      */
     std::string checkpoint_file_name;
 
-    // REMOVE probably
-    /**
-     * Specifies the initial temperature of the simulation.
-     */
-    // double T_init = 40.0;
-
-    /**
-     * Specifies the target temperature of the simulation.
-     */
-    double temp_target = 40.0;
-
     /**
      * Specifies the number of steps between thermometer applications.
      */
     int temp_frequency = 1000;
-
-    /**
-     * Specifies the maximal absolute temperature change per thermostat application.
-     */
-    double max_delta_temp = std::numeric_limits<double>::infinity();
 
     /**
      * Store the gravity pulling the atoms down.
@@ -371,25 +355,11 @@ public:
     int get_dimensions() const;
 
     /**
-     * Get the target temperature of the simulation.
-     *
-     * @return The target temperature.
-     */
-    double get_temp_target() const;
-
-    /**
      * Get the number of steps between thermometer applications.
      *
      * @return The application frequency.
      */
     int get_temp_frequency() const;
-
-    /**
-     * Get the maximal absolute temperature change per thermostat application.
-     *
-     * @return The maximal absolute delta temperature.
-     */
-    double get_max_delta_temp() const;
 
     // Setter methods
 
@@ -490,25 +460,11 @@ public:
     void set_dimensions(const int dimensions);
 
     /**
-     * Set the target temperature of the simulation.
-     *
-     * @param temp_target The target temperature.
-     */
-    void set_temp_target(const double temp_target);
-
-    /**
      * Set the number of steps between thermometer applications.
      *
      * @param temp_frequency The application frequency.
      */
     void set_temp_frequency(const int temp_frequency);
-
-    /**
-     * Set the maximal absolute temperature change per thermostat application.
-     *
-     * @param max_delta_temp The maximal absolute delta temperature.
-     */
-    void set_max_delta_temp(double max_delta_temp);
 
     /**
      * Set the gravity pulling the atoms down.
