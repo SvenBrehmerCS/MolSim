@@ -53,6 +53,12 @@ private:
      */
     std::array<double, 3> cell_size;
 
+    /**
+     * Define the domain size and sub dimensions.
+     */
+    std::array<double, 3> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
+
+
 public:
     /**
      * Define the default constructor.
