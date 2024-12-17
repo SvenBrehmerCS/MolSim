@@ -308,5 +308,194 @@ TEST(CellList, IterateInner) {
 }
 
 // TODO: Test loop cells
-// TODO: Test loop plains
+
+// Test if looping through the xy plains works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateXYPlain) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 13.0, 3.0, 0.1 }, {}, 1),
+        Particle({ 11.9, 4.1, 15.9 }, {}, 2),
+        Particle({ 11.9, 3.0, 15.9 }, {}, 3),
+        Particle({ 11.9, 1.9, 15.9 }, {}, 4),
+        Particle({ 13.0, 4.1, 15.9 }, {}, 5),
+        Particle({ 13.0, 3.0, 15.9 }, {}, 6),
+        Particle({ 13.0, 1.9, 15.9 }, {}, 7),
+        Particle({ 14.1, 4.1, 15.9 }, {}, 8),
+        Particle({ 14.1, 3.0, 15.9 }, {}, 9),
+        Particle({ 14.1, 1.9, 15.9 }, {}, 10),
+        Particle({ 13.0, 4.2, 15.9 }, {}, 11),
+        Particle({ 14.2, 3.0, 15.9 }, {}, 12),
+        Particle({ 10.1, 4.1, 15.9 }, {}, 13),
+        Particle({ 10.1, 3.0, 15.9 }, {}, 14),
+        Particle({ 10.1, 1.9, 15.9 }, {}, 15),
+        Particle({ 13.0, 4.1, 14.01 }, {}, 16),
+        Particle({ 13.0, 3.0, 14.01 }, {}, 17),
+        Particle({ 13.0, 1.9, 14.01 }, {}, 18),
+        Particle({ 15.9, 4.1, 15.9 }, {}, 19),
+        Particle({ 15.9, 3.0, 15.9 }, {}, 20),
+        Particle({ 15.9, 1.9, 15.9 }, {}, 21),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 22),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 23),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+        { 1, 7 },
+        { 1, 8 },
+        { 1, 9 },
+        { 1, 10 },
+        { 1, 11 },
+        { 1, 12 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_xy_pairs(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the xz plains works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateXZPlain) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 13.0, 0.1, 3.0 }, {}, 1),
+        Particle({ 11.9, 15.9, 4.1 }, {}, 2),
+        Particle({ 11.9, 15.9, 3.0 }, {}, 3),
+        Particle({ 11.9, 15.9, 1.9 }, {}, 4),
+        Particle({ 13.0, 15.9, 4.1 }, {}, 5),
+        Particle({ 13.0, 15.9, 3.0 }, {}, 6),
+        Particle({ 13.0, 15.9, 1.9 }, {}, 7),
+        Particle({ 14.1, 15.9, 4.1 }, {}, 8),
+        Particle({ 14.1, 15.9, 3.0 }, {}, 9),
+        Particle({ 14.1, 15.9, 1.9 }, {}, 10),
+        Particle({ 13.0, 15.9, 4.2 }, {}, 11),
+        Particle({ 14.2, 15.9, 3.0 }, {}, 12),
+        Particle({ 10.1, 15.9, 4.1 }, {}, 13),
+        Particle({ 10.1, 15.9, 3.0 }, {}, 14),
+        Particle({ 10.1, 15.9, 1.9 }, {}, 15),
+        Particle({ 13.0, 14.01, 4.1 }, {}, 16),
+        Particle({ 13.0, 14.01, 3.0 }, {}, 17),
+        Particle({ 13.0, 14.01, 1.9 }, {}, 18),
+        Particle({ 15.9, 15.9, 4.1 }, {}, 19),
+        Particle({ 15.9, 15.9, 3.0 }, {}, 20),
+        Particle({ 15.9, 15.9, 1.9 }, {}, 21),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 22),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 23),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+        { 1, 7 },
+        { 1, 8 },
+        { 1, 9 },
+        { 1, 10 },
+        { 1, 11 },
+        { 1, 12 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_xz_pairs(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the yz plains works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateYZPlain) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 0.1, 13.0, 3.0 }, {}, 1),
+        Particle({ 15.9, 11.9, 4.1 }, {}, 2),
+        Particle({ 15.9, 11.9, 3.0 }, {}, 3),
+        Particle({ 15.9, 11.9, 1.9 }, {}, 4),
+        Particle({ 15.9, 13.0, 4.1 }, {}, 5),
+        Particle({ 15.9, 13.0, 3.0 }, {}, 6),
+        Particle({ 15.9, 13.0, 1.9 }, {}, 7),
+        Particle({ 15.9, 14.1, 4.1 }, {}, 8),
+        Particle({ 15.9, 14.1, 3.0 }, {}, 9),
+        Particle({ 15.9, 14.1, 1.9 }, {}, 10),
+        Particle({ 15.9, 13.0, 4.2 }, {}, 11),
+        Particle({ 15.9, 14.2, 3.0 }, {}, 12),
+        Particle({ 15.9, 10.1, 4.1 }, {}, 13),
+        Particle({ 15.9, 10.1, 3.0 }, {}, 14),
+        Particle({ 15.9, 10.1, 1.9 }, {}, 15),
+        Particle({ 14.01, 13.0, 4.1 }, {}, 16),
+        Particle({ 14.01, 13.0, 3.0 }, {}, 17),
+        Particle({ 14.01, 13.0, 1.9 }, {}, 18),
+        Particle({ 15.9, 15.9, 4.1 }, {}, 19),
+        Particle({ 15.9, 15.9, 3.0 }, {}, 20),
+        Particle({ 15.9, 15.9, 1.9 }, {}, 21),
+        Particle({ 8.0, 8.0, 8.0 }, {}, 22),
+        Particle({ 8.2, 8.2, 8.2 }, {}, 23),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+        { 1, 7 },
+        { 1, 8 },
+        { 1, 9 },
+        { 1, 10 },
+        { 1, 11 },
+        { 1, 12 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_yz_pairs(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
 // TODO: Test loop rest

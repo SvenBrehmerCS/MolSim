@@ -21,6 +21,14 @@ CellList::CellList(const double rc, const std::array<double, 3>& domain) {
     };
 
     cells.resize(this->n_x * this->n_y * this->n_z);
+
+    dom = domain;
+    domain_x = { domain[0], 0.0, 0.0 };
+    domain_y = { 0.0, domain[1], 0.0 };
+    domain_z = { 0.0, 0.0, domain[2] };
+    domain_xy = { domain[0], domain[1], 0.0 };
+    domain_xz = { domain[0], 0.0, domain[2] };
+    domain_yz = { 0.0, domain[1], domain[2] };
 }
 
 void CellList::create_list(const std::vector<Particle>& particles) {
@@ -257,47 +265,63 @@ void CellList::loop_inner(const std::function<particle_it>& iterator, std::vecto
     }
 }
 
-
-// TODO:  °°°     Test if the particles are within the correct distance.    °°°
 void CellList::loop_xy_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-    for (size_t i = 0; i < n_x; i++) {
-        for (size_t j = 0; j < n_y; j++) {
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
             for (size_t k : cells[get_cell_index(i, j, 1)]) {
                 // Loop over the cells using the newton optimization
                 for (size_t l : cells[get_cell_index(i - 1, j - 1, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i, j - 1, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i + 1, j - 1, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i - 1, j, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i, j, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i + 1, j, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i - 1, j + 1, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i, j + 1, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
 
                 for (size_t l : cells[get_cell_index(i + 1, j + 1, n_z - 2)]) {
-                    iterator(particles[k], particles[l]);
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_z) <= rc) {
+                        iterator(particles[k], particles[l]);
+                    }
                 }
             }
         }
@@ -305,60 +329,60 @@ void CellList::loop_xy_pairs(const std::function<particle_pair_it>& iterator, st
 }
 
 void CellList::loop_xz_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-    for (size_t i = 0; i < n_x; i++) {
-        for (size_t j = 0; j < n_z; j++) {
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_z - 1; j++) {
             for (size_t k : cells[get_cell_index(i, 1, j)]) {
                 // Loop over the cells using the newton optimization
                 for (size_t l : cells[get_cell_index(i - 1, n_y - 2, j - 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i, n_y - 2, j - 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i + 1, n_y - 2, j - 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
-                for (size_t l : cells[get_cell_index(i - n_y - 2, 1, j)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                for (size_t l : cells[get_cell_index(i - 1, n_y - 2, j)]) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
-                for (size_t l : cells[get_cell_index(n_y - 2, i, j)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                for (size_t l : cells[get_cell_index(i, n_y - 2, j)]) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
-                for (size_t l : cells[get_cell_index(i + n_y - 2, 1, j)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                for (size_t l : cells[get_cell_index(i + 1, n_y - 2, j)]) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i - 1, n_y - 2, j + 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i, n_y - 2, j + 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i + 1, n_y - 2, j + 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_y) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
@@ -368,60 +392,60 @@ void CellList::loop_xz_pairs(const std::function<particle_pair_it>& iterator, st
 }
 
 void CellList::loop_yz_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-    for (size_t i = 0; i < n_y; i++) {
-        for (size_t j = 0; j < n_z; j++) {
-            for (size_t k : cells[get_cell_index(i, j, 1)]) {
+    for (size_t i = 1; i < n_y - 1; i++) {
+        for (size_t j = 1; j < n_z - 1; j++) {
+            for (size_t k : cells[get_cell_index(1, i, j)]) {
                 // Loop over the cells using the newton optimization
                 for (size_t l : cells[get_cell_index(n_x - 2, i - 1, j - 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i, j - 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i + 1, j - 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i - 1, j)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i, j)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i + 1, j)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i - 1, j + 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i, j + 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(n_x - 2, i + 1, j + 1)]) {
-                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX()) <= rc) {
+                    if (ArrayUtils::L2Norm(particles[k].getX() - particles[l].getX() + domain_x) <= rc) {
                         iterator(particles[k], particles[l]);
                     }
                 }
@@ -435,19 +459,19 @@ void CellList::loop_x_near(const std::function<particle_pair_it>& iterator, std:
         for (size_t l : cells[get_cell_index(i, 1, 1)]) {
             // Loop over x axis
             for (size_t m : cells[get_cell_index(i - 1, n_y - 2, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_yz) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(i, n_y - 2, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_yz) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(i + 1, n_y - 2, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_yz) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
@@ -460,19 +484,19 @@ void CellList::loop_x_far(const std::function<particle_pair_it>& iterator, std::
         for (size_t l : cells[get_cell_index(i, n_y - 2, 1)]) {
             // Loop over shifted x axis
             for (size_t m : cells[get_cell_index(i - 1, 1, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_y + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(i, 1, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_y + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(i + 1, 1, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_y + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
@@ -485,19 +509,19 @@ void CellList::loop_y_near(const std::function<particle_pair_it>& iterator, std:
         for (size_t l : cells[get_cell_index(1, i, 1)]) {
             // Loop over y axis
             for (size_t m : cells[get_cell_index(n_x - 2, i - 1, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_xz) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(n_x - 2, i, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_xz) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(n_x - 2, i + 1, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_xz) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
@@ -510,19 +534,19 @@ void CellList::loop_y_far(const std::function<particle_pair_it>& iterator, std::
         for (size_t l : cells[get_cell_index(n_x - 2, i, 1)]) {
             // Loop over shifted y axis
             for (size_t m : cells[get_cell_index(1, i - 1, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(1, i, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(1, i + 1, n_z - 2)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
@@ -535,20 +559,20 @@ void CellList::loop_z_near(const std::function<particle_pair_it>& iterator, std:
         for (size_t l : cells[get_cell_index(1, 1, i)]) {
             // Loop over z axis
             for (size_t m : cells[get_cell_index(n_x - 2, n_y - 2, i - 1)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_xy) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
 
             for (size_t m : cells[get_cell_index(n_x - 2, n_y - 2, i)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_xy) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(n_x - 2, n_y - 2, i + 1)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_xy) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
@@ -561,19 +585,19 @@ void CellList::loop_z_far(const std::function<particle_pair_it>& iterator, std::
         for (size_t l : cells[get_cell_index(n_x - 2, 1, i)]) {
             // Loop over shifted z axis
             for (size_t m : cells[get_cell_index(1, n_y - 2, i - 1)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(1, n_y - 2, i)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(1, n_y - 2, i + 1)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
@@ -584,7 +608,7 @@ void CellList::loop_z_far(const std::function<particle_pair_it>& iterator, std::
 void CellList::loop_origin_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     for (size_t l : cells[get_cell_index(1, 1, 1)]) {
         for (size_t m : cells[get_cell_index(n_x - 2, n_y - 2, n_z - 2)]) {
-            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + dom) <= rc) {
                 iterator(particles[l], particles[m]);
             }
         }
@@ -594,7 +618,7 @@ void CellList::loop_origin_corner(const std::function<particle_pair_it>& iterato
 void CellList::loop_x_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     for (size_t l : cells[get_cell_index(n_x - 2, 1, 1)]) {
         for (size_t m : cells[get_cell_index(1, n_y - 2, n_z - 2)]) {
-            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_yz) <= rc) {
                 iterator(particles[l], particles[m]);
             }
         }
@@ -604,7 +628,7 @@ void CellList::loop_x_corner(const std::function<particle_pair_it>& iterator, st
 void CellList::loop_y_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     for (size_t l : cells[get_cell_index(1, n_y - 2, 1)]) {
         for (size_t m : cells[get_cell_index(n_x - 2, 1, n_z - 2)]) {
-            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_y + domain_xz) <= rc) {
                 iterator(particles[l], particles[m]);
             }
         }
@@ -614,7 +638,7 @@ void CellList::loop_y_corner(const std::function<particle_pair_it>& iterator, st
 void CellList::loop_xy_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     for (size_t l : cells[get_cell_index(n_x - 2, n_y - 2, 1)]) {
         for (size_t m : cells[get_cell_index(1, 1, n_z - 2)]) {
-            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX()) <= rc) {
+            if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_xy + domain_z) <= rc) {
                 iterator(particles[l], particles[m]);
             }
         }
