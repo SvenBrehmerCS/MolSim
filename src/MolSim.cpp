@@ -34,11 +34,9 @@ int main(const int argc, const char* argv[]) {
     switch (env.get_input_file_format()) {
     case TXT:
         reader = std::make_unique<inputReader::FileReader>(env.get_input_file_name());
-        // REMOVE reader.reset(new inputReader::FileReader(env.get_input_file_name()));
         break;
     case XML:
         reader = std::make_unique<inputReader::XMLTreeReader>(env.get_input_file_name());
-        // REMOVE reader.reset(new inputReader::XMLTreeReader(env.get_input_file_name()));
         break;
     default:
         SPDLOG_CRITICAL("Error: Illegal input file format specifier.");
@@ -54,9 +52,9 @@ int main(const int argc, const char* argv[]) {
     std::shared_ptr<ParticleContainer> cont { nullptr };
 
     if (env.requires_direct_sum()) {
-        cont.reset(new DSContainer(env.get_domain_size()));
+        cont = std::make_shared<DSContainer>(env.get_domain_size());
     } else {
-        cont.reset(new BoxContainer(env.get_r_cutoff(), env.get_domain_size()));
+        cont = std::make_shared<BoxContainer>(env.get_r_cutoff(), env.get_domain_size());
     }
 
     reader->readParticle(*cont, env.get_delta_t(), env.get_gravity());
@@ -68,10 +66,10 @@ int main(const int argc, const char* argv[]) {
 
     switch (env.get_calculator_type()) {
     case GRAVITY:
-        calculator.reset(new physicsCalculator::GravityCalculator(env, cont));
+        calculator = std::make_unique<physicsCalculator::GravityCalculator>(env, cont);
         break;
     case LJ_FULL:
-        calculator.reset(new physicsCalculator::LJCalculator(env, cont));
+        calculator = std::make_unique<physicsCalculator::LJCalculator>(env, cont);
         break;
     default:
         SPDLOG_CRITICAL("Error: Illegal force model specifier.");
@@ -84,16 +82,16 @@ int main(const int argc, const char* argv[]) {
 
     switch (env.get_output_file_format()) {
     case NO_OUT:
-        writer.reset(new outputWriter::NoWriter());
+        writer = std::make_unique<outputWriter::NoWriter>();
         break;
     case VTK:
-        writer.reset(new outputWriter::VTKWriter());
+        writer = std::make_unique<outputWriter::VTKWriter>();
         break;
     case XYZ:
-        writer.reset(new outputWriter::XYZWriter());
+        writer = std::make_unique<outputWriter::XYZWriter>();
         break;
     case CHECKPOINT:
-        writer.reset(new outputWriter::VTKWriter());
+        writer = std::make_unique<outputWriter::VTKWriter>();
         break;
     default:
         SPDLOG_CRITICAL("Error: Illegal file format specifier.");

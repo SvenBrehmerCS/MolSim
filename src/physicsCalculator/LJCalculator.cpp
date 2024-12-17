@@ -18,9 +18,9 @@ namespace physicsCalculator {
         env = new_env;
 
         if (is_infinite) {
-            cont.reset(new DSContainer(particles, env.get_domain_size(), new_desc));
+            cont = std::make_shared<DSContainer>(particles, env.get_domain_size(), new_desc);
         } else {
-            cont.reset(new BoxContainer(particles, env.get_r_cutoff(), env.get_domain_size(), new_desc));
+            cont = std::make_shared<BoxContainer>(particles, env.get_r_cutoff(), env.get_domain_size(), new_desc);
         }
 
         // Initialize the forces

@@ -18,7 +18,7 @@ namespace physicsCalculator {
 
         switch (type) {
         case INF_CONT:
-            cont.reset(new DSContainer(particles, new_desc));
+            cont = std::make_shared<DSContainer>(particles, new_desc);
             break;
 
         default:

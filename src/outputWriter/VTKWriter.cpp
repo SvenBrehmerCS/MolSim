@@ -23,7 +23,7 @@ namespace outputWriter {
 
     void VTKWriter::initializeOutput(int numParticles) {
 
-        vtkFile = new VTKFile_t("UnstructuredGrid");
+        vtkFile = std::make_unique<VTKFile_t>("UnstructuredGrid");
 
         // per point, we add type, position, velocity and force
         PointData pointData;
@@ -59,7 +59,6 @@ namespace outputWriter {
 
         std::ofstream file(strstr.str().c_str());
         VTKFile(file, *vtkFile);
-        delete vtkFile;
     }
 
     void VTKWriter::plotParticle(const Particle& p, const double mass) {
