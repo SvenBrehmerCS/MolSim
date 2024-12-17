@@ -899,7 +899,7 @@ TEST(CellList, IterateXYCell) {
 
     cells.create_list(particles);
 
-    cells.loop_y_corner(
+    cells.loop_xy_corner(
         [&pairs](Particle& p1, Particle& p2) {
             std::tuple<int, int> rm = {
                 static_cast<int>(std::min(p1.getType(), p2.getType())),
