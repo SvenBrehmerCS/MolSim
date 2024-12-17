@@ -503,16 +503,243 @@ TEST(CellList, IterateNearXAxis) {
     CellList cells(2.0, { 16.0, 16.0, 16.0 });
 
     std::vector<Particle> particles = {
-
+        Particle({ 7.0, 0.1, 0.1 }, {}, 1),
+        Particle({ 5.9, 15.9, 15.9 }, {}, 2),
+        Particle({ 7.0, 15.9, 15.9 }, {}, 3),
+        Particle({ 8.1, 15.9, 15.9 }, {}, 4),
+        Particle({ 7.1, 15.9, 15.9 }, {}, 5),
+        Particle({ 8.2, 15.9, 15.9 }, {}, 6),
+        Particle({ 4.1, 15.9, 15.9 }, {}, 7),
+        Particle({ 7.0, 14.1, 14.1 }, {}, 8),
+        Particle({ 9.9, 15.9, 15.9 }, {}, 9),
     };
 
     std::list<std::tuple<int, int>> pairs = {
-
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
     };
 
     cells.create_list(particles);
 
     cells.loop_x_near(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the far x axis works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateFarXAxis) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 7.0, 0.1, 15.9 }, {}, 1),
+        Particle({ 5.9, 15.9, 0.1 }, {}, 2),
+        Particle({ 7.0, 15.9, 0.1 }, {}, 3),
+        Particle({ 8.1, 15.9, 0.1 }, {}, 4),
+        Particle({ 7.1, 15.9, 0.1 }, {}, 5),
+        Particle({ 8.2, 15.9, 0.1 }, {}, 6),
+        Particle({ 4.1, 15.9, 0.1 }, {}, 7),
+        Particle({ 7.0, 14.1, 1.9 }, {}, 8),
+        Particle({ 9.9, 15.9, 0.1 }, {}, 9),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_x_far(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the near y axis works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateNearYAxis) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 0.1, 7.0, 0.1 }, {}, 1),
+        Particle({ 15.9, 5.9, 15.9 }, {}, 2),
+        Particle({ 15.9, 7.0, 15.9 }, {}, 3),
+        Particle({ 15.9, 8.1, 15.9 }, {}, 4),
+        Particle({ 15.9, 7.1, 15.9 }, {}, 5),
+        Particle({ 15.9, 8.2, 15.9 }, {}, 6),
+        Particle({ 15.9, 4.1, 15.9 }, {}, 7),
+        Particle({ 14.1, 7.0, 14.1 }, {}, 8),
+        Particle({ 15.9, 9.9, 15.9 }, {}, 9),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_y_near(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the far y axis works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateFarYAxis) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 0.1, 7.0, 15.9 }, {}, 1),
+        Particle({ 15.9, 5.9, 0.1 }, {}, 2),
+        Particle({ 15.9, 7.0, 0.1 }, {}, 3),
+        Particle({ 15.9, 8.1, 0.1 }, {}, 4),
+        Particle({ 15.9, 7.1, 0.1 }, {}, 5),
+        Particle({ 15.9, 8.2, 0.1 }, {}, 6),
+        Particle({ 15.9, 4.1, 0.1 }, {}, 7),
+        Particle({ 14.1, 7.0, 1.9 }, {}, 8),
+        Particle({ 15.9, 9.9, 0.1 }, {}, 9),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_y_far(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the near z axis works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateNearZAxis) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 0.1, 0.1, 7.0 }, {}, 1),
+        Particle({ 15.9, 15.9, 5.9 }, {}, 2),
+        Particle({ 15.9, 15.9, 7.0 }, {}, 3),
+        Particle({ 15.9, 15.9, 8.1 }, {}, 4),
+        Particle({ 15.9, 15.9, 7.1 }, {}, 5),
+        Particle({ 15.9, 15.9, 8.2 }, {}, 6),
+        Particle({ 15.9, 15.9, 4.1 }, {}, 7),
+        Particle({ 14.1, 14.1, 7.0 }, {}, 8),
+        Particle({ 15.9, 15.9, 9.9 }, {}, 9),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_z_near(
+        [&pairs](Particle& p1, Particle& p2) {
+            std::tuple<int, int> rm = {
+                static_cast<int>(std::min(p1.getType(), p2.getType())),
+                static_cast<int>(std::max(p1.getType(), p2.getType())),
+            };
+
+            EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
+                << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
+
+            pairs.remove(rm);
+        },
+        particles);
+
+    EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
+}
+
+// Test if looping through the far z axis works correctly. This test tests the cutoff distance, and all possible iteration configurations.
+TEST(CellList, IterateFarZAxis) {
+    CellList cells(2.0, { 16.0, 16.0, 16.0 });
+
+    std::vector<Particle> particles = {
+        Particle({ 0.1, 15.9, 7.0 }, {}, 1),
+        Particle({ 15.9, 0.1, 5.9 }, {}, 2),
+        Particle({ 15.9, 0.1, 7.0 }, {}, 3),
+        Particle({ 15.9, 0.1, 8.1 }, {}, 4),
+        Particle({ 15.9, 0.1, 7.1 }, {}, 5),
+        Particle({ 15.9, 0.1, 8.2 }, {}, 6),
+        Particle({ 15.9, 0.1, 4.1 }, {}, 7),
+        Particle({ 14.1, 1.9, 7.0 }, {}, 8),
+        Particle({ 15.9, 0.1, 9.9 }, {}, 9),
+    };
+
+    std::list<std::tuple<int, int>> pairs = {
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 1, 5 },
+        { 1, 6 },
+    };
+
+    cells.create_list(particles);
+
+    cells.loop_z_far(
         [&pairs](Particle& p1, Particle& p2) {
             std::tuple<int, int> rm = {
                 static_cast<int>(std::min(p1.getType(), p2.getType())),

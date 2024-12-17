@@ -139,9 +139,9 @@ int main(const int argc, const char* argv[]) {
 
     // Get the start time of the simulation (std::cout is used for performance measurements when the log level is off)
     const auto end_time = std::chrono::steady_clock::now();
-    const auto ms_duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    std::cout << "The simulation took " << ms_duration.count() << " ms. The update time for a single particle was "
-              << (static_cast<double>(ms_duration.count()) / static_cast<double>(iteration * cont->size())) << " ns." << std::endl;
+    const auto ns_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+    std::cout << "The simulation took " << ns_duration / 1000000.0 << " ms. The update time for a single particle was "
+              << (ns_duration / static_cast<double>(iteration * cont->size())) << " ns." << std::endl;
 
     // TODO hier Simulation checkpoint setzen wenn outputformat = checkpoint gesetzt
     if (env.get_output_file_format() == CHECKPOINT) {

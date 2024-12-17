@@ -585,19 +585,19 @@ void CellList::loop_z_far(const std::function<particle_pair_it>& iterator, std::
         for (size_t l : cells[get_cell_index(n_x - 2, 1, i)]) {
             // Loop over shifted z axis
             for (size_t m : cells[get_cell_index(1, n_y - 2, i - 1)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_y) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(1, n_y - 2, i)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_y) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
 
             for (size_t m : cells[get_cell_index(1, n_y - 2, i + 1)]) {
-                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_z) <= rc) {
+                if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() - domain_x + domain_y) <= rc) {
                     iterator(particles[l], particles[m]);
                 }
             }
