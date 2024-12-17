@@ -4,14 +4,19 @@
 #include "outputWriter/CheckpointWriter.h"
 #include "container/DSContainer.h"
 #include <gtest/gtest.h>
-TEST(CheckpointWriterTest, writeCheckpoint) {
+TEST(CheckpointWriterTestCombined, CheckpointCombined) {
     Environment env;
     DSContainer container;
     outputWriter::CheckpointWriter writer;
 
-    env.set_delta_t(0.01);
-    env.set_t_end(15);
+    container.resize(4);
+    Particle particle0;
+    Particle particle1;
+    Particle particle2;
+    Particle particle3;
 
+    particle0.setX({0.5,0.5,0.5});
+    particle0.setV({1.1,1.1,1.1});
     writer.plot(container,env, "test");
     env.set_delta_t(10);
 }
