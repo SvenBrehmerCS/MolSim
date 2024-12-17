@@ -45,9 +45,5 @@
         <h>1.2</h>
         <b_motion>0.0</b_motion>
     </disc>
-    <thermo>
-        <T_init>0.5</T_init>
-        <T_frequency>1000</T_frequency>
-    </thermo>
     <checkpoint>EquilibriumDatei</checkpoint>
 </simulation>
