@@ -25,9 +25,6 @@
             <vy>50.0</vy>
             <vz>50.0</vz>
         </domain>
-        <T_init>40.0</T_init>
-        <T_frequency>1000</T_frequency>
-        <max_delta_T>5</max_delta_T>
         <g_grav></g_grav>
     </param>
     <particle>
@@ -60,8 +57,8 @@
             <vz>20</vz>
         </count>
         <m>2.5</m>
-        <epsilon></epsilon>
         <sigma></sigma>
+        <epsilon></epsilon>
         <h>0.3</h>
         <b_motion>0.1</b_motion>
     </cuboid>
@@ -76,11 +73,16 @@
             <vy>-2.0</vy>
             <vz>5.0</vz>
         </velocity>
-        <m>0.4</m>
         <r>5.9</r>
-        <epsilon></epsilon>
+        <m>0.4</m>
         <sigma></sigma>
+        <epsilon></epsilon>
         <h>1.0</h>
         <b_motion>0.0</b_motion>
     </disc>
+    <thermo>
+        <T_init>5</T_init>
+        <T_target>6</T_target>
+        <T_frequency></T_frequency>
+    </thermo>
 </simulation>

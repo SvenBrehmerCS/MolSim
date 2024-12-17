@@ -45,6 +45,13 @@
                 </xs:annotation>
             </xs:element>
 
+            <xs:element name="thermo" type=" thermo_t" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> The information needed to regulate the simulation
+                        temperature. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
             <xs:element name="checkpoint" type="xs:string" minOccurs="0" maxOccurs="1">
                 <!-- TODO add regex -->
                 <xs:annotation>
@@ -261,55 +268,6 @@
                 <xs:annotation>
                     <xs:documentation> Size of the simulation domain in each direction. </xs:documentation>
                 </xs:annotation>
-            </xs:element>
-
-            <xs:element name="T_init" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation> Initial temperature of the simulation. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:double">
-                        <xs:minExclusive value="0.0" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
-            <xs:element name="T_target" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation> Target temperature of the simulation. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:double">
-                        <xs:minInclusive value="0.0" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
-            <xs:element name="T_frequency" default="10000">
-                <xs:annotation>
-                    <xs:documentation> Number of steps between thermostat applications. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:positiveInteger">
-                        <xs:maxInclusive value="2147483647" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
-            <xs:element name="max_delta_T" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation> Maximal absolute temperature change per thermostat
-                        application. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:double">
-                        <xs:minExclusive value="0.0" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:element>
 
             <xs:element name="g_grav" type="xs:double" default="0.0">
@@ -535,6 +493,64 @@
                 <xs:simpleType>
                     <xs:restriction base="xs:double">
                         <xs:minInclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="thermo_t">
+        <xs:annotation>
+            <xs:documentation> This complex type represents the thermostat, which regulates the
+                temperature of the simulation. </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="T_init" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation> Initial temperature of the simulation. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="T_target" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation> Target temperature of the simulation. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="T_frequency" default="10000">
+                <xs:annotation>
+                    <xs:documentation> Number of steps between thermostat applications. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:positiveInteger">
+                        <xs:maxInclusive value="2147483647" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="max_delta_T" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> Maximal absolute temperature change per thermostat
+                        application. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>

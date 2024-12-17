@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="../../res/input.xsd">
+    xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
-        <name>EquilibriumDatei</name>
+        <name>FallingDrop</name>
         <format>VTK</format>
         <frequency>100</frequency>
     </output>
@@ -25,8 +25,6 @@
             <vy>180</vy>
             <vz>9.0</vz>
         </domain>
-        <T_init>0.5</T_init>
-        <T_frequency>1000</T_frequency>
         <g_grav>-12.44</g_grav>
     </param>
     <disc>
@@ -47,5 +45,9 @@
         <h>1.2</h>
         <b_motion>0.0</b_motion>
     </disc>
+    <thermo>
+        <T_init>0.5</T_init>
+        <T_frequency>1000</T_frequency>
+    </thermo>
     <checkpoint>EquilibriumDatei</checkpoint>
 </simulation>

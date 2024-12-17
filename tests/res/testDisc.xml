@@ -25,7 +25,6 @@
             <vy>25</vy>
             <vz>25</vz>
         </domain>
-        <T_frequency></T_frequency>
         <g_grav></g_grav>
     </param>
     <disc>

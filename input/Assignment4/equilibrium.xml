@@ -17,7 +17,7 @@
             <boundary_xy_far>HARD</boundary_xy_far>
         </boundaries>
         <delta_t>0.0005</delta_t>
-        <t_end>1</t_end>
+        <t_end>15</t_end>
         <dimensions>2</dimensions>
         <r_cutoff>3</r_cutoff>
         <domain>
@@ -25,8 +25,6 @@
             <vy>180</vy>
             <vz>9.0</vz>
         </domain>
-        <T_init>0.5</T_init>
-        <T_frequency>1000</T_frequency>
         <g_grav>-12.44</g_grav>
     </param>
     <cuboid>
@@ -51,4 +49,8 @@
         <h>1.2</h>
         <b_motion>0.0</b_motion>
     </cuboid>
+    <thermo>
+        <T_init>0.5</T_init>
+        <T_frequency>1000</T_frequency>
+    </thermo>
 </simulation>
