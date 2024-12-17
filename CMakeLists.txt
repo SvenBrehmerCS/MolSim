@@ -56,7 +56,7 @@ add_executable(MolSim ${MY_SRC})
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
         PUBLIC
-            cxx_std_17
+            cxx_std_20
 )
 
 target_include_directories(MolSim
