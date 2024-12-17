@@ -21,7 +21,7 @@
  * The main entry point for the program.
  */
 int main(const int argc, const char* argv[]) {
-    namespace fs = std::filesystem;
+    //namespace fs = std::filesystem;
 
     // Initialize the simulation environment.
     Environment env { argc, argv };
