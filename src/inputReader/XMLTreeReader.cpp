@@ -69,6 +69,8 @@ namespace inputReader {
         const double t_end = sim->param().t_end();
         environment.set_t_end(t_end);
 
+        environment.set_dimensions(sim->param().dimensions());
+
         const double r_cutoff = sim->param().r_cutoff();
         environment.set_r_cutoff(r_cutoff);
 
@@ -101,7 +103,7 @@ namespace inputReader {
             if (sim->thermo().get().max_delta_T().present())
                 thermostat.set_max_change(sim->thermo().get().max_delta_T().get());
 
-
+            thermostat.set_dimensions(sim->param().dimensions());
             environment.set_temp_frequency(sim->thermo().get().T_frequency());
         }
 
