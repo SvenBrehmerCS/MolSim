@@ -45,7 +45,7 @@
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="thermo" type=" thermo_t" minOccurs="0">
+            <xs:element name="thermo" type="thermo_t" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation> The information needed to regulate the simulation
                         temperature. </xs:documentation>
