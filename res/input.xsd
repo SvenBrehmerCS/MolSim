@@ -52,8 +52,7 @@
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="checkpoint" type="xs:string" minOccurs="0" maxOccurs="1">
-                <!-- TODO add regex -->
+            <xs:element name="checkpoint" type="xs:string" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation> The checkpoint file used as INPUT. </xs:documentation>
                 </xs:annotation>
@@ -329,11 +328,11 @@
 
             <xs:element name="velocity" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The rough velocity of the cuboid. </xs:documentation>
+                    <xs:documentation> The velocity of the cuboid. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="count" type="uivector">
+            <xs:element name="count" type="pivector">
                 <xs:annotation>
                     <xs:documentation> The amount of particles in each direction. </xs:documentation>
                 </xs:annotation>
@@ -419,7 +418,7 @@
 
             <xs:element name="velocity" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The rough velocity of the disc. </xs:documentation>
+                    <xs:documentation> The velocity of the disc. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
@@ -663,7 +662,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="uivector">
+    <xs:complexType name="pivector">
         <xs:annotation>
             <xs:documentation> This complex type represents a three value vector of integers.
                 @details This complex type consists of three integer variables which are used as
@@ -677,7 +676,7 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:int">
-                        <xs:minInclusive value="0" />
+                        <xs:minExclusive value="0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -687,7 +686,7 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:int">
-                        <xs:minInclusive value="0" />
+                        <xs:minExclusive value="0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -697,7 +696,7 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:int">
-                        <xs:minInclusive value="0" />
+                        <xs:minExclusive value="0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>

@@ -505,32 +505,32 @@ void pdvector::vz(const vz_type& x) { this->vz_.set(x); }
 void pdvector::vz(::std::unique_ptr<vz_type> x) { this->vz_.set(std::move(x)); }
 
 
-// uivector
+// pivector
 //
 
-const uivector::vx_type& uivector::vx() const { return this->vx_.get(); }
+const pivector::vx_type& pivector::vx() const { return this->vx_.get(); }
 
-uivector::vx_type& uivector::vx() { return this->vx_.get(); }
+pivector::vx_type& pivector::vx() { return this->vx_.get(); }
 
-void uivector::vx(const vx_type& x) { this->vx_.set(x); }
+void pivector::vx(const vx_type& x) { this->vx_.set(x); }
 
-void uivector::vx(::std::unique_ptr<vx_type> x) { this->vx_.set(std::move(x)); }
+void pivector::vx(::std::unique_ptr<vx_type> x) { this->vx_.set(std::move(x)); }
 
-const uivector::vy_type& uivector::vy() const { return this->vy_.get(); }
+const pivector::vy_type& pivector::vy() const { return this->vy_.get(); }
 
-uivector::vy_type& uivector::vy() { return this->vy_.get(); }
+pivector::vy_type& pivector::vy() { return this->vy_.get(); }
 
-void uivector::vy(const vy_type& x) { this->vy_.set(x); }
+void pivector::vy(const vy_type& x) { this->vy_.set(x); }
 
-void uivector::vy(::std::unique_ptr<vy_type> x) { this->vy_.set(std::move(x)); }
+void pivector::vy(::std::unique_ptr<vy_type> x) { this->vy_.set(std::move(x)); }
 
-const uivector::vz_type& uivector::vz() const { return this->vz_.get(); }
+const pivector::vz_type& pivector::vz() const { return this->vz_.get(); }
 
-uivector::vz_type& uivector::vz() { return this->vz_.get(); }
+pivector::vz_type& pivector::vz() { return this->vz_.get(); }
 
-void uivector::vz(const vz_type& x) { this->vz_.set(x); }
+void pivector::vz(const vz_type& x) { this->vz_.set(x); }
 
-void uivector::vz(::std::unique_ptr<vz_type> x) { this->vz_.set(std::move(x)); }
+void pivector::vz(::std::unique_ptr<vz_type> x) { this->vz_.set(std::move(x)); }
 
 
 // format
@@ -2018,22 +2018,22 @@ pdvector& pdvector::operator=(const pdvector& x) {
 
 pdvector::~pdvector() { }
 
-// uivector
+// pivector
 //
 
-uivector::uivector(const vx_type& vx, const vy_type& vy, const vz_type& vz)
+pivector::pivector(const vx_type& vx, const vy_type& vy, const vz_type& vz)
     : ::xml_schema::type()
     , vx_(vx, this)
     , vy_(vy, this)
     , vz_(vz, this) { }
 
-uivector::uivector(const uivector& x, ::xml_schema::flags f, ::xml_schema::container* c)
+pivector::pivector(const pivector& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c)
     , vx_(x.vx_, f, this)
     , vy_(x.vy_, f, this)
     , vz_(x.vz_, f, this) { }
 
-uivector::uivector(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+pivector::pivector(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c)
     , vx_(this)
     , vy_(this)
@@ -2044,7 +2044,7 @@ uivector::uivector(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_
     }
 }
 
-void uivector::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+void pivector::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
     for (; p.more_content(); p.next_content(false)) {
         const ::xercesc::DOMElement& i(p.cur_element());
         const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
@@ -2098,9 +2098,9 @@ void uivector::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags 
     }
 }
 
-uivector* uivector::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class uivector(*this, f, c); }
+pivector* pivector::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class pivector(*this, f, c); }
 
-uivector& uivector::operator=(const uivector& x) {
+pivector& pivector::operator=(const pivector& x) {
     if (this != &x) {
         static_cast<::xml_schema::type&>(*this) = x;
         this->vx_ = x.vx_;
@@ -2111,7 +2111,7 @@ uivector& uivector::operator=(const uivector& x) {
     return *this;
 }
 
-uivector::~uivector() { }
+pivector::~pivector() { }
 
 // format
 //

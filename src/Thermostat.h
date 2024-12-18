@@ -58,15 +58,15 @@ public:
 
     inline const bool get_active() const { return active; }
 
-    inline void set_dimensions(const int& dim) { dimensions = dim; }
+    inline void set_dimensions(int dim) { dimensions = dim; }
 
-    inline void set_T_target(const double& T_target) { this->T_target = T_target; }
+    inline void set_T_target(double T_target) { this->T_target = T_target; }
 
-    inline void set_max_change(const double& max_change) { this->max_change = max_change; }
+    inline void set_max_change(double max_change) { this->max_change = max_change; }
 
     inline void set_particles(const std::shared_ptr<ParticleContainer>& particles) { this->particles = particles; }
 
-    inline void set_active(const bool& active) { this->active = active; }
+    inline void set_active(bool active) { this->active = active; }
 
     /**
      * Regulates the Temperature of the given particle container.

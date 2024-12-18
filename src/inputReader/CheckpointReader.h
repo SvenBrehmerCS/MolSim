@@ -1,6 +1,8 @@
-//
-// Created by frederik on 12/6/24.
-// TODO Documentation
+/**
+ * @file
+ *
+ * @brief Handles the reading of a checkpoint file.
+ */
 
 #ifndef CHECKPOINTREADER_H
 #define CHECKPOINTREADER_H
@@ -8,9 +10,15 @@
 #include "Reader.h"
 #include "container/ParticleContainer.h"
 
+/**
+ * @brief Collection of readers for different input types.
+ */
 namespace inputReader {
+
     /**
-     * This class reads in the Simulation
+     * @class CheckpointReader
+     *
+     * @brief A reader able to load a checkpoint into the simulation.
      */
     class CheckpointReader {
     public:
@@ -19,14 +27,12 @@ namespace inputReader {
         ~CheckpointReader() = default;
 
         /**
+         * Loads the particles from a checkpoint into the simulation.
          *
          * @param container
-         * @param environment
          * @param filename
          */
         void readSimulation(ParticleContainer& container, const char* filename);
     };
-}
-
-
+} // namespace inputReader
 #endif // CHECKPOINTREADER_H

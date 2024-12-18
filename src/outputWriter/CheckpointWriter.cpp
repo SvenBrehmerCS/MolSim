@@ -10,8 +10,7 @@
 #include <fstream>
 #include <iostream>
 namespace outputWriter {
-    ;
-    void CheckpointWriter::plot(ParticleContainer& container, Environment& env, const char* filename) {
+    void CheckpointWriter::plot(const ParticleContainer& container, const Environment& env, const char* filename) {
         std::ofstream outputFile(filename, std::ios::binary);
 
         if (!outputFile.is_open()) {
@@ -62,5 +61,5 @@ namespace outputWriter {
             ++particle;
         }
     }
-    void CheckpointWriter::plotParticles(ParticleContainer& container, const std::string& filename, int iteration) { return; }
+    void CheckpointWriter::plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration) { return; }
 }

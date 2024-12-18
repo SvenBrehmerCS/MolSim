@@ -49,9 +49,10 @@ public:
     ParticleContainer();
 
     /**
-     * Create a particle container from a vector of particles.
+     * Create a particle container from a vector of particles and their types.
      *
      * @param new_particles The particles which should be stored.
+     * @param new_desc The types of the particles to be stored.
      */
     ParticleContainer(const std::vector<Particle>& new_particles, const std::vector<TypeDesc>& new_desc);
 
@@ -63,10 +64,11 @@ public:
     ParticleContainer(const std::array<double, 3>& new_domain);
 
     /**
-     * Create a particle container of a certain size from a vector of particles.
+     * Create a particle container of a certain size from a vector of particles and their types.
      *
      * @param new_particles The particles which should be stored.
      * @param new_domain The new domain size.
+     * @param new_desc The types of the particles to be stored.
      */
     ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc);
 
@@ -78,17 +80,17 @@ public:
     /**
      * Get the reference of a particle at a certain index.
      *
-     * @param idx THe index of the referenced particle.
+     * @param idx The index of the referenced particle.
      *
-     * @return The reference to the particle
+     * @return The reference to the particle.
      */
     Particle& operator[](const size_t idx);
 
     /**
      * Returns a read/write iterator that points to the first element in the particle container.
-     * Iteration is done in ordinary element order
+     * Iteration is done in ordinary element order.
      *
-     * @return read/write iterator
+     * @return Read/write iterator.
      */
     std::vector<Particle>::iterator begin();
 
@@ -96,7 +98,7 @@ public:
      * Returns a read-only (constant) iterator that points to the first element in the particle container.
      * Iteration is done in ordinary element order.
      *
-     * @return read-only iterator
+     * @return Read-only iterator.
      */
     std::vector<Particle>::const_iterator begin() const;
 
@@ -104,7 +106,7 @@ public:
      * Returns a read/write iterator that points one past the last element in the particle container.
      * Iteration is done in ordinary element order.
      *
-     * @return read/write iterator
+     * @return Read/write iterator.
      */
     std::vector<Particle>::iterator end();
 
@@ -112,12 +114,14 @@ public:
      * Returns a read-only (constant) iterator that points one past the last element in the particle container.
      * Iteration is done in ordinary element order.
      *
-     * @return read-only iterator
+     * @return Read-only iterator.
      */
     std::vector<Particle>::const_iterator end() const;
 
     /**
      * Returns the number of elements in the particle container.
+     *
+     * @return Size of container.
      */
     size_t size() const;
 
@@ -126,7 +130,7 @@ public:
      * If the number is smaller than the particle container current size the particle container is truncated,
      * otherwise default constructed elements are appended.
      *
-     * @param new_size  Number of elements the particle container should contain.
+     * @param new_size Number of elements the particle container should contain.
      */
     void resize(size_t new_size);
 
@@ -139,8 +143,6 @@ public:
 
     /**
      * Remove all particles which are out of the domain.
-     *
-     * @param domain The size of the domain.
      */
     void remove_particles_out_of_domain();
 
@@ -166,7 +168,7 @@ public:
     /**
      * Create a type table using the types.
      *
-     * @param A vector of types that should be used for the type creation.
+     * @param new_types A vector of types that should be used for the type creation.
      */
     void build_type_table(const std::vector<TypeDesc>& new_types);
 
@@ -190,7 +192,7 @@ public:
     inline const TypeDesc& get_type_descriptor(const int t) const { return types[t]; }
 
     /**
-     * Set the particle types
+     * Set the particle types.
      *
      * @param ptypes The particle type.
      */

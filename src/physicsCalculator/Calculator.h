@@ -52,6 +52,7 @@ namespace physicsCalculator {
          *
          * @param new_env The simulation environment.
          * @param particles The particles used for testing.
+         * @param new_desc The particle types.
          */
         Calculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc);
 

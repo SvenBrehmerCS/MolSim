@@ -26,20 +26,32 @@ public:
     /**
      * Generates the cuboid from the given parameters.
      *
-     * @param container the particle container where the particles from the cuboid are stored inside
-     * @param num_particles the offset inside the container where the cuboid starts at
-     * @param x the position of the lower left corner of the cuboid
-     * @param v the base velocity of each particle
-     * @param type the type of the particles
-     * @param N the number of particles in each dimension
-     * @param h the distance between particles
-     * @param b_m the brownian motion
-     * @param num_dimensions the number of dimensions
+     * @param container the particle container where the particles will be stored.
+     * @param num_particles the offset inside the container where the cuboid starts at.
+     * @param x the position of the lower left corner of the cuboid.
+     * @param v the base velocity of each particle.
+     * @param type the type of the particles.
+     * @param N the number of particles in each dimension.
+     * @param h the distance between particles.
+     * @param b_m the brownian motion.
+     * @param num_dimensions the number of dimensions.
      **/
-    void generateCuboid(ParticleContainer& container, int num_particles, std::array<double, 3> x, std::array<double, 3> v, int type,
-        std::array<int, 3> N, double h, double b_m, int num_dimensions);
+    void generateCuboid(ParticleContainer& container, int num_particles, const std::array<double, 3>& x, const std::array<double, 3>& v, int type,
+        const std::array<int, 3>& N, double h, double b_m, int num_dimensions);
 
-    // TODO: Doc
-    int generateDisc(ParticleContainer& container, int num_particles, std::array<double, 3> center, std::array<double, 3> velocity, int type,
-        double radius, double h, double b_m, int dim);
+    /**
+     * Generates a disc from the given parameters.
+     *
+     * @param container The particle container where the particles from the cuboid are stored inside.
+     * @param num_particles The offset inside the container where the cuboid starts at.
+     * @param center The position of the center particle of the disc.
+     * @param velocity Base velocity of the disc.
+     * @param type The type of the particles.
+     * @param r The radius of the disc as a number of particles.
+     * @param h The distance between particles.
+     * @param b_m The brownian motion.
+     * @param num_dimensions The number of dimensions affected by the brownian motion.
+     */
+    int generateDisc(ParticleContainer& container, int num_particles, const std::array<double, 3>& center, const std::array<double, 3>& velocity,
+        int type, double radius, double h, double b_m, int dim);
 };

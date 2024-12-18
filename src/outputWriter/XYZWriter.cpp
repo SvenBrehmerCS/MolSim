@@ -16,7 +16,7 @@ namespace outputWriter {
 
     XYZWriter::~XYZWriter() = default;
 
-    void XYZWriter::plotParticles(ParticleContainer& container, const std::string& filename, int iteration) {
+    void XYZWriter::plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration) {
         std::ofstream file;
         std::stringstream strstr;
         strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".xyz";

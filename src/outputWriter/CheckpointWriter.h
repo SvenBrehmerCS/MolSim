@@ -1,7 +1,11 @@
-//
-// Created by frederik on 12/6/24.
-//
-
+/**
+ * @file
+ *
+ * @brief Handles writing checkpoints.
+ *
+ * @author frederik
+ * @date 12/6/24
+ */
 #ifndef CHECKPOINTWRITER_H
 #define CHECKPOINTWRITER_H
 #include "Environment.h"
@@ -11,23 +15,29 @@
 
 namespace outputWriter {
 
-
     class CheckpointWriter : public Writer {
     public:
         CheckpointWriter() = default;
+
         virtual ~CheckpointWriter() = default;
+
         /**
+         * Plots the state of all particles of the current simulation.
          *
-         * Function plots the entire state of the current simulation, all particles and environment variables
-         *
-         * @param container
-         * @param env
-         * @param filename the name of the File the simulation will be written to.
+         * @param container Container of particle to save.
+         * @param env Container holding necessary variables for saveing the types.
+         * @param filename Name of the File the simulation will be written to.
          */
-        void plot(ParticleContainer& container, Environment& env, const char* filename);
-        virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration);
+        void plot(const ParticleContainer& container, const Environment& env, const char* filename);
+
+        /**
+         * Handles the creation and writing of the checkpoint file.
+         *
+         * @param container List of particles to be plotted.
+         * @param filename The base name of the file to be written.
+         * @param iteration The number of the current iteration, which is used to generate an unique filename
+         */
+        virtual void plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration);
     };
-
-
 }
 #endif // CHECKPOINTWRITER_H

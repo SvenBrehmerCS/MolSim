@@ -40,6 +40,7 @@ public:
      * @param new_particles Vector of test particles.
      * @param rc The cutoff distance used for the simulation.
      * @param new_domain Vector of the number of cells in each direction.
+     * @param new_desc The types of the particles to be stored.
      */
     BoxContainer(
         const std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc);

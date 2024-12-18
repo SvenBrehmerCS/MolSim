@@ -11,7 +11,7 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 
-Particle::Particle(int type_arg) {
+Particle::Particle(const int type_arg) {
     type = type_arg;
     SPDLOG_TRACE("Particle generated without args!");
     f = { 0., 0., 0. };

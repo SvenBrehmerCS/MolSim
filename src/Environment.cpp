@@ -497,7 +497,7 @@ void Environment::set_epsilon(const double epsilon) { this->epsilon = epsilon; }
 
 void Environment::set_print_step(const int print_step) { this->print_step = print_step; }
 
-void Environment::set_output_file_name(std::string& output_file_name) { this->output_file = output_file_name; }
+void Environment::set_output_file_name(const std::string& output_file_name) { this->output_file = output_file_name; }
 
 void Environment::set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
 
@@ -518,7 +518,7 @@ void Environment::set_domain_size(const std::array<double, 3> domain_size) { thi
 
 const char* Environment::get_checkpoint_file_name() const { return checkpoint_file_name.c_str(); }
 
-void Environment::set_checkpoint_file_name(std::string& checkpoint_file_name) { this->checkpoint_file_name = checkpoint_file_name; }
+void Environment::set_checkpoint_file_name(const std::string& checkpoint_file_name) { this->checkpoint_file_name = checkpoint_file_name; }
 
 void Environment::set_dimensions(const int dimensions) { this->dimensions = dimensions; }
 

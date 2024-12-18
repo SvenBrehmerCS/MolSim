@@ -89,6 +89,8 @@ public:
 
     /**
      * Get the corner vector of the front up right corner.
+     *
+     * @return The corner vector.
      */
     std::array<double, 3> get_corner_vector();
 
@@ -226,7 +228,7 @@ public:
      * @param particles The particles vector.
      */
     void loop_y_corner(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
-    
+
     /**
      * Loop through the xy corner pairs.
      *

@@ -60,7 +60,7 @@ enum CalculatorType {
 };
 
 /**
- * @enum FileFormat
+ * @enum OutputFormat
  *
  * @brief The enum describes the different file formats used by this program.
  */
@@ -81,7 +81,7 @@ enum OutputFormat {
     XYZ,
 
     /**
-     * Define the checkpoint file format
+     * Define the checkpoint file format.
      */
     CHECKPOINT,
 };
@@ -141,27 +141,27 @@ private:
     CalculatorType calc = LJ_FULL;
 
     /**
-     * Store the condition of the XY boundary at the origin:
+     * Store the condition of the XY boundary at the origin.
      */
     BoundaryType xy_near = INF_CONT;
     /**
-     * Store the condition of the XZ boundary at the origin:
+     * Store the condition of the XZ boundary at the origin.
      */
     BoundaryType xz_near = INF_CONT;
     /**
-     * Store the condition of the YZ boundary at the origin:
+     * Store the condition of the YZ boundary at the origin.
      */
     BoundaryType yz_near = INF_CONT;
     /**
-     * Store the condition of the XY boundary away from the origin:
+     * Store the condition of the XY boundary away from the origin.
      */
     BoundaryType xy_far = INF_CONT;
     /**
-     * Store the condition of the XZ boundary away from the origin:
+     * Store the condition of the XZ boundary away from the origin.
      */
     BoundaryType xz_far = INF_CONT;
     /**
-     * Store the condition of the YZ boundary away from the origin:
+     * Store the condition of the YZ boundary away from the origin.
      */
     BoundaryType yz_far = INF_CONT;
 
@@ -175,6 +175,7 @@ private:
      * Store the sigma used for the Lenard-Jones calculation. By default it is initialized to 1.0.
      */
     double sigma = 1.0;
+
     /**
      * Store the time delta. By default it is initialized to 0.014.
      */
@@ -336,6 +337,11 @@ public:
     std::array<double, 3> get_domain_size() const;
 
     /**
+     * Get the checkpoint file name.
+     */
+    const char* get_checkpoint_file_name() const;
+
+    /**
      * Test if the simulation requires the direct sum implementation.
      *
      * @return A boolean indicating if the direct sum implementation is required.
@@ -403,7 +409,7 @@ public:
      *
      * @param output_file_name The file name of the output file.
      */
-    void set_output_file_name(std::string& output_file_name);
+    void set_output_file_name(const std::string& output_file_name);
 
     /**
      * Set the format of the the output file.
@@ -441,16 +447,11 @@ public:
     void set_domain_size(const std::array<double, 3> domain_size);
 
     /**
+     * Set the checkpoint_file_name
      *
-     * get the checkpoint file name
-     */
-    const char* get_checkpoint_file_name() const;
-
-    /**
-     * set the checkpoint_file_name
      * @param checkpoint_file_name
      */
-    void set_checkpoint_file_name(std::string& checkpoint_file_name);
+    void set_checkpoint_file_name(const std::string& checkpoint_file_name);
 
     /**
      * Set the number of dimensions of the simulation.

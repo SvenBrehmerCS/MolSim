@@ -21,6 +21,12 @@ namespace outputWriter {
      */
     class VTKWriter : public Writer {
 
+    private:
+        /**
+         * Stores the open VTK file.
+         */
+        std::unique_ptr<VTKFile_t> vtkFile;
+
     public:
         VTKWriter();
 
@@ -28,11 +34,16 @@ namespace outputWriter {
 
         /**
          * Set up internal data structures and prepare to plot a particle.
+         *
+         * @param numParticles Number of particles to be plotted.
          */
-        void initializeOutput(int numParticles);
+        void initializeOutput(const int numParticles);
 
         /**
          * Plot type, mass, position, velocity and force of a particle.
+         *
+         * @param p Particle to plot.
+         * @param mass Mass of particle.
          *
          * @note: initializeOutput() must have been called before.
          */
@@ -42,23 +53,17 @@ namespace outputWriter {
          * Writes the final output file.
          *
          * @param filename The base name of the file to be written.
-         * @param iteration The number of the current iteration,
-         *        which is used to generate an unique filename
+         * @param iteration The number of the current iteration, which is used to generate an unique filename.
          */
-        void writeFile(const std::string& filename, int iteration);
+        void writeFile(const std::string& filename, const int iteration);
 
         /**
          * Handles the creation and writing of the vtk file
          *
-         * @param particles List of particles to be plotted.
+         * @param container List of particles to be plotted.
          * @param filename The base name of the file to be written.
-         * @param iteration The number of the current iteration,
-         *        which is used to generate an unique filename
+         * @param iteration The number of the current iteration, which is used to generate an unique filename.
          */
-        virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration);
-
-    private:
-        std::unique_ptr<VTKFile_t> vtkFile;
+        virtual void plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration);
     };
-
 } // namespace outputWriter

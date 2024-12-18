@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @brief Handles the reading of a XML input file
+ * @brief Handles the reading of a XML input file.
  */
 
 #pragma once
@@ -20,7 +20,7 @@
 #include <string>
 
 /**
- * @brief Collection of readers for different input types
+ * @brief Collection of readers for different input types.
  */
 namespace inputReader {
 
@@ -37,7 +37,6 @@ namespace inputReader {
          */
         std::unique_ptr<sim_t> sim;
 
-
     public:
         XMLTreeReader(const char* filename);
 
@@ -47,6 +46,7 @@ namespace inputReader {
          * Imports the simulation arguments from the input file.
          *
          * @param environment Data structure for holding the simulation parameters.
+         * @param thermostat Data structure representing the thermostat.
          */
         virtual void readArguments(Environment& environment, Thermostat& thermostat);
 
@@ -54,6 +54,8 @@ namespace inputReader {
          * Imports the particles from the input file.
          *
          * @param particles Data structure for holding the particles.
+         * @param delta_t Time between steps for type initialization.
+         * @param gravity Constant force on particles for type initialization.
          */
         virtual void readParticle(ParticleContainer& container, const double delta_t, const double gravity);
 

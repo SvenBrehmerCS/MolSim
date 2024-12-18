@@ -50,7 +50,7 @@ public:
      *
      * @param type Optional: Define the atom type.
      */
-    explicit Particle(int type = 0);
+    explicit Particle(const int type = 0);
 
     /**
      * Generate the copy of a particle.
@@ -64,7 +64,7 @@ public:
      *
      * @param x_arg The position of the particle
      * @param v_arg The velocity of the particle
-     * @param type Optional: Define the atom type.
+     * @param type_arg Optional: Define the atom type.
      */
     Particle(const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, const int type_arg = 0);
 
@@ -132,17 +132,16 @@ public:
     /**
      * Set the force that affected the particle the previous iteration.
      *
-     * @param f_new The new old force.
+     * @param old_f_new The new old force.
      */
     void setOldF(const std::array<double, 3>& old_f_new);
 
     /**
-     *
      * Sets the type of a particle
      *
-     * @param new_type
+     * @param new_type Type to be given to the particle.
      */
-    void setType(int new_type);
+    void setType(const int new_type);
 
     /**
      * Compare if two particles are equal.

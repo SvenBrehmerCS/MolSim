@@ -21,7 +21,7 @@ namespace outputWriter {
 
     VTKWriter::~VTKWriter() = default;
 
-    void VTKWriter::initializeOutput(int numParticles) {
+    void VTKWriter::initializeOutput(const int numParticles) {
 
         vtkFile = std::make_unique<VTKFile_t>("UnstructuredGrid");
 
@@ -53,12 +53,13 @@ namespace outputWriter {
         vtkFile->UnstructuredGrid(unstructuredGrid);
     }
 
-    void VTKWriter::writeFile(const std::string& filename, int iteration) {
+    void VTKWriter::writeFile(const std::string& filename, const int iteration) {
         std::stringstream strstr;
         strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
 
         std::ofstream file(strstr.str().c_str());
         VTKFile(file, *vtkFile);
+        vtkFile.reset();
     }
 
     void VTKWriter::plotParticle(const Particle& p, const double mass) {
@@ -96,7 +97,7 @@ namespace outputWriter {
         pointsIterator->push_back(p.getX()[2]);
     }
 
-    void VTKWriter::plotParticles(ParticleContainer& container, const std::string& filename, int iteration) {
+    void VTKWriter::plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration) {
         initializeOutput(container.size());
 
         for (const Particle& p : container) {

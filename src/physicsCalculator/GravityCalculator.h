@@ -35,7 +35,9 @@ namespace physicsCalculator {
          *
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
+         * @param new_desc The particle types.
          * @param init_forces Define wether the forces should be initialized.
+         * @param type Type container holding the particles.
          */
         GravityCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
             const bool init_forces = true, const BoundaryType type = INF_CONT);

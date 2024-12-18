@@ -11,7 +11,7 @@
 #include <cmath>
 
 /**
- * @class TypePairDesc
+ * @class TypeDesc
  *
  * @brief Define the parameters describing a particle type or particle type mixture.
  */

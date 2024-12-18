@@ -570,7 +570,7 @@ class thermo_t;
 class bound;
 class dvector;
 class pdvector;
-class uivector;
+class pivector;
 class format;
 class frequency;
 class calc;
@@ -2381,7 +2381,7 @@ public:
      * @brief Accessor and modifier functions for the %velocity
      * required element.
      *
-     * The rough velocity of the cuboid.
+     * The velocity of the cuboid.
      */
     //@{
 
@@ -2444,7 +2444,7 @@ public:
     /**
      * @brief Element type.
      */
-    typedef ::uivector count_type;
+    typedef ::pivector count_type;
 
     /**
      * @brief Element traits type.
@@ -2961,7 +2961,7 @@ public:
      * @brief Accessor and modifier functions for the %velocity
      * required element.
      *
-     * The rough velocity of the disc.
+     * The velocity of the disc.
      */
     //@{
 
@@ -4482,7 +4482,7 @@ protected:
 };
 
 /**
- * @brief Class corresponding to the %uivector schema type.
+ * @brief Class corresponding to the %pivector schema type.
  *
  * This complex type represents a three value vector of integers.
  * @details This complex type consists of three integer variables which
@@ -4491,7 +4491,7 @@ protected:
  *
  * @nosubgrouping
  */
-class uivector : public ::xml_schema::type {
+class pivector : public ::xml_schema::type {
 public:
     /**
      * @name vx
@@ -4670,7 +4670,7 @@ public:
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    uivector(const vx_type&, const vy_type&, const vz_type&);
+    pivector(const vx_type&, const vy_type&, const vz_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -4680,7 +4680,7 @@ public:
      * @param c A pointer to the object that will contain the new
      * instance.
      */
-    uivector(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    pivector(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy constructor.
@@ -4691,7 +4691,7 @@ public:
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    uivector(const uivector& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    pivector(const pivector& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy the instance polymorphically.
@@ -4704,7 +4704,7 @@ public:
      * used for copying and should be used for polymorphic object
      * models instead of the copy constructor.
      */
-    virtual uivector* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+    virtual pivector* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
 
     /**
      * @brief Copy assignment operator.
@@ -4714,14 +4714,14 @@ public:
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    uivector& operator=(const uivector& x);
+    pivector& operator=(const pivector& x);
 
     //@}
 
     /**
      * @brief Destructor.
      */
-    virtual ~uivector();
+    virtual ~pivector();
 
     // Implementation.
     //
