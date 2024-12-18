@@ -915,5 +915,3 @@ TEST(CellList, IterateXYCell) {
 
     EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
 }
-
-// TODO: Test loop corners

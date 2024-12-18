@@ -846,4 +846,166 @@ TEST(Stepper, MultipleReflecting) {
     }
 }
 
-// TODO: further analytical stepper tests
+// ==================================================================================================
+//
+//      Perform analytical tests for periodic systems
+//
+// ==================================================================================================
+
+static inline void shrink_arr(std::array<double, 3>& arr, const std::array<double, 3>& dom) {
+    for (size_t i = 0; i < arr.size(); i++) {
+        while (arr[i] < 0.0) {
+            arr[i] += dom[i];
+        }
+
+        while (arr[i] > dom[i]) {
+            arr[i] -= dom[i];
+        }
+    }
+}
+
+// Test if a periodic system remains stable for a long lasting simulation.
+TEST(Stepper, Periodic1) {
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-6;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 0.0, 0.0, 25.0 }, { 3.0, 1.0, 2.0 }, 0),
+        Particle({ 0.0, 0.0, 10.0 }, { 3.0, -2.0, 2.0 }, 1),
+    };
+
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 243564544.0, 12.0, 244140625.0, 0.0001, 0.0 },
+        TypeDesc { 121782272.5, 12.0, 244140625.0, 0.0001, 0.0 },
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+        "-sigma=12.0",
+        "-epsilon=244140625.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+    env.set_r_cutoff(20.0);
+    env.set_domain_size({ 800.0, 800.0, 800.0 });
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, true, false);
+    double total_time = 0.0;
+    Stepper stepper({ PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC }, { 800.0, 800.0, 800.0 });
+
+    // Perform the steps for 100 time units
+    for (size_t i = 0; i <= 1000000; i++) {
+        // Test that the position is correct
+        std::array<double, 3> expected_pos_0 = {
+            3.0 * total_time,
+            5.0 * std::sin(total_time / 5.0),
+            20.0 + 2.0 * total_time + 5.0 * std::cos(total_time / 5.0),
+        };
+
+        shrink_arr(expected_pos_0, env.get_domain_size());
+
+        std::array<double, 3> expected_pos_1 = {
+            3.0 * total_time,
+            -10.0 * std::sin(total_time / 5.0),
+            20.0 + 2.0 * total_time - 10.0 * std::cos(total_time / 5.0),
+        };
+
+        shrink_arr(expected_pos_1, env.get_domain_size());
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+
+        if (i % 2048 == 0) {
+            std::cout << i << std::endl;
+        }
+
+        ASSERT_NO_THROW(stepper.step(calc));
+        total_time += 0.0001;
+    }
+}
+
+// Test if a periodic system remains stable for a long lasting simulation.
+TEST(Stepper, Periodic1) {
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-6;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 0.0, 0.0, 25.0 }, { 3.0, 1.0, 2.0 }, 0),
+        Particle({ 0.0, 0.0, 10.0 }, { 3.0, -2.0, 2.0 }, 1),
+    };
+
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc { 243564544.0, 12.0, 244140625.0, 0.0001, 0.0 },
+        TypeDesc { 121782272.5, 12.0, 244140625.0, 0.0001, 0.0 },
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+        "-sigma=12.0",
+        "-epsilon=244140625.0",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+    env.set_r_cutoff(20.0);
+    env.set_domain_size({ 800.0, 800.0, 800.0 });
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, true, false);
+    double total_time = 0.0;
+    Stepper stepper({ PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC }, { 800.0, 800.0, 800.0 });
+
+    // Perform the steps for 100 time units
+    for (size_t i = 0; i <= 1000000; i++) {
+        // Test that the position is correct
+        std::array<double, 3> expected_pos_0 = {
+            3.0 * total_time,
+            5.0 * std::sin(total_time / 5.0),
+            20.0 + 2.0 * total_time + 5.0 * std::cos(total_time / 5.0),
+        };
+
+        shrink_arr(expected_pos_0, env.get_domain_size());
+
+        std::array<double, 3> expected_pos_1 = {
+            3.0 * total_time,
+            -10.0 * std::sin(total_time / 5.0),
+            20.0 + 2.0 * total_time - 10.0 * std::cos(total_time / 5.0),
+        };
+
+        shrink_arr(expected_pos_1, env.get_domain_size());
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+
+        if (i % 2048 == 0) {
+            std::cout << i << std::endl;
+        }
+
+        ASSERT_NO_THROW(stepper.step(calc));
+        total_time += 0.0001;
+    }
+}

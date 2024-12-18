@@ -108,8 +108,6 @@ target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC s
 include(GoogleTest)
 gtest_discover_tests(MolTest)
 
-include(xercesc)
-
 #include the spdlog module
 include(spdlog)
 # message(STATUS "Using libxsd from: ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd")

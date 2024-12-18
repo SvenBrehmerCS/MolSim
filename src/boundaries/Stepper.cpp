@@ -85,7 +85,7 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
             cont.loop_x_near([this, &calc](Particle& p1, Particle& p2) {
                 const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, domain[1], domain[2] }) - p2.getX();
                 const double dist = ArrayUtils::L2Norm(arr);
-                const double force = calc.calculateFAbs(p1, p2, dist);
+                const double force = -calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
                 p1.setF(-force * arr + p1.getF());

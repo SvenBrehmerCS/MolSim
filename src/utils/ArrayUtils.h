@@ -18,6 +18,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <iomanip>
 
 /**
  * @brief Collection of utility functions and operators for iterable data containers
@@ -91,6 +92,7 @@ namespace ArrayUtils {
             return surround[0] + surround[1];
         }
         std::ostringstream strStream;
+        strStream << std::fixed << std::setprecision(8);
         strStream << surround[0] << *iter;
         for (++iter; iter != end; ++iter) {
             strStream << delimiter << *iter;

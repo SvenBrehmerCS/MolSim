@@ -51,8 +51,10 @@ TEST(ParticleToString, FirstToStringMethod) {
     std::string str;
     ASSERT_NO_THROW(str = p.toString());
 
-    const std::string res = "Particle: X: [-2, 17.9, -1.33] v: [-4.21, 2.1, 1.234] f: [-0.01, -1.2, 0.34] old_f: [6.6, 0.2, -1] type: 22";
-    EXPECT_TRUE(str == res) << "The correct string should be returned.";
+    const std::string res = "Particle: X: [-2.00000000, 17.90000000, -1.33000000] v: [-4.21000000, 2.10000000, 1.23400000] f: [-0.01000000, "
+                            "-1.20000000, 0.34000000] old_f: [6.60000000, 0.20000000, -1.00000000] type: 22";
+    EXPECT_TRUE(str == res) << "The correct string should be returned."
+                            << "(Expected: " << res << ", Got: " << str << ")";
 }
 
 TEST(ParticleEquals, CorrectEquals) {

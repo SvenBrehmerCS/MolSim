@@ -1,5 +1,4 @@
 #include "ParticleContainer.h"
-#include <iostream>
 
 ParticleContainer::ParticleContainer() = default;
 
