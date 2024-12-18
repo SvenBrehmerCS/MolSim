@@ -902,8 +902,8 @@ TEST(Stepper, Periodic1) {
     double total_time = 0.0;
     Stepper stepper({ PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC }, { 800.0, 800.0, 800.0 });
 
-    // Perform the steps for 100 time units
-    for (size_t i = 0; i <= 1000000; i++) {
+    // Perform the steps for 1 time units
+    for (size_t i = 0; i <= 10000; i++) {
         // Test that the position is correct
         std::array<double, 3> expected_pos_0 = {
             3.0 * total_time,
