@@ -13,11 +13,7 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebIn
 # Update the compile options for the release mode
 # TODO: For valgrind profiling -march=native must be disabled.
 # TODO: Additional useful compiler options could be: -march=native, -fprofile-generate, -fprofile-use (+ -fprofile-fix)
-set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native")
-
-# let ccmake and cmake-gui offer the default log levels TODO:
-set(LOG_LEVEL "INFO" CACHE STRING "Set the log level. This must either be OFF, CRITICAL, ERROR, WARN, INFO, DEBUG or TRACE.") 
-add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})
+set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
 
 # set Release as the default build type if it is not yet set.
 if(NOT CMAKE_BUILD_TYPE)
@@ -66,11 +62,10 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
-        XercesC::XercesC
+            xerces-c
 )
 
 # activate all compiler warnings. Clean up your code :P
@@ -83,8 +78,6 @@ target_compile_options(MolSim
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
-
-include(xercesc)
 
 # Generate the doxygen make option
 include(doxygen)
@@ -106,7 +99,7 @@ target_include_directories(MolTest
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC XercesC::XercesC PUBLIC spdlog::spdlog)
+target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC spdlog::spdlog)
 
 include(GoogleTest)
 gtest_discover_tests(MolTest)
