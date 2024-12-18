@@ -141,7 +141,6 @@ int main(const int argc, const char* argv[]) {
     std::cout << "The simulation took " << ns_duration / 1000000.0 << " ms. The update time for a single particle was "
               << (ns_duration / static_cast<double>(iteration * cont->size())) << " ns." << std::endl;
 
-    // TODO hier Simulation checkpoint setzen wenn outputformat = checkpoint gesetzt
     if (env.get_output_file_format() == CHECKPOINT) {
         SPDLOG_INFO("Checkpoint written.");
         outputWriter::CheckpointWriter checkpoint_writer;

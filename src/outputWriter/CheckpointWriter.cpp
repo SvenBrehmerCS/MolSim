@@ -41,8 +41,6 @@ namespace outputWriter {
         // outputFile << container.size();
         SPDLOG_INFO("container size: {}", container.size());
 
-        // TODO evtl. noch dimension einlesen
-
         auto particle = container.begin();
 
         for (size_t i = 0; i < container.size(); i++) {

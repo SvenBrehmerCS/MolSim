@@ -9,7 +9,6 @@
 #include <fstream>
 
 namespace inputReader {
-    // TODO Change for new particles and container (We might lose the mass)
     void inputReader::CheckpointReader::readSimulation(ParticleContainer& container, const char* filename) {
         std::ifstream inputFile(filename, std::ios::binary);
 
