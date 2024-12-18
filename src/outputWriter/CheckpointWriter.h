@@ -15,6 +15,11 @@
 
 namespace outputWriter {
 
+    /**
+     * @class CheckpointWriter
+     *
+     * @brief This class implements the functionality to generate a checkpoint file.
+     */
     class CheckpointWriter : public Writer {
     public:
         CheckpointWriter() = default;
