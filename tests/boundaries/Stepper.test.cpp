@@ -938,14 +938,14 @@ TEST(Stepper, Periodic1) {
 }
 
 // Test if a periodic system remains stable for a long lasting simulation.
-TEST(Stepper, Periodic1) {
+TEST(Stepper, Periodic2) {
     // Set the margin for the maximum floatingpoint error
     const double error_margin = 1E-6;
 
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 0.0, 0.0, 25.0 }, { 3.0, 1.0, 2.0 }, 0),
-        Particle({ 0.0, 0.0, 10.0 }, { 3.0, -2.0, 2.0 }, 1),
+        Particle({ 0.0, 0.0, 5.0 }, { 3.0, 1.0, 2.0 }, 0),
+        Particle({ 0.0, 0.0, 790.0 }, { 3.0, -2.0, 2.0 }, 1),
     };
 
     // Initialise the list of type descriptors
