@@ -7,12 +7,17 @@ cmake_minimum_required(VERSION 3.10)
 # define project name, version
 project(PSEMolDyn_GroupB VERSION 0.0.1)
 
+# Define the compilers used for the project
+# which compilers to use for C and C++
+set(CMAKE_CXX_COMPILER icpx)
+
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
-# Update the compile options for the release mode
-# TODO: Additional useful compiler options could be: -fprofile-generate and -fprofile-use (+ -fprofile-fix)
-set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # Update the compile options for the release mode
+    set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
+endif()
 
 # set Release as the default build type if it is not yet set.
 if(NOT CMAKE_BUILD_TYPE)
@@ -77,7 +82,7 @@ target_compile_options(MolSim
         PRIVATE
             $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror>
             # disable some spam warnings for icpc...
-            $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+            $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259 -ip -ipo -fast>
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)

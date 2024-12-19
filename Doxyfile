@@ -1047,8 +1047,6 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-# TODO: Remove exclude files if they are not required
-
 EXCLUDE                = src/inputReader/input.h \
                          src/inputReader/input.cpp \
                          src/outputWriter/vtk-unstructured.h \
