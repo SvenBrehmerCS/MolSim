@@ -165,7 +165,6 @@ private:
      */
     BoundaryType yz_far = INF_CONT;
 
-
     /**
      * Store the epsilon used for the Lenard-Jones calculation. By default it is initialized to 5.0.
      */
@@ -200,11 +199,6 @@ private:
      * Store the total size of the simulation domain.
      */
     Vec<double> domain_size = { 180.0, 90.0, 1.0 };
-
-    /**
-     * Specifies the name of the input_file_checkpoint.
-     */
-    std::string checkpoint_file_name;
 
     /**
      * Specifies the number of steps between thermometer applications.
@@ -337,11 +331,6 @@ public:
     Vec<double> get_domain_size() const;
 
     /**
-     * Get the checkpoint file name.
-     */
-    const char* get_checkpoint_file_name() const;
-
-    /**
      * Test if the simulation requires the direct sum implementation.
      *
      * @return A boolean indicating if the direct sum implementation is required.
@@ -445,13 +434,6 @@ public:
      * @param domain_size Vector of domain size along the axes.
      */
     void set_domain_size(const Vec<double> domain_size);
-
-    /**
-     * Set the checkpoint_file_name
-     *
-     * @param checkpoint_file_name
-     */
-    void set_checkpoint_file_name(const std::string& checkpoint_file_name);
 
     /**
      * Set the number of dimensions of the simulation.

@@ -81,14 +81,6 @@ namespace inputReader {
         };
         environment.set_domain_size(domain_size);
 
-        // TODO this is probably unnecessary
-        /*
-        if (sim->checkpoint().present()) {
-            SPDLOG_TRACE("Checkpointing...");
-            environment.set_checkpoint_file_name(sim->checkpoint().get().);
-        }
-        */
-
         if (sim->thermo().present()) {
             if (sim->thermo().get().T_target().present()) {
                 thermostat.set_T_target(sim->thermo().get().T_target().get());
@@ -155,7 +147,7 @@ namespace inputReader {
         for (const auto& particle : particles) {
             container[i].setX({ particle.position().vx(), particle.position().vy(), particle.position().vz() });
             container[i].setV({ particle.velocity().vx(), particle.velocity().vy(), particle.velocity().vz() });
-            ptypes.push_back(TypeDesc { particle.m(), 1.0, 5.0, delta_t, gravity }); // TODO Implement epsilon and sigma for single
+            ptypes.push_back(TypeDesc { particle.m(), 1.0, 5.0, delta_t, gravity });
             container[i].setType(ptype++);
             i++;
         }

@@ -11,8 +11,8 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
 # Update the compile options for the release mode
-# TODO: For valgrind profiling -march=native must be disabled.
-# TODO: Additional useful compiler options could be: -march=native, -fprofile-generate, -fprofile-use (+ -fprofile-fix)
+# For valgrind profiling -march=native must be disabled.
+# Additional useful compiler options could be: -march=native, -fprofile-generate, -fprofile-use (+ -fprofile-fix)
 set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native")
 
 # let ccmake and cmake-gui offer the default log levels TODO:

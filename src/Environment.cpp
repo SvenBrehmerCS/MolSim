@@ -516,10 +516,6 @@ void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutof
 
 void Environment::set_domain_size(const Vec<double> domain_size) { this->domain_size = domain_size; }
 
-const char* Environment::get_checkpoint_file_name() const { return checkpoint_file_name.c_str(); }
-
-void Environment::set_checkpoint_file_name(const std::string& checkpoint_file_name) { this->checkpoint_file_name = checkpoint_file_name; }
-
 void Environment::set_dimensions(const int dimensions) { this->dimensions = dimensions; }
 
 void Environment::set_temp_frequency(const int temp_frequency) { this->temp_frequency = temp_frequency; }
