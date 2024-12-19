@@ -8,9 +8,6 @@
 #include "boundaries/PeriodicBoundary.h"
 #include "container/BoxContainer.h"
 
-// TODO:
-#include <iostream>
-
 Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const std::array<double, 3>& new_domain) {
     bound_t = bt;
     domain = new_domain;

@@ -228,8 +228,6 @@ TEST(CellList, CreateList) {
     EXPECT_EQ(pairs.size(), 0) << "The pair size should be 0 but it was " << pairs.size();
 }
 
-// TODO: Additional test to loop cell pairs
-
 // Test if the iterator for the halo cells work correctly.
 TEST(CellList, IterateHalo) {
     CellList cells(2.0, { 12.0, 12.0, 12.0 });

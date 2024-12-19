@@ -931,4 +931,88 @@ TEST(Stepper, Periodic1) {
     }
 }
 
-// TODO: Test further systems
+
+// Test if a periodic system remains stable for a long lasting simulation, if paired with a hard boundary. This uses particles running to edges and
+// plains.
+TEST(Stepper, PeriodicHard) {
+    // Set the margin for the maximum floatingpoint error
+    const double error_margin = 1E-6;
+
+    // Initialize the list of particles
+    std::vector<Particle> particles = {
+        Particle({ 0.0, 0.0, 12.0 }, { 4.0, 4.0, 0.0 }, 0),
+        Particle({ 60.0, 0.0, 60.0 }, { 0.0, 6.0, 0.0 }, 0),
+        Particle({ 40.0, 0.0, 0.0 }, { 0.0, 3.0, 160.0 }, 0),
+    };
+
+    // Initialise the list of type descriptors
+    std::vector<TypeDesc> ptypes = {
+        TypeDesc(1.0, 1.0, 50.0, 0.0, 0.0001),
+    };
+
+    // Initialize the simulation environment
+    const char* argv[] = {
+        "./MolSim",
+        "path/to/input.txt",
+        "-delta_t=0.0001",
+    };
+
+    constexpr int argc = sizeof(argv) / sizeof(argv[0]);
+    Environment env;
+
+    ASSERT_NO_THROW(env = Environment(argc, argv));
+    env.set_r_cutoff(10.0);
+    env.set_domain_size({ 79.99999, 79.99999, 80.0 });
+
+    // Initialize the Calculator
+    physicsCalculator::LJCalculator calc(env, particles, ptypes, true, false);
+    double total_time = 0.0;
+    Stepper stepper({ PERIODIC, PERIODIC, HARD, PERIODIC, PERIODIC, HARD }, { 79.99999, 79.99999, 80.0 });
+
+    // Perform the steps for 100 time units
+    for (size_t i = 0; i <= 1000000; i++) {
+        // Test that the position is correct
+        std::array<double, 3> expected_pos_0 = {
+            4.0 * total_time,
+            4.0 * total_time,
+            12.0,
+        };
+
+        shrink_arr(expected_pos_0, env.get_domain_size());
+
+        std::array<double, 3> expected_pos_1 = {
+            60.0,
+            6.0 * total_time,
+            60.0,
+        };
+
+        shrink_arr(expected_pos_1, env.get_domain_size());
+
+        std::array<double, 3> expected_pos_2 = {
+            40.0,
+            3.0 * total_time,
+            0.0160 * (i % 10000),
+        };
+
+        if (expected_pos_2[2] > 80.0) {
+            expected_pos_2[2] = 160.0 - expected_pos_2[2];
+        }
+
+        shrink_arr(expected_pos_2, std::array<double, 3>({ 79.99999, 79.99999, 81.0 }));
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+
+        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[2].getX() - expected_pos_2), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_2)
+            << ", Got: " << ArrayUtils::to_string(calc.get_container()[2].getX()) << ")";
+
+        ASSERT_NO_THROW(stepper.step(calc));
+        total_time += 0.0001;
+    }
+}

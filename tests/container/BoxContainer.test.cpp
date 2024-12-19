@@ -54,7 +54,6 @@ TEST(BoxContainer, Constructor) {
 
     EXPECT_EQ(box.getRC(), 2.1) << "The getter for the cutoff distance returned a wrong value";
     EXPECT_TRUE(box.get_corner_vector() == domain) << "The getter for the domain returned a wrong value";
-    // TODO Test remaining getter
 
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(particles[i] == box[i]) << "The particles must maintain their provided order, and all particles must be available.";
