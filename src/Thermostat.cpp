@@ -4,12 +4,8 @@ void Thermostat::regulate_Temperature() {
 
     double E_kin = 0.0;
     for (const auto& p : *particles) {
-<<<<<<< HEAD
-        E_kin += particles->get_type_descriptor(p.getType()).get_mass() * ArrayUtils::L2Norm(p.getV()) * ArrayUtils::L2Norm(p.getV());
-=======
         double sp = (p.getV()[0] * p.getV()[0]) + (p.getV()[1] * p.getV()[1]) + (p.getV()[2] * p.getV()[2]);
         E_kin += particles->get_type_descriptor(p.getType()).get_mass() * sp;
->>>>>>> 37340456bcc4208a296977a1d5a7e677b396316f
     }
 
     double T_curr = E_kin / static_cast<double>(dimensions * particles->size());
