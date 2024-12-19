@@ -277,25 +277,25 @@ void CellList::loop_xy_pairs(const std::function<particle_pair_it>& iterator, st
                 }
 
                 for (size_t l : cells[get_cell_index(i, j - 1, n_z - 2)]) {
-                    if ( (particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
+                    if ((particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i + 1, j - 1, n_z - 2)]) {
-                    if ( (particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
+                    if ((particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i - 1, j, n_z - 2)]) {
-                    if ( (particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
+                    if ((particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
                         iterator(particles[k], particles[l]);
                     }
                 }
 
                 for (size_t l : cells[get_cell_index(i, j, n_z - 2)]) {
-                    if ( (particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
+                    if ((particles[k].getX() - particles[l].getX() + domain_z).len_squ() <= rc_squ) {
                         iterator(particles[k], particles[l]);
                     }
                 }

@@ -84,6 +84,8 @@ public:
      * @param x The x coordinate.
      * @param y The y coordinate.
      * @param z The z coordinate.
+     * 
+     * @return The index of the cell within the cell list.
      */
     size_t get_cell_index(const size_t x, const size_t y, const size_t z);
 

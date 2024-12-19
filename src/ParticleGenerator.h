@@ -47,11 +47,13 @@ public:
      * @param center The position of the center particle of the disc.
      * @param velocity Base velocity of the disc.
      * @param type The type of the particles.
-     * @param r The radius of the disc as a number of particles.
+     * @param radius The radius of the disc as a number of particles.
      * @param h The distance between particles.
      * @param b_m The brownian motion.
-     * @param num_dimensions The number of dimensions affected by the brownian motion.
+     * @param dim The number of dimensions affected by the brownian motion.
+     *
+     * @return The number of new particles.
      */
-    int generateDisc(ParticleContainer& container, int num_particles, const Vec<double>& center, const Vec<double>& velocity,
-        int type, double radius, double h, double b_m, int dim);
+    int generateDisc(ParticleContainer& container, int num_particles, const Vec<double>& center, const Vec<double>& velocity, int type, double radius,
+        double h, double b_m, int dim);
 };

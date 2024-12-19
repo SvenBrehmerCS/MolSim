@@ -273,7 +273,7 @@ TEST(CellList, IterateBoundary) {
 
     ASSERT_NO_THROW(cells.create_list(particles));
 
-    std::list<int> indices = {2, 5, 7, 8};
+    std::list<int> indices = { 2, 5, 7, 8 };
 
     cells.loop_boundary(
         [&indices](Particle& p1) {

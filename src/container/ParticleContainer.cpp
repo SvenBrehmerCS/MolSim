@@ -10,8 +10,7 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles,
 ParticleContainer::ParticleContainer(const Vec<double>& new_domain)
     : domain { new_domain } { }
 
-ParticleContainer::ParticleContainer(
-    const std::vector<Particle>& new_particles, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc)
+ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc)
     : particles { new_particles }
     , domain { new_domain } {
     build_type_table(new_desc);

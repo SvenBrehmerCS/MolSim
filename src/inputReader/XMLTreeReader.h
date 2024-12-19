@@ -38,6 +38,11 @@ namespace inputReader {
         std::unique_ptr<sim_t> sim;
 
     public:
+        /**
+         * Define the xml file reader constructor.
+         *
+         * @param filename The name of the output file.
+         */
         XMLTreeReader(const char* filename);
 
         virtual ~XMLTreeReader();
@@ -53,7 +58,7 @@ namespace inputReader {
         /**
          * Imports the particles from the input file.
          *
-         * @param particles Data structure for holding the particles.
+         * @param container Data structure for holding the particles.
          * @param delta_t Time between steps for type initialization.
          * @param gravity Constant force on particles for type initialization.
          */
@@ -64,6 +69,8 @@ namespace inputReader {
          *
          * @param h Distance between particles inside the disc.
          * @param r Radius of the disc.
+         *
+         * @return The number of added particles.
          */
         int num_particles_added(double h, double r);
     };

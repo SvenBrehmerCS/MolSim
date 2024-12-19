@@ -39,6 +39,11 @@ namespace inputReader {
         std::ifstream input_file;
 
     public:
+        /**
+         * Define the file reader constructor.
+         *
+         * @param filename The name of the output file.
+         */
         FileReader(const char* filename);
 
         virtual ~FileReader();
@@ -54,7 +59,7 @@ namespace inputReader {
         /**
          * Imports the particles from the input file.
          *
-         * @param particles Data structure for holding the particles.
+         * @param container Data structure for holding the particles.
          * @param delta_t Time between steps for type initialization.
          * @param gravity Constant force on particles for type initialization.
          */

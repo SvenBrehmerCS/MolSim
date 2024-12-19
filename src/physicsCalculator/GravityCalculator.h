@@ -52,17 +52,21 @@ namespace physicsCalculator {
          *
          * @param p1 The first particle.
          * @param p2 The second particle.
-         * @param dist THe distance between the particles.
+         * @param dist_squ The distance between the particles.
+         *
+         * @return The force interacting between p1 and p2.
          */
         virtual double calculateFAbs(const Particle& p1, const Particle& p2, const double dist_squ);
 
         /**
          * Get the force absolute and sign direction between two particles.
          *
-         * @param dist The distance between two particles.
+         * @param dist_squ The squared distance between two particles.
          * @param t1 The type of the first particle.
          * @param t2 The type of the second particle.
+         *
+         * @return The force interacting between p1 and p2.
          */
-        virtual double calculateFDist(const double dist, const int t1, const int t2) const;
+        virtual double calculateFDist(const double dist_squ, const int t1, const int t2) const;
     };
 } // namespace physicsCalculator

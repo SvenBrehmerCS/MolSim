@@ -22,15 +22,15 @@ TEST(CheckpointWriterTest, CheckpointCombined) {
     env.set_gravity(gravity);
 
     auto desc = TypeDesc(mass, sigma, epsilon, delta_t, gravity);
-    container.set_particle_type({desc});
+    container.set_particle_type({ desc });
 
     container.resize(4);
     for (int i = 0; i < 4; i++) {
         double j = i;
-        container[i].setX({j, j, j});
+        container[i].setX({ j, j, j });
         container[i].setType(0);
-        container[i].setV({j, j, j});
-        container[i].setF({j, j, j});
+        container[i].setV({ j, j, j });
+        container[i].setF({ j, j, j });
     }
 
     writer.plot(container, env, "CheckpointCombined");
@@ -88,5 +88,4 @@ TEST(CheckpointWriterTest, CheckpointCombined) {
     EXPECT_EQ(container[3].getF()[0], 3);
     EXPECT_EQ(container[3].getF()[1], 3);
     EXPECT_EQ(container[3].getF()[2], 3);
-
 }

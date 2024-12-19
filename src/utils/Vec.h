@@ -1,5 +1,5 @@
 /**
- * @file Vec.hpp
+ * @file
  *
  * @brief This file defines the main vector functionality.
  *
@@ -11,8 +11,8 @@
 #include <cmath>
 #include <initializer_list>
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
 
 /**
  * @brief Enable vector alignment.
@@ -659,7 +659,8 @@ HOT FLATTEN ALWAYS_INLINE [[nodiscard]] inline constexpr Vec<number_t> operator+
  *
  * This method computes the difference of two vectors.
  *
- * @param __rhs The vector that should be inverted.
+ * @param __lhs The vector on the left site of the substraction.
+ * @param __rhs The vector on the right site of the substraction.
  *
  * @tparam number_t The numerical precision of the vector.
  *

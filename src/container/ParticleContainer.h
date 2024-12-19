@@ -176,7 +176,7 @@ public:
      * Get the descriptor of a particle pair.
      *
      * @param t1 The first type.
-     * @param t1 The second type.
+     * @param t2 The second type.
      *
      * @return The pair descriptor.
      */

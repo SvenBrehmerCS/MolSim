@@ -5,8 +5,8 @@
 ParticleGenerator::ParticleGenerator() = default;
 ParticleGenerator::~ParticleGenerator() = default;
 
-void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_particles, const Vec<double>& x,
-    const Vec<double>& v, int type, const std::array<int, 3>& N, double h, double b_m, int dim) {
+void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_particles, const Vec<double>& x, const Vec<double>& v, int type,
+    const std::array<int, 3>& N, double h, double b_m, int dim) {
 
     int N1 = N[0];
     int N2 = N[1];
@@ -36,8 +36,8 @@ void ParticleGenerator::generateCuboid(ParticleContainer& container, int num_par
     }
 }
 
-int ParticleGenerator::generateDisc(ParticleContainer& container, int num_particles, const Vec<double>& center,
-    const Vec<double>& velocity, int type, double radius, double h, double b_m, int dim) {
+int ParticleGenerator::generateDisc(ParticleContainer& container, int num_particles, const Vec<double>& center, const Vec<double>& velocity, int type,
+    double radius, double h, double b_m, int dim) {
     int num_particles_added = 0;
 
     double radius_distance = radius * h;
