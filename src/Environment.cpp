@@ -443,7 +443,7 @@ double Environment::get_r_cutoff() const { return r_cutoff; }
 
 double Environment::get_gravity() const { return gravity; }
 
-std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
+Vec<double> Environment::get_domain_size() const { return domain_size; }
 
 int Environment::get_dimensions() const { return dimensions; }
 
@@ -514,7 +514,7 @@ void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_t
 
 void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
 
-void Environment::set_domain_size(const std::array<double, 3> domain_size) { this->domain_size = domain_size; }
+void Environment::set_domain_size(const Vec<double> domain_size) { this->domain_size = domain_size; }
 
 const char* Environment::get_checkpoint_file_name() const { return checkpoint_file_name.c_str(); }
 

@@ -3,8 +3,8 @@
             xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
         <name>rayleigh_big</name>
-        <format>VTK</format>
-        <frequency>100</frequency>
+        <format>NO_OUT</format>
+        <frequency>100000</frequency>
     </output>
     <param>
         <calc>LJ_FULL</calc>

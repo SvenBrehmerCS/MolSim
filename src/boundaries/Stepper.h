@@ -31,12 +31,12 @@ private:
     /**
      * An array storing the domain size.
      */
-    std::array<double, 3> domain;
+    Vec<double> domain;
 
     /**
-     * A boolean indicating if the simulation has an infinite domain.
+     * A boolean indicating if the simulation has an outflow boundary.
      */
-    bool inf;
+    bool out = false;
 
 public:
     /**
@@ -45,7 +45,7 @@ public:
      * @param bt The boundary types used for the simulation.
      * @param new_domain The size of the new domain.
      */
-    Stepper(const std::array<BoundaryType, 6>& bt, const std::array<double, 3>& new_domain);
+    Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain);
 
     /**
      * Provide a default destructor for a stepper.

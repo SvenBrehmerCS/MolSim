@@ -32,7 +32,7 @@ public:
      * @param rc The cutoff distance used for the simulation.
      * @param new_domain Vector of the number of cells in each direction.
      */
-    BoxContainer(const double rc, const std::array<double, 3>& new_domain);
+    BoxContainer(const double rc, const Vec<double>& new_domain);
 
     /**
      * Define the box container.
@@ -43,7 +43,7 @@ public:
      * @param new_desc The types of the particles to be stored.
      */
     BoxContainer(
-        const std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc);
+        const std::vector<Particle>& new_particles, const double rc, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc);
 
     /**
      * Define the default destructor for a box container.

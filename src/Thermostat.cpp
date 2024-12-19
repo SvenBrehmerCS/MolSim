@@ -4,7 +4,7 @@ void Thermostat::regulate_Temperature() {
 
     double E_kin = 0.0;
     for (const auto& p : *particles) {
-        double sp = (p.getV()[0] * p.getV()[0]) + (p.getV()[1] * p.getV()[1]) + (p.getV()[2] * p.getV()[2]);
+        double sp = p.getV().len_squ();
         E_kin += particles->get_type_descriptor(p.getType()).get_mass() * sp;
     }
 

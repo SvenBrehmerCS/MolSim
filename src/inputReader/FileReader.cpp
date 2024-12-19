@@ -25,8 +25,8 @@ namespace inputReader {
 
     void FileReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
 
-        std::array<double, 3> x;
-        std::array<double, 3> v;
+        Vec<double> x;
+        Vec<double> v;
         std::array<int, 3> N;
         double m;
         double h;
@@ -61,12 +61,9 @@ namespace inputReader {
         for (int i = 0; i < num_particles; i++) {
             std::istringstream datastream(tmp_string);
 
-            for (auto& xj : x) {
-                datastream >> xj;
-            }
-            for (auto& vj : v) {
-                datastream >> vj;
-            }
+            datastream >> x[0] >> x[1] >> x[2];
+            datastream >> v[0] >> v[1] >> v[2];
+
             if (datastream.eof()) {
                 SPDLOG_CRITICAL("Error reading file: eof reached unexpectedly reading from line {}", i);
                 std::exit(EXIT_FAILURE);
@@ -98,12 +95,9 @@ namespace inputReader {
             for (int i = 0; i < num_cubes; i++) {
                 std::istringstream datastream(tmp_string);
 
-                for (auto& xj : x) {
-                    datastream >> xj;
-                }
-                for (auto& vj : v) {
-                    datastream >> vj;
-                }
+                datastream >> x[0] >> x[1] >> x[2];
+                datastream >> v[0] >> v[1] >> v[2];
+
                 datastream >> m;
 
                 for (auto& nj : N) {

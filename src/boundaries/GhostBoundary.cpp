@@ -12,15 +12,16 @@ void GhostBoundary::postF(Particle& particle, physicsCalculator::Calculator& cal
     // Create ghost particles if required
     if (pos == 0.0) {
         if (particle.getX()[dim] < r) {
-            std::array<double, 3> f = { 0.0, 0.0, 0.0 };
-            f[dim] = -calc.calculateFDist(particle.getX()[dim] * 2.0, particle.getType(), particle.getType()) * (particle.getX()[dim]) * 2.0;
+            Vec<double> f = { 0.0, 0.0, 0.0 };
+            const double dist = (pos - particle.getX()[dim]) * 2.0;
+            f[dim] = -calc.calculateFDist(dist * dist, particle.getType(), particle.getType()) * (particle.getX()[dim]) * 2.0;
             particle.setF(particle.getF() + f);
         }
     } else {
         if (particle.getX()[dim] > pos - r) {
-            std::array<double, 3> f = { 0.0, 0.0, 0.0 };
-            f[dim] = calc.calculateFDist((pos - particle.getX()[dim]) * 2.0, particle.getType(), particle.getType()) * (pos - particle.getX()[dim])
-                * 2.0;
+            Vec<double> f = { 0.0, 0.0, 0.0 };
+            const double dist = (pos - particle.getX()[dim]) * 2.0;
+            f[dim] = calc.calculateFDist(dist * dist, particle.getType(), particle.getType()) * (pos - particle.getX()[dim]) * 2.0;
             particle.setF(particle.getF() + f);
         }
     }

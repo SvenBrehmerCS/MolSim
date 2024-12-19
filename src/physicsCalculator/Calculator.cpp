@@ -2,7 +2,7 @@
 #include "container/DSContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/Reader.h"
-#include "utils/ArrayUtils.h"
+#include "utils/Vec.h"
 
 #include <memory>
 #include <spdlog/spdlog.h>
@@ -43,8 +43,8 @@ namespace physicsCalculator {
 
     void Calculator::calculateF() {
         cont->iterate_pairs([this](Particle& i, Particle& j) {
-            const double dist = ArrayUtils::L2Norm(i.getX() - j.getX());
-            const double force = this->calculateFAbs(i, j, dist);
+            const double dist_squ = (i.getX() - j.getX()).len_squ();
+            const double force = this->calculateFAbs(i, j, dist_squ);
 
             // Update the forces for both particles
             i.setF(force * (j.getX() - i.getX()) + i.getF());

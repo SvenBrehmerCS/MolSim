@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include <array>
 #include <string>
+
+#include "utils/Vec.h"
 
 /**
  * @class Particle
@@ -22,22 +23,22 @@ private:
     /**
      * Position of the particle
      */
-    std::array<double, 3> x;
+    Vec<double> x;
 
     /**
      * Velocity of the particle
      */
-    std::array<double, 3> v;
+    Vec<double> v;
 
     /**
      * Force effective on this particle
      */
-    std::array<double, 3> f;
+    Vec<double> f;
 
     /**
      * Force which was effective on this particle
      */
-    std::array<double, 3> old_f;
+    Vec<double> old_f;
 
     /**
      * Type of the particle.
@@ -66,7 +67,7 @@ public:
      * @param v_arg The velocity of the particle
      * @param type_arg Optional: Define the atom type.
      */
-    Particle(const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, const int type_arg = 0);
+    Particle(const Vec<double>& x_arg, const Vec<double>& v_arg, const int type_arg = 0);
 
     /**
      * Destroy a particle.
@@ -78,28 +79,28 @@ public:
      *
      * @return The particle position.
      */
-    const std::array<double, 3>& getX() const;
+    const Vec<double>& getX() const;
 
     /**
      * Get the constant reference to the particle velocity.
      *
      * @return The particle velocity.
      */
-    const std::array<double, 3>& getV() const;
+    const Vec<double>& getV() const;
 
     /**
      * Get the constant reference to the force on the particle.
      *
      * @return The force on the particle.
      */
-    const std::array<double, 3>& getF() const;
+    const Vec<double>& getF() const;
 
     /**
      * Get the constant reference to the old force on the particle.
      *
      * @return The force on the particle.
      */
-    const std::array<double, 3>& getOldF() const;
+    const Vec<double>& getOldF() const;
 
     /**
      * Get the type of the particle.
@@ -113,28 +114,28 @@ public:
      *
      * @param x_new The new position.
      */
-    void setX(const std::array<double, 3>& x_new);
+    void setX(const Vec<double>& x_new);
 
     /**
      * Set the velocity of the particle.
      *
      * @param v_new The new velocity.
      */
-    void setV(const std::array<double, 3>& v_new);
+    void setV(const Vec<double>& v_new);
 
     /**
      * Set the force affecting the particle.
      *
      * @param f_new The new force.
      */
-    void setF(const std::array<double, 3>& f_new);
+    void setF(const Vec<double>& f_new);
 
     /**
      * Set the force that affected the particle the previous iteration.
      *
      * @param old_f_new The new old force.
      */
-    void setOldF(const std::array<double, 3>& old_f_new);
+    void setOldF(const Vec<double>& old_f_new);
 
     /**
      * Sets the type of a particle

@@ -30,7 +30,7 @@ protected:
     /**
      * Store the domain size of the container.
      */
-    std::array<double, 3> domain = { 0.0, 0.0, 0.0 };
+    Vec<double> domain = { 0.0, 0.0, 0.0 };
 
     /**
      * Store the descriptors for the different types.
@@ -61,7 +61,7 @@ public:
      *
      * @param new_domain The new domain size.
      */
-    ParticleContainer(const std::array<double, 3>& new_domain);
+    ParticleContainer(const Vec<double>& new_domain);
 
     /**
      * Create a particle container of a certain size from a vector of particles and their types.
@@ -70,7 +70,7 @@ public:
      * @param new_domain The new domain size.
      * @param new_desc The types of the particles to be stored.
      */
-    ParticleContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc);
+    ParticleContainer(const std::vector<Particle>& new_particles, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc);
 
     /**
      * Destroy all particles.
@@ -156,7 +156,7 @@ public:
      *
      * @return The corner vector.
      */
-    const std::array<double, 3>& get_corner_vector() const;
+    const Vec<double>& get_corner_vector() const;
 
     /**
      * Get the vector representing all types of particles in the container.

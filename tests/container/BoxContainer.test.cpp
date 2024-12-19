@@ -50,7 +50,7 @@ TEST(BoxContainer, Constructor) {
     };
 
     BoxContainer box(particles, 2.1, { 10.5, 12.2, 10.5 }, { TypeDesc { 0.5, 1.0, 5.0, 0.1, 0.0 }, TypeDesc { 0.3, 1.0, 5.0, 0.1, 0.0 } });
-    const std::array<double, 3> domain = { 10.5, 12.2, 10.5 };
+    const Vec<double> domain = { 10.5, 12.2, 10.5 };
 
     EXPECT_EQ(box.getRC(), 2.1) << "The getter for the cutoff distance returned a wrong value";
     EXPECT_TRUE(box.get_corner_vector() == domain) << "The getter for the domain returned a wrong value";

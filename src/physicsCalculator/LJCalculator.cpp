@@ -31,16 +31,16 @@ namespace physicsCalculator {
 
     LJCalculator::~LJCalculator() = default;
 
-    double LJCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist) {
+    double LJCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist_squ) {
         // Calculate the distance and force experienced by two particles
-        return calculateFDist(dist, p1.getType(), p2.getType());
+        return calculateFDist(dist_squ, p1.getType(), p2.getType());
     }
 
-    double LJCalculator::calculateFDist(const double dist, const int t1, const int t2) const {
+    double LJCalculator::calculateFDist(const double dist_squ, const int t1, const int t2) const {
         // Calculate the powers of (sigma / distance)
-        const double term_to_2 = (cont->get_type_pair_descriptor(t1, t2).get_sigma_squared() / (dist * dist));
+        const double term_to_2 = (cont->get_type_pair_descriptor(t1, t2).get_sigma_squared() / (dist_squ));
         const double term_to_6 = term_to_2 * term_to_2 * term_to_2;
 
-        return (cont->get_type_pair_descriptor(t1, t2).get_scaled_epsilon() / (dist * dist)) * std::fma(-2.0 * term_to_6, term_to_6, term_to_6);
+        return (cont->get_type_pair_descriptor(t1, t2).get_scaled_epsilon() / (dist_squ)) * std::fma(-2.0 * term_to_6, term_to_6, term_to_6);
     }
 } // namespace physicsCalculator

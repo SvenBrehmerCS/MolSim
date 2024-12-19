@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include "utils/ArrayUtils.h"
-#include <array>
+#include "utils/Vec.h"
 #include <cmath>
 
 /**

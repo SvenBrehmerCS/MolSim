@@ -88,19 +88,16 @@ TEST(GravityStepper, Step1) {
         EXPECT_EQ(pi->getType(), exp[i].getType()) << "The type must not change when updating the force.";
 
         // Test if the new positions is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - exp[i].getX()), error_margin)
-            << "The positions was not correct. (expected: " << ArrayUtils::to_string(exp[i].getX()) << ", got: " << ArrayUtils::to_string(pi->getX())
-            << ")";
+        EXPECT_LT((pi->getX() - exp[i].getX()).len(), error_margin)
+            << "The positions was not correct. (expected: " << exp[i].getX() << ", got: " << pi->getX() << ")";
 
         // Test if the new velocity is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getV() - exp[i].getV()), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(exp[i].getV()) << ", got: " << ArrayUtils::to_string(pi->getV())
-            << ")";
+        EXPECT_LT((pi->getV() - exp[i].getV()).len(), error_margin)
+            << "The force was not correct. (expected: " << exp[i].getV() << ", got: " << pi->getV() << ")";
 
         // Test if the new force is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - exp[i].getF()), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(exp[i].getF()) << ", got: " << ArrayUtils::to_string(pi->getF())
-            << ")";
+        EXPECT_LT((pi->getF() - exp[i].getF()).len(), error_margin)
+            << "The force was not correct. (expected: " << exp[i].getF() << ", got: " << pi->getF() << ")";
 
         pi++;
     }
@@ -168,10 +165,10 @@ TEST(LJStepper, Step1) {
         EXPECT_FLOAT_EQ(ptypes[pi->getType()].get_mass(), 1.0) << "The particle mass must not change.";
         EXPECT_EQ(pi->getType(), expected[i].getType()) << "The particle type must not change.";
 
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected[i].getX()), error_margin) << "The particle must have the new position.";
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getV() - expected[i].getV()), error_margin) << "The particle must have the new velocity.";
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected[i].getF()), error_margin) << "The particle must have the new force.";
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getOldF() - expected[i].getOldF()), error_margin) << "The particle must have the new old force.";
+        EXPECT_LT((pi->getX() - expected[i].getX()).len(), error_margin) << "The particle must have the new position.";
+        EXPECT_LT((pi->getV() - expected[i].getV()).len(), error_margin) << "The particle must have the new velocity.";
+        EXPECT_LT((pi->getF() - expected[i].getF()).len(), error_margin) << "The particle must have the new force.";
+        EXPECT_LT((pi->getOldF() - expected[i].getOldF()).len(), error_margin) << "The particle must have the new old force.";
 
         pi++;
     }
@@ -239,8 +236,8 @@ TEST(GravityStepper, Analytical1) {
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos = { 0.5 + total_time * 2.0, 2.0 + total_time * -0.5, -31.0 + total_time * 2.5 };
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos), error_margin)
+        const Vec<double> expected_pos = { 0.5 + total_time * 2.0, 2.0 + total_time * -0.5, -31.0 + total_time * 2.5 };
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ")";
 
         ASSERT_NO_THROW(stepper.step(calc));
@@ -283,21 +280,21 @@ TEST(GravityStepper, Analytical2) {
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos_1 = {
+        const Vec<double> expected_pos_1 = {
             2.0 + std::cos(time_mod_two_pi) + total_time * 0.1,
             1.0 + std::sin(time_mod_two_pi),
             3.0 + total_time * -0.05,
         };
 
-        const std::array<double, 3> expected_pos_2 = {
+        const Vec<double> expected_pos_2 = {
             2.0 + -std::cos(time_mod_two_pi) + total_time * 0.1,
             1.0 + -std::sin(time_mod_two_pi),
             3.0 + total_time * -0.05,
         };
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_1), error_margin)
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_1).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 1.";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_2), error_margin)
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_2).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
 
         ASSERT_NO_THROW(stepper.step(calc));
@@ -350,29 +347,29 @@ TEST(GravityStepper, Analytical3) {
     // Perform the steps for 10 time units
     for (size_t i = 0; i <= 100000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos_1 = {
+        const Vec<double> expected_pos_1 = {
             1.0 + std::cos(time_mod_two_pi) + total_time * 0.01,
             -1.0 + std::sin(time_mod_two_pi) + total_time * 0.05,
             2.0 + total_time * -0.05,
         };
 
-        const std::array<double, 3> expected_pos_2 = {
+        const Vec<double> expected_pos_2 = {
             1.0 + -std::cos(time_mod_two_pi) + total_time * 0.01,
             -1.0 + -std::sin(time_mod_two_pi) + total_time * 0.05,
             2.0 + total_time * -0.05,
         };
 
-        const std::array<double, 3> expected_pos_3 = {
+        const Vec<double> expected_pos_3 = {
             1.0 + total_time * 0.01,
             -1.0 + total_time * 0.05,
             2.0 + total_time * -0.05,
         };
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_1), error_margin)
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_1).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 1.";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_2), error_margin)
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_2).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[2].getX() - expected_pos_3), error_margin)
+        ASSERT_LT((calc.get_container()[2].getX() - expected_pos_3).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 3.";
 
         ASSERT_NO_THROW(stepper.step(calc));
@@ -426,21 +423,21 @@ TEST(GravityStepper, Analytical4) {
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos_1 = {
+        const Vec<double> expected_pos_1 = {
             1.0 + std::sin(time_mod_two_pi) + total_time * 0.05,
             -2.0 + total_time * 0.05,
             0.0 + std::cos(time_mod_two_pi) + total_time * 0.01,
         };
 
-        const std::array<double, 3> expected_pos_2 = {
+        const Vec<double> expected_pos_2 = {
             1.0 + -2.0 * std::sin(time_mod_two_pi) + total_time * 0.05,
             -2.0 + total_time * 0.05,
             0.0 + -2.0 * std::cos(time_mod_two_pi) + total_time * 0.01,
         };
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_1), error_margin)
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_1).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 1.";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_2), error_margin)
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_2).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
 
         ASSERT_NO_THROW(stepper.step(calc));
@@ -491,10 +488,10 @@ TEST(LJStepper, Analytical1) {
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos = { 1.0 + total_time * 0.5, 10.0 + total_time * -0.5, -25.0 + total_time * 0.2 };
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+        const Vec<double> expected_pos = { 1.0 + total_time * 0.5, 10.0 + total_time * -0.5, -25.0 + total_time * 0.2 };
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos
+            << ", Got: " << calc.get_container()[0].getX() << ")";
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
@@ -539,24 +536,24 @@ TEST(LJStepper, Analytical2) {
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos_0 = {
+        const Vec<double> expected_pos_0 = {
             5.0 * std::cos(total_time / 5.0) + total_time * 0.02 + 1.3,
             5.0 * std::sin(total_time / 5.0) + total_time * -0.01 + 2.2,
             -1.5 + total_time * 0.03,
         };
 
-        const std::array<double, 3> expected_pos_1 = {
+        const Vec<double> expected_pos_1 = {
             -5.0 * std::cos(total_time / 5.0) + total_time * 0.02 + 1.3,
             -5.0 * std::sin(total_time / 5.0) + total_time * -0.01 + 2.2,
             -1.5 + total_time * 0.03,
         };
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_0).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_0
+            << ", Got: " << calc.get_container()[0].getX() << ")";
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_1).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
+            << ", Got: " << calc.get_container()[1].getX() << ")";
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
@@ -602,24 +599,24 @@ TEST(LJStepper, Analytical3) {
     // Perform the steps for 50 time units
     for (size_t i = 0; i <= 500000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos_0 = {
+        const Vec<double> expected_pos_0 = {
             0.0,
             5.0 * std::sin(total_time / 5.0),
             5.0 * std::cos(total_time / 5.0),
         };
 
-        const std::array<double, 3> expected_pos_1 = {
+        const Vec<double> expected_pos_1 = {
             0.0,
             -10.0 * std::sin(total_time / 5.0),
             -10.0 * std::cos(total_time / 5.0),
         };
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_0).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_0
+            << ", Got: " << calc.get_container()[0].getX() << ")";
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_1).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
+            << ", Got: " << calc.get_container()[1].getX() << ")";
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
@@ -678,33 +675,33 @@ TEST(LJStepper, Analytical4) {
     // Perform the steps for 20 time units
     for (size_t i = 0; i <= 200000; i++) {
         // Test that the position is correct
-        const std::array<double, 3> expected_pos_0 = {
+        const Vec<double> expected_pos_0 = {
             1.7480669497636142554225485204397801807855281376745671279006682579 + total_time * 0.001,
             -1.351933050236385744577451479560219819214471862325432872099331742 + total_time * 0.001,
             1.1480669497636142554225485204397801807855281376745671279006682579 + total_time * -0.002,
         };
 
-        const std::array<double, 3> expected_pos_1 = {
+        const Vec<double> expected_pos_1 = {
             1.1 + total_time * 0.001,
             -2.0 + total_time * 0.001,
             0.5 + total_time * -0.002,
         };
 
-        const std::array<double, 3> expected_pos_2 = {
+        const Vec<double> expected_pos_2 = {
             0.4519330502363857445774514795602198192144718623254328720993317420 + total_time * 0.001,
             -2.6480669497636142554225485204397801807855281376745671279006682579 + total_time * 0.001,
             -0.148066949763614255422548520439780180785528137674567127900668257 + total_time * -0.002,
         };
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[2].getX() - expected_pos_2), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_2)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[2].getX()) << ")";
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_0).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_0
+            << ", Got: " << calc.get_container()[0].getX() << ")";
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_1).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
+            << ", Got: " << calc.get_container()[1].getX() << ")";
+        ASSERT_LT((calc.get_container()[2].getX() - expected_pos_2).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_2
+            << ", Got: " << calc.get_container()[2].getX() << ")";
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
@@ -771,7 +768,7 @@ TEST(Stepper, MultipleBoundaries) {
             y_rel = 20.0 - y_rel;
         }
 
-        std::vector<std::array<double, 3>> positions = {
+        std::vector<Vec<double>> positions = {
             { x_rel, y_rel, 5.0 },
             { 10.0 - x_rel, 10.0 - y_rel, 5.0 },
         };
@@ -783,9 +780,9 @@ TEST(Stepper, MultipleBoundaries) {
         ASSERT_EQ(positions.size(), calc.get_container().size()) << "The particles of the outflow condition weren't removed correctly.";
 
         for (size_t j = 0; j < positions.size(); j++) {
-            ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[j].getX() - positions[j]), error_margin)
-                << "The calculation diverged at time step " << i << " (Expected: " << ArrayUtils::to_string(positions[i])
-                << ", Got: " << ArrayUtils::to_string(calc.get_container()[i].getX()) << ") (Particle " << j << ")";
+            ASSERT_LT((calc.get_container()[j].getX() - positions[j]).len(), error_margin)
+                << "The calculation diverged at time step " << i << " (Expected: " << positions[i] << ", Got: " << calc.get_container()[i].getX()
+                << ") (Particle " << j << ")";
         }
 
         stepper.step(calc);
@@ -830,7 +827,7 @@ TEST(Stepper, MultipleReflecting) {
         ASSERT_EQ(calc.get_container().size(), 1000) << "The particle container must not leak. (" << i << ")";
 
         calc.get_container().iterate_pairs([](Particle& p1, Particle& p2) {
-            ASSERT_LE(ArrayUtils::L2Norm(p1.getX() - p2.getX()), 3.0) << "Iterated over a particle pair with illegal spacing.";
+            ASSERT_LE((p1.getX() - p2.getX()).len(), 3.0) << "Iterated over a particle pair with illegal spacing.";
         });
 
         for (const Particle& p : calc.get_container()) {
@@ -852,7 +849,7 @@ TEST(Stepper, MultipleReflecting) {
 //
 // ==================================================================================================
 
-static inline void shrink_arr(std::array<double, 3>& arr, const std::array<double, 3>& dom) {
+static inline void shrink_arr(Vec<double>& arr, const Vec<double>& dom) {
     for (size_t i = 0; i < 3; i++) {
         arr[i] = std::fmod(arr[i], dom[i]);
 
@@ -903,7 +900,7 @@ TEST(Stepper, Periodic1) {
     // Perform the steps for 75 time units
     for (size_t i = 0; i <= 750000; i++) {
         // Test that the position is correct
-        std::array<double, 3> expected_pos_0 = {
+        Vec<double> expected_pos_0 = {
             3.0 * total_time,
             5.0 * std::sin(total_time / 5.0),
             20.0 + 2.0 * total_time + 5.0 * std::cos(total_time / 5.0),
@@ -911,7 +908,7 @@ TEST(Stepper, Periodic1) {
 
         shrink_arr(expected_pos_0, env.get_domain_size());
 
-        std::array<double, 3> expected_pos_1 = {
+        Vec<double> expected_pos_1 = {
             3.0 * total_time,
             -10.0 * std::sin(total_time / 5.0),
             20.0 + 2.0 * total_time - 10.0 * std::cos(total_time / 5.0),
@@ -919,12 +916,12 @@ TEST(Stepper, Periodic1) {
 
         shrink_arr(expected_pos_1, env.get_domain_size());
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_0).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_0
+            << ", Got: " << calc.get_container()[0].getX() << ")";
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_1).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
+            << ", Got: " << calc.get_container()[1].getX() << ")";
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;
@@ -972,7 +969,7 @@ TEST(Stepper, PeriodicHard) {
     // Perform the steps for 100 time units
     for (size_t i = 0; i <= 1000000; i++) {
         // Test that the position is correct
-        std::array<double, 3> expected_pos_0 = {
+        Vec<double> expected_pos_0 = {
             4.0 * total_time,
             4.0 * total_time,
             12.0,
@@ -980,7 +977,7 @@ TEST(Stepper, PeriodicHard) {
 
         shrink_arr(expected_pos_0, env.get_domain_size());
 
-        std::array<double, 3> expected_pos_1 = {
+        Vec<double> expected_pos_1 = {
             60.0,
             6.0 * total_time,
             60.0,
@@ -988,7 +985,7 @@ TEST(Stepper, PeriodicHard) {
 
         shrink_arr(expected_pos_1, env.get_domain_size());
 
-        std::array<double, 3> expected_pos_2 = {
+        Vec<double> expected_pos_2 = {
             40.0,
             3.0 * total_time,
             0.0160 * (i % 10000),
@@ -998,19 +995,19 @@ TEST(Stepper, PeriodicHard) {
             expected_pos_2[2] = 160.0 - expected_pos_2[2];
         }
 
-        shrink_arr(expected_pos_2, std::array<double, 3>({ 79.99999, 79.99999, 81.0 }));
+        shrink_arr(expected_pos_2, Vec<double>({ 79.99999, 79.99999, 81.0 }));
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[0].getX() - expected_pos_0), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_0)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[0].getX()) << ")";
+        ASSERT_LT((calc.get_container()[0].getX() - expected_pos_0).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_0
+            << ", Got: " << calc.get_container()[0].getX() << ")";
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[1].getX() - expected_pos_1), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_1)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[1].getX()) << ")";
+        ASSERT_LT((calc.get_container()[1].getX() - expected_pos_1).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
+            << ", Got: " << calc.get_container()[1].getX() << ")";
 
-        ASSERT_LT(ArrayUtils::L2Norm(calc.get_container()[2].getX() - expected_pos_2), error_margin)
-            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << ArrayUtils::to_string(expected_pos_2)
-            << ", Got: " << ArrayUtils::to_string(calc.get_container()[2].getX()) << ")";
+        ASSERT_LT((calc.get_container()[2].getX() - expected_pos_2).len(), error_margin)
+            << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_2
+            << ", Got: " << calc.get_container()[2].getX() << ")";
 
         ASSERT_NO_THROW(stepper.step(calc));
         total_time += 0.0001;

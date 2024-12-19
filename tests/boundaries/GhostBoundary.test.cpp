@@ -43,7 +43,7 @@ TEST(GhostBoundary, ForceNearBoundary) {
     GhostBoundary boundary_y_far(10.0, 1);
     GhostBoundary boundary_z_far(10.0, 2);
 
-    const std::vector<std::array<double, 3>> expectedF = {
+    const std::vector<Vec<double>> expectedF = {
         { 0.0, 0.0, 292959375000 },
         { 0.0, -35689544.677734375, 0.0 },
     };
@@ -55,7 +55,7 @@ TEST(GhostBoundary, ForceNearBoundary) {
         boundary_x_far.postF(particles[i], calc);
         boundary_y_far.postF(particles[i], calc);
         boundary_z_far.postF(particles[i], calc);
-        EXPECT_LT(ArrayUtils::L2Norm(particles[i].getF() - expectedF[i]), 1E-3) << "The particle " << i << " must have the correct force.";
+        EXPECT_LT((particles[i].getF() - expectedF[i]).len(), 1E-3) << "The particle " << i << " must have the correct force.";
     }
 }
 

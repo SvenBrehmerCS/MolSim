@@ -7,11 +7,11 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& new_particles,
     build_type_table(new_desc);
 }
 
-ParticleContainer::ParticleContainer(const std::array<double, 3>& new_domain)
+ParticleContainer::ParticleContainer(const Vec<double>& new_domain)
     : domain { new_domain } { }
 
 ParticleContainer::ParticleContainer(
-    const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc)
+    const std::vector<Particle>& new_particles, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc)
     : particles { new_particles }
     , domain { new_domain } {
     build_type_table(new_desc);
@@ -56,7 +56,7 @@ void ParticleContainer::remove_particles_out_of_domain() {
     }
 }
 
-const std::array<double, 3>& ParticleContainer::get_corner_vector() const { return domain; }
+const Vec<double>& ParticleContainer::get_corner_vector() const { return domain; }
 
 std::vector<TypeDesc> ParticleContainer::get_types() const { return types; }
 

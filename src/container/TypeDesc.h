@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include "utils/ArrayUtils.h"
-#include <array>
+#include "utils/Vec.h"
 #include <cmath>
 
 /**
@@ -45,7 +44,7 @@ private:
     /**
      * Store the gravity affecting the type.
      */
-    std::array<double, 3> G;
+    Vec<double> G;
 
 public:
     /**
@@ -109,5 +108,5 @@ public:
      *
      * @return The gravity vector.
      */
-    inline std::array<double, 3> get_G() const { return G; }
+    inline Vec<double> get_G() const { return G; }
 };

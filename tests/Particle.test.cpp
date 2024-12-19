@@ -3,9 +3,9 @@
 
 // Test if the particle can be constructed correctly without the type argument
 TEST(ParticleConstructor, ParticleDefaultType) {
-    const std::array<double, 3> x = { 3.0, 1.5, -14.0 };
-    const std::array<double, 3> v = { -7.0, 2.0, -0.01 };
-    const std::array<double, 3> zero = { 0.0, 0.0, 0.0 };
+    const Vec<double> x = { 3.0, 1.5, -14.0 };
+    const Vec<double> v = { -7.0, 2.0, -0.01 };
+    const Vec<double> zero = { 0.0, 0.0, 0.0 };
 
     Particle p;
 
@@ -20,9 +20,9 @@ TEST(ParticleConstructor, ParticleDefaultType) {
 
 // Test if the particle can be constructed correctly with the type argument
 TEST(ParticleConstructor, ParticleWithType) {
-    const std::array<double, 3> x = { -2.0, 17.9, -1.33 };
-    const std::array<double, 3> v = { -4.21, 2.1, 1.234 };
-    const std::array<double, 3> zero = { 0.0, 0.0, 0.0 };
+    const Vec<double> x = { -2.0, 17.9, -1.33 };
+    const Vec<double> v = { -4.21, 2.1, 1.234 };
+    const Vec<double> zero = { 0.0, 0.0, 0.0 };
 
     Particle p;
 
@@ -37,10 +37,10 @@ TEST(ParticleConstructor, ParticleWithType) {
 
 // Test if the particle can be converted to the string
 TEST(ParticleToString, FirstToStringMethod) {
-    const std::array<double, 3> x = { -2.0, 17.9, -1.33 };
-    const std::array<double, 3> v = { -4.21, 2.1, 1.234 };
-    const std::array<double, 3> f = { -0.01, -1.2, 0.34 };
-    const std::array<double, 3> old_f = { 6.6, 0.2, -1.0 };
+    const Vec<double> x = { -2.0, 17.9, -1.33 };
+    const Vec<double> v = { -4.21, 2.1, 1.234 };
+    const Vec<double> f = { -0.01, -1.2, 0.34 };
+    const Vec<double> old_f = { 6.6, 0.2, -1.0 };
 
     Particle p;
 
@@ -51,25 +51,24 @@ TEST(ParticleToString, FirstToStringMethod) {
     std::string str;
     ASSERT_NO_THROW(str = p.toString());
 
-    const std::string res = "Particle: X: [-2.00000000, 17.90000000, -1.33000000] v: [-4.21000000, 2.10000000, 1.23400000] f: [-0.01000000, "
-                            "-1.20000000, 0.34000000] old_f: [6.60000000, 0.20000000, -1.00000000] type: 22";
+    const std::string res = "Particle: X: (-2, 17.9, -1.33) v: (-4.21, 2.1, 1.234) f: (-0.01, -1.2, 0.34) old_f: (6.6, 0.2, -1) type: 22";
     EXPECT_TRUE(str == res) << "The correct string should be returned."
                             << "(Expected: " << res << ", Got: " << str << ")";
 }
 
 TEST(ParticleEquals, CorrectEquals) {
-    const std::array<double, 3> x1 = { -2.0, 17.9, -1.33 };
-    const std::array<double, 3> v1 = { -4.21, 2.1, 1.234 };
-    const std::array<double, 3> f1 = { -0.01, -1.2, 0.34 };
-    const std::array<double, 3> old_f1 = { 6.6, 0.2, -1.0 };
-    const std::array<double, 3> x2 = { -2.0, 17.9, -1.33 };
-    const std::array<double, 3> v2 = { -4.21, 2.1, 1.234 };
-    const std::array<double, 3> f2 = { -0.01, -1.2, 0.34 };
-    const std::array<double, 3> old_f2 = { 6.6, 0.2, -1.0 };
-    const std::array<double, 3> x3 = { 2.0, 15.9, -1.69 };
-    const std::array<double, 3> v3 = { -5.21, -2.1, 1.24 };
-    const std::array<double, 3> f3 = { 0.0, -8.2, -3.141 };
-    const std::array<double, 3> old_f3 = { 6.9, 2., -34.8 };
+    const Vec<double> x1 = { -2.0, 17.9, -1.33 };
+    const Vec<double> v1 = { -4.21, 2.1, 1.234 };
+    const Vec<double> f1 = { -0.01, -1.2, 0.34 };
+    const Vec<double> old_f1 = { 6.6, 0.2, -1.0 };
+    const Vec<double> x2 = { -2.0, 17.9, -1.33 };
+    const Vec<double> v2 = { -4.21, 2.1, 1.234 };
+    const Vec<double> f2 = { -0.01, -1.2, 0.34 };
+    const Vec<double> old_f2 = { 6.6, 0.2, -1.0 };
+    const Vec<double> x3 = { 2.0, 15.9, -1.69 };
+    const Vec<double> v3 = { -5.21, -2.1, 1.24 };
+    const Vec<double> f3 = { 0.0, -8.2, -3.141 };
+    const Vec<double> old_f3 = { 6.9, 2., -34.8 };
 
     Particle p1;
     Particle p2;

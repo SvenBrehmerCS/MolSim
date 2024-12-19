@@ -9,7 +9,7 @@
 #include "Calculator.h"
 #include "Environment.h"
 #include "container/ParticleContainer.h"
-#include "utils/ArrayUtils.h"
+#include "utils/Vec.h"
 
 namespace physicsCalculator {
 

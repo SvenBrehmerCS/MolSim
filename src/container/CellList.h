@@ -36,7 +36,7 @@ private:
     /**
      * Store the cells in a flat out vector.
      */
-    std::vector<std::list<size_t>> cells;
+    std::vector<std::vector<size_t>> cells;
 
     /**
      * Define the dimensions of the domain.
@@ -51,12 +51,12 @@ private:
     /**
      * Define the cell sizes
      */
-    std::array<double, 3> cell_size;
+    Vec<double> cell_size;
 
     /**
      * Define the domain size and sub dimensions.
      */
-    std::array<double, 3> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
+    Vec<double> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
 
 
 public:
@@ -71,7 +71,7 @@ public:
      * @param rc The new cutoff distance.
      * @param domain The domain size.
      */
-    CellList(const double rc, const std::array<double, 3>& domain);
+    CellList(const double rc, const Vec<double>& domain);
 
     /**
      * Define the default destructor.
@@ -92,7 +92,7 @@ public:
      *
      * @return The corner vector.
      */
-    std::array<double, 3> get_corner_vector();
+    Vec<double> get_corner_vector();
 
     /**
      * Create the cell list using the particle vector. This method must only be called if the cell list was initialized with the detailed constructor.

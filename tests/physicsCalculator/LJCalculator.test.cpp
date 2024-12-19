@@ -48,7 +48,7 @@ TEST(Calculator, UpdateX2) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_x = {
+    const std::vector<Vec<double>> expected_x = {
         { 1.2025, 2.1975, 3.005 },
         { -1.89, -2.1, 1.195 },
         { -1.19, -1.005, 2.1 },
@@ -72,9 +72,8 @@ TEST(Calculator, UpdateX2) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the position.";
 
         // Test if the new position is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected_x[i]), error_margin)
-            << "The position was not correct. (expected: " << ArrayUtils::to_string(expected_x[i]) << ", got: " << ArrayUtils::to_string(pi->getX())
-            << ")";
+        EXPECT_LT((pi->getX() - expected_x[i]).len(), error_margin)
+            << "The position was not correct. (expected: " << expected_x[i] << ", got: " << pi->getX() << ")";
 
         pi++;
     }
@@ -147,7 +146,7 @@ TEST(Calculator, UpdateV2) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_v = {
+    const std::vector<Vec<double>> expected_v = {
         { 1.0, 1.8, 1.05 },
         { 0.075, -0.975, 0.95 },
         { 1.05, -1.9, -0.95 },
@@ -171,9 +170,8 @@ TEST(Calculator, UpdateV2) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the velocity.";
 
         // Test if the new velocity is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getV() - expected_v[i]), error_margin)
-            << "The velocity was not correct. (expected: " << ArrayUtils::to_string(expected_v[i]) << ", got: " << ArrayUtils::to_string(pi->getV())
-            << ")";
+        EXPECT_LT((pi->getV() - expected_v[i]).len(), error_margin)
+            << "The velocity was not correct. (expected: " << expected_v[i] << ", got: " << pi->getV() << ")";
 
         pi++;
     }
@@ -252,7 +250,7 @@ TEST(Calculator, UpdateOldF2) {
     ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles old force.";
 
     auto pi = calc.get_container().begin();
-    const std::array<double, 3> zero_v = { 0.0, 0.0, 0.0 };
+    const Vec<double> zero_v = { 0.0, 0.0, 0.0 };
 
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the old force.";
@@ -331,7 +329,7 @@ TEST(LJCalculator, UpdateF1) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_F = {
+    const std::vector<Vec<double>> expected_F = {
         { 0.0, 465.0 / 512.0, 0.0 },
         { 0.0, -465.0 / 512.0, 0.0 },
     };
@@ -353,9 +351,8 @@ TEST(LJCalculator, UpdateF1) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_F[i]), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_F[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
-            << ")";
+        EXPECT_LT((pi->getF() - expected_F[i]).len(), error_margin)
+            << "The force was not correct. (expected: " << expected_F[i] << ", got: " << pi->getF() << ")";
 
         pi++;
     }
@@ -401,7 +398,7 @@ TEST(LJCalculator, UpdateF2) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_F = {
+    const std::vector<Vec<double>> expected_F = {
         { 93.0 / 256.0, 0.0, 0.0 },
         { -93.0 / 256.0, 0.0, 0.0 },
     };
@@ -423,9 +420,8 @@ TEST(LJCalculator, UpdateF2) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_F[i]), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_F[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
-            << ")";
+        EXPECT_LT((pi->getF() - expected_F[i]).len(), error_margin)
+            << "The force was not correct. (expected: " << expected_F[i] << ", got: " << pi->getF() << ")";
 
         pi++;
     }
@@ -471,7 +467,7 @@ TEST(LJCalculator, UpdateF3) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_F = {
+    const std::vector<Vec<double>> expected_F = {
         { 0.0, 0.0, -975360.0 },
         { 0.0, 0.0, 975360.0 },
     };
@@ -493,9 +489,8 @@ TEST(LJCalculator, UpdateF3) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_F[i]), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_F[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
-            << ")";
+        EXPECT_LT((pi->getF() - expected_F[i]).len(), error_margin)
+            << "The force was not correct. (expected: " << expected_F[i] << ", got: " << pi->getF() << ")";
 
         pi++;
     }
@@ -541,7 +536,7 @@ TEST(LJCalculator, UpdateF4) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_F = {
+    const std::vector<Vec<double>> expected_F = {
         { 200.0 / 243.0, 200.0 / 243.0, 200.0 / 243.0 },
         { -200.0 / 243.0, -200.0 / 243.0, -200.0 / 243.0 },
     };
@@ -563,9 +558,8 @@ TEST(LJCalculator, UpdateF4) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the forces.";
 
         // Test if the new force is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_F[i]), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_F[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
-            << ")";
+        EXPECT_LT((pi->getF() - expected_F[i]).len(), error_margin)
+            << "The force was not correct. (expected: " << expected_F[i] << ", got: " << pi->getF() << ")";
 
         pi++;
     }
@@ -630,7 +624,7 @@ TEST(LJCalculator, UpdateFSingle) {
     // Make sure that there are no unwanted changes
     ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles forces.";
 
-    const std::array<double, 3> zero_v = { 0.0, 0.0, 0.0 };
+    const Vec<double> zero_v = { 0.0, 0.0, 0.0 };
 
     EXPECT_TRUE(calc.get_container()[0].getX() == particles[0].getX()) << "The position must not change when updating the force.";
     EXPECT_TRUE(calc.get_container()[0].getV() == particles[0].getV()) << "The velocity must not change when updating the force.";

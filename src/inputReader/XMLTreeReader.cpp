@@ -74,7 +74,7 @@ namespace inputReader {
         const double r_cutoff = sim->param().r_cutoff();
         environment.set_r_cutoff(r_cutoff);
 
-        const std::array<double, 3> domain_size = {
+        const Vec<double> domain_size = {
             sim->param().domain().vx(),
             sim->param().domain().vy(),
             sim->param().domain().vz(),
@@ -133,8 +133,8 @@ namespace inputReader {
         std::vector<TypeDesc> ptypes = container.get_types();
         int ptype = ptypes.size();
 
-        std::array<double, 3> x = { 0.0, 0.0, 0.0 };
-        std::array<double, 3> v = { 0.0, 0.0, 0.0 };
+        Vec<double> x = { 0.0, 0.0, 0.0 };
+        Vec<double> v = { 0.0, 0.0, 0.0 };
         std::array<int, 3> N = { 0, 0, 0 };
         double m;
         double s;
@@ -142,8 +142,8 @@ namespace inputReader {
         double h;
         double brownian_motion;
 
-        std::array<double, 3> disc_center = { 0.0, 0.0, 0.0 };
-        std::array<double, 3> disc_velocity = { 0.0, 0.0, 0.0 };
+        Vec<double> disc_center = { 0.0, 0.0, 0.0 };
+        Vec<double> disc_velocity = { 0.0, 0.0, 0.0 };
 
         // Initialize all the single particles into the container.
         SPDLOG_TRACE("Single particles...");
