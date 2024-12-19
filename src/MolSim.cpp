@@ -12,7 +12,6 @@
 #include "physicsCalculator/GravityCalculator.h"
 #include "physicsCalculator/LJCalculator.h"
 
-#include <filesystem>
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -21,8 +20,6 @@
  * The main entry point for the program.
  */
 int main(const int argc, const char* argv[]) {
-    namespace fs = std::filesystem;
-
     // Initialize the simulation environment.
     Environment env { argc, argv };
 
