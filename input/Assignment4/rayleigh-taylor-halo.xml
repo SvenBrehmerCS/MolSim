@@ -2,9 +2,9 @@
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
-        <name>rayleigh_big</name>
-        <format>NO_OUT</format>
-        <frequency>100000</frequency>
+        <name>rayleigh_halo</name>
+        <format>VTK</format>
+        <frequency>100</frequency>
     </output>
     <param>
         <calc>LJ_FULL</calc>
