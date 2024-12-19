@@ -25,6 +25,12 @@
             <vy>25</vy>
             <vz>25</vz>
         </domain>
-        <g_grav></g_grav>
+        <g_grav>12</g_grav>
     </param>
+    <thermo>
+        <T_init>35</T_init>
+        <T_target>28</T_target>
+        <T_frequency>2</T_frequency>
+        <max_delta_T>5</max_delta_T>
+    </thermo>
 </simulation>

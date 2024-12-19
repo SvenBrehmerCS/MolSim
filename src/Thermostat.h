@@ -56,9 +56,16 @@ public:
      */
     ~Thermostat() = default;
 
+    // TODO
+    // inline const bool get_dimensions() const { return dimensions; }
+
+    // inline const bool get_T_target() const { return T_target; }
+
+    // inline const bool get_max_change() const { return max_change; }
+
     inline const bool get_active() const { return active; }
 
-    inline void set_dimensions(int dim) { dimensions = dim; }
+    inline void set_dimensions(int dimensions) { this->dimensions = dimensions; }
 
     inline void set_T_target(double T_target) { this->T_target = T_target; }
 
@@ -72,4 +79,21 @@ public:
      * Regulates the Temperature of the given particle container.
      */
     void regulate_Temperature();
+
+    inline std::string toString() const {
+        std::stringstream stream;
+        stream << "Thermostat: dimensions: " << dimensions << " T_target: " << T_target << " max_change: " << max_change
+               << " particles: " << particles << " active: " << active;
+        return stream.str();
+    }
+
+    inline bool operator==(const Thermostat& other) const {
+        return (dimensions == other.dimensions) && (T_target == other.T_target) && (max_change == other.max_change) && (particles == other.particles)
+            && (active == other.active);
+    }
 };
+
+inline std::ostream& operator<<(std::ostream& stream, const Thermostat& t) {
+    stream << t.toString();
+    return stream;
+}

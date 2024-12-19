@@ -23,6 +23,7 @@ TEST(XMLTreeReader, TestEnumTypeConversion) {
     EXPECT_EQ(NO_OUT, output_t::format_type::NO_OUT) << "The enums NO_OUT and output_t::format_type::NO_OUT must be interchangeable";
     EXPECT_EQ(VTK, output_t::format_type::VTK) << "The enums VTK and output_t::format_type::VTK must be interchangeable";
     EXPECT_EQ(XYZ, output_t::format_type::XYZ) << "The enums XYZ and output_t::format_type::XYZ must be interchangeable";
+    EXPECT_EQ(CHECKPOINT, output_t::format_type::CHECKPOINT) << "The enums CHECKPOINT and output_t::format_type::CHECKPOINT must be interchangeable";
     // Calculator types
     EXPECT_EQ(GRAVITY, param_t::calc_type::GRAVITY) << "The enums GRAVITY and param_t::calc_type::GRAVITY must be interchangeable";
     EXPECT_EQ(LJ_FULL, param_t::calc_type::LJ_FULL) << "The enums LJ_FULL and param_t::calc_type::LJ_FULL must be interchangeable";
@@ -51,6 +52,12 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
+    Thermostat exp_thermo;
+    exp_thermo.set_active(true);
+    exp_thermo.set_dimensions(2);
+    exp_thermo.set_max_change(5);
+    exp_thermo.set_T_target(28);
+
     reader.readArguments(environment, thermo);
     reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
     EXPECT_EQ(container.size(), 0);
@@ -62,6 +69,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     EXPECT_EQ(environment.get_boundary_type(), boundaries);
     EXPECT_EQ(environment.get_delta_t(), 0.5);
     EXPECT_EQ(environment.get_t_end(), 500);
+    EXPECT_EQ(thermo, exp_thermo);
 }
 
 // test of the particles are inserted correctly
@@ -136,7 +144,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
     EXPECT_EQ(container[4].getV(), v);
 }
 
-// test of everything combined has the correct value
+// test of everything combined has the correct value (with default value thermostat)
 
 TEST(XMLTreeReader, TestXMLCombined) {
     const char* xml = "../tests/res/testCombined.xml";
@@ -162,6 +170,12 @@ TEST(XMLTreeReader, TestXMLCombined) {
     Thermostat thermo;
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
+
+    Thermostat exp_thermo;
+    exp_thermo.set_active(false);
+    exp_thermo.set_dimensions(3);
+    exp_thermo.set_max_change(std::numeric_limits<double>::infinity());
+    exp_thermo.set_T_target(std::numeric_limits<double>::quiet_NaN());
 
     reader.readArguments(environment, thermo);
     reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
@@ -192,4 +206,6 @@ TEST(XMLTreeReader, TestXMLCombined) {
     EXPECT_EQ(container[7].getV(), vdisc);
     EXPECT_EQ(container[8].getV(), vdisc);
     EXPECT_EQ(container[9].getV(), vdisc);
+
+    EXPECT_EQ(thermo, exp_thermo);
 }

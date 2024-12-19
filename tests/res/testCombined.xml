@@ -80,4 +80,7 @@
         <h>1</h>
         <b_motion>0</b_motion>
     </disc>
+    <thermo>
+        <T_frequency></T_frequency>
+    </thermo>
 </simulation>

@@ -45,34 +45,36 @@ TEST(Thermostat, EmptyContainerRegulation) {
     EXPECT_FALSE(thermo.get_active()) << "regulate_Temperature() should not change the activity status.";
 }
 
+// Testing regulation to lower and same temperature
 TEST(Thermostat, OneParticleRegulation) {
-    Particle particle = { { 15, 15, 15 }, { 1, 1, 1 } };
+    Particle particle = { { 15, 15, 15 }, { 3, 3, 3 } };
     TypeDesc type = { 1, 1, 5, 0.1, -12.44 };
     std::shared_ptr<ParticleContainer> cont = std::make_shared<DSContainer>(std::vector<Particle> { particle }, std::vector<TypeDesc> { type });
 
     Thermostat thermo;
     thermo.set_dimensions(3);
     thermo.set_max_change(15);
-    thermo.set_T_target(9);
+    thermo.set_T_target(1);
     thermo.set_particles(cont);
 
-    // Temperature has to be adjusted.
+    // Temperature has to be decreased.
     EXPECT_NO_THROW(thermo.regulate_Temperature()) << "regulate_Temperature() should not throw an exception.";
 
     EXPECT_FALSE(thermo.get_active()) << "regulate_Temperature() should not change the activity status.";
 
-    Particle expected = { { 15, 15, 15 }, { 3, 3, 3 } };
+    Particle expected = { { 15, 15, 15 }, { 1, 1, 1 } };
 
     EXPECT_EQ(cont->size(), 1) << "Amount of particles should not change when changing temperature.";
     EXPECT_EQ(*cont->begin(), expected) << "Particle should be updated correctly.";
 
-    // Temperature does not have to be adjusted.
+    // Temperature does not have to be decreased.
     EXPECT_NO_THROW(thermo.regulate_Temperature()) << "regulate_Temperature() should not throw an exception.";
 
     EXPECT_EQ(cont->size(), 1) << "Amount of particles should not change when not changing temperature.";
     EXPECT_EQ(*cont->begin(), expected) << "Particle should not be changed if temperature is correct.";
 }
 
+// Testing regulation to higher and same temperature
 TEST(Thermostat, MultipleParticleRegulation) {
     const double error_margin = 1E-9;
 
@@ -93,7 +95,7 @@ TEST(Thermostat, MultipleParticleRegulation) {
     thermo.set_T_target(15);
     thermo.set_particles(cont);
 
-    // Temperature has to be adjusted.
+    // Temperature has to be increased.
     EXPECT_NO_THROW(thermo.regulate_Temperature()) << "regulate_Temperature() should not throw an exception.";
 
     std::vector<Particle> expected = {
@@ -107,15 +109,14 @@ TEST(Thermostat, MultipleParticleRegulation) {
     auto actual = cont->begin();
     for (size_t i = 0; i < 3; i++) {
         EXPECT_EQ((*actual).getX(), expected[i].getX()) << "Position of particle should not be changed by temperature regulation.";
-        EXPECT_LT(((*actual).getV() - expected[i].getV()).len(), error_margin)
-            << "Velocity should be correctly scaled according to temperature.";
+        EXPECT_LT(((*actual).getV() - expected[i].getV()).len(), error_margin) << "Velocity should be correctly scaled according to temperature.";
         EXPECT_EQ((*actual).getF(), expected[i].getF()) << "Force of particle should not be changed by temperature regulation.";
         EXPECT_EQ((*actual).getOldF(), expected[i].getOldF()) << "Old of particle force should not be changed by temperature regulation.";
         EXPECT_EQ((*actual).getType(), expected[i].getType()) << "Type of particle should not be changed by temperature regulation.";
         actual++;
     }
 
-    // Temperature does not have to be adjusted.
+    // Temperature does not have to be increased.
     EXPECT_NO_THROW(thermo.regulate_Temperature()) << "regulate_Temperature() should not throw an exception.";
 
     EXPECT_TRUE(thermo.get_active()) << "regulate_Temperature() should not change the activity status.";
@@ -123,8 +124,7 @@ TEST(Thermostat, MultipleParticleRegulation) {
     actual = cont->begin();
     for (size_t i = 0; i < 3; i++) {
         EXPECT_EQ((*actual).getX(), expected[i].getX()) << "Position of particle should not be changed by temperature regulation.";
-        EXPECT_LT(((*actual).getV() - expected[i].getV()).len(), error_margin)
-            << "Velocity should be correctly scaled according to temperature.";
+        EXPECT_LT(((*actual).getV() - expected[i].getV()).len(), error_margin) << "Velocity should be correctly scaled according to temperature.";
         EXPECT_EQ((*actual).getF(), expected[i].getF()) << "Force of particle should not be changed by temperature regulation.";
         EXPECT_EQ((*actual).getOldF(), expected[i].getOldF()) << "Old of particle force should not be changed by temperature regulation.";
         EXPECT_EQ((*actual).getType(), expected[i].getType()) << "Type of particle should not be changed by temperature regulation.";
