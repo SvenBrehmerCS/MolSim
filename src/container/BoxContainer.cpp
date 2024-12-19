@@ -2,14 +2,14 @@
 
 #include "BoxContainer.h"
 
-BoxContainer::BoxContainer(const double rc, const std::array<double, 3>& new_domain)
+BoxContainer::BoxContainer(const double rc, const Vec<double>& new_domain)
     : ParticleContainer(new_domain) {
     cells = CellList(rc, domain);
     cells.create_list(particles);
 };
 
 BoxContainer::BoxContainer(
-    const std::vector<Particle>& new_particles, const double rc, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc)
+    const std::vector<Particle>& new_particles, const double rc, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc)
     : ParticleContainer(new_particles, new_domain, new_desc) {
     cells = CellList(rc, domain);
     cells.create_list(particles);

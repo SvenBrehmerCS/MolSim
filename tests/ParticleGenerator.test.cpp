@@ -8,8 +8,8 @@ TEST(ParticleGenerator, GenerateCuboid) {
     ParticleGenerator generator;
     DSContainer container;
 
-    std::array<double, 3> x = { 0.0, 0.0, 0.0 };
-    std::array<double, 3> v = { 1.0, 1.0, 1.0 };
+    Vec<double> x = { 0.0, 0.0, 0.0 };
+    Vec<double> v = { 1.0, 1.0, 1.0 };
     int type = 35;
     std::array<int, 3> N = { 2, 2, 1 };
     double h = 1.0;
@@ -73,8 +73,8 @@ TEST(ParticleGenerator, GenerateCuboidWithParticles) {
     ParticleGenerator generator;
     DSContainer container;
 
-    std::array<double, 3> x = { 0.0, 0.0, 0.0 };
-    std::array<double, 3> v = { 1.0, 1.0, 1.0 };
+    Vec<double> x = { 0.0, 0.0, 0.0 };
+    Vec<double> v = { 1.0, 1.0, 1.0 };
     std::array<int, 3> N = { 2, 1, 1 };
     double type = 69;
     double h = 1.0;
@@ -133,8 +133,8 @@ TEST(ParticleGenerator, GenerateCuboidNoMotion) {
     ParticleGenerator generator;
     DSContainer container;
 
-    std::array<double, 3> x = { 0.0, 0.0, 0.0 };
-    std::array<double, 3> y = { 1.0, 1.0, 1.0 };
+    Vec<double> x = { 0.0, 0.0, 0.0 };
+    Vec<double> y = { 1.0, 1.0, 1.0 };
     int type = 27;
     std::array<int, 3> N = { 2, 1, 1 };
     double h = 1.0;
@@ -172,13 +172,13 @@ TEST(ParticleGenerator, GenerateCuboidNoMotion) {
 TEST(ParticleGenerator, generateDisc) {
     ParticleGenerator generator;
     DSContainer container;
-    std::array<double, 3> x = { 0.0, 0.0, 0.0 };
-    std::array<double, 3> x1 = { -1, 0.0, 0.0 };
-    std::array<double, 3> x2 = { 0.0, -1, 0.0 };
-    std::array<double, 3> x3 = { 0.0, 0.0, 0.0 };
-    std::array<double, 3> x4 = { 0.0, 1, 0.0 };
-    std::array<double, 3> x5 = { 1, 0.0, 0.0 };
-    std::array<double, 3> v = { 1.0, 1.0, 1.0 };
+    Vec<double> x = { 0.0, 0.0, 0.0 };
+    Vec<double> x1 = { -1, 0.0, 0.0 };
+    Vec<double> x2 = { 0.0, -1, 0.0 };
+    Vec<double> x3 = { 0.0, 0.0, 0.0 };
+    Vec<double> x4 = { 0.0, 1, 0.0 };
+    Vec<double> x5 = { 1, 0.0, 0.0 };
+    Vec<double> v = { 1.0, 1.0, 1.0 };
     int type = 36;
     double h = 1.0;
     double brownian_motion = 0.0;

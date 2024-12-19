@@ -12,7 +12,7 @@ void PeriodicBoundary::postX(Particle& particle) {
         return;
     }
 
-    std::array<double, 3> arr = particle.getX();
+    Vec<double> arr = particle.getX();
 
     if (arr[dim] < 0.0) {
         arr[dim] = pos + arr[dim];

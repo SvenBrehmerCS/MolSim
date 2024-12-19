@@ -6,10 +6,10 @@ DSContainer::DSContainer()
 DSContainer::DSContainer(const std::vector<Particle>& new_particles, const std::vector<TypeDesc>& new_desc)
     : ParticleContainer(new_particles, new_desc) { }
 
-DSContainer::DSContainer(const std::array<double, 3>& new_domain)
+DSContainer::DSContainer(const Vec<double>& new_domain)
     : ParticleContainer(new_domain) { }
 
-DSContainer::DSContainer(const std::vector<Particle>& new_particles, const std::array<double, 3>& new_domain, const std::vector<TypeDesc>& new_desc)
+DSContainer::DSContainer(const std::vector<Particle>& new_particles, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc)
     : ParticleContainer(new_particles, new_domain, new_desc) { }
 
 DSContainer::~DSContainer() = default;

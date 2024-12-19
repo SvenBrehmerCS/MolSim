@@ -36,7 +36,7 @@ public:
      * @param b_m the brownian motion.
      * @param num_dimensions the number of dimensions.
      **/
-    void generateCuboid(ParticleContainer& container, int num_particles, const std::array<double, 3>& x, const std::array<double, 3>& v, int type,
+    void generateCuboid(ParticleContainer& container, int num_particles, const Vec<double>& x, const Vec<double>& v, int type,
         const std::array<int, 3>& N, double h, double b_m, int num_dimensions);
 
     /**
@@ -52,6 +52,6 @@ public:
      * @param b_m The brownian motion.
      * @param num_dimensions The number of dimensions affected by the brownian motion.
      */
-    int generateDisc(ParticleContainer& container, int num_particles, const std::array<double, 3>& center, const std::array<double, 3>& velocity,
+    int generateDisc(ParticleContainer& container, int num_particles, const Vec<double>& center, const Vec<double>& velocity,
         int type, double radius, double h, double b_m, int dim);
 };

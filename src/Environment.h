@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "utils/ArrayUtils.h"
+#include "utils/Vec.h"
 
 #include <string>
 
@@ -199,7 +199,7 @@ private:
     /**
      * Store the total size of the simulation domain.
      */
-    std::array<double, 3> domain_size = { 180.0, 90.0, 1.0 };
+    Vec<double> domain_size = { 180.0, 90.0, 1.0 };
 
     /**
      * Specifies the name of the input_file_checkpoint.
@@ -334,7 +334,7 @@ public:
      *
      * @return The vector representing the size of the domain.
      */
-    std::array<double, 3> get_domain_size() const;
+    Vec<double> get_domain_size() const;
 
     /**
      * Get the checkpoint file name.
@@ -444,7 +444,7 @@ public:
      *
      * @param domain_size Vector of domain size along the axes.
      */
-    void set_domain_size(const std::array<double, 3> domain_size);
+    void set_domain_size(const Vec<double> domain_size);
 
     /**
      * Set the checkpoint_file_name

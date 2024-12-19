@@ -48,7 +48,7 @@ TEST(Calculator, UpdateX1) {
     physicsCalculator::GravityCalculator calc(env, particles, ptypes, false);
 
     // Initialize the positions to the expected values
-    const std::vector<std::array<double, 3>> expected_x = {
+    const std::vector<Vec<double>> expected_x = {
         { 0.7975, 1.505, -2.0475 },
         { 2.21, -2.845, -0.6475 },
         { -1.89, 2.8125, 3.545 },
@@ -72,9 +72,8 @@ TEST(Calculator, UpdateX1) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the position.";
 
         // Test if the new position is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getX() - expected_x[i]), error_margin)
-            << "The position was not correct. (expected: " << ArrayUtils::to_string(expected_x[i]) << ", got: " << ArrayUtils::to_string(pi->getX())
-            << ")";
+        EXPECT_LT((pi->getX() - expected_x[i]).len(), error_margin)
+            << "The position was not correct. (expected: " << expected_x[i] << ", got: " << pi->getX() << ")";
 
         pi++;
     }
@@ -127,7 +126,7 @@ TEST(Calculator, UpdateV1) {
     physicsCalculator::GravityCalculator calc(env, particles, ptypes, false);
 
     // Initialize the velocity to the expected values
-    const std::vector<std::array<double, 3>> expected_v = {
+    const std::vector<Vec<double>> expected_v = {
         { 6.9625, 1.975, -0.425 },
         { -2.875, 1.625, -1.575 },
         { 1.025, -1.95, 0.35 },
@@ -151,9 +150,8 @@ TEST(Calculator, UpdateV1) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the velocity.";
 
         // Test if the new velocity is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getV() - expected_v[i]), error_margin)
-            << "The velocity was not correct. (expected: " << ArrayUtils::to_string(expected_v[i]) << ", got: " << ArrayUtils::to_string(pi->getV())
-            << ")";
+        EXPECT_LT((pi->getV() - expected_v[i]).len(), error_margin)
+            << "The velocity was not correct. (expected: " << expected_v[i] << ", got: " << pi->getV() << ")";
 
         pi++;
     }
@@ -212,7 +210,7 @@ TEST(Calculator, UpdateOldF1) {
     ASSERT_EQ(particles.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles old force.";
 
     auto pi = calc.get_container().begin();
-    const std::array<double, 3> zero_v = { 0.0, 0.0, 0.0 };
+    const Vec<double> zero_v = { 0.0, 0.0, 0.0 };
 
     for (size_t i = 0; i < particles.size(); i++) {
         EXPECT_TRUE(pi->getX() == particles[i].getX()) << "The position must not change when updating the old force.";
@@ -257,7 +255,7 @@ TEST(GravityCalculator, UpdateF1) {
     // Initialize the Calculator
     physicsCalculator::GravityCalculator calc(env, particles, ptypes, false);
 
-    const std::array<double, 3> zero_v = { 0.0, 0.0, 0.0 };
+    const Vec<double> zero_v = { 0.0, 0.0, 0.0 };
 
     // Perform a single calculateF
     ASSERT_NO_THROW(calc.calculateF());
@@ -320,7 +318,7 @@ TEST(Calculator, UpdateF2) {
     physicsCalculator::GravityCalculator calc(env, particles, ptypes, false);
 
     // Initialize the force to the expected values
-    const std::vector<std::array<double, 3>> expected_f = {
+    const std::vector<Vec<double>> expected_f = {
         { 0.0, 0.0, 0.0 },
         { 0.5669872981, 0.5669872981, 0.5669872981 },
         { -0.5669872981, -0.5669872981, -0.5669872981 },
@@ -343,9 +341,8 @@ TEST(Calculator, UpdateF2) {
         EXPECT_EQ(pi->getType(), particles[i].getType()) << "The type must not change when updating the force.";
 
         // Test if the new force is correct
-        EXPECT_LT(ArrayUtils::L2Norm(pi->getF() - expected_f[i]), error_margin)
-            << "The force was not correct. (expected: " << ArrayUtils::to_string(expected_f[i]) << ", got: " << ArrayUtils::to_string(pi->getF())
-            << ")";
+        EXPECT_LT((pi->getF() - expected_f[i]).len(), error_margin)
+            << "The force was not correct. (expected: " << expected_f[i] << ", got: " << pi->getF() << ")";
 
         pi++;
     }

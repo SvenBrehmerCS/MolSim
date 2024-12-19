@@ -70,8 +70,8 @@ TEST(XMLTreeReader, TestParticles) {
 
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
-    std::array<double, 3> x = { 0.1, 0.2, 0.3 };
-    std::array<double, 3> v = { 1.0, 1.5, 1.7 };
+    Vec<double> x = { 0.1, 0.2, 0.3 };
+    Vec<double> v = { 1.0, 1.5, 1.7 };
     double m = 0.01;
 
     reader.readParticle(container, 0.0005, 0.0);
@@ -89,11 +89,11 @@ TEST(XMLTreeReader, TestXMLCuboid) {
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
-    std::array<double, 3> x0 = { 0, 0, 0 };
-    std::array<double, 3> x1 = { 1, 0, 0 };
-    std::array<double, 3> x2 = { 0, 1, 0 };
-    std::array<double, 3> x3 = { 1, 1, 0 };
-    std::array<double, 3> v = { 0.5, 0.7, 0.9 };
+    Vec<double> x0 = { 0, 0, 0 };
+    Vec<double> x1 = { 1, 0, 0 };
+    Vec<double> x2 = { 0, 1, 0 };
+    Vec<double> x3 = { 1, 1, 0 };
+    Vec<double> v = { 0.5, 0.7, 0.9 };
 
     reader.readParticle(container, 0.0005, 0.0);
     ASSERT_EQ(container.size(), 4);
@@ -114,12 +114,12 @@ TEST(XMLTreeReader, TestXMLDisc) {
     DSContainer container;
     inputReader::XMLTreeReader reader(xml);
 
-    std::array<double, 3> x1 = { -1, 0.0, 0.0 };
-    std::array<double, 3> x2 = { 0.0, -1, 0.0 };
-    std::array<double, 3> x3 = { 0.0, 0.0, 0.0 };
-    std::array<double, 3> x4 = { 0.0, 1, 0.0 };
-    std::array<double, 3> x5 = { 1, 0.0, 0.0 };
-    std::array<double, 3> v = { 1.0, 1.0, 1.0 };
+    Vec<double> x1 = { -1, 0.0, 0.0 };
+    Vec<double> x2 = { 0.0, -1, 0.0 };
+    Vec<double> x3 = { 0.0, 0.0, 0.0 };
+    Vec<double> x4 = { 0.0, 1, 0.0 };
+    Vec<double> x5 = { 1, 0.0, 0.0 };
+    Vec<double> v = { 1.0, 1.0, 1.0 };
 
     reader.readParticle(container, 0.0005, 0.0);
 
@@ -141,22 +141,22 @@ TEST(XMLTreeReader, TestXMLDisc) {
 TEST(XMLTreeReader, TestXMLCombined) {
     const char* xml = "../tests/res/testCombined.xml";
 
-    std::array<double, 3> x1disc = { -1.5, 0.0, 0.0 };
-    std::array<double, 3> x2disc = { -0.5, -1, 0.0 };
-    std::array<double, 3> x3disc = { -0.5, 0.0, 0.0 };
-    std::array<double, 3> x4disc = { -0.5, 1, 0.0 };
-    std::array<double, 3> x5disc = { 0.5, 0.0, 0.0 };
-    std::array<double, 3> vdisc = { 0.5, 1.0, 1.0 };
+    Vec<double> x1disc = { -1.5, 0.0, 0.0 };
+    Vec<double> x2disc = { -0.5, -1, 0.0 };
+    Vec<double> x3disc = { -0.5, 0.0, 0.0 };
+    Vec<double> x4disc = { -0.5, 1, 0.0 };
+    Vec<double> x5disc = { 0.5, 0.0, 0.0 };
+    Vec<double> vdisc = { 0.5, 1.0, 1.0 };
 
 
-    std::array<double, 3> x0cuboid = { 0, 0, 0 };
-    std::array<double, 3> x1cuboid = { 1, 0, 0 };
-    std::array<double, 3> x2cuboid = { 0, 1, 0 };
-    std::array<double, 3> x3cuboid = { 1, 1, 0 };
-    std::array<double, 3> vcuboid = { 0.5, 0.7, 0.9 };
+    Vec<double> x0cuboid = { 0, 0, 0 };
+    Vec<double> x1cuboid = { 1, 0, 0 };
+    Vec<double> x2cuboid = { 0, 1, 0 };
+    Vec<double> x3cuboid = { 1, 1, 0 };
+    Vec<double> vcuboid = { 0.5, 0.7, 0.9 };
 
-    std::array<double, 3> xparticle = { 0.1, 0.2, 0.3 };
-    std::array<double, 3> vparticle = { 1.0, 1.5, 1.7 };
+    Vec<double> xparticle = { 0.1, 0.2, 0.3 };
+    Vec<double> vparticle = { 1.0, 1.5, 1.7 };
 
     Environment environment;
     Thermostat thermo;

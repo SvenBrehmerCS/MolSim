@@ -140,12 +140,12 @@ TEST(CellList, LoopPairs3D) {
 TEST(CellList, ConstructorGetter) {
     // Create a cell list with a inner cell count of 10 x 8 x 3
     CellList cells = CellList(3.0, { 30.0, 24.0, 9.0 });
-    std::array<double, 3> corner = { 30.0, 24.0, 9.0 };
+    Vec<double> corner = { 30.0, 24.0, 9.0 };
 
     EXPECT_EQ(cells.get_cell_index(0, 0, 0), 0) << "The index was computed wrong.";
     EXPECT_EQ(cells.get_cell_index(1, 4, 2), 72) << "The index was computed wrong.";
     EXPECT_EQ(cells.get_cell_index(2, 1, 2), 107) << "The index was computed wrong.";
-    EXPECT_LT(ArrayUtils::L2Norm(cells.get_corner_vector() - corner), 1E-9) << "The corner vector must be computed correctly.";
+    EXPECT_LT((cells.get_corner_vector() - corner).len(), 1E-9) << "The corner vector must be computed correctly.";
 }
 
 // Test that the create list method works correctly

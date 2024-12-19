@@ -37,7 +37,7 @@ TEST(Thermostat, EmptyContainerRegulation) {
     EXPECT_FALSE(thermo.get_active()) << "regulate_Temperature() should not change the activity status.";
 
     // Boxcontainer
-    cont = std::make_shared<BoxContainer>(3.0, std::array<double, 3> { 15.0, 15.0, 15.0 });
+    cont = std::make_shared<BoxContainer>(3.0, Vec<double> { 15.0, 15.0, 15.0 });
 
     EXPECT_NO_THROW(thermo.regulate_Temperature()) << "regulate_Temperature() should not throw an exception.";
 
@@ -85,7 +85,7 @@ TEST(Thermostat, MultipleParticleRegulation) {
         { 1, 1, 5, 0.1, -9.81 },
         { 2, 1, 5, 0.1, -9.81 },
     };
-    std::shared_ptr<ParticleContainer> cont = std::make_shared<DSContainer>(particles, std::array<double, 3> { 20, 20, 20 }, types);
+    std::shared_ptr<ParticleContainer> cont = std::make_shared<DSContainer>(particles, Vec<double> { 20, 20, 20 }, types);
 
     Thermostat thermo;
     thermo.set_active(true);
@@ -107,7 +107,7 @@ TEST(Thermostat, MultipleParticleRegulation) {
     auto actual = cont->begin();
     for (size_t i = 0; i < 3; i++) {
         EXPECT_EQ((*actual).getX(), expected[i].getX()) << "Position of particle should not be changed by temperature regulation.";
-        EXPECT_LT(ArrayUtils::L2Norm((*actual).getV() - expected[i].getV()), error_margin)
+        EXPECT_LT(((*actual).getV() - expected[i].getV()).len(), error_margin)
             << "Velocity should be correctly scaled according to temperature.";
         EXPECT_EQ((*actual).getF(), expected[i].getF()) << "Force of particle should not be changed by temperature regulation.";
         EXPECT_EQ((*actual).getOldF(), expected[i].getOldF()) << "Old of particle force should not be changed by temperature regulation.";
@@ -123,7 +123,7 @@ TEST(Thermostat, MultipleParticleRegulation) {
     actual = cont->begin();
     for (size_t i = 0; i < 3; i++) {
         EXPECT_EQ((*actual).getX(), expected[i].getX()) << "Position of particle should not be changed by temperature regulation.";
-        EXPECT_LT(ArrayUtils::L2Norm((*actual).getV() - expected[i].getV()), error_margin)
+        EXPECT_LT(((*actual).getV() - expected[i].getV()).len(), error_margin)
             << "Velocity should be correctly scaled according to temperature.";
         EXPECT_EQ((*actual).getF(), expected[i].getF()) << "Force of particle should not be changed by temperature regulation.";
         EXPECT_EQ((*actual).getOldF(), expected[i].getOldF()) << "Old of particle force should not be changed by temperature regulation.";

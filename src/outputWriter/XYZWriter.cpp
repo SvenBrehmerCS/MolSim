@@ -28,13 +28,11 @@ namespace outputWriter {
              << std::endl;
 
         for (const Particle& p : container) {
-            std::array<double, 3> x = p.getX();
+            Vec<double> x = p.getX();
             file << "Ar ";
             file.setf(std::ios_base::showpoint);
 
-            for (auto& xi : x) {
-                file << xi << " ";
-            }
+            file << x[0] << x[1] << x[2] << " ";
 
             file << std::endl;
         }
