@@ -35,13 +35,14 @@ namespace physicsCalculator {
 
     GravityCalculator::~GravityCalculator() = default;
 
-    double GravityCalculator::calculateFDist(const double dist, const int t1, const int t2) const {
-        return cont->get_type_pair_descriptor(t1, t2).get_mass() / (dist * dist * dist);
+    double GravityCalculator::calculateFDist(const double dist_squ, const int t1, const int t2) const {
+        const double dist = std::sqrt(dist_squ);
+        return cont->get_type_pair_descriptor(t1, t2).get_mass() / (dist_squ * dist);
     }
 
-    double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist) {
+    double GravityCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist_squ) {
         // Calculate the distance and force experienced by two particles
-        return calculateFDist(dist, p1.getType(), p2.getType());
+        return calculateFDist(dist_squ, p1.getType(), p2.getType());
     }
 
 } // namespace physicsCalculator

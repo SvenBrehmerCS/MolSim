@@ -43,8 +43,8 @@ namespace physicsCalculator {
 
     void Calculator::calculateF() {
         cont->iterate_pairs([this](Particle& i, Particle& j) {
-            const double dist = (i.getX() - j.getX()).len();
-            const double force = this->calculateFAbs(i, j, dist);
+            const double dist_squ = (i.getX() - j.getX()).len_squ();
+            const double force = this->calculateFAbs(i, j, dist_squ);
 
             // Update the forces for both particles
             i.setF(force * (j.getX() - i.getX()) + i.getF());

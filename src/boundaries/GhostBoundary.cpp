@@ -13,14 +13,15 @@ void GhostBoundary::postF(Particle& particle, physicsCalculator::Calculator& cal
     if (pos == 0.0) {
         if (particle.getX()[dim] < r) {
             Vec<double> f = { 0.0, 0.0, 0.0 };
-            f[dim] = -calc.calculateFDist(particle.getX()[dim] * 2.0, particle.getType(), particle.getType()) * (particle.getX()[dim]) * 2.0;
+            const double dist = (pos - particle.getX()[dim]) * 2.0;
+            f[dim] = -calc.calculateFDist(dist * dist, particle.getType(), particle.getType()) * (particle.getX()[dim]) * 2.0;
             particle.setF(particle.getF() + f);
         }
     } else {
         if (particle.getX()[dim] > pos - r) {
             Vec<double> f = { 0.0, 0.0, 0.0 };
-            f[dim] = calc.calculateFDist((pos - particle.getX()[dim]) * 2.0, particle.getType(), particle.getType()) * (pos - particle.getX()[dim])
-                * 2.0;
+            const double dist = (pos - particle.getX()[dim]) * 2.0;
+            f[dim] = calc.calculateFDist(dist * dist, particle.getType(), particle.getType()) * (pos - particle.getX()[dim]) * 2.0;
             particle.setF(particle.getF() + f);
         }
     }
