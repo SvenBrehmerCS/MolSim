@@ -11,6 +11,11 @@ void Thermostat::regulate_Temperature() {
     double T_curr = E_kin / static_cast<double>(dimensions * particles->size());
     double diff = T_target - T_curr;
 
+    if (T_curr == 0.0) {
+        SPDLOG_CRITICAL("Congratulations! You broke physics.");
+        std::exit(EXIT_FAILURE);
+    }
+
     double beta;
     if (std::abs(diff) <= max_change) {
         beta = std::sqrt(T_target / T_curr);
