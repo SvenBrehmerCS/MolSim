@@ -139,7 +139,7 @@ int main(const int argc, const char* argv[]) {
     const auto end_time = std::chrono::steady_clock::now();
     const auto ns_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
     std::cout << "The simulation took " << ns_duration / 1000000.0 << " ms. The update time for a single particle was "
-              << (ns_duration / static_cast<double>(iteration * cont->size())) << " ns." << std::endl;
+              << (ns_duration / static_cast<double>(iteration * cont->size()) / 1000.0) << " µs." << std::endl;
 
     if (env.get_output_file_format() == CHECKPOINT) {
         SPDLOG_INFO("Checkpoint written.");

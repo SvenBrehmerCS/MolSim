@@ -564,7 +564,6 @@ void CellList::loop_z_near(const std::function<particle_pair_it>& iterator, std:
                 }
             }
 
-
             for (size_t m : cells[get_cell_index(n_x - 2, n_y - 2, i)]) {
                 if (ArrayUtils::L2Norm(particles[l].getX() - particles[m].getX() + domain_xy) <= rc) {
                     iterator(particles[l], particles[m]);

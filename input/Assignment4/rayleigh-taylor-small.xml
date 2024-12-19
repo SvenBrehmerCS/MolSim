@@ -4,17 +4,17 @@
     <output>
         <name>rayleigh_small</name>
         <format>VTK</format>
-        <frequency>100</frequency>
+        <frequency>25</frequency>
     </output>
     <param>
         <calc>LJ_FULL</calc>
         <boundaries>
             <boundary_yz_near>PERIODIC</boundary_yz_near>
-            <boundary_xz_near>HARD</boundary_xz_near>
-            <boundary_xy_near>HARD</boundary_xy_near>
+            <boundary_xz_near>HALO</boundary_xz_near>
+            <boundary_xy_near>HALO</boundary_xy_near>
             <boundary_yz_far>PERIODIC</boundary_yz_far>
-            <boundary_xz_far>HARD</boundary_xz_far>
-            <boundary_xy_far>HARD</boundary_xy_far>
+            <boundary_xz_far>HALO</boundary_xz_far>
+            <boundary_xy_far>HALO</boundary_xy_far>
         </boundaries>
         <delta_t>0.0005</delta_t>
         <t_end>25</t_end>

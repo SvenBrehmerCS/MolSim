@@ -4,10 +4,10 @@ void Thermostat::regulate_Temperature() {
 
     double E_kin = 0.0;
     for (const auto& p : *particles) {
-        E_kin += particles->get_type_descriptor(p.getType()).get_mass() * ArrayUtils::L2Norm(p.getV());
+        E_kin += particles->get_type_descriptor(p.getType()).get_mass() * ArrayUtils::L2Norm(p.getV()) * ArrayUtils::L2Norm(p.getV());
     }
 
-    double T_curr = E_kin / (dimensions * particles->size());
+    double T_curr = E_kin / static_cast<double>(dimensions * particles->size());
     double diff = T_target - T_curr;
 
     double beta;

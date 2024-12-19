@@ -8,6 +8,9 @@
 #include "boundaries/PeriodicBoundary.h"
 #include "container/BoxContainer.h"
 
+// TODO:
+#include <iostream>
+
 Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const std::array<double, 3>& new_domain) {
     bound_t = bt;
     domain = new_domain;
@@ -71,8 +74,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
     if (bound_t[0] == PERIODIC) {
         BoxContainer& cont = dynamic_cast<BoxContainer&>(calc.get_container());
 
-        cont.iterate_xy_pairs([this, &calc](Particle& p1, Particle& p2) {
-            const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, 0.0, domain[2] }) - p2.getX();
+        cont.iterate_yz_pairs([this, &calc](Particle& p1, Particle& p2) {
+            const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ domain[0], 0.0, 0.0 }) - p2.getX();
             const double dist = ArrayUtils::L2Norm(arr);
             const double force = calc.calculateFAbs(p1, p2, dist);
 
@@ -82,17 +85,17 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
         });
 
         if (bound_t[1] == PERIODIC) {
-            cont.loop_x_near([this, &calc](Particle& p1, Particle& p2) {
-                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, domain[1], domain[2] }) - p2.getX();
+            cont.loop_z_near([this, &calc](Particle& p1, Particle& p2) {
+                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ domain[0], domain[1], 0.0 }) - p2.getX();
                 const double dist = ArrayUtils::L2Norm(arr);
-                const double force = -calc.calculateFAbs(p1, p2, dist);
+                const double force = calc.calculateFAbs(p1, p2, dist);
 
                 // Update the forces for both particles
                 p1.setF(-force * arr + p1.getF());
                 p2.setF(force * arr + p2.getF());
             });
-            cont.loop_x_far([this, &calc](Particle& p1, Particle& p2) {
-                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, -domain[1], domain[2] }) - p2.getX();
+            cont.loop_z_far([this, &calc](Particle& p1, Particle& p2) {
+                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ -domain[0], domain[1], 0.0 }) - p2.getX();
                 const double dist = ArrayUtils::L2Norm(arr);
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
@@ -137,8 +140,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
         });
 
         if (bound_t[2] == PERIODIC) {
-            cont.loop_z_near([this, &calc](Particle& p1, Particle& p2) {
-                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ domain[0], domain[1], 0.0 }) - p2.getX();
+            cont.loop_x_near([this, &calc](Particle& p1, Particle& p2) {
+                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, domain[1], domain[2] }) - p2.getX();
                 const double dist = ArrayUtils::L2Norm(arr);
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
@@ -146,8 +149,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
                 p1.setF(-force * arr + p1.getF());
                 p2.setF(force * arr + p2.getF());
             });
-            cont.loop_z_far([this, &calc](Particle& p1, Particle& p2) {
-                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ -domain[0], -domain[1], 0.0 }) - p2.getX();
+            cont.loop_x_far([this, &calc](Particle& p1, Particle& p2) {
+                const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, -domain[1], domain[2] }) - p2.getX();
                 const double dist = ArrayUtils::L2Norm(arr);
                 const double force = calc.calculateFAbs(p1, p2, dist);
 
@@ -161,8 +164,8 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
     if (bound_t[2] == PERIODIC) {
         BoxContainer& cont = dynamic_cast<BoxContainer&>(calc.get_container());
 
-        cont.iterate_yz_pairs([this, &calc](Particle& p1, Particle& p2) {
-            const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ domain[0], 0.0, 0.0 }) - p2.getX();
+        cont.iterate_xy_pairs([this, &calc](Particle& p1, Particle& p2) {
+            const std::array<double, 3> arr = p1.getX() + std::array<double, 3>({ 0.0, 0.0, domain[2] }) - p2.getX();
             const double dist = ArrayUtils::L2Norm(arr);
             const double force = calc.calculateFAbs(p1, p2, dist);
 
