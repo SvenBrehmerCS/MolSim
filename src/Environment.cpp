@@ -408,46 +408,7 @@ Environment::Environment(const int argc, const char* argv[]) {
 
 Environment::~Environment() = default;
 
-const char* Environment::get_input_file_name() const { return input_file; }
-
-InputFormat Environment::get_input_file_format() const { return input_format; }
-
-const char* Environment::get_output_file_name() const { return output_file.c_str(); }
-
-OutputFormat Environment::get_output_file_format() const { return output_format; }
-
-CalculatorType Environment::get_calculator_type() const { return calc; }
-
-std::array<BoundaryType, 6> Environment::get_boundary_type() const {
-    return std::array<BoundaryType, 6> {
-        yz_near,
-        xz_near,
-        xy_near,
-        yz_far,
-        xz_far,
-        xy_far,
-    };
-}
-
-int Environment::get_print_step() const { return print_step; }
-
-double Environment::get_sigma() const { return sigma; }
-
-double Environment::get_epsilon() const { return epsilon; }
-
-double Environment::get_delta_t() const { return delta_t; }
-
-double Environment::get_t_end() const { return t_end; }
-
-double Environment::get_r_cutoff() const { return r_cutoff; }
-
-double Environment::get_gravity() const { return gravity; }
-
-Vec<double> Environment::get_domain_size() const { return domain_size; }
-
-int Environment::get_dimensions() const { return dimensions; }
-
-bool Environment::requires_direct_sum() const {
+const bool Environment::requires_direct_sum() const {
     for (size_t i = 0; i < 6; i++) {
         if (get_boundary_type()[i] == INF_CONT) {
             return true;
@@ -485,23 +446,16 @@ void Environment::assert_boundary_conditions() {
     }
 }
 
-int Environment::get_temp_frequency() const { return temp_frequency; }
-
-void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
-
-void Environment::set_delta_t(const double delta_t) { this->delta_t = delta_t; }
-
-void Environment::set_sigma(const double sigma) { this->sigma = sigma; }
-
-void Environment::set_epsilon(const double epsilon) { this->epsilon = epsilon; }
-
-void Environment::set_print_step(const int print_step) { this->print_step = print_step; }
-
-void Environment::set_output_file_name(const std::string& output_file_name) { this->output_file = output_file_name; }
-
-void Environment::set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
-
-void Environment::set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
+const std::array<BoundaryType, 6> Environment::get_boundary_type() const {
+    return std::array<BoundaryType, 6> {
+        yz_near,
+        xz_near,
+        xy_near,
+        yz_far,
+        xz_far,
+        xy_far,
+    };
+}
 
 void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_type) {
     yz_near = boundary_type[0];
@@ -511,13 +465,3 @@ void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_t
     xz_far = boundary_type[4];
     xy_far = boundary_type[5];
 }
-
-void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
-
-void Environment::set_domain_size(const Vec<double> domain_size) { this->domain_size = domain_size; }
-
-void Environment::set_dimensions(const int dimensions) { this->dimensions = dimensions; }
-
-void Environment::set_temp_frequency(const int temp_frequency) { this->temp_frequency = temp_frequency; }
-
-void Environment::set_gravity(const double g) { gravity = g; }
