@@ -9,7 +9,7 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 
 # Define the compilers used for the project
 # which compilers to use for C and C++
-set(CMAKE_CXX_COMPILER icpx)
+set(CMAKE_CXX_COMPILER g++)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
