@@ -11,19 +11,19 @@ void HardBoundary::postF(Particle& particle, physicsCalculator::Calculator& calc
 void HardBoundary::postX(Particle& particle) {
     if (pos == 0.0) {
         if (particle.getX()[dim] < pos) {
-            std::array<double, 3> v = particle.getV();
+            Vec<double> v = particle.getV();
             v[dim] *= -1.0;
             particle.setV(v);
-            std::array<double, 3> x = particle.getX();
+            Vec<double> x = particle.getX();
             x[dim] *= -1.0;
             particle.setX(x);
         }
     } else {
         if (particle.getX()[dim] > pos) {
-            std::array<double, 3> v = particle.getV();
+            Vec<double> v = particle.getV();
             v[dim] *= -1.0;
             particle.setV(v);
-            std::array<double, 3> x = particle.getX();
+            Vec<double> x = particle.getX();
             x[dim] = pos * 2.0 - particle.getX()[dim];
             particle.setX(x);
         }

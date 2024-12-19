@@ -21,9 +21,9 @@ namespace outputWriter {
 
     VTKWriter::~VTKWriter() = default;
 
-    void VTKWriter::initializeOutput(int numParticles) {
+    void VTKWriter::initializeOutput(const int numParticles) {
 
-        vtkFile = new VTKFile_t("UnstructuredGrid");
+        vtkFile = std::make_unique<VTKFile_t>("UnstructuredGrid");
 
         // per point, we add type, position, velocity and force
         PointData pointData;
@@ -53,26 +53,26 @@ namespace outputWriter {
         vtkFile->UnstructuredGrid(unstructuredGrid);
     }
 
-    void VTKWriter::writeFile(const std::string& filename, int iteration) {
+    void VTKWriter::writeFile(const std::string& filename, const int iteration) {
         std::stringstream strstr;
         strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
 
         std::ofstream file(strstr.str().c_str());
         VTKFile(file, *vtkFile);
-        delete vtkFile;
+        vtkFile.reset();
     }
 
-    void VTKWriter::plotParticle(const Particle& p) {
+    void VTKWriter::plotParticle(const Particle& p, const double mass) {
         if (vtkFile->UnstructuredGrid().present()) {
-            spdlog::debug("UnstructuredGrid is present");
+            SPDLOG_DEBUG("UnstructuredGrid is present");
         } else {
-            spdlog::error("ERROR: No UnstructuredGrid present");
+            SPDLOG_ERROR("ERROR: No UnstructuredGrid present");
         }
 
         PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
         PointData::DataArray_iterator dataIterator = pointDataSequence.begin();
 
-        dataIterator->push_back(p.getM());
+        dataIterator->push_back(mass);
         // cout << "Appended mass data in: " << dataIterator->Name();
 
         dataIterator++;
@@ -97,11 +97,11 @@ namespace outputWriter {
         pointsIterator->push_back(p.getX()[2]);
     }
 
-    void VTKWriter::plotParticles(ParticleContainer& container, const std::string& filename, int iteration) {
+    void VTKWriter::plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration) {
         initializeOutput(container.size());
 
         for (const Particle& p : container) {
-            this->plotParticle(p);
+            this->plotParticle(p, container.get_type_descriptor(p.getType()).get_mass());
         }
 
         writeFile(filename, iteration);

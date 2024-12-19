@@ -2,17 +2,16 @@
 #include <gtest/gtest.h>
 #include <physicsCalculator/LJCalculator.h>
 
-// Test the no boundary does not affect a particle with post x
+// Test that the no boundary does not affect a particle with post x
 TEST(NoBoundary, ParticleUnaffectedX) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, -1.0, -2.0 }, { 3.0, -2.0, 2.0 }, 0.5, 0),
-        Particle({ 7.0, 2.0, 4.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
-        Particle({ 13.0, 15.0, 16.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
-        Particle({ 13, 62.0, 22.0 }, { -1.0, 2.0, -1.0 }, 2.5, 1),
+        Particle({ 2.0, -1.0, -2.0 }, { 3.0, -2.0, 2.0 }, 0),
+        Particle({ 7.0, 2.0, 4.0 }, { -1.0, 2.0, -1.0 }, 1),
+        Particle({ 13.0, 15.0, 16.0 }, { -1.0, 2.0, -1.0 }, 1),
+        Particle({ 13, 62.0, 22.0 }, { -1.0, 2.0, -1.0 }, 1),
     };
 
-    // When calling calculateF the current force must be zero
     particles[0].setF({ 1.0, 4.0, -1.0 });
     particles[0].setOldF({ -2.0, 2.0, 2.0 });
     particles[1].setF({ 2.0, -4.0, 1.0 });
@@ -47,17 +46,16 @@ TEST(NoBoundary, ParticleUnaffectedX) {
     }
 }
 
-// Test the no boundary does not affect a particle with post F
+// Test that the no boundary does not affect a particle with post F
 TEST(NoBoundary, ParticleUnaffectedF) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, -1.0, -3.0 }, { 1.0, -4.0, 2.0 }, 0.5, 0),
-        Particle({ 7.0, 3.0, 6.0 }, { -2.0, -2.0, 1.0 }, 2.5, 1),
-        Particle({ 14.0, 15.0, 16.0 }, { -5.0, 2.0, -4.0 }, 2.0, 1),
-        Particle({ 12, 61.0, 23.0 }, { -21.0, 3.0, 2.0 }, 1.0, 2),
+        Particle({ 2.0, -1.0, -3.0 }, { 1.0, -4.0, 2.0 }, 0),
+        Particle({ 7.0, 3.0, 6.0 }, { -2.0, -2.0, 1.0 }, 1),
+        Particle({ 14.0, 15.0, 16.0 }, { -5.0, 2.0, -4.0 }, 1),
+        Particle({ 12, 61.0, 23.0 }, { -21.0, 3.0, 2.0 }, 2),
     };
 
-    // When calling calculateF the current force must be zero
     particles[0].setF({ 1.0, 4.0, 2.0 });
     particles[0].setOldF({ -3.0, 2.0, 2.0 });
     particles[1].setF({ 2.0, -4.0, 1.0 });
@@ -81,7 +79,7 @@ TEST(NoBoundary, ParticleUnaffectedF) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, {}, false);
 
     NoBoundary boundary_x_near(0.0, 0);
     NoBoundary boundary_y_near(0.0, 1);

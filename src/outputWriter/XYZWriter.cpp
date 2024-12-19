@@ -16,7 +16,7 @@ namespace outputWriter {
 
     XYZWriter::~XYZWriter() = default;
 
-    void XYZWriter::plotParticles(ParticleContainer& container, const std::string& filename, int iteration) {
+    void XYZWriter::plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration) {
         std::ofstream file;
         std::stringstream strstr;
         strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".xyz";
@@ -28,13 +28,11 @@ namespace outputWriter {
              << std::endl;
 
         for (const Particle& p : container) {
-            std::array<double, 3> x = p.getX();
+            Vec<double> x = p.getX();
             file << "Ar ";
             file.setf(std::ios_base::showpoint);
 
-            for (auto& xi : x) {
-                file << xi << " ";
-            }
+            file << x[0] << x[1] << x[2] << " ";
 
             file << std::endl;
         }

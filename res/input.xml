@@ -16,8 +16,6 @@
             <boundary_xz_far>INF_CONT</boundary_xz_far>
             <boundary_xy_far>INF_CONT</boundary_xy_far>
         </boundaries>
-        <epsilon>5.0</epsilon>
-        <sigma>1.0</sigma>
         <delta_t>0.014</delta_t>
         <t_end>1000.0</t_end>
         <dimensions>3</dimensions>
@@ -27,6 +25,7 @@
             <vy>50.0</vy>
             <vz>50.0</vz>
         </domain>
+        <g_grav></g_grav>
     </param>
     <particle>
         <position>
@@ -52,12 +51,14 @@
             <vy>0.7</vy>
             <vz>0.9</vz>
         </velocity>
-        <m>2.5</m>
         <count>
             <vx>10</vx>
             <vy>15</vy>
             <vz>20</vz>
         </count>
+        <m>2.5</m>
+        <sigma></sigma>
+        <epsilon></epsilon>
         <h>0.3</h>
         <b_motion>0.1</b_motion>
     </cuboid>
@@ -72,9 +73,16 @@
             <vy>-2.0</vy>
             <vz>5.0</vz>
         </velocity>
-        <m>0.4</m>
         <r>5.9</r>
+        <m>0.4</m>
+        <sigma></sigma>
+        <epsilon></epsilon>
         <h>1.0</h>
         <b_motion>0.0</b_motion>
     </disc>
+    <thermo>
+        <T_init>5</T_init>
+        <T_target>6</T_target>
+        <T_frequency></T_frequency>
+    </thermo>
 </simulation>

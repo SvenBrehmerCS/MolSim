@@ -1,7 +1,7 @@
 /**
  * @file
  *
- * @brief Handles the reading of a XML input file
+ * @brief Handles the reading of a XML input file.
  */
 
 #pragma once
@@ -10,7 +10,8 @@
 
 #include "Environment.h"
 #include "ParticleGenerator.h"
-#include "boundaries/ParticleContainer.h"
+#include "Thermostat.h"
+#include "container/ParticleContainer.h"
 #include "input.h"
 #include "spdlog/spdlog.h"
 
@@ -19,7 +20,7 @@
 #include <string>
 
 /**
- * @brief Collection of readers for different input types
+ * @brief Collection of readers for different input types.
  */
 namespace inputReader {
 
@@ -37,6 +38,11 @@ namespace inputReader {
         std::unique_ptr<sim_t> sim;
 
     public:
+        /**
+         * Define the xml file reader constructor.
+         *
+         * @param filename The name of the output file.
+         */
         XMLTreeReader(const char* filename);
 
         virtual ~XMLTreeReader();
@@ -45,21 +51,26 @@ namespace inputReader {
          * Imports the simulation arguments from the input file.
          *
          * @param environment Data structure for holding the simulation parameters.
+         * @param thermostat Data structure representing the thermostat.
          */
-        virtual void readArguments(Environment& environment);
+        virtual void readArguments(Environment& environment, Thermostat& thermostat);
 
         /**
          * Imports the particles from the input file.
          *
-         * @param particles Data structure for holding the particles.
+         * @param container Data structure for holding the particles.
+         * @param delta_t Time between steps for type initialization.
+         * @param gravity Constant force on particles for type initialization.
          */
-        virtual void readParticle(ParticleContainer& container);
+        virtual void readParticle(ParticleContainer& container, const double delta_t, const double gravity);
 
         /**
          * Calculates the number of particles generated when creating a disc of particles.
          *
          * @param h Distance between particles inside the disc.
          * @param r Radius of the disc.
+         *
+         * @return The number of added particles.
          */
         int num_particles_added(double h, double r);
     };

@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include <array>
 #include <string>
+
+#include "utils/Vec.h"
 
 /**
  * @class Particle
@@ -22,27 +23,22 @@ private:
     /**
      * Position of the particle
      */
-    std::array<double, 3> x;
+    Vec<double> x;
 
     /**
      * Velocity of the particle
      */
-    std::array<double, 3> v;
+    Vec<double> v;
 
     /**
      * Force effective on this particle
      */
-    std::array<double, 3> f;
+    Vec<double> f;
 
     /**
      * Force which was effective on this particle
      */
-    std::array<double, 3> old_f;
-
-    /**
-     * Mass of this particle
-     */
-    double m;
+    Vec<double> old_f;
 
     /**
      * Type of the particle.
@@ -55,7 +51,7 @@ public:
      *
      * @param type Optional: Define the atom type.
      */
-    explicit Particle(int type = 0);
+    explicit Particle(const int type = 0);
 
     /**
      * Generate the copy of a particle.
@@ -69,10 +65,9 @@ public:
      *
      * @param x_arg The position of the particle
      * @param v_arg The velocity of the particle
-     * @param m_arg The mass of the particle
-     * @param type Optional: Define the atom type.
+     * @param type_arg Optional: Define the atom type.
      */
-    Particle(const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, const double m_arg, const int type_arg = 0);
+    Particle(const Vec<double>& x_arg, const Vec<double>& v_arg, const int type_arg = 0);
 
     /**
      * Destroy a particle.
@@ -84,70 +79,28 @@ public:
      *
      * @return The particle position.
      */
-    const std::array<double, 3>& getX() const;
+    const Vec<double>& getX() const;
 
     /**
      * Get the constant reference to the particle velocity.
      *
      * @return The particle velocity.
      */
-    const std::array<double, 3>& getV() const;
+    const Vec<double>& getV() const;
 
     /**
      * Get the constant reference to the force on the particle.
      *
      * @return The force on the particle.
      */
-    const std::array<double, 3>& getF() const;
+    const Vec<double>& getF() const;
 
     /**
      * Get the constant reference to the old force on the particle.
      *
      * @return The force on the particle.
      */
-    const std::array<double, 3>& getOldF() const;
-
-    /**
-     * Set the position of the particle.
-     *
-     * @param x_new The new position.
-     */
-    void setX(const std::array<double, 3>& x_new);
-
-    /**
-     * Set the velocity of the particle.
-     *
-     * @param v_new The new velocity.
-     */
-    void setV(const std::array<double, 3>& v_new);
-
-    /**
-     * Set the force affecting the particle.
-     *
-     * @param f_new The new force.
-     */
-    void setF(const std::array<double, 3>& f_new);
-
-    /**
-     * Set the force that affected the particle the previous iteration.
-     *
-     * @param f_new The new old force.
-     */
-    void setOldF(const std::array<double, 3>& old_f_new);
-
-    /**
-     * Set the mass of the particle.
-     *
-     * @param m_new The new mass.
-     */
-    void setM(const double m_new);
-
-    /**
-     * Get the mass of the particle.
-     *
-     * @return The mass of the particle.
-     */
-    double getM() const;
+    const Vec<double>& getOldF() const;
 
     /**
      * Get the type of the particle.
@@ -155,6 +108,41 @@ public:
      * @return The type of the particle.
      */
     int getType() const;
+
+    /**
+     * Set the position of the particle.
+     *
+     * @param x_new The new position.
+     */
+    void setX(const Vec<double>& x_new);
+
+    /**
+     * Set the velocity of the particle.
+     *
+     * @param v_new The new velocity.
+     */
+    void setV(const Vec<double>& v_new);
+
+    /**
+     * Set the force affecting the particle.
+     *
+     * @param f_new The new force.
+     */
+    void setF(const Vec<double>& f_new);
+
+    /**
+     * Set the force that affected the particle the previous iteration.
+     *
+     * @param old_f_new The new old force.
+     */
+    void setOldF(const Vec<double>& old_f_new);
+
+    /**
+     * Sets the type of a particle
+     *
+     * @param new_type Type to be given to the particle.
+     */
+    void setType(const int new_type);
 
     /**
      * Compare if two particles are equal.

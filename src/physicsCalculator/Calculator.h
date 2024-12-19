@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Environment.h"
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 
 #include <memory>
 
@@ -52,8 +52,9 @@ namespace physicsCalculator {
          *
          * @param new_env The simulation environment.
          * @param particles The particles used for testing.
+         * @param new_desc The particle types.
          */
-        Calculator(const Environment& new_env, const std::vector<Particle>& particles);
+        Calculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc);
 
         /**
          * Define the default destructor for every calculator.
@@ -62,13 +63,25 @@ namespace physicsCalculator {
 
         /**
          * Get the force absolute and sign direction between two particles.
+         *
+         * @param dist_squ The distance squared between two particles.
+         * @param t1 The type of the first particle.
+         * @param t2 The type of the second particle.
+         *
+         * @return The force interacting between p1 and p2.
          */
-        virtual double calculateFDist(const double dist) const = 0;
+        virtual double calculateFDist(const double dist_squ, const int t1, const int t2) const = 0;
 
         /**
          * Get the force absolute and sign direction between two particles.
+         *
+         * @param p1 The first particle.
+         * @param p2 The second particle.
+         * @param dist_squ THe distance between the particles.
+         *
+         * @return The force interacting between p1 and p2.
          */
-        virtual double calculateFAbs(const Particle& p1, const Particle& p2) = 0;
+        virtual double calculateFAbs(const Particle& p1, const Particle& p2, const double dist_squ) = 0;
 
         /**
          * Update the forces experienced by all the particles.

@@ -41,7 +41,20 @@
 
             <xs:element name="disc" type="disc_t" minOccurs="0" maxOccurs="unbounded">
                 <xs:annotation>
-                    <xs:documentation> The information needed to generate a disc of particles</xs:documentation>
+                    <xs:documentation> The information needed to generate a disc of particles. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="thermo" type="thermo_t" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> The information needed to regulate the simulation
+                        temperature. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="checkpoint" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> The checkpoint file used as INPUT. </xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
@@ -86,6 +99,11 @@
                                 <xs:documentation> @brief Output will be printed as XYZ files. </xs:documentation>
                             </xs:annotation>
                         </xs:enumeration>
+                        <xs:enumeration value="CHECKPOINT">
+                            <xs:annotation>
+                                <xs:documentation> @brief Checkpoint output will be generated. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -97,7 +115,7 @@
 
                 <xs:simpleType>
                     <xs:restriction base="xs:positiveInteger">
-                        <xs:maxInclusive value="1000000" />
+                        <xs:maxInclusive value="2147483647" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -191,31 +209,6 @@
                 </xs:complexType>
             </xs:element>
 
-            <xs:element name="epsilon" default="5.0">
-                <xs:annotation>
-                    <xs:documentation> The depth of the potential well of the Lennard-Jones
-                        potential. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:double">
-                        <xs:minExclusive value="0.0" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
-            <xs:element name="sigma" default="1.0">
-                <xs:annotation>
-                    <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
-                </xs:annotation>
-
-                <xs:simpleType>
-                    <xs:restriction base="xs:double">
-                        <xs:minExclusive value="0.0" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-
             <xs:element name="delta_t" default="0.014">
                 <xs:annotation>
                     <xs:documentation> Amount of time passing between simulation steps. </xs:documentation>
@@ -275,6 +268,12 @@
                     <xs:documentation> Size of the simulation domain in each direction. </xs:documentation>
                 </xs:annotation>
             </xs:element>
+
+            <xs:element name="g_grav" type="xs:double" default="0.0">
+                <xs:annotation>
+                    <xs:documentation> Continuos gravitational acceleration. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -329,7 +328,13 @@
 
             <xs:element name="velocity" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The rough velocity of the cuboid. </xs:documentation>
+                    <xs:documentation> The velocity of the cuboid. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="count" type="pivector">
+                <xs:annotation>
+                    <xs:documentation> The amount of particles in each direction. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
@@ -345,10 +350,29 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="count" type="uivector">
+            <xs:element name="sigma" default="1.0">
                 <xs:annotation>
-                    <xs:documentation> The amount of particles in each direction. </xs:documentation>
+                    <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
                 </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="epsilon" default="5.0">
+                <xs:annotation>
+                    <xs:documentation> The depth of the potential well of the Lennard-Jones
+                        potential. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
             <xs:element name="h">
@@ -384,6 +408,7 @@
                 parameters needed to define a disc of particles, such as the position of the center
                 of the disc, the velocity of the disc, distance between particles, and more. </xs:documentation>
         </xs:annotation>
+
         <xs:sequence>
             <xs:element name="center" type="dvector">
                 <xs:annotation>
@@ -393,8 +418,21 @@
 
             <xs:element name="velocity" type="dvector">
                 <xs:annotation>
-                    <xs:documentation> The rough velocity of the disc. </xs:documentation>
+                    <xs:documentation> The velocity of the disc. </xs:documentation>
                 </xs:annotation>
+            </xs:element>
+
+            <xs:element name="r">
+                <xs:annotation>
+                    <xs:documentation> The radius in terms of the number of molecules along the
+                        radius. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
 
             <xs:element name="m">
@@ -409,10 +447,22 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="r">
+            <xs:element name="sigma" default="1.0">
                 <xs:annotation>
-                    <xs:documentation> The radius in terms of the number of molecules along the
-                        radius. </xs:documentation>
+                    <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="epsilon" default="5.0">
+                <xs:annotation>
+                    <xs:documentation> The depth of the potential well of the Lennard-Jones
+                        potential. </xs:documentation>
                 </xs:annotation>
 
                 <xs:simpleType>
@@ -442,6 +492,64 @@
                 <xs:simpleType>
                     <xs:restriction base="xs:double">
                         <xs:minInclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="thermo_t">
+        <xs:annotation>
+            <xs:documentation> This complex type represents the thermostat, which regulates the
+                temperature of the simulation. </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="T_init" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation> Initial temperature of the simulation. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="T_target" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation> Target temperature of the simulation. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="T_frequency" default="10000">
+                <xs:annotation>
+                    <xs:documentation> Number of steps between thermostat applications. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:positiveInteger">
+                        <xs:maxInclusive value="2147483647" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="max_delta_T" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> Maximal absolute temperature change per thermostat
+                        application. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -554,7 +662,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="uivector">
+    <xs:complexType name="pivector">
         <xs:annotation>
             <xs:documentation> This complex type represents a three value vector of integers.
                 @details This complex type consists of three integer variables which are used as
@@ -568,7 +676,7 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:int">
-                        <xs:minInclusive value="0" />
+                        <xs:minExclusive value="0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -578,7 +686,7 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:int">
-                        <xs:minInclusive value="0" />
+                        <xs:minExclusive value="0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -588,7 +696,7 @@
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:int">
-                        <xs:minInclusive value="0" />
+                        <xs:minExclusive value="0" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>

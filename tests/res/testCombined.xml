@@ -16,8 +16,6 @@
             <boundary_xz_far></boundary_xz_far>
             <boundary_xy_far></boundary_xy_far>
         </boundaries>
-        <epsilon></epsilon>
-        <sigma></sigma>
         <delta_t></delta_t>
         <t_end></t_end>
         <dimensions></dimensions>
@@ -27,6 +25,7 @@
             <vy>25</vy>
             <vz>25</vz>
         </domain>
+        <g_grav></g_grav>
     </param>
     <particle>
         <position>
@@ -52,12 +51,14 @@
             <vy>0.7</vy>
             <vz>0.9</vz>
         </velocity>
-        <m>2.5</m>
         <count>
             <vx>2</vx>
             <vy>2</vy>
             <vz>1</vz>
         </count>
+        <m>2.5</m>
+        <sigma></sigma>
+        <epsilon></epsilon>
         <h>1</h>
         <b_motion>0</b_motion>
     </cuboid>
@@ -72,9 +73,14 @@
             <vy>1</vy>
             <vz>1</vz>
         </velocity>
-        <m>2.5</m>
         <r>1</r>
+        <m>2.5</m>
+        <sigma></sigma>
+        <epsilon></epsilon>
         <h>1</h>
         <b_motion>0</b_motion>
     </disc>
+    <thermo>
+        <T_frequency></T_frequency>
+    </thermo>
 </simulation>

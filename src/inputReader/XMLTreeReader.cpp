@@ -1,38 +1,40 @@
 #include "XMLTreeReader.h"
 
+#include "CheckpointReader.h"
+
 namespace inputReader {
 
     XMLTreeReader::XMLTreeReader(const char* filename) {
-        spdlog::debug("Parsing XML input {}", filename);
+        SPDLOG_DEBUG("Parsing XML input {}", filename);
         // Testing if filename is correct.
-        spdlog::trace("Verifying file name...");
+        SPDLOG_TRACE("Verifying file name...");
         std::ifstream XMLFile(filename);
         if (!XMLFile.is_open()) {
-            spdlog::critical("Could not open file {}", filename);
+            SPDLOG_CRITICAL("Could not open file {}", filename);
             std::exit(EXIT_FAILURE);
         }
 
         // Validating and parsing the input into tree object.
-        spdlog::trace("Parsing XML file...");
+        SPDLOG_TRACE("Parsing XML file...");
         try {
             sim = simulation(filename);
         } catch (const xml_schema::exception& e) {
-            spdlog::critical("XML validation error: {}", e.what());
+            SPDLOG_CRITICAL("XML validation error: {}", e.what());
             std::exit(EXIT_FAILURE);
         } catch (const std::exception& e) {
-            spdlog::critical("Error: {}", e.what());
+            SPDLOG_CRITICAL("Error: {}", e.what());
             std::exit(EXIT_FAILURE);
         }
 
-        spdlog::trace("...Finished parsing XML input {}", filename);
+        SPDLOG_TRACE("...Finished parsing XML input {}", filename);
     }
 
     XMLTreeReader::~XMLTreeReader() = default;
 
-    void XMLTreeReader::readArguments(Environment& environment) {
-        spdlog::debug("Setting up simulation environment");
+    void XMLTreeReader::readArguments(Environment& environment, Thermostat& thermostat) {
+        SPDLOG_DEBUG("Setting up simulation environment");
 
-        spdlog::trace("Loading output parameters...");
+        SPDLOG_TRACE("Loading output parameters...");
         std::string output_file_name = sim->output().name();
         environment.set_output_file_name(output_file_name);
 
@@ -42,7 +44,7 @@ namespace inputReader {
         const int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
 
-        spdlog::trace("Loading environment arguments...");
+        SPDLOG_TRACE("Loading environment arguments...");
         const param_t::calc_type::value calc = sim->param().calc();
         environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));
 
@@ -61,64 +63,92 @@ namespace inputReader {
             static_cast<BoundaryType>(static_cast<int>(xy_far)),
         });
 
-        const double epsilon = sim->param().epsilon();
-        environment.set_epsilon(epsilon);
-
-        const double sigma = sim->param().sigma();
-        environment.set_sigma(sigma);
-
         const double delta_t = sim->param().delta_t();
         environment.set_delta_t(delta_t);
 
         const double t_end = sim->param().t_end();
         environment.set_t_end(t_end);
 
+        environment.set_dimensions(sim->param().dimensions());
+
         const double r_cutoff = sim->param().r_cutoff();
         environment.set_r_cutoff(r_cutoff);
 
-        const std::array<double, 3> domain_size = {
+        const Vec<double> domain_size = {
             sim->param().domain().vx(),
             sim->param().domain().vy(),
             sim->param().domain().vz(),
         };
         environment.set_domain_size(domain_size);
 
-        spdlog::trace("...Finished setting up simulation environment");
+        if (sim->thermo().present()) {
+            if (sim->thermo().get().T_target().present()) {
+                thermostat.set_T_target(sim->thermo().get().T_target().get());
+                thermostat.set_active(true);
+            } else if (sim->thermo().get().T_init().present()) {
+                thermostat.set_T_target(sim->thermo().get().T_init().get());
+                thermostat.set_active(true);
+            } else {
+                SPDLOG_WARN("Both target and initial temperature were not given. Proceeding without thermostat.");
+            }
+
+            if (sim->thermo().get().max_delta_T().present())
+                thermostat.set_max_change(sim->thermo().get().max_delta_T().get());
+
+            thermostat.set_dimensions(sim->param().dimensions());
+            environment.set_temp_frequency(sim->thermo().get().T_frequency());
+        }
+
+        environment.set_gravity(sim->param().g_grav());
+
+        SPDLOG_TRACE("...Finished setting up simulation environment");
     }
 
-    void XMLTreeReader::readParticle(ParticleContainer& container) {
-        spdlog::debug("Generating particles");
+    void XMLTreeReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
+        SPDLOG_DEBUG("Generating particles");
+
+        if (sim->checkpoint().present()) {
+            SPDLOG_TRACE("Checkpoint...");
+            CheckpointReader checkpoint_reader;
+            checkpoint_reader.readSimulation(container, sim->checkpoint().get().data());
+        }
 
         const int num_dimensions = sim->param().dimensions();
 
         size_t t = sim->particle().size();
         if (t > INT_MAX) {
-            spdlog::critical("Particle size too large");
+            SPDLOG_CRITICAL("Particle size too large");
             std::exit(EXIT_FAILURE);
         }
-        int num_particles = static_cast<int>(sim->particle().size());
+        int num_particles = static_cast<int>(sim->particle().size()) + container.size();
 
-        std::array<double, 3> x = { 0.0, 0.0, 0.0 };
-        std::array<double, 3> v = { 0.0, 0.0, 0.0 };
+        std::vector<TypeDesc> ptypes = container.get_types();
+        int ptype = ptypes.size();
+
+        Vec<double> x = { 0.0, 0.0, 0.0 };
+        Vec<double> v = { 0.0, 0.0, 0.0 };
         std::array<int, 3> N = { 0, 0, 0 };
         double m;
+        double s;
+        double e;
         double h;
         double brownian_motion;
 
-        std::array<double, 3> disc_center = { 0.0, 0.0, 0.0 };
-        std::array<double, 3> disc_velocity = { 0.0, 0.0, 0.0 };
+        Vec<double> disc_center = { 0.0, 0.0, 0.0 };
+        Vec<double> disc_velocity = { 0.0, 0.0, 0.0 };
 
         // Initialize all the single particles into the container.
-        spdlog::trace("Single particles...");
+        SPDLOG_TRACE("Single particles...");
+        int i = container.size();
         container.resize(num_particles);
 
         const auto& particles = sim->particle();
 
-        int i = 0;
         for (const auto& particle : particles) {
             container[i].setX({ particle.position().vx(), particle.position().vy(), particle.position().vz() });
             container[i].setV({ particle.velocity().vx(), particle.velocity().vy(), particle.velocity().vz() });
-            container[i].setM(particle.m());
+            ptypes.push_back(TypeDesc { particle.m(), 1.0, 5.0, delta_t, gravity });
+            container[i].setType(ptype++);
             i++;
         }
 
@@ -126,41 +156,60 @@ namespace inputReader {
         ParticleGenerator generator;
 
         // Initialize all the cuboids into the container.
-        spdlog::trace("Cuboids...");
+        SPDLOG_TRACE("Cuboids...");
         for (const auto& cuboid : cuboids) {
             x = { cuboid.position().vx(), cuboid.position().vy(), cuboid.position().vz() };
             v = { cuboid.velocity().vx(), cuboid.velocity().vy(), cuboid.velocity().vz() };
             N = { cuboid.count().vx(), cuboid.count().vy(), cuboid.count().vz() };
             m = cuboid.m();
+            s = cuboid.sigma();
+            e = cuboid.epsilon();
             h = cuboid.h();
-            brownian_motion = cuboid.b_motion();
+
+            if (sim->thermo().present() && sim->thermo().get().T_init().present()) {
+                brownian_motion = std::sqrt(sim->thermo().get().T_init().get() / m);
+            } else {
+                brownian_motion = cuboid.b_motion();
+            }
 
             container.resize(num_particles + cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz());
 
-            generator.generateCuboid(container, num_particles, x, v, m, N, h, brownian_motion, num_dimensions);
+            ptypes.push_back(TypeDesc { m, s, e, delta_t, gravity });
+
+            generator.generateCuboid(container, num_particles, x, v, ptype++, N, h, brownian_motion, num_dimensions);
 
             num_particles += cuboid.count().vx() * cuboid.count().vy() * cuboid.count().vz();
         }
 
         // Initialize all the discs into the container.
-        spdlog::trace("Discs...");
+        SPDLOG_TRACE("Discs...");
         const auto& discs = sim->disc();
         for (const auto& disc : discs) {
             disc_center = { disc.center().vx(), disc.center().vy(), disc.center().vz() };
             disc_velocity = { disc.velocity().vx(), disc.velocity().vy(), disc.velocity().vz() };
+            m = disc.m();
+
+            if (sim->thermo().present() && sim->thermo().get().T_init().present()) {
+                brownian_motion = std::sqrt(sim->thermo().get().T_init().get() / m);
+            } else {
+                brownian_motion = disc.b_motion();
+            }
 
             int particles_future_added = num_particles_added(disc.h(), disc.r());
 
             container.resize(num_particles + particles_future_added);
 
+            ptypes.push_back(TypeDesc { m, disc.sigma(), disc.epsilon(), delta_t, gravity });
 
             int particles_added = generator.generateDisc(
-                container, num_particles, disc_center, disc_velocity, disc.m(), disc.r(), disc.h(), disc.b_motion(), num_dimensions);
+                container, num_particles, disc_center, disc_velocity, ptype++, disc.r(), disc.h(), brownian_motion, num_dimensions);
 
             num_particles += particles_added;
         }
 
-        spdlog::trace("...Finished generating particles");
+        container.build_type_table(ptypes);
+
+        SPDLOG_TRACE("...Finished generating particles");
     }
 
     int XMLTreeReader::num_particles_added(double h, double r) {
