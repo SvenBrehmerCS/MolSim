@@ -261,16 +261,21 @@ TEST(CellList, IterateHalo) {
 
 // Test if the iterator for the boundary cells work correctly.
 TEST(CellList, IterateBoundary) {
-    CellList cells(2.5, { 21.0, 21.0, 21.0 });
+    CellList cells(3, { 21.0, 21.0, 21.0 });
     std::vector<Particle> particles = {
-        // TODO:
+        Particle({ -1.0, 1, -1.0 }, {}, 1),
+        Particle({ 20.0, 2.0, 2.0 }, {}, 2),
+        Particle({ 3.0, 13.0, 8.0 }, {}, 3),
+        Particle({ 10.0, 13.0, -1.0 }, {}, 4),
+        Particle({ 2.0, 2, 1.0 }, {}, 5),
+        Particle({ 13, 13.0, 13.0 }, {}, 6),
+        Particle({ 10.0, 20.0, 12.0 }, {}, 7),
+        Particle({ 3.0, 1.0, 5.0 }, {}, 8),
     };
 
     ASSERT_NO_THROW(cells.create_list(particles));
 
-    std::list<int> indices = {
-        // TODO:
-    };
+    std::list<int> indices = {2, 5, 7, 8};
 
     cells.loop_boundary(
         [&indices](Particle& p1) {
@@ -285,16 +290,21 @@ TEST(CellList, IterateBoundary) {
 
 // Test if the iterator for the inner cells work correctly.
 TEST(CellList, IterateInner) {
-    CellList cells(2.0, { 21.0, 21.0, 21.0 });
+    CellList cells(3.0, { 21.0, 21.0, 21.0 });
     std::vector<Particle> particles = {
-        // TODO:
+        Particle({ -1.0, -1.0, -1.0 }, {}, 1),
+        Particle({ 23.0, 2.0, 4.0 }, {}, 2),
+        Particle({ 3.0, 13.0, 8.0 }, {}, 3),
+        Particle({ 10.0, 13.0, -1.0 }, {}, 4),
+        Particle({ 4.0, 6.0, 1.0 }, {}, 5),
+        Particle({ 13, 13.0, 13.0 }, {}, 6),
+        Particle({ 10.0, 23.0, 12.0 }, {}, 7),
+        Particle({ 3.0, 1.0, 5.0 }, {}, 8),
     };
 
     ASSERT_NO_THROW(cells.create_list(particles));
 
-    std::list<int> indices = {
-        // TODO:
-    };
+    std::list<int> indices = { 3, 5, 6, 8 };
 
     cells.loop_inner(
         [&indices](Particle& p1) {
