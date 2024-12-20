@@ -595,7 +595,7 @@ public:
      *
      * @return The distance
      */
-    HOT FLATTEN ALWAYS_INLINE [[nodiscard]] inline constexpr number_t dist_to(const vec_t __restrict__& __v) const noexcept(true) {
+    HOT FLATTEN ALWAYS_INLINE [[nodiscard]] inline constexpr number_t dist_to(const vec_t &__restrict__ __v) const noexcept(true) {
         return l_2_norm(this - __v);
     }
 };
