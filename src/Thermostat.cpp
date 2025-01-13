@@ -3,9 +3,9 @@
 void Thermostat::regulate_Temperature() {
 
     double E_kin = 0.0;
+#pragma omp parallel for schedule(auto) reduction(+ : E_kin)
     for (const auto& p : *particles) {
-        double sp = p.getV().len_squ();
-        E_kin += particles->get_type_descriptor(p.getType()).get_mass() * sp;
+        E_kin += particles->get_type_descriptor(p.getType()).get_mass() * p.getV().len_squ();
     }
 
     double T_curr = E_kin / static_cast<double>(dimensions * particles->size());
@@ -29,6 +29,7 @@ void Thermostat::regulate_Temperature() {
         beta = std::sqrt((T_curr + max_change) / T_curr);
     }
 
+#pragma omp parallel for schedule(auto)
     for (auto& p : *particles) {
         p.setV(beta * p.getV());
     }
