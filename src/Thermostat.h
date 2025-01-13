@@ -12,7 +12,6 @@
 
 #include <math.h>
 #include <memory>
-#include <omp.h>
 
 /**
  * @class Thermostat
@@ -118,7 +117,7 @@ public:
 
     /**
      * An equal operator for testing purposes.
-     *
+     * 
      * @param other The thermostat that should be compared.
      *
      * @return Boolean representation of equality between the two thermostats.
