@@ -59,6 +59,22 @@ private:
     Vec<double> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
 
 
+    /**
+     * adjacency list contains the neighbours of each cell
+     */
+    std::vector<std::vector<size_t>> adjacency_list;
+
+    /**
+     * adjacency_list_squared contains all neighbours and 2nd degree neighbours of each cell
+     */
+    std::vector<std::vector<size_t>> adjacency_list_squared;
+
+    /**
+     * contains all colors needed to group the cells into colors
+     */
+    std::vector<int> colors;
+
+
 public:
     /**
      * Define the default constructor.
@@ -95,6 +111,12 @@ public:
      * @return The corner vector.
      */
     Vec<double> get_corner_vector();
+    std::vector<std::vector<size_t>> adjacency_l();
+    static std::vector<std::vector<size_t>> adjacency_squared(std::vector<std::vector<size_t>>& adjacency);
+
+    void initialize_iterate_pairs_parallel_colors();
+    void loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+    void loop_cell_pairs_molecules_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
     /**
      * Create the cell list using the particle vector. This method must only be called if the cell list was initialized with the detailed constructor.

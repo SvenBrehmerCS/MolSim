@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <set>
+#include <unordered_set>
 
 #include <spdlog/spdlog.h>
 
@@ -70,8 +72,232 @@ Vec<double> CellList::get_corner_vector() {
     };
 }
 
+std::vector<std::vector<size_t>> CellList::adjacency_l() {
+    std::vector<std::vector<size_t>> adjacency(n_x * n_y * n_z);
+
+    for (size_t i = 0; i < n_x; i++) {
+        for (size_t j = 0; j < n_y; j++) {
+            for (size_t k = 0; k < n_z; k++) {
+                // current cell where all neighbours should be searched
+                const size_t idx = get_cell_index(i, j, k);
+
+                for (int dx = -1; dx < 1; dx++) {
+                    for (int dy = -1; dy < 1; dy++) {
+                        for (int dz = -1; dz < 1; dz++) {
+                            // TODO check if including current cell leads to bugs
+                            // coordinates of the neighbour cell, the current cell is also included
+                            if (dx == 0 && dy == 0 && dz == 0) {
+                                continue;
+                            }
+                            int nx = static_cast<int>(i) + dx;
+                            int ny = static_cast<int>(j) + dy;
+                            int nz = static_cast<int>(k) + dz;
+
+                            // check for out of bounds
+                            if (nx >= 0 && ny >= 0 && nz >= 0 && nx < static_cast<int>(n_x) && ny < static_cast<int>(n_y)
+                                && nz < static_cast<int>(n_z)) {
+                                adjacency[idx].push_back(get_cell_index(nx, ny, nz));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return adjacency;
+}
+
+std::vector<std::vector<size_t>> CellList::adjacency_squared(std::vector<std::vector<size_t>>& adjacency) {
+    std::vector<std::vector<size_t>> adjacency_squared(adjacency.size());
+
+    for (size_t node = 0; node < adjacency.size(); node++) {
+        std::unordered_set<size_t> neighbours;
+        for (auto neighbour1 : adjacency[node]) {
+            neighbours.insert(neighbour1);
+            for (auto neighbour2 : adjacency[neighbour1]) {
+                neighbours.insert(neighbour2);
+            }
+        }
+        neighbours.erase(node);
+        adjacency_squared[node] = std::vector<size_t>(neighbours.begin(), neighbours.end());
+    }
+    return adjacency_squared;
+}
+
+std::vector<int> color_greedy(const std::vector<std::vector<size_t>>& adjacency) {
+    std::vector<int> colors(adjacency.size(), -1);
+
+    for (size_t cell = 0; cell < adjacency.size(); cell++) {
+        std::set<size_t> used;
+        for (auto n : adjacency[cell]) {
+            if (colors[n] != -1) {
+                used.insert(n);
+            }
+        }
+        int c = 0;
+        while (used.find(c) != used.end()) {
+            c++;
+        }
+        colors[cell] = c;
+    }
+    return colors;
+}
+
+void CellList::initialize_iterate_pairs_parallel_colors() {
+    adjacency_list = adjacency_l();
+
+    adjacency_list_squared = adjacency_squared(adjacency_list);
+
+    colors = color_greedy(adjacency_list_squared);
+}
+
+void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+    /*
+    auto adjacency = adjacency_l();
+
+    const auto adjacency_2 = adjacency_squared(adjacency);
+
+    const auto colors = color_greedy(adjacency_2);
+    */
+    if (colors.empty() && adjacency_list_squared.empty() && adjacency_list.empty()) {
+        initialize_iterate_pairs_parallel_colors();
+    }
+
+    int num_colors = -1;
+
+#pragma omp parallel for reduction(max : num_colors)
+    for (size_t i = 0; i < colors.size(); i++) {
+        num_colors = colors[i] > num_colors ? colors[i] : num_colors;
+    }
+    // TODO check if num_colors or num_colors + 1 is required
+    // the groups vector has the colors as index and a list of cells with the same color in it
+    std::vector<std::vector<size_t>> groups(num_colors + 1);
+
+    // fill the cells into groups here
+    for (size_t cell = 0; cell < adjacency_list.size(); cell++) {
+        groups[colors[cell]].push_back(cell);
+    }
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+    for (size_t color = 0; color < groups.size(); color++) {
+        for (size_t cell = 0; cell < groups[color].size(); cell++) {
+            const size_t idx = groups[color][cell];
+
+            const size_t i = idx / (n_y * n_z);
+            const size_t tmp = idx % (n_y * n_z);
+            const size_t j = tmp / n_z;
+            const size_t k = tmp % n_z;
+
+            for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
+                auto l2_it = l1_it;
+                l2_it++;
+                for (; l2_it != cells[idx].end(); l2_it++) {
+                    if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
+                        iterator(particles[*l1_it], particles[*l2_it]);
+                    }
+                }
+            }
+
+            for (const size_t l : cells[idx]) {
+                Particle& self = particles[l];
+
+                auto process_neigbour_cells = [&](const size_t cell_idx) {
+                    for (const size_t m : cells[cell_idx]) {
+                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                            iterator(self, particles[m]);
+                        }
+                    }
+                };
+
+                // process all neighbours cells here
+                for (int dx = -1; dx < 1; dx++) {
+                    for (int dy = -1; dy < 1; dy++) {
+                        for (int dz = -1; dz < 1; dz++) {
+                            if (dx == 0 && dy == 0 && dz == 0) {
+                                continue;
+                            }
+                            const int nx = static_cast<int>(i) + dx;
+                            const int ny = static_cast<int>(j) + dy;
+                            const int nz = static_cast<int>(k) + dz;
+                            // check if valid cell
+                            if (nx >= 0 && ny >= 0 && nz >= 0 && nx < static_cast<int>(n_x) && ny < static_cast<int>(n_y)
+                                && nz < static_cast<int>(n_z)) {
+                                process_neigbour_cells(get_cell_index(nx, ny, nz));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void CellList::loop_cell_pairs_molecules_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+#pragma omp parallel for collapse(3) schedule(dynamic)
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            for (size_t k = 1; k < n_z - 1; k++) {
+                const size_t idx = get_cell_index(i, j, k);
+
+                for (size_t l = 0; l < cells[idx].size(); l++) {
+                    auto l1_it = std::next(cells[idx].begin(), l);
+                    for (auto l2_it = std::next(cells[idx].begin(), l + 1); l2_it != cells[idx].end(); l2_it++) {
+                        if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
+
+                            // TODO check if a synchronize is required here
+#pragma omp critical
+                            iterator(particles[*l1_it], particles[*l2_it]);
+                        }
+                    }
+                }
+
+                // Loop through the direct neighbors
+                for (size_t l : cells[idx]) {
+                    Particle& self = particles[l];
+
+                    auto process_neigbour_cells = [&](size_t cell_idx) {
+                        for (size_t m : cells[cell_idx]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+#pragma omp critical
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    };
+                    // Loop through the direct neighbours
+                    process_neigbour_cells(get_cell_index(i + 1, j, k));
+                    process_neigbour_cells(get_cell_index(i, j + 1, k));
+                    process_neigbour_cells(get_cell_index(i, j, k + 1));
+
+                    // Loop through the neighbours with shared edge
+                    process_neigbour_cells(get_cell_index(i + 1, j + 1, k));
+                    process_neigbour_cells(get_cell_index(i + 1, j, k + 1));
+                    process_neigbour_cells(get_cell_index(i, j + 1, k + 1));
+
+                    // Loop through the neighbors with shared corners
+                    process_neigbour_cells(get_cell_index(i + 1, j + 1, k + 1));
+
+                    // Loop backwards particles
+                    process_neigbour_cells(get_cell_index(i + 1, j - 1, k));
+                    process_neigbour_cells(get_cell_index(i + 1, j, k - 1));
+                    process_neigbour_cells(get_cell_index(i + 1, j - 1, k - 1));
+
+                    // Loop sidewards particles
+                    process_neigbour_cells(get_cell_index(i - 1, j - 1, k + 1));
+                    process_neigbour_cells(get_cell_index(i, j - 1, k + 1));
+                    process_neigbour_cells(get_cell_index(i + 1, j - 1, k + 1));
+                }
+            }
+        }
+    }
+}
+
+
 void CellList::loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     // Loop through the cells using the indices, ignore halo cells
+    loop_cell_pairs_parallel_colors(iterator, particles);
+    /*
+
     for (size_t i = 1; i < n_x - 1; i++) {
         for (size_t j = 1; j < n_y - 1; j++) {
             for (size_t k = 1; k < n_z - 1; k++) {
@@ -175,6 +401,7 @@ void CellList::loop_cell_pairs(const std::function<particle_pair_it>& iterator, 
             }
         }
     }
+    */
 }
 
 void CellList::loop_halo(const std::function<particle_it>& iterator, std::vector<Particle>& particles) {
