@@ -33,6 +33,12 @@ typedef void(particle_it)(Particle&);
  */
 class CellList {
 private:
+    enum Direction {
+        X,
+        Y,
+        Z,
+    };
+
     /**
      * Store the cells in a flat out vector.
      */
@@ -57,7 +63,6 @@ private:
      * Define the domain size and sub dimensions.
      */
     Vec<double> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
-
 
 public:
     /**
@@ -84,7 +89,7 @@ public:
      * @param x The x coordinate.
      * @param y The y coordinate.
      * @param z The z coordinate.
-     * 
+     *
      * @return The index of the cell within the cell list.
      */
     size_t get_cell_index(const size_t x, const size_t y, const size_t z);
@@ -111,6 +116,11 @@ public:
      */
     void loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
+private:
+    void loop_cell_pairs_helper(
+        const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles, const int offs_1, const int offs_2, const Direction dir);
+
+public:
     /**
      * Loop through the particles within the halo.
      *
