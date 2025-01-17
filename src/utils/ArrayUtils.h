@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <iomanip>
 #include <list>
 #include <map>
 #include <numeric>
@@ -65,10 +66,14 @@ namespace ArrayUtils {
     } // namespace is_container_impl
 
     /**
+     * @struct is_container
      * @brief Type trait to check if a given type is a container.
      * @tparam T Type to check.
      */
     template <typename T> struct is_container {
+        /**
+         * A boolean indicating if something is a container.
+         */
         static constexpr bool const value = is_container_impl::is_container<std::decay_t<T>>::value;
     };
 
@@ -76,7 +81,7 @@ namespace ArrayUtils {
      * @brief Generates a string representation of a container which fulfills the Container
      * requirement (provide cbegin and cend).
      * @tparam Container Type of Container.
-     * @param container.
+     * @param container The container that should be converted.
      * @param delimiter String that is put between items.
      * @param surround Strings to be put before and after the listing (e.g.
      * brackets).
@@ -91,6 +96,7 @@ namespace ArrayUtils {
             return surround[0] + surround[1];
         }
         std::ostringstream strStream;
+        strStream << std::fixed << std::setprecision(8);
         strStream << surround[0] << *iter;
         for (++iter; iter != end; ++iter) {
             strStream << delimiter << *iter;

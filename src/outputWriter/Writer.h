@@ -1,23 +1,23 @@
 /**
  * @file
  *
- * @brief Defines a default interface for the output writers
+ * @brief Defines a default interface for the output writers.
  */
 
 #pragma once
 
-#include "boundaries/ParticleContainer.h"
+#include "container/ParticleContainer.h"
 #include <string>
 
 /**
- * @brief Collection of writers for different output types
+ * @brief Collection of writers for different output types.
  */
 namespace outputWriter {
 
     /**
      * @class Writer
      *
-     * @brief The default class for an instance of a writer
+     * @brief The default class for an instance of a writer.
      */
     class Writer {
 
@@ -28,13 +28,12 @@ namespace outputWriter {
         virtual ~Writer() {};
 
         /**
-         * @brief Creates an output file based on the state of the given particles
+         * Creates an output file based on the state of the given particles.
          *
-         * @param particles List of particles to be plotted.
+         * @param container List of particles to be plotted.
          * @param filename The base name of the file to be written.
-         * @param iteration The number of the current iteration,
-         *        which is used to generate an unique filename
+         * @param iteration The number of the current iteration, which is used to generate an unique filename.
          */
-        virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration) = 0;
+        virtual void plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration) = 0;
     };
 } // namespace outputWriter

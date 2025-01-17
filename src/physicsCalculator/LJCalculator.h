@@ -8,8 +8,8 @@
 
 #include "Calculator.h"
 #include "Environment.h"
-#include "boundaries/ParticleContainer.h"
-#include "utils/ArrayUtils.h"
+#include "container/ParticleContainer.h"
+#include "utils/Vec.h"
 
 namespace physicsCalculator {
 
@@ -35,19 +35,38 @@ namespace physicsCalculator {
          *
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
+         * @param new_desc The particle types.
          * @param init_forces Define wether the forces should be initialized.
          * @param is_infinite A boolean indicating if the simulation ahs an infinite domain size.
          */
-        LJCalculator(
-            const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const bool is_infinite = true);
+        LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
+            const bool init_forces = true, const bool is_infinite = true);
 
         /**
          * Define a constructor for a Lenard Jones calculator.
          */
         virtual ~LJCalculator();
 
-        virtual double calculateFAbs(const Particle& p1, const Particle& p2);
+        /**
+         * Get the force absolute and sign direction between two particles.
+         *
+         * @param p1 The first particle.
+         * @param p2 The second particle.
+         * @param dist The distance between the particles.
+         * 
+         * @return The force interacting between p1 and p2.
+         */
+        virtual double calculateFAbs(const Particle& p1, const Particle& p2, const double dist);
 
-        virtual double calculateFDist(const double dist) const;
+        /**
+         * Get the force absolute and sign direction between two particles.
+         *
+         * @param dist The distance between two particles.
+         * @param t1 The type of the first particle.
+         * @param t2 The type of the second particle.
+         * 
+         * @return The force interacting between p1 and p2.
+         */
+        virtual double calculateFDist(const double dist, const int t1, const int t2) const;
     };
 } // namespace physicsCalculator

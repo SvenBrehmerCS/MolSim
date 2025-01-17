@@ -1,18 +1,12 @@
 #include "Calculator.h"
-
-#include "boundaries/InfContainer.h"
-
+#include "container/DSContainer.h"
 #include "inputReader/FileReader.h"
 #include "inputReader/Reader.h"
-
-#include "utils/ArrayUtils.h"
+#include "utils/Vec.h"
 
 #include <memory>
 #include <spdlog/spdlog.h>
 
-/**
- * @brief Collection of calculators for different levels of complexity
- */
 namespace physicsCalculator {
 
     Calculator::Calculator() = default;
@@ -21,9 +15,9 @@ namespace physicsCalculator {
         : env { new_env }
         , cont { new_cont } { }
 
-    Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles) {
+    Calculator::Calculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc) {
         env = new_env;
-        cont.reset(new InfContainer(particles));
+        cont = std::make_shared<DSContainer>(particles, new_desc);
     }
 
     ParticleContainer& Calculator::get_container() { return *cont; }
@@ -33,38 +27,38 @@ namespace physicsCalculator {
     void Calculator::calculateOldF() {
         for (Particle& p : *cont) {
             p.setOldF(p.getF());
-            p.setF({ 0.0, 0.0, 0.0 });
+            p.setF(cont->get_type_descriptor(p.getType()).get_G());
         }
 
-        spdlog::debug("Updated the old force.");
+        SPDLOG_DEBUG("Updated the old force.");
     }
 
     void Calculator::calculateX() {
         for (Particle& p : *cont) {
-            p.setX(p.getX() + env.get_delta_t() * p.getV() + (env.get_delta_t() * env.get_delta_t() * 0.5 / p.getM()) * p.getF());
+            p.setX(p.getX() + env.get_delta_t() * p.getV() + cont->get_type_descriptor(p.getType()).get_dt_dt_m() * p.getF());
         }
 
-        spdlog::debug("Updated the positions.");
+        SPDLOG_DEBUG("Updated the positions.");
     }
 
     void Calculator::calculateF() {
         cont->iterate_pairs([this](Particle& i, Particle& j) {
-            const double force = this->calculateFAbs(i, j);
+            const double dist_squ = (i.getX() - j.getX()).len_squ();
+            const double force = this->calculateFAbs(i, j, dist_squ);
 
             // Update the forces for both particles
             i.setF(force * (j.getX() - i.getX()) + i.getF());
             j.setF(force * (i.getX() - j.getX()) + j.getF());
         });
 
-        spdlog::debug("Calculated the new force.");
+        SPDLOG_DEBUG("Calculated the new force.");
     }
 
     void Calculator::calculateV() {
         for (Particle& p : *cont) {
-            p.setV(p.getV() + (env.get_delta_t() * 0.5 / p.getM()) * (p.getOldF() + p.getF()));
+            p.setV(p.getV() + cont->get_type_descriptor(p.getType()).get_dt_m() * (p.getOldF() + p.getF()));
         }
 
-        spdlog::debug("Updated the velocities.");
+        SPDLOG_DEBUG("Updated the velocities.");
     }
-
 }

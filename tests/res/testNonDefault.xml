@@ -16,8 +16,6 @@
             <boundary_xz_far>HALO</boundary_xz_far>
             <boundary_xy_far>OUTFLOW</boundary_xy_far>
         </boundaries>
-        <epsilon>10</epsilon>
-        <sigma>2.0</sigma>
         <delta_t>0.5</delta_t>
         <t_end>500</t_end>
         <dimensions>2</dimensions>
@@ -27,5 +25,12 @@
             <vy>25</vy>
             <vz>25</vz>
         </domain>
+        <g_grav>12</g_grav>
     </param>
+    <thermo>
+        <T_init>35</T_init>
+        <T_target>28</T_target>
+        <T_frequency>2</T_frequency>
+        <max_delta_T>5</max_delta_T>
+    </thermo>
 </simulation>

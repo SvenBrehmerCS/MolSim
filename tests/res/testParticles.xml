@@ -16,8 +16,6 @@
             <boundary_xz_far></boundary_xz_far>
             <boundary_xy_far></boundary_xy_far>
         </boundaries>
-        <epsilon></epsilon>
-        <sigma></sigma>
         <delta_t></delta_t>
         <t_end></t_end>
         <dimensions></dimensions>
@@ -27,6 +25,7 @@
             <vy>25</vy>
             <vz>25</vz>
         </domain>
+        <g_grav></g_grav>
     </param>
     <particle>
         <position>

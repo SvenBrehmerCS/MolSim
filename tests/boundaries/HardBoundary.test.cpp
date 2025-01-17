@@ -6,10 +6,10 @@
 TEST(HardBoundary, ParticleReflectCorrectly) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ -1.0, 0.0, 2.0 }, { 2.0, 1.0, 1.0 }, 1.0),
-        Particle({ 1.0, 12.0, 2.0 }, { 1.0, -3.0, -2.0 }, 1.0),
-        Particle({ 3.0, -2.0, 13.0 }, { 2.0, 2.0, -1.0 }, 1.0),
-        Particle({ 2.0, 5.0, -2.0 }, { 1.0, 3.0, -2.0 }, 1.0),
+        Particle({ -1.0, 0.0, 2.0 }, { 2.0, 1.0, 1.0 }, 0),
+        Particle({ 1.0, 12.0, 2.0 }, { 1.0, -3.0, -2.0 }, 0),
+        Particle({ 3.0, -2.0, 13.0 }, { 2.0, 2.0, -1.0 }, 0),
+        Particle({ 2.0, 5.0, -2.0 }, { 1.0, 3.0, -2.0 }, 0),
     };
 
     particles[0].setF({ 1.0, 4.0, 2.0 });
@@ -22,10 +22,10 @@ TEST(HardBoundary, ParticleReflectCorrectly) {
     particles[3].setOldF({ -6.0, 1.0, -6.0 });
 
     std::vector<Particle> reflected = {
-        Particle({ 1.0, 0.0, 2.0 }, { -2.0, 1.0, 1.0 }, 1.0),
-        Particle({ 1.0, 8.0, 2.0 }, { 1.0, 3.0, -2.0 }, 1.0),
-        Particle({ 3.0, 2.0, 7.0 }, { 2.0, -2.0, 1.0 }, 1.0),
-        Particle({ 2.0, 5.0, 2.0 }, { 1.0, 3.0, 2.0 }, 1.0),
+        Particle({ 1.0, 0.0, 2.0 }, { -2.0, 1.0, 1.0 }, 0),
+        Particle({ 1.0, 8.0, 2.0 }, { 1.0, 3.0, -2.0 }, 0),
+        Particle({ 3.0, 2.0, 7.0 }, { 2.0, -2.0, 1.0 }, 0),
+        Particle({ 2.0, 5.0, 2.0 }, { 1.0, 3.0, 2.0 }, 0),
     };
 
     reflected[0].setF({ 1.0, 4.0, 2.0 });
@@ -51,7 +51,8 @@ TEST(HardBoundary, ParticleReflectCorrectly) {
         boundary_x_far.postX(particles[i]);
         boundary_y_far.postX(particles[i]);
         boundary_z_far.postX(particles[i]);
-        EXPECT_TRUE(particles[i] == reflected[i]) << "The particle " << i << " was not reflected correctly.";
+        EXPECT_TRUE(particles[i] == reflected[i]) << "The particle " << i << " was not reflected correctly. (expected: " << reflected[i].toString()
+                                                  << ", got: " << particles[i].toString() << ")";
     }
 }
 
@@ -59,10 +60,10 @@ TEST(HardBoundary, ParticleReflectCorrectly) {
 TEST(HardBoundary, ParticleNoFChange) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, -1.0, -3.0 }, { 1.0, -4.0, 2.0 }, 0.5, 0),
-        Particle({ 7.0, 3.0, 6.0 }, { -2.0, -2.0, 1.0 }, 2.5, 1),
-        Particle({ 14.0, 15.0, 16.0 }, { -5.0, 2.0, -4.0 }, 2.0, 1),
-        Particle({ 12, 61.0, 23.0 }, { -21.0, 3.0, 2.0 }, 1.0, 2),
+        Particle({ 2.0, -1.0, -3.0 }, { 1.0, -4.0, 2.0 }, 0),
+        Particle({ 7.0, 3.0, 6.0 }, { -2.0, -2.0, 1.0 }, 1),
+        Particle({ 14.0, 15.0, 16.0 }, { -5.0, 2.0, -4.0 }, 1),
+        Particle({ 12, 61.0, 23.0 }, { -21.0, 3.0, 2.0 }, 2),
     };
 
     particles[0].setF({ 1.0, 4.0, 2.0 });
@@ -88,7 +89,7 @@ TEST(HardBoundary, ParticleNoFChange) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, {}, false);
 
     HardBoundary boundary_x_near(0.0, 0);
     HardBoundary boundary_y_near(0.0, 1);
@@ -117,11 +118,11 @@ TEST(HardBoundary, ParticleNoFChange) {
 TEST(HardBoundary, ParticleInDomain) {
     // Initialize the list of particles
     std::vector<Particle> particles = {
-        Particle({ 2.0, 1.0, 3.0 }, { 1.0, -4.0, 2.0 }, 0.5, 0),
-        Particle({ 7.0, 3.0, 6.0 }, { -2.0, -2.0, 1.0 }, 2.5, 1),
-        Particle({ 6.0, 12.0, 8.0 }, { -5.0, 2.0, -4.0 }, 2.0, 1),
-        Particle({ 4.0, 1.0, 7.0 }, { -21.0, 3.0, 2.0 }, 1.0, 2),
-        Particle({ 0.0, 0.0, 0.0 }, { -1.0, 3.0, -3.0 }, 1.0, 2),
+        Particle({ 2.0, 1.0, 3.0 }, { 1.0, -4.0, 2.0 }, 0),
+        Particle({ 7.0, 3.0, 6.0 }, { -2.0, -2.0, 1.0 }, 1),
+        Particle({ 6.0, 12.0, 8.0 }, { -5.0, 2.0, -4.0 }, 1),
+        Particle({ 4.0, 1.0, 7.0 }, { -21.0, 3.0, 2.0 }, 2),
+        Particle({ 0.0, 0.0, 0.0 }, { -1.0, 3.0, -3.0 }, 2),
     };
 
     particles[0].setF({ 1.0, 4.0, 2.0 });
@@ -149,7 +150,7 @@ TEST(HardBoundary, ParticleInDomain) {
     ASSERT_NO_THROW(env = Environment(argc, argv));
 
     // Initialize the Calculator
-    physicsCalculator::LJCalculator calc(env, particles, false);
+    physicsCalculator::LJCalculator calc(env, particles, {}, false);
 
     HardBoundary boundary_x_near(0.0, 0);
     HardBoundary boundary_y_near(0.0, 1);

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "boundaries/Boundary.h"
 #include "physicsCalculator/Calculator.h"
 
@@ -17,23 +19,33 @@
 class Stepper {
 private:
     /**
-     * An array storing the domain size.
+     * An array storing the boundary conditions.
      */
-    std::array<Boundary*, 6> bc;
+    std::array<std::unique_ptr<Boundary>, 6> bc;
 
     /**
-     * A boolean indicating if the simulation has an infinite domain.
+     * An array storing the boundary condition descriptors.
      */
-    bool inf;
+    std::array<BoundaryType, 6> bound_t;
+
+    /**
+     * An array storing the domain size.
+     */
+    Vec<double> domain;
+
+    /**
+     * A boolean indicating if the simulation has an outflow boundary.
+     */
+    bool out = false;
 
 public:
     /**
      * Create a stepper.
      *
-     * @param boundaries The boundaries of the simulation.
-     * @param is_inf A boolean indicating if the simulation is an infinite domain.
+     * @param bt The boundary types used for the simulation.
+     * @param new_domain The size of the new domain.
      */
-    Stepper(const std::array<Boundary*, 6>& boundaries, const bool is_inf);
+    Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain);
 
     /**
      * Provide a default destructor for a stepper.

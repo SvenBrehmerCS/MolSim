@@ -84,22 +84,30 @@ Initialize the Tags in the XML File, the values will be used to run the simulati
 | **particle**   | Information needed to generate a single particle.          | `type="particle_t", minOccurs="0", maxOccurs="unbounded"` |
 | **cuboid**     | Information needed to generate a cuboid of particles.      | `type="cuboid_t", minOccurs="0", maxOccurs="unbounded"`   |
 | **disc**       | Information needed to generate a disc of particles.        | `type="disc_t", minOccurs="0", maxOccurs="unbounded"`     |
+| **thermo**     | Information needed to specify the thermostat.              | `type="thermo_t", minOccurs="0"`                          |
+| **checkpoint** | File address of the checkpoint to be loaded.               | `type="xs:string", minOccurs="0"`                         |
 | **name**       | Desired name prefix for the output file.                   | `type="xs:string", default="MD_vtk"`                      |
 | **format**     | Desired output format.                                     | `default="VTK"`                                           |
 | **frequency**  | Number of time steps between outputs.                      | `default="10"`                                            |
 | **calc**       | Force calculation mode (e.g., Lennard-Jones).              | `default="LJ_FULL"`                                       |
-| **bound**      | Boundary condition for the simulation.                     | `default="INF_CONT"`                                      |
-| **epsilon**    | Depth of the Lennard-Jones potential well.                 | `default="5.0"`                                           |
-| **sigma**      | Zero-crossing of the Lennard-Jones potential.              | `default="1.0"`                                           |
+| **boundaries** | Boundary condition for the simulation.                     | `default="INF_CONT"`                                      |
 | **delta_t**    | Simulation time step.                                      | `default="0.014"`                                         |
 | **t_end**      | End time for the simulation.                               | `default="1000.0"`                                        |
 | **dimensions** | Number of coordinates affected by Brownian motion.         | `default="3"`                                             |
 | **r_cutoff**   | Distance beyond which force calculations are neglected.    | `default="3.0"`                                           |
+| **domain**     | Size of the simulation in each coordinate direction.       | `type="pdvector""`                                        |
+| **g_grav**     | Distance beyond which force calculations are neglected.    | `type="xs:double" default="0.0"`                          |
 | **position**   | Position of the particle or object.                        | `type="dvector"`                                          |
 | **velocity**   | Velocity of the particle or object.                        | `type="dvector"`                                          |
+| **count**      | Number of particles in each direction for cuboids.         | `type="pivector"`                                         |
 | **m**          | Mass of the particle.                                      | `type="xs:double"`                                        |
-| **count**      | Number of particles in each direction for cuboids.         | `type="uivector"`                                         |
+| **sigma**      | Zero-crossing of the Lennard-Jones potential.              | `default="1.0"`                                           |
+| **epsilon**    | Depth of the Lennard-Jones potential well.                 | `default="5.0"`                                           |
 | **h**          | Distance between particles in cuboids or discs.            | `type="xs:double"`                                        |
 | **b_motion**   | Average Brownian motion in the cuboid or disc.             | `default="0.0"`                                           |
 | **center**     | Center position of the disc.                               | `type="dvector"`                                          |
 | **r**          | Radius of the disc in terms of molecules along the radius. | `type="xs:double"`                                        |
+| **T_init**     | Initial temperature of the simulation.                     | `minOccurs="0" maxOccurs="1"`                             |
+| **T_target**   | Target temperature of the simulation.                      | `minOccurs="0" maxOccurs="1"`                             |
+| **T_frequency**| Simulation steps between thermostat applications.          | `default="10000"`                                         |
+| **max_delta_T**| Absolute maximum value of temperature change.              | `minOccurs="0"`                                           |

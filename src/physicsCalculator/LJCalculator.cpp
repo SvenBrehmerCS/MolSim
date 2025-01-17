@@ -2,24 +2,25 @@
 
 #include <spdlog/spdlog.h>
 
-#include "boundaries/BoxContainer.h"
-#include "boundaries/InfContainer.h"
+#include "container/BoxContainer.h"
+#include "container/DSContainer.h"
 
 namespace physicsCalculator {
     LJCalculator::LJCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
-        : Calculator(new_env, new_cont) {
+        : Calculator { new_env, new_cont } {
         // Initialize the forces
         calculateF();
     }
 
-    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces, const bool is_infinite) {
-        spdlog::warn("Called a LJCalculator constructor which should only be used for testing.");
+    LJCalculator::LJCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
+        const bool init_forces, const bool is_infinite) {
+        SPDLOG_WARN("Called a LJCalculator constructor which should only be used for testing.");
         env = new_env;
 
         if (is_infinite) {
-            cont.reset(new InfContainer(particles, env.get_domain_size()));
+            cont = std::make_shared<DSContainer>(particles, env.get_domain_size(), new_desc);
         } else {
-            cont.reset(new BoxContainer(particles, env.get_r_cutoff(), env.get_domain_size()));
+            cont = std::make_shared<BoxContainer>(particles, env.get_r_cutoff(), env.get_domain_size(), new_desc);
         }
 
         // Initialize the forces
@@ -30,19 +31,16 @@ namespace physicsCalculator {
 
     LJCalculator::~LJCalculator() = default;
 
-    double LJCalculator::calculateFAbs(const Particle& p1, const Particle& p2) {
+    double LJCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist_squ) {
         // Calculate the distance and force experienced by two particles
-        const double distance = ArrayUtils::L2Norm(p1.getX() - p2.getX());
-
-        return calculateFDist(distance);
+        return calculateFDist(dist_squ, p1.getType(), p2.getType());
     }
 
-    double LJCalculator::calculateFDist(const double dist) const {
+    double LJCalculator::calculateFDist(const double dist_squ, const int t1, const int t2) const {
         // Calculate the powers of (sigma / distance)
-        const double term = (env.get_sigma() / dist);
-        const double term_to_2 = term * term;
+        const double term_to_2 = (cont->get_type_pair_descriptor(t1, t2).get_sigma_squared() / (dist_squ));
         const double term_to_6 = term_to_2 * term_to_2 * term_to_2;
 
-        return (24.0 * env.get_epsilon() / (dist * dist)) * (term_to_6 - 2.0 * term_to_6 * term_to_6);
+        return (cont->get_type_pair_descriptor(t1, t2).get_scaled_epsilon() / (dist_squ)) * std::fma(-2.0 * term_to_6, term_to_6, term_to_6);
     }
 } // namespace physicsCalculator

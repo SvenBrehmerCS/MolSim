@@ -8,8 +8,8 @@
 
 #include "Calculator.h"
 #include "Environment.h"
-#include "boundaries/ParticleContainer.h"
-#include "utils/ArrayUtils.h"
+#include "container/ParticleContainer.h"
+#include "utils/Vec.h"
 
 namespace physicsCalculator {
 
@@ -35,10 +35,12 @@ namespace physicsCalculator {
          *
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
+         * @param new_desc The particle types.
          * @param init_forces Define wether the forces should be initialized.
+         * @param type Type container holding the particles.
          */
-        GravityCalculator(
-            const Environment& new_env, const std::vector<Particle>& particles, const bool init_forces = true, const BoundaryType type = INF_CONT);
+        GravityCalculator(const Environment& new_env, const std::vector<Particle>& particles, const std::vector<TypeDesc>& new_desc,
+            const bool init_forces = true, const BoundaryType type = INF_CONT);
 
         /**
          * Define a constructor for a gravity calculator.
@@ -47,12 +49,24 @@ namespace physicsCalculator {
 
         /**
          * Get the force absolute and sign direction between two particles.
+         *
+         * @param p1 The first particle.
+         * @param p2 The second particle.
+         * @param dist_squ The distance between the particles.
+         *
+         * @return The force interacting between p1 and p2.
          */
-        virtual double calculateFAbs(const Particle& p1, const Particle& p2);
+        virtual double calculateFAbs(const Particle& p1, const Particle& p2, const double dist_squ);
 
         /**
          * Get the force absolute and sign direction between two particles.
+         *
+         * @param dist_squ The squared distance between two particles.
+         * @param t1 The type of the first particle.
+         * @param t2 The type of the second particle.
+         *
+         * @return The force interacting between p1 and p2.
          */
-        virtual double calculateFDist(const double dist) const;
+        virtual double calculateFDist(const double dist_squ, const int t1, const int t2) const;
     };
 } // namespace physicsCalculator

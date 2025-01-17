@@ -29,12 +29,12 @@ namespace outputWriter {
         /**
          * Creates the XYZ file and plots the particles
          *
-         * @param particles List of particles to be plotted.
+         * @param container List of particles to be plotted.
          * @param filename The base name of the file to be written.
          * @param iteration The number of the current iteration,
          *        which is used to generate an unique filename
          */
-        virtual void plotParticles(ParticleContainer& container, const std::string& filename, int iteration);
+        virtual void plotParticles(const ParticleContainer& container, const std::string& filename, const int iteration);
     };
 
 } // namespace outputWriter

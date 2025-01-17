@@ -13,11 +13,11 @@
  * Print an error message and exit immediately with EXIT_FAILURE.
  */
 static void panic_exit(const char* message) {
-    spdlog::critical(message);
+    SPDLOG_CRITICAL(message);
     std::exit(EXIT_FAILURE);
 }
 
-Environment::Environment() { spdlog::trace("Initialized with a standard environment."); }
+Environment::Environment() { SPDLOG_TRACE("Initialized with a standard environment."); }
 
 Environment::Environment(const int argc, const char* argv[]) {
     // Test if there is a request for a help message within all passed arguments
@@ -80,7 +80,7 @@ Environment::Environment(const int argc, const char* argv[]) {
             std::cout << "        The default force model is lj." << std::endl;
             std::cout << std::endl;
             std::cout << "Each argument may only be provided once. If no argument is provided the default" << std::endl;
-            std::cout << "value is being used. There may not be any blank spaces seperating the option" << std::endl;
+            std::cout << "value is being used. There may not be any blank spaces separating the option" << std::endl;
             std::cout << "and its value. The output files will be placed in the folder, from where the" << std::endl;
             std::cout << "program is executed." << std::endl;
             std::cout << std::endl;
@@ -153,7 +153,7 @@ Environment::Environment(const int argc, const char* argv[]) {
                 panic_exit("The option delta_t must only have one floating point number as input.");
             }
 
-            if (t_end <= 0.0) {
+            if (delta_t <= 0.0) {
                 panic_exit("The option delta_t must have a strictly positive value.");
             }
 
@@ -393,45 +393,60 @@ Environment::Environment(const int argc, const char* argv[]) {
         panic_exit("Unsupported input file type.");
     }
 
-    spdlog::debug("The program was executed using the command line arguments.");
-    spdlog::debug("    t_end = {} ({})", t_end, btos(default_end));
-    spdlog::debug("    delta_t = {} ({})", delta_t, btos(default_delta));
-    spdlog::debug("    sigma = {} ({})", sigma, btos(default_sigma));
-    spdlog::debug("    epsilon = {} ({})", epsilon, btos(default_epsilon));
-    spdlog::debug("    print_step = {} ({})", print_step, btos(default_print_step));
-    spdlog::debug("    input_file = {}", input_file);
-    spdlog::debug("    output_file = {} ({})", output_file, btos(default_out_name));
-    spdlog::debug("    format = {} ({})", static_cast<int>(output_format), btos(default_file_format));
-    spdlog::debug("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
-    spdlog::debug("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
-}
-
-Environment::Environment(const Environment& env) {
-    t_end = env.get_t_end();
-    delta_t = env.get_delta_t();
-    epsilon = env.get_epsilon();
-    sigma = env.get_sigma();
-    print_step = env.get_print_step();
-    input_file = env.get_input_file_name();
-    output_file = env.get_output_file_name();
-    output_format = env.get_output_file_format();
-    calc = env.get_calculator_type();
-    r_cutoff = env.get_r_cutoff();
+    SPDLOG_DEBUG("The program was executed using the command line arguments.");
+    SPDLOG_DEBUG("    t_end = {} ({})", t_end, btos(default_end));
+    SPDLOG_DEBUG("    delta_t = {} ({})", delta_t, btos(default_delta));
+    SPDLOG_DEBUG("    sigma = {} ({})", sigma, btos(default_sigma));
+    SPDLOG_DEBUG("    epsilon = {} ({})", epsilon, btos(default_epsilon));
+    SPDLOG_DEBUG("    print_step = {} ({})", print_step, btos(default_print_step));
+    SPDLOG_DEBUG("    input_file = {}", input_file);
+    SPDLOG_DEBUG("    output_file = {} ({})", output_file, btos(default_out_name));
+    SPDLOG_DEBUG("    format = {} ({})", static_cast<int>(output_format), btos(default_file_format));
+    SPDLOG_DEBUG("    log_level = {} ({})", static_cast<int>(spdlog::get_level()), btos(default_log_level));
+    SPDLOG_DEBUG("    calc = {} ({})", static_cast<int>(calc), btos(default_calculator));
 }
 
 Environment::~Environment() = default;
 
-const char* Environment::get_input_file_name() const { return input_file; }
+const bool Environment::requires_direct_sum() const {
+    for (size_t i = 0; i < 6; i++) {
+        if (get_boundary_type()[i] == INF_CONT) {
+            return true;
+        }
+    }
 
-InputFormat Environment::get_input_file_format() const { return input_format; }
+    return false;
+}
 
-const char* Environment::get_output_file_name() const { return output_file.c_str(); }
+void Environment::assert_boundary_conditions() {
+    bool has_inf = false;
+    bool has_anti_inf = false;
+    bool has_ghost = false;
 
-OutputFormat Environment::get_output_file_format() const { return output_format; }
+    for (size_t i = 0; i < 6; i++) {
+        if (get_boundary_type()[i] == INF_CONT) {
+            has_inf = true;
+        }
 
-CalculatorType Environment::get_calculator_type() const { return calc; }
+        if (get_boundary_type()[i] == OUTFLOW || get_boundary_type()[i] == PERIODIC) {
+            has_anti_inf = true;
+        }
 
-std::array<BoundaryType, 6> Environment::get_boundary_type() const {
+        if (get_boundary_type()[i] == HALO) {
+            has_ghost = true;
+        }
+    }
+
+    if (has_inf && has_anti_inf) {
+        panic_exit("The infinite boundary condition and the outflow condition may not be combined.");
+    }
+
+    if (has_ghost && calc == GRAVITY) {
+        panic_exit("The gravity calculator must not be combined with a ghost particle boundary.");
+    }
+}
+
+const std::array<BoundaryType, 6> Environment::get_boundary_type() const {
     return std::array<BoundaryType, 6> {
         yz_near,
         xz_near,
@@ -442,36 +457,6 @@ std::array<BoundaryType, 6> Environment::get_boundary_type() const {
     };
 }
 
-int Environment::get_print_step() const { return print_step; }
-
-double Environment::get_sigma() const { return sigma; }
-
-double Environment::get_epsilon() const { return epsilon; }
-
-double Environment::get_delta_t() const { return delta_t; }
-
-double Environment::get_t_end() const { return t_end; }
-
-double Environment::get_r_cutoff() const { return r_cutoff; }
-
-std::array<double, 3> Environment::get_domain_size() const { return domain_size; }
-
-void Environment::set_t_end(const double t_end) { this->t_end = t_end; }
-
-void Environment::set_delta_t(const double delta_t) { this->delta_t = delta_t; }
-
-void Environment::set_sigma(const double sigma) { this->sigma = sigma; }
-
-void Environment::set_epsilon(const double epsilon) { this->epsilon = epsilon; }
-
-void Environment::set_print_step(const int print_step) { this->print_step = print_step; }
-
-void Environment::set_output_file_name(std::string& output_file_name) { this->output_file = output_file_name; }
-
-void Environment::set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
-
-void Environment::set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
-
 void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_type) {
     yz_near = boundary_type[0];
     xz_near = boundary_type[1];
@@ -480,7 +465,3 @@ void Environment::set_boundary_type(const std::array<BoundaryType, 6> boundary_t
     xz_far = boundary_type[4];
     xy_far = boundary_type[5];
 }
-
-void Environment::set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
-
-void Environment::set_domain_size(const std::array<double, 3> domain_size) { this->domain_size = domain_size; }
