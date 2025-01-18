@@ -9,6 +9,7 @@
 
 #include <spdlog/spdlog.h>
 
+
 CellList::CellList(const double rc, const Vec<double>& domain) {
     this->rc = rc;
     rc_squ = rc * rc;
@@ -31,6 +32,8 @@ CellList::CellList(const double rc, const Vec<double>& domain) {
     domain_xy = { domain[0], domain[1], 0.0 };
     domain_xz = { domain[0], 0.0, domain[2] };
     domain_yz = { 0.0, domain[1], domain[2] };
+
+    initialize_iterate_pairs_parallel_colors();
 }
 
 void CellList::create_list(const std::vector<Particle>& particles) {
@@ -75,6 +78,7 @@ Vec<double> CellList::get_corner_vector() {
 std::vector<std::vector<size_t>> CellList::adjacency_l() {
     std::vector<std::vector<size_t>> adjacency(cells.size());
 
+#pragma omp parallel for collapse(3) schedule(dynamic)
     for (size_t i = 1; i < n_x - 1; i++) {
         for (size_t j = 1; j < n_y - 1; j++) {
             for (size_t k = 1; k < n_z - 1; k++) {
@@ -88,15 +92,7 @@ std::vector<std::vector<size_t>> CellList::adjacency_l() {
                             if (dx == 0 && dy == 0 && dz == 0) {
                                 continue;
                             }
-                            const int nx = static_cast<int>(i) + dx;
-                            const int ny = static_cast<int>(j) + dy;
-                            const int nz = static_cast<int>(k) + dz;
-
-                            // check for out of bounds
-                            if (nx >= 0 && ny >= 0 && nz >= 0 && nx < static_cast<int>(n_x) && ny < static_cast<int>(n_y)
-                                && nz < static_cast<int>(n_z)) {
-                                adjacency[idx].push_back(get_cell_index(nx, ny, nz));
-                            }
+                            adjacency[idx].push_back(get_cell_index(i + dx, j + dy, k + dz));
                         }
                     }
                 }
@@ -109,6 +105,7 @@ std::vector<std::vector<size_t>> CellList::adjacency_l() {
 std::vector<std::vector<size_t>> CellList::adjacency_squared(std::vector<std::vector<size_t>>& adjacency) {
     std::vector<std::vector<size_t>> adjacency_squared(adjacency.size());
 
+#pragma omp parallel for schedule(dynamic)
     for (size_t node = 0; node < adjacency.size(); node++) {
         std::unordered_set<size_t> neighbours;
         for (auto neighbour1 : adjacency[node]) {
@@ -118,14 +115,14 @@ std::vector<std::vector<size_t>> CellList::adjacency_squared(std::vector<std::ve
             }
         }
         neighbours.erase(node);
-        adjacency_squared[node] = std::vector<size_t>(neighbours.begin(), neighbours.end());
+        adjacency_squared[node] = std::vector(neighbours.begin(), neighbours.end());
     }
     return adjacency_squared;
 }
 
 std::vector<int> color_greedy(const std::vector<std::vector<size_t>>& adjacency) {
-    std::vector<int> colors(adjacency.size(), -1);
-
+    std::vector colors(adjacency.size(), -1);
+#pragma omp parallel for schedule(dynamic)
     for (size_t cell = 0; cell < adjacency.size(); cell++) {
         std::set<int> used;
         for (auto n : adjacency[cell]) {
@@ -148,12 +145,7 @@ void CellList::initialize_iterate_pairs_parallel_colors() {
     adjacency_list_squared = adjacency_squared(adjacency_list);
 
     colors = color_greedy(adjacency_list_squared);
-}
 
-void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-    if (colors.empty() && adjacency_list_squared.empty() && adjacency_list.empty()) {
-        initialize_iterate_pairs_parallel_colors();
-    }
     int num_colors = -1;
 
 #pragma omp parallel for reduction(max : num_colors)
@@ -161,23 +153,34 @@ void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair
         num_colors = colors[i] > num_colors ? colors[i] : num_colors;
     }
     // the groups vector has the colors as index and a list of cells with the same color in it
-    std::vector<std::vector<size_t>> groups(num_colors + 1);
+    const std::vector<std::vector<size_t>> tmp(num_colors + 1);
+    groups = tmp;
 
     // fill the cells into groups here
     for (size_t cell = 0; cell < adjacency_list.size(); cell++) {
         groups[colors[cell]].push_back(cell);
     }
-#pragma omp parallel for schedule(dynamic)
+}
+
+void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+#pragma omp parallel for schedule(dynamic) collapse(2)
     for (size_t color = 0; color < groups.size(); color++) {
         for (size_t cell = 0; cell < groups[color].size(); cell++) {
             const size_t idx = groups[color][cell];
 
+#pragma omp parallel for schedule(dynamic)
             for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
                 auto l2_it = l1_it;
                 l2_it++;
+#pragma omp parallel for simd
                 for (; l2_it != cells[idx].end(); l2_it++) {
-                    if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
-                        iterator(particles[*l1_it], particles[*l2_it]);
+#pragma omp simd
+                    Particle& p1 = particles[*l1_it];
+                    Particle& p2 = particles[*l2_it];
+                    auto diff = p1.getX() - p2.getX();
+                    double dis_squa = diff.len_squ();
+                    if (dis_squa <= rc_squ) {
+                        iterator(p1, p2);
                     }
                 }
             }
@@ -189,9 +192,12 @@ void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair
                     if (idx < n) {
                         continue;
                     }
+#pragma omp parallel for simd
                     for (const size_t m : cells[n]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
+#pragma omp simd
+                        Particle& p = particles[m];
+                        if ((self.getX() - p.getX()).len_squ() <= rc_squ) {
+                            iterator(self, p);
                         }
                     }
                 }
@@ -212,8 +218,6 @@ void CellList::loop_cell_pairs_molecules_parallel(const std::function<particle_p
                     auto l1_it = std::next(cells[idx].begin(), l);
                     for (auto l2_it = std::next(cells[idx].begin(), l + 1); l2_it != cells[idx].end(); l2_it++) {
                         if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
-
-                            // TODO check if a synchronize is required here
 #pragma omp critical
                             iterator(particles[*l1_it], particles[*l2_it]);
                         }

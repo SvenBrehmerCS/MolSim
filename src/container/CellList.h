@@ -12,6 +12,7 @@
 #include <list>
 #include <vector>
 
+
 /**
  * @typedef particle_pair_it
  *
@@ -73,6 +74,12 @@ private:
      * contains all colors needed to group the cells into colors
      */
     std::vector<int> colors;
+
+    // the groups vector has the colors as index and a list of cells with the same color in it
+
+    int num_colors;
+
+    std::vector<std::vector<size_t>> groups;
 
 
 public:
