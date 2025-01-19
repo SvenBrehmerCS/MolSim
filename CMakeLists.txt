@@ -4,8 +4,6 @@
 #
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER icpx)
-
 # define project name, version
 project(PSEMolDyn_GroupB VERSION 0.0.1)
 

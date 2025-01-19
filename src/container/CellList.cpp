@@ -163,18 +163,15 @@ void CellList::initialize_iterate_pairs_parallel_colors() {
 }
 
 void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-#pragma omp parallel for schedule(dynamic) collapse(2)
+#pragma omp parallel for schedule(dynamic)
     for (size_t color = 0; color < groups.size(); color++) {
         for (size_t cell = 0; cell < groups[color].size(); cell++) {
             const size_t idx = groups[color][cell];
 
 #pragma omp parallel for schedule(dynamic)
             for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
-                auto l2_it = l1_it;
-                l2_it++;
-#pragma omp parallel for simd
-                for (; l2_it != cells[idx].end(); l2_it++) {
-#pragma omp simd
+#pragma omp parallel for
+                for (auto l2_it = l1_it + 1; l2_it != cells[idx].end(); l2_it++) {
                     Particle& p1 = particles[*l1_it];
                     Particle& p2 = particles[*l2_it];
                     auto diff = p1.getX() - p2.getX();
@@ -192,9 +189,8 @@ void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair
                     if (idx < n) {
                         continue;
                     }
-#pragma omp parallel for simd
+#pragma omp parallel for
                     for (const size_t m : cells[n]) {
-#pragma omp simd
                         Particle& p = particles[m];
                         if ((self.getX() - p.getX()).len_squ() <= rc_squ) {
                             iterator(self, p);
