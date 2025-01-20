@@ -12,7 +12,7 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebIn
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # Update the compile options for the release mode
-    set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
+    set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native -fopenmp")
 endif()
 
 # set Release as the default build type if it is not yet set.
