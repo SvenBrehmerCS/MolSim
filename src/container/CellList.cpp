@@ -75,7 +75,7 @@ void CellList::loop_cell_pairs(const std::function<particle_pair_it>& iterator, 
         for (size_t y = 1; y < 3; y++) {
             for (size_t z = 1; z < 3; z++) {
 // Loop through the cells using the indices, ignore halo cells
-#pragma omp for collapse(3)
+#pragma omp parallel for collapse(3)
                 for (size_t i = x; i < n_x - 1; i += 3) {
                     for (size_t j = y; j < n_y - 1; j += 3) {
                         for (size_t k = z; k < n_z - 1; k += 3) {
