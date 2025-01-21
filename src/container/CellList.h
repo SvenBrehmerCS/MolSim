@@ -10,6 +10,7 @@
 
 #include <functional>
 #include <list>
+#include <omp.h>
 #include <vector>
 
 /**
@@ -124,6 +125,14 @@ private:
      * @param particles The particles vector.
      */
     void loop_cell_pairs_serial(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * A parallel implementation of loop_cell_pairs_serial(iterator, particles).
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_cell_pairs_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
     /**
      * A looping algorithm separating cell interactions to update domain slices parallel.
