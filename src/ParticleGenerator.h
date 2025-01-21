@@ -56,4 +56,20 @@ public:
      */
     int generateDisc(ParticleContainer& container, int num_particles, const Vec<double>& center, const Vec<double>& velocity, int type, double radius,
         double h, double b_m, int dim);
+    
+    /**
+     * Generates the membrane from the given parameters.
+     *
+     * @param container the particle container where the particles will be stored.
+     * @param num_particles the offset inside the container where the cuboid starts at.
+     * @param x the position of the lower left corner of the cuboid.
+     * @param v the base velocity of each particle.
+     * @param type the type of the particles.
+     * @param N the number of particles in each dimension.
+     * @param h the distance between particles.
+     * @param b_m the brownian motion.
+     * @param num_dimensions the number of dimensions.
+     **/
+    void generateMembrane(ParticleContainer& container, int num_particles, const Vec<double>& x, const Vec<double>& v, int type,
+        const std::array<int, 2>& N, double h, double b_m, int num_dimensions);
 };

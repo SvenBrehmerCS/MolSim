@@ -60,6 +60,12 @@ bool Particle::isCornerNeighbour(const size_t idx) const {
     return (idx == neighbors[4]) | (idx == neighbors[5]) | (idx == neighbors[6]) | (idx == neighbors[7]);
 }
 
+void Particle::setIndex(size_t idx) { index = idx; }
+
+void Particle::setNeighbors(const std::array<size_t, 8>& new_neighbors) { neighbors = new_neighbors; }
+
+void Particle::setInMolecule(bool in_molecule_arg) { in_molecule = in_molecule_arg; }
+
 void Particle::setX(const Vec<double>& x_new) { x = x_new; }
 
 void Particle::setV(const Vec<double>& v_new) { v = v_new; }

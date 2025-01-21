@@ -95,3 +95,36 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
     }
     return num_particles_added;
 }
+
+void generateMembrane(ParticleContainer& container, int num_particles, const Vec<double>& x, const Vec<double>& v, int type,
+    const std::array<int, 3>& N, double h, double b_m, int dim) {
+    int N1 = N[0];
+    int N2 = N[1];
+    Vec<double> boltz_v;
+
+    auto particle = container.begin();
+    particle += num_particles;
+
+    for (int j = 0; j < N2; j++) {
+        for (int k = 0; k < N1; k++) {
+            // set place
+            particle->setX({ x[0] + k * h, x[1] + j * h, x[2] });
+            particle->setV(v);
+            particle->setType(type);
+            particle->setInMolecule(true);
+            particle->setIndex(num_particles);
+            particle->setNeighbors({
+                k == 0 ? SIZE_MAX : num_particles - 1,
+                k == N1 - 1 ? SIZE_MAX : num_particles + 1,
+                j == 0 ? SIZE_MAX : num_particles - N1,
+                j == N2 - 1 ? SIZE_MAX : num_particles + N1,
+                k == 0 || j == 0 ? SIZE_MAX : num_particles - N1 - 1,
+                k == N1 - 1 || j == 0 ? SIZE_MAX : num_particles + N1 - 1,
+                k == 0 || j == N2 - 1 ? SIZE_MAX : num_particles - N1 + 1,
+                k == N1 - 1 || j == N2 - 1 ? SIZE_MAX : num_particles + N1 + 1,
+            });
+            particle++;
+            num_particles++;
+        }
+    }
+}

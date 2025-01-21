@@ -194,6 +194,27 @@ public:
     void setType(const int new_type);
 
     /**
+     * Set the index of the particle in the particle container.
+     *
+     * @param index_new The new index of the particle in the particle container.
+     */
+    void setIndex(const size_t index_new);
+
+    /**
+     * Set the indices of the neighbors.
+     *
+     * @param neighbors_new The new indices of the neighbors.
+     */
+    void setNeighbors(const std::array<size_t, 8>& neighbors_new);
+
+    /**
+     * Set if the particle is part of a molecule.
+     *
+     * @param in_molecule A boolean indicating if the particle is part of a molecule.
+     */
+    void setInMolecule(const bool in_molecule);
+
+    /**
      * Compare if two particles are equal.
      *
      * @param other The particle which should be compared.
