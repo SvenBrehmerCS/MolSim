@@ -117,8 +117,31 @@ public:
     void loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
 private:
+    /**
+     * A serial looping algorithm making use of newton thrid law.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_cell_pairs_serial(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * A looping algorithm separating cell interactions to update domain slices parallel.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
     void loop_cell_pairs_slices(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
+    /**
+     * Implements the cell interactions for loop_cell_pairs_slices(iterator, particles).
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     * @param offs_1 First offset for interaction. (e.g. X offset for XZ slices)
+     * @param offs_2 Second offset for interaction. (e.g. Z offset for XZ slices)
+     * @param dir The Axis piercing the simulated slice.
+     */
     void slice_loop_helper(
         const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles, const int offs_1, const int offs_2, const Direction dir);
 
