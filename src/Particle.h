@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <array>
 #include <string>
 
 #include "utils/Vec.h"
@@ -20,6 +21,11 @@
 class Particle {
 
 private:
+    /**
+     * The indices of the connected particles in the cell list
+     */
+    std::array<size_t, 8> neighbors;
+
     /**
      * Position of the particle
      */
@@ -41,9 +47,20 @@ private:
     Vec<double> old_f;
 
     /**
+     * The index of the particle in the particle container
+     */
+    size_t index;
+
+    /**
      * Type of the particle.
      */
     int type;
+
+    /**
+     * Define wether the particle is part of a molecule
+     */
+    bool in_molecule = false;
+
 
 public:
     /**
@@ -108,6 +125,38 @@ public:
      * @return The type of the particle.
      */
     int getType() const;
+
+    /**
+     * Get the index of the particle in the particle container.
+     *
+     * @return The index of the particle in the particle container.
+     */
+    size_t getIndex() const;
+
+    /**
+     * Test if the particle is part of a molecule.
+     *
+     * @return A boolean indicating if the particle is part of a molecule.
+     */
+    bool isMolecule() const;
+
+    /**
+     * Test if a particle is a direct neighbour of the particle.
+     *
+     * @param idx The index of the particle to test.
+     *
+     * @return A boolean indicating if the particle is a neighbour.
+     */
+    bool isDirectNeighbour(const size_t idx) const;
+
+    /**
+     * Test if a particle is a corner neighbour of the particle.
+     *
+     * @param idx The index of the particle to test.
+     *
+     * @return A boolean indicating if the particle is a corner neighbour.
+     */
+    bool isCornerNeighbour(const size_t idx) const;
 
     /**
      * Set the position of the particle.
