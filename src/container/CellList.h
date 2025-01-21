@@ -59,7 +59,6 @@ private:
      */
     Vec<double> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
 
-
 public:
     /**
      * Define the default constructor.
@@ -112,6 +111,24 @@ public:
      */
     void loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
+private:
+    /**
+     * A serial looping algorithm making use of newton thrid law.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_cell_pairs_serial(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * A parallel implementation of loop_cell_pairs_serial(iterator, particles).
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_cell_pairs_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+public:
     /**
      * Loop through the particles within the halo.
      *
