@@ -116,7 +116,7 @@ int main(const int argc, const char* argv[]) {
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // Update x, v, f
-        stepper.step(*calculator);
+        stepper.step(*calculator, current_time);
 
         iteration++;
         current_time += env.get_delta_t();

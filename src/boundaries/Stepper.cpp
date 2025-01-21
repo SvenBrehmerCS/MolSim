@@ -8,9 +8,10 @@
 #include "boundaries/PeriodicBoundary.h"
 #include "container/BoxContainer.h"
 
-Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain) {
+Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain, const physicsCalculator::Tweezers& tweezers) {
     bound_t = bt;
     domain = new_domain;
+    tw = tweezers;
 
     // Initialize the particle container.
     for (size_t i = 0; i < 6; i++) {
@@ -40,7 +41,7 @@ Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_d
     }
 }
 
-void Stepper::step(physicsCalculator::Calculator& calc) {
+void Stepper::step(physicsCalculator::Calculator& calc, const double t) {
     calc.calculateX();
 
     for (Particle& p : calc.get_container()) {
@@ -62,6 +63,10 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
         for (size_t i = 0; i < bc.size(); i++) {
             bc[i]->postF(p, calc);
         }
+    }
+
+    if(t <= tw.get_end()) {
+        tw.apply(calc.get_container());
     }
 
     if (bound_t[0] == PERIODIC) {
