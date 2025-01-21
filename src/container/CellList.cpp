@@ -71,9 +71,9 @@ Vec<double> CellList::get_corner_vector() {
 }
 
 void CellList::loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-    for (size_t x = 1; x < 3; x++) {
-        for (size_t y = 1; y < 3; y++) {
-            for (size_t z = 1; z < 3; z++) {
+    for (size_t x = 1; x < 4; x++) {
+        for (size_t y = 1; y < 4; y++) {
+            for (size_t z = 1; z < 4; z++) {
 // Loop through the cells using the indices, ignore halo cells
 #pragma omp parallel for collapse(3)
                 for (size_t i = x; i < n_x - 1; i += 3) {
