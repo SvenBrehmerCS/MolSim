@@ -22,6 +22,7 @@ TEST(CellList, LoopPairsNoParticle) {
             EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
                 << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
 
+#pragma omp critical
             pairs.remove(rm);
         },
         particles);
@@ -50,6 +51,7 @@ TEST(CellList, LoopPairsSingleParticle) {
             EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
                 << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
 
+#pragma omp critical
             pairs.remove(rm);
         },
         particles);
@@ -129,6 +131,7 @@ TEST(CellList, LoopPairs3D) {
             EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
                 << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
 
+#pragma omp critical
             pairs.remove(rm);
         },
         particles);
@@ -221,6 +224,7 @@ TEST(CellList, CreateList) {
             EXPECT_TRUE(std::find(pairs.begin(), pairs.end(), rm) != pairs.end())
                 << "Iterated over an illegal pair: (" << std::get<0>(rm) << ", " << std::get<1>(rm) << ")";
 
+#pragma omp critical
             pairs.remove(rm);
         },
         particles_new);
