@@ -1,5 +1,5 @@
 #include "Thermostat.h"
-
+// TODO Parallelization
 void Thermostat::regulate_Temperature() {
 
     double E_kin = 0.0;
