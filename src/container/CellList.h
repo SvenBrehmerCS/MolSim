@@ -117,7 +117,9 @@ public:
     void loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
 private:
-    void loop_cell_pairs_helper(
+    void loop_cell_pairs_slices(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    void slice_loop_helper(
         const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles, const int offs_1, const int offs_2, const Direction dir);
 
 public:
