@@ -160,8 +160,6 @@ void CellList::initialize_iterate_pairs_parallel_colors() {
 }
 
 void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-#pragma omp parallel
-#pragma omp single
     for (size_t color = 0; color < groups.size(); color++) {
 #pragma omp parallel for
         for (size_t cell = 0; cell < groups[color].size(); cell++) {
@@ -260,112 +258,6 @@ void CellList::loop_cell_pairs_molecules_parallel(const std::function<particle_p
 void CellList::loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     // Loop through the cells using the indices, ignore halo cells
     loop_cell_pairs_parallel_colors(iterator, particles);
-
-    /*
-    for (size_t i = 1; i < n_x - 1; i++) {
-        for (size_t j = 1; j < n_y - 1; j++) {
-            for (size_t k = 1; k < n_z - 1; k++) {
-                const size_t idx = get_cell_index(i, j, k);
-
-                for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
-                    auto l2_it = l1_it;
-                    l2_it++;
-                    for (; l2_it != cells[idx].end(); l2_it++) {
-                        if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
-                            iterator(particles[*l1_it], particles[*l2_it]);
-                        }
-                    }
-                }
-
-                // Loop through the direct neighbors
-                for (size_t l : cells[idx]) {
-                    Particle& self = particles[l];
-                    for (size_t m : cells[get_cell_index(i + 1, j, k)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i, j + 1, k)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i, j, k + 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    // Loop through the neighbors with shared edge
-                    for (size_t m : cells[get_cell_index(i + 1, j + 1, k)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i + 1, j, k + 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i, j + 1, k + 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    // Loop through the neighbors with shared corners
-                    for (size_t m : cells[get_cell_index(i + 1, j + 1, k + 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    // Loop backwards particles
-                    for (size_t m : cells[get_cell_index(i + 1, j - 1, k)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i + 1, j, k - 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i + 1, j - 1, k - 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    // Loop sidewards particles
-                    for (size_t m : cells[get_cell_index(i - 1, j - 1, k + 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i, j - 1, k + 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-
-                    for (size_t m : cells[get_cell_index(i + 1, j - 1, k + 1)]) {
-                        if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
-                            iterator(self, particles[m]);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    */
 }
 
 void CellList::loop_halo(const std::function<particle_it>& iterator, std::vector<Particle>& particles) {
