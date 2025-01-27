@@ -6,13 +6,16 @@
 
 #pragma once
 
+#include "Environment.h"
 #include "Particle.h"
 
 #include <functional>
 #include <list>
-#include <omp.h>
 #include <vector>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 /**
  * @typedef particle_pair_it
@@ -66,6 +69,8 @@ private:
      */
     Vec<double> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
 
+    UpdateStrategy strat;
+
     /**
      * adjacency list contains the neighbours of each cell
      */
@@ -98,8 +103,9 @@ public:
      *
      * @param rc The new cutoff distance.
      * @param domain The domain size.
+     * @param strat The parallelization strategy used for updating the cells.
      */
-    CellList(const double rc, const Vec<double>& domain);
+    CellList(const double rc, const Vec<double>& domain, const UpdateStrategy strat = UpdateStrategy::SERIAL);
 
     /**
      * Define the default destructor.
@@ -125,7 +131,7 @@ public:
     Vec<double> get_corner_vector();
     std::vector<std::vector<size_t>> adjacency_l();
     static std::vector<std::vector<size_t>> adjacency_squared(std::vector<std::vector<size_t>>& adjacency);
-
+    // TODO Documentation and cleanup
     void initialize_iterate_pairs_parallel_colors();
     void loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
     void loop_cell_pairs_molecules_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);

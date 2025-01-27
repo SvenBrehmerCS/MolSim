@@ -48,6 +48,11 @@ namespace inputReader {
         const param_t::calc_type::value calc = sim->param().calc();
         environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));
 
+#ifdef _OPENMP
+        const param_t::strategy_type::value strat = sim->param().strategy();
+        environment.set_update_strategy(static_cast<UpdateStrategy>(static_cast<int>(strat)));
+#endif
+
         const bound::value yz_near = sim->param().boundaries().boundary_yz_near();
         const bound::value xz_near = sim->param().boundaries().boundary_xz_near();
         const bound::value xy_near = sim->param().boundaries().boundary_xy_near();

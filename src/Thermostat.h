@@ -12,7 +12,6 @@
 
 #include <math.h>
 #include <memory>
-#include <omp.h>
 
 /**
  * @class Thermostat

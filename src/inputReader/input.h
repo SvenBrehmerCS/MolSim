@@ -574,6 +574,7 @@ class pivector;
 class format;
 class frequency;
 class calc;
+class strategy;
 class boundaries;
 class delta_t;
 class t_end;
@@ -1524,6 +1525,70 @@ public:
     //@}
 
     /**
+     * @name strategy
+     *
+     * @brief Accessor and modifier functions for the %strategy
+     * required element.
+     *
+     * The desired parallelization strategy to be used.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::strategy strategy_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<strategy_type, char> strategy_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const strategy_type& strategy() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    strategy_type& strategy();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void strategy(const strategy_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void strategy(::std::unique_ptr<strategy_type> p);
+
+    /**
+     * @brief Return the default value for the element.
+     *
+     * @return A read-only (constant) reference to the element's
+     * default value.
+     */
+    static const strategy_type& strategy_default_value();
+
+    //@}
+
+    /**
      * @name boundaries
      *
      * @brief Accessor and modifier functions for the %boundaries
@@ -1950,8 +2015,8 @@ public:
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    param_t(const calc_type&, const boundaries_type&, const delta_t_type&, const t_end_type&, const dimensions_type&, const r_cutoff_type&,
-        const domain_type&, const g_grav_type&);
+    param_t(const calc_type&, const strategy_type&, const boundaries_type&, const delta_t_type&, const t_end_type&, const dimensions_type&,
+        const r_cutoff_type&, const domain_type&, const g_grav_type&);
 
     /**
      * @brief Create an instance from the ultimate base and
@@ -1961,8 +2026,8 @@ public:
      * This constructor will try to use the passed values directly
      * instead of making copies.
      */
-    param_t(const calc_type&, ::std::unique_ptr<boundaries_type>, const delta_t_type&, const t_end_type&, const dimensions_type&,
-        const r_cutoff_type&, ::std::unique_ptr<domain_type>, const g_grav_type&);
+    param_t(const calc_type&, const strategy_type&, ::std::unique_ptr<boundaries_type>, const delta_t_type&, const t_end_type&,
+        const dimensions_type&, const r_cutoff_type&, ::std::unique_ptr<domain_type>, const g_grav_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -2026,6 +2091,8 @@ protected:
 protected:
     ::xsd::cxx::tree::one<calc_type> calc_;
     static const calc_type calc_default_value_;
+    ::xsd::cxx::tree::one<strategy_type> strategy_;
+    static const strategy_type strategy_default_value_;
     ::xsd::cxx::tree::one<boundaries_type> boundaries_;
     ::xsd::cxx::tree::one<delta_t_type> delta_t_;
     ::xsd::cxx::tree::one<t_end_type> t_end_;
@@ -5105,6 +5172,151 @@ protected:
 public:
     static const char* const _xsd_calc_literals_[2];
     static const value _xsd_calc_indexes_[2];
+
+    //@endcond
+};
+
+/**
+ * @brief Enumeration class corresponding to the %strategy
+ * schema type.
+ *
+ * This simple type represents the parallelization strategy
+ * used by the simulation.
+ */
+class strategy : public ::xml_schema::string {
+public:
+    /**
+     * @brief Underlying enum type.
+     */
+    enum value {
+        /**
+         * @brief Uses no parallelization when updating the
+         * container.
+         */
+        SERIAL,
+        /**
+         * @brief Divides the container update so that cells
+         * that can not interfere with each other are updated parallelized.
+         */
+        GRID,
+        /**
+         * @brief Divides the container update so that the
+         * directional accesses are computed at the same time.
+         */
+        SLICE
+    };
+
+    /**
+     * @brief Create an instance from the underlying enum value.
+     *
+     * @param v A enum value.
+     */
+    strategy(value v);
+
+    /**
+     * @brief Create an instance from a C string.
+     *
+     * @param v A string value.
+     */
+    strategy(const char* v);
+
+    /**
+     * @brief Create an instance from a string.
+     *
+     * @param v A string value.
+     */
+    strategy(const ::std::string& v);
+
+    /**
+     * @brief Create an instance from the base value.
+     *
+     * @param v A base value.
+     */
+    strategy(const ::xml_schema::string& v);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    strategy(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    strategy(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    strategy(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    strategy(const strategy& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+#ifdef XSD_CXX11
+    strategy& operator=(const strategy&) = default;
+#endif
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual strategy* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    /**
+     * @brief Assign the underlying enum value.
+     *
+     * @param v A enum value.
+     * @return A refernce to the instance.
+     */
+    strategy& operator=(value v);
+
+    /**
+     * @brief Implicit conversion operator to the underlying
+     * enum value.
+     *
+     * @return A enum value.
+     */
+    virtual operator value() const { return _xsd_strategy_convert(); }
+
+    //@cond
+
+protected:
+    value _xsd_strategy_convert() const;
+
+public:
+    static const char* const _xsd_strategy_literals_[3];
+    static const value _xsd_strategy_indexes_[3];
 
     //@endcond
 };
