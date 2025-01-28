@@ -36,7 +36,7 @@ CellList::CellList(const double rc, const Vec<double>& domain, const UpdateStrat
     this->strat = strat;
 
     // REMOVE
-    initialize_iterate_pairs_parallel_colors();
+    // initialize_iterate_pairs_parallel_colors();
 }
 
 void CellList::create_list(const std::vector<Particle>& particles) {
