@@ -116,7 +116,7 @@ std::vector<std::vector<size_t>> CellList::adjacency_squared(std::vector<std::ve
             }
         }
         neighbours.erase(node);
-        adjacency_squared[node] = std::vector(neighbours.begin(), neighbours.end());
+        adjacency_squared[node] = std::vector<size_t>(neighbours.begin(), neighbours.end());
     }
     return adjacency_squared;
 }
