@@ -10,6 +10,8 @@
 
 #include <string>
 
+#include <array>
+
 /**
  * @enum BoundaryType
  *
