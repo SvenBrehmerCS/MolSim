@@ -148,7 +148,7 @@ void CellList::initialize_iterate_pairs_parallel_colors() {
 
     int num_colors = -1;
 
-#pragma omp parallel for reduction(max : num_colors)
+#pragma omp parallel for reduction(max : num_colors) schedule(dynamic)
     for (size_t i = 0; i < colors.size(); i++) {
         num_colors = colors[i] > num_colors ? colors[i] : num_colors;
     }
@@ -164,7 +164,7 @@ void CellList::initialize_iterate_pairs_parallel_colors() {
 
 void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     for (size_t color = 0; color < groups.size(); color++) {
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic)
         for (size_t cell = 0; cell < groups[color].size(); cell++) {
             const size_t idx = groups[color][cell];
 
@@ -386,7 +386,7 @@ void CellList::loop_cell_pairs_parallel(const std::function<particle_pair_it>& i
         for (size_t y = 1; y < 4; y++) {
             for (size_t z = 1; z < 4; z++) {
 // Loop through the cells using the indices, ignore halo cells
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
                 for (size_t i = x; i < n_x - 1; i += 3) {
                     for (size_t j = y; j < n_y - 1; j += 3) {
                         for (size_t k = z; k < n_z - 1; k += 3) {
@@ -496,7 +496,7 @@ void CellList::loop_cell_pairs_parallel(const std::function<particle_pair_it>& i
 }
 
 void CellList::loop_cell_pairs_slices(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
     for (size_t i = 1; i < n_x - 1; i++) {
         for (size_t j = 1; j < n_y - 1; j++) {
             for (size_t k = 1; k < n_z - 1; k++) {
@@ -536,7 +536,7 @@ void CellList::slice_loop_helper(
     // Loop through the cells as slices, ignore halo cells
     switch (dir) {
     case X:
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
         for (size_t i = 1; i < n_x; i += 2) {
             for (size_t j = 1; j < n_y - 1; j++) {
                 for (size_t k = 1; k < n_z - 1; k++) {
@@ -552,7 +552,7 @@ void CellList::slice_loop_helper(
                 }
             }
         }
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
         for (size_t i = 2; i < n_x; i += 2) {
             for (size_t j = 1; j < n_y - 1; j++) {
                 for (size_t k = 1; k < n_z - 1; k++) {
@@ -570,7 +570,7 @@ void CellList::slice_loop_helper(
         }
         break;
     case Y:
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
         for (size_t i = 1; i < n_x - 1; i++) {
             for (size_t j = 1; j < n_y; j += 2) {
                 for (size_t k = 1; k < n_z - 1; k++) {
@@ -586,7 +586,7 @@ void CellList::slice_loop_helper(
                 }
             }
         }
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
         for (size_t i = 1; i < n_x - 1; i++) {
             for (size_t j = 2; j < n_y; j += 2) {
                 for (size_t k = 1; k < n_z - 1; k++) {
@@ -604,7 +604,7 @@ void CellList::slice_loop_helper(
         }
         break;
     case Z:
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
         for (size_t i = 1; i < n_x - 1; i++) {
             for (size_t j = 1; j < n_y - 1; j++) {
                 for (size_t k = 1; k < n_z; k += 2) {
@@ -620,7 +620,7 @@ void CellList::slice_loop_helper(
                 }
             }
         }
-#pragma omp parallel for collapse(3)
+#pragma omp parallel for collapse(3) schedule(dynamic)
         for (size_t i = 1; i < n_x - 1; i++) {
             for (size_t j = 1; j < n_y - 1; j++) {
                 for (size_t k = 2; k < n_z; k += 2) {
