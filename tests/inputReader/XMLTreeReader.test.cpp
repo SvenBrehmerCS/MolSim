@@ -6,7 +6,6 @@
 #include "container/DSContainer.h"
 #include "container/ParticleContainer.h"
 
-#include <bits/fs_fwd.h>
 #include <fstream>
 #include <gtest/gtest.h>
 
