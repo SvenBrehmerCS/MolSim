@@ -57,6 +57,16 @@ enum CalculatorType {
      * Define the lenard jones calculation type without range cut-offs.
      */
     LJ_FULL,
+
+    /**
+     * Define a membrane supporting lenard jones calculation type.
+     */
+    LJ_MOL,
+
+    /**
+     * Define the smoothed version of the lenard jones calculation.
+     */
+    LJ_SMOOTH,
 };
 
 /**
@@ -106,6 +116,11 @@ enum OutputFormat {
      * Define the checkpoint file format.
      */
     CHECKPOINT,
+
+    /**
+     * Define the radial distribution function format.
+     */
+    RDF
 };
 
 /**
@@ -221,6 +236,11 @@ private:
      * Store the radius beyond which force calculation is cut off.
      */
     double r_cutoff = 3.0;
+
+    /**
+     * Store the radius beyond which force calculation is cut off.
+     */
+    double r_l = 3.0;
 
     /**
      * Store the total size of the simulation domain.
@@ -362,6 +382,13 @@ public:
     inline const double get_r_cutoff() const { return r_cutoff; }
 
     /**
+     * Get the cutoff radius beyond which forces no longer affect particles.
+     *
+     * @return The radius.
+     */
+    inline const double get_r_l() const { return r_l; }
+
+    /**
      * Get the gravity pulling the atoms down.
      *
      * @return The gravity.
@@ -468,6 +495,13 @@ public:
      * @param r_cutoff The radius.
      */
     inline void set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
+
+    /**
+     * Set the cutoff radius beyond which forces no longer affect particles.
+     *
+     * @param r_l The radius.
+     */
+    inline void set_r_l(const double r_l) { this->r_l = r_l; }
 
     /**
      * Set the domain size at whichs end the boundaries are located.

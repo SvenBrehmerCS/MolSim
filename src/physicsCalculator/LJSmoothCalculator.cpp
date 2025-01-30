@@ -6,10 +6,10 @@
 #include "container/DSContainer.h"
 
 namespace physicsCalculator {
-    LJSmoothCalculator::LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont, const double new_rl)
+    LJSmoothCalculator::LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
         : Calculator { new_env, new_cont }
-        , r_l_squ { new_rl * new_rl }
-        , r_l { new_rl }
+        , r_l_squ { new_env.get_r_l() * new_env.get_r_l() }
+        , r_l { new_env.get_r_l() }
         , r_c_squ { new_env.get_r_cutoff() * new_env.get_r_cutoff() } {
         // Initialize the forces
         calculateF();

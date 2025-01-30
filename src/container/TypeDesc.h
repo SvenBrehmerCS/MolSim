@@ -135,14 +135,14 @@ public:
     /**
      * @brief Get the preferred particle distance within the membrane.
      *
-     * @return The prefered particle distance.
+     * @return The preferred particle distance.
      */
     inline double get_r0() const { return rad; }
 
     /**
      * @brief Get the preferred particle distance within the membrane.
      *
-     * @return The prefered particle distance.
+     * @return The preferred particle distance.
      */
     inline double get_r1() const { return rad_scale; }
 

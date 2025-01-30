@@ -54,7 +54,7 @@ TEST(GravityStepper, Step1) {
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
-    ASSERT_NO_THROW(stepper.step(calc));
+    ASSERT_NO_THROW(stepper.step(calc, 0));
 
     std::vector<Particle> exp = {
         Particle({ 0.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, 1),
@@ -154,7 +154,7 @@ TEST(LJStepper, Step1) {
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
-    ASSERT_NO_THROW(stepper.step(calc));
+    ASSERT_NO_THROW(stepper.step(calc, 0));
 
     // Make sure that there are no unwanted changes
     ASSERT_EQ(expected.size(), calc.get_container().size()) << "The number of particles must not change when updating the particles forces.";
@@ -192,7 +192,7 @@ TEST(Calculator, StepNo) {
     Stepper stepper({ INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT, INF_CONT }, {});
 
     // Perform a single step
-    ASSERT_NO_THROW(stepper.step(calc));
+    ASSERT_NO_THROW(stepper.step(calc, 0));
 
     EXPECT_EQ(calc.get_container().size(), 0) << "Calculating the velocity on an empty container should not add a particle.";
 }
@@ -240,7 +240,7 @@ TEST(GravityStepper, Analytical1) {
         ASSERT_LT((calc.get_container()[0].getX() - expected_pos).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ")";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
     }
 }
@@ -297,7 +297,7 @@ TEST(GravityStepper, Analytical2) {
         ASSERT_LT((calc.get_container()[1].getX() - expected_pos_2).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
         time_mod_two_pi += 0.0001;
 
@@ -372,7 +372,7 @@ TEST(GravityStepper, Analytical3) {
         ASSERT_LT((calc.get_container()[2].getX() - expected_pos_3).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 3.";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
         time_mod_two_pi += 0.0001;
 
@@ -440,7 +440,7 @@ TEST(GravityStepper, Analytical4) {
         ASSERT_LT((calc.get_container()[1].getX() - expected_pos_2).len(), error_margin)
             << "The calculation diverged at time step " << i << " (" << total_time << ") for particle 2.";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
         time_mod_two_pi += 0.0001;
 
@@ -493,7 +493,7 @@ TEST(LJStepper, Analytical1) {
             << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos
             << ", Got: " << calc.get_container()[0].getX() << ")";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
     }
 }
@@ -555,7 +555,7 @@ TEST(LJStepper, Analytical2) {
             << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
             << ", Got: " << calc.get_container()[1].getX() << ")";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
     }
 }
@@ -618,7 +618,7 @@ TEST(LJStepper, Analytical3) {
             << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
             << ", Got: " << calc.get_container()[1].getX() << ")";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
     }
 }
@@ -703,7 +703,7 @@ TEST(LJStepper, Analytical4) {
             << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_2
             << ", Got: " << calc.get_container()[2].getX() << ")";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
     }
 }
@@ -785,7 +785,7 @@ TEST(Stepper, MultipleBoundaries) {
                 << ") (Particle " << j << ")";
         }
 
-        stepper.step(calc);
+        stepper.step(calc, 0);
     }
 }
 
@@ -839,7 +839,7 @@ TEST(Stepper, MultipleReflecting) {
             ASSERT_LE(p.getX()[2], 21.0) << "A particle must not leave the domain. (" << i << ")";
         }
 
-        stepper.step(calc);
+        stepper.step(calc, 0);
     }
 }
 
@@ -923,7 +923,7 @@ TEST(Stepper, Periodic1) {
             << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_1
             << ", Got: " << calc.get_container()[1].getX() << ")";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
     }
 }
@@ -1009,7 +1009,7 @@ TEST(Stepper, PeriodicHard) {
             << "The calculation diverged at time step " << i << " (" << total_time << ") (Expected: " << expected_pos_2
             << ", Got: " << calc.get_container()[2].getX() << ")";
 
-        ASSERT_NO_THROW(stepper.step(calc));
+        ASSERT_NO_THROW(stepper.step(calc, 0));
         total_time += 0.0001;
     }
 }

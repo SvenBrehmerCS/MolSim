@@ -1,7 +1,11 @@
 #include "Tweezers.h"
 
 namespace physicsCalculator {
+    Tweezers::Tweezers() { }
+
     Tweezers::Tweezers(const std::vector<size_t>& i, const Vec<double>& f, const double e) {
+        SPDLOG_WARN("Called a Tweezers constructor which should only be used for testing.");
+
         indices = i;
         force = f;
         end = e;
