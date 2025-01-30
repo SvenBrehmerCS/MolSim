@@ -56,7 +56,7 @@ public:
      */
     int generateDisc(ParticleContainer& container, int num_particles, const Vec<double>& center, const Vec<double>& velocity, int type, double radius,
         double h, double b_m, int dim);
-    
+
     /**
      * Generates the membrane from the given parameters.
      *

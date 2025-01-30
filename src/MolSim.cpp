@@ -11,6 +11,8 @@
 #include "outputWriter/XYZWriter.h"
 #include "physicsCalculator/GravityCalculator.h"
 #include "physicsCalculator/LJCalculator.h"
+#include "physicsCalculator/LJSmoothCalculator.h"
+#include "physicsCalculator/MolCalculator.h"
 
 #include <iostream>
 #include <spdlog/spdlog.h>
@@ -54,7 +56,9 @@ int main(const int argc, const char* argv[]) {
         cont = std::make_shared<BoxContainer>(env.get_r_cutoff(), env.get_domain_size(), env.get_update_strategy());
     }
 
-    reader->readParticle(*cont, env.get_delta_t(), env.get_gravity());
+    physicsCalculator::Tweezers tweezer;
+
+    reader->readParticle(*cont, tweezer, env.get_delta_t(), env.get_gravity());
     reader.reset();
     env.assert_boundary_conditions();
 
@@ -67,6 +71,12 @@ int main(const int argc, const char* argv[]) {
         break;
     case LJ_FULL:
         calculator = std::make_unique<physicsCalculator::LJCalculator>(env, cont);
+        break;
+    case LJ_MOL:
+        calculator = std::make_unique<physicsCalculator::MolCalculator>(env, cont);
+        break;
+    case LJ_SMOOTH:
+        calculator = std::make_unique<physicsCalculator::LJSmoothCalculator>(env, cont);
         break;
     default:
         SPDLOG_CRITICAL("Error: Illegal force model specifier.");
@@ -97,7 +107,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper { env.get_boundary_type(), env.get_domain_size() };
+    Stepper stepper { env.get_boundary_type(), env.get_domain_size(), tweezer };
 
     // Fully initialise Thermostat
     thermostat.set_particles(cont);

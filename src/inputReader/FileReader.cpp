@@ -23,7 +23,7 @@ namespace inputReader {
 
     void FileReader::readArguments(Environment& environment, Thermostat& thermostat) { }
 
-    void FileReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
+    void FileReader::readParticle(ParticleContainer& container, physicsCalculator::Tweezers& tweezers, const double delta_t, const double gravity) {
 
         Vec<double> x;
         Vec<double> v;

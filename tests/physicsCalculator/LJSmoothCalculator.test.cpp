@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <physicsCalculator/LJSmoothCalculator.h>
 
-// TODO:
 // Test if the forces between two particles within the unscaled part are computed correctly
 TEST(LJSmoothCalculatorTest, Unscaled) {
     //  Set the margin for the maximum floatingpoint error

@@ -34,19 +34,22 @@ namespace physicsCalculator {
 
     double MolCalculator::calculateFAbs(const Particle& p1, const Particle& p2, const double dist_squ) {
         // Calculate the distance and force experienced by two particles
-
-        if (p1.isMolecule() & (p1.getType() == p2.getType())) {
-            if (p1.isDirectNeighbour(p2.getType())) {
+        if (p1.isMolecule() && (p1.getType() == p2.getType())) {
+            if (p1.isDirectNeighbour(p2.getIndex())) {
                 const double dist = std::sqrt(dist_squ);
                 return cont->get_type_descriptor(p1.getType()).get_k() * (dist - cont->get_type_descriptor(p1.getType()).get_r0()) / dist;
-            } else if (p1.isCornerNeighbour(p2.getType())) {
+            }
+
+            if (p1.isCornerNeighbour(p2.getIndex())) {
                 const double dist = std::sqrt(dist_squ);
                 return cont->get_type_descriptor(p1.getType()).get_k() * (dist - cont->get_type_descriptor(p1.getType()).get_r1()) / dist;
-            } else if (dist_squ <= cont->get_type_descriptor(p1.getType()).get_cut()) {
-                return calculateFDist(dist_squ, p1.getType(), p2.getType());
-            } else {
-                return 0.0;
             }
+
+            if (dist_squ <= cont->get_type_descriptor(p1.getType()).get_cut()) {
+                return calculateFDist(dist_squ, p1.getType(), p2.getType());
+            }
+
+            return 0.0;
         } else {
             return calculateFDist(dist_squ, p1.getType(), p2.getType());
         }
