@@ -10,19 +10,19 @@ TEST(MolCalculator, calculateMolecules) {
 
     ParticleGenerator gen;
     std::vector<TypeDesc> desc = {
-        TypeDesc(1.0, 1.0, 0.01, 1.0, 0.0, 1.0, 1.0),
+        TypeDesc(1.0, 0.1, 1.0, 1.0, 0.0, 1.0, 1.0),
     };
 
     std::vector<Particle> particles = {
-        Particle({ 50, 50, 50 }, {}),
-        Particle({ 51, 50, 50 }, {}),
-        Particle({ 52, 50, 50 }, {}),
-        Particle({ 50, 51, 50 }, {}),
-        Particle({ 51, 51, 50 }, {}),
-        Particle({ 52, 51, 50 }, {}),
-        Particle({ 50, 52, 50 }, {}),
-        Particle({ 51, 52, 50 }, {}),
-        Particle({ 52, 52, 50 }, {}),
+        Particle({ 50.5, 50.5, 50.5 }, {}),
+        Particle({ 51.5, 50.5, 50.5 }, {}),
+        Particle({ 52.5, 50.5, 50.5 }, {}),
+        Particle({ 50.5, 51.5, 50.5 }, {}),
+        Particle({ 51.5, 51.5, 50.5 }, {}),
+        Particle({ 52.5, 51.5, 50.5 }, {}),
+        Particle({ 50.5, 52.5, 50.5 }, {}),
+        Particle({ 51.5, 52.5, 50.5 }, {}),
+        Particle({ 52.5, 52.5, 50.5 }, {}),
     };
 
     particles[0].setNeighbors({ 1, 3, SIZE_MAX, SIZE_MAX, 4, SIZE_MAX, SIZE_MAX, SIZE_MAX });
@@ -37,8 +37,8 @@ TEST(MolCalculator, calculateMolecules) {
 
     for (size_t i = 0; i < particles.size(); i++) {
         particles[i].setInMolecule(true);
+        particles[i].setIndex(i);
     }
-
 
     // Initialize the simulation environment
     Environment env;
@@ -66,31 +66,43 @@ TEST(MolCalculator, calculateMolecules) {
     for (size_t i = 0; i < particles.size(); i++) {
         // Test if the new force is correct
         EXPECT_LT((calc.get_container()[i].getF() - expected_f[i]).len(), error_margin)
-            << "The force was not correct. (expected: " << expected_f[i] << ", got: " << calc.get_container()[i].getF() << ")";
+            << "The force was not correct. (expected: " << expected_f[i] << ", got: " << calc.get_container()[i].getF() << ")" << " (" << i << ")"
+            << std::endl;
     }
 }
 
 // Test if the forces work if the membrane is spaced out
 TEST(MolCalculator, calculateMoleculesSpaced) {
-    //  Set the margin for the maximum floatingpoint error
+        //  Set the margin for the maximum floatingpoint error
     const double error_margin = 1E-9;
 
     ParticleGenerator gen;
     std::vector<TypeDesc> desc = {
-        TypeDesc(1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0),
+        TypeDesc(1.0, 0.1, 1.0, 1.0, 0.0, 1.0, 1.0),
     };
 
-    BoxContainer container(10.0, { 100.0, 100.0, 100.0 });
-    container.set_particle_type(desc);
+    std::vector<Particle> particles = {
+        Particle({ 50.0, 50.0, 50.0 }, {}),
+        Particle({ 50.0, 51.1, 50.0 }, {}),
+        Particle({ 51.1, 50.0, 50.0 }, {}),
+        Particle({ 51.1, 51.1, 50.0 }, {}),
+    };
 
-    container.resize(4);
-    gen.generateMembrane(container, 0, { 50.0, 50.0, 50.0 }, { 0.0, 0.0, 0.0 }, 0, { 2, 2 }, 1.1, 0.0, 3);
+    particles[0].setNeighbors({ 1, 2, SIZE_MAX, SIZE_MAX, 3, SIZE_MAX, SIZE_MAX, SIZE_MAX });
+    particles[1].setNeighbors({ 0, 3, SIZE_MAX, SIZE_MAX, 2, SIZE_MAX, SIZE_MAX, SIZE_MAX });
+    particles[2].setNeighbors({ 0, 3, SIZE_MAX, SIZE_MAX, 1, SIZE_MAX, SIZE_MAX, SIZE_MAX });
+    particles[3].setNeighbors({ 1, 2, SIZE_MAX, SIZE_MAX, 0, SIZE_MAX, SIZE_MAX, SIZE_MAX });
 
+    for (size_t i = 0; i < particles.size(); i++) {
+        particles[i].setInMolecule(true);
+        particles[i].setIndex(i);
+    }
+
+    // Initialize the simulation environment
     Environment env;
-    env.set_r_cutoff(10.0);
 
     // Initialize the Calculator
-    physicsCalculator::MolCalculator calc(env, std::make_shared<BoxContainer>(container));
+    physicsCalculator::MolCalculator calc(env, particles, desc, false);
 
     // Initialize the force to the expected values
     const std::vector<Vec<double>> expected_f = {
@@ -104,10 +116,10 @@ TEST(MolCalculator, calculateMoleculesSpaced) {
     ASSERT_NO_THROW(calc.calculateF());
 
     // Make sure that there are no unwanted changes
-    for (size_t i = 0; i < container.size(); i++) {
-        std::cout << container[i] << "\n";
+    for (size_t i = 0; i < particles.size(); i++) {
         // Test if the new force is correct
-        EXPECT_LT((container[i].getF() - expected_f[i]).len(), error_margin)
-            << "The force was not correct. (expected: " << expected_f[i] << ", got: " << container[i].getF() << ")";
+        EXPECT_LT((calc.get_container()[i].getF() - expected_f[i]).len(), error_margin)
+            << "The force was not correct. (expected: " << expected_f[i] << ", got: " << calc.get_container()[i].getF() << ")" << " (" << i << ")"
+            << std::endl;
     }
 }
