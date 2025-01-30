@@ -20,7 +20,8 @@
         <delta_t></delta_t>
         <t_end></t_end>
         <dimensions></dimensions>
-        <r_cutoff></r_cutoff>
+        <r_c></r_c>
+        <r_l></r_l>
         <domain>
             <vx>25</vx>
             <vy>25</vy>

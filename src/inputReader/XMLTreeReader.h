@@ -13,6 +13,7 @@
 #include "Thermostat.h"
 #include "container/ParticleContainer.h"
 #include "input.h"
+#include "physicsCalculator/Tweezers.h"
 #include "spdlog/spdlog.h"
 
 #include <fstream>
@@ -59,10 +60,11 @@ namespace inputReader {
          * Imports the particles from the input file.
          *
          * @param container Data structure for holding the particles.
+         * @param tweezers Data structure representing tweezers.
          * @param delta_t Time between steps for type initialization.
          * @param gravity Constant force on particles for type initialization.
          */
-        virtual void readParticle(ParticleContainer& container, const double delta_t, const double gravity);
+        virtual void readParticle(ParticleContainer& container, physicsCalculator::Tweezers& tweezers, const double delta_t, const double gravity);
 
         /**
          * Calculates the number of particles generated when creating a disc of particles.

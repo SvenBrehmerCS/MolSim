@@ -47,12 +47,12 @@ private:
     double stiff;
 
     /**
-     * Store the prefered distance of particles within the domain.
+     * Store the preferred distance of particles within the domain.
      */
     double rad;
 
     /**
-     * Store the prefered distance of particles within the domain, over corners.
+     * Store the preferred distance of particles within the domain, over corners.
      */
     double rad_scale;
 
@@ -134,24 +134,24 @@ public:
 
     /**
      * @brief Get the preferred particle distance within the membrane.
-     * 
-     * @return The prefered particle distance.
+     *
+     * @return The preferred particle distance.
      */
     inline double get_r0() const { return rad; }
-    
+
     /**
      * @brief Get the preferred particle distance within the membrane.
-     * 
-     * @return The prefered particle distance.
+     *
+     * @return The preferred particle distance.
      */
     inline double get_r1() const { return rad_scale; }
 
     /**
      * @brief Get the membrane force cutoff distance.
-     * 
+     *
      * @return The membrane force cutoff distance.
      */
-    inline double get_cut() const {return c;}
+    inline double get_cut() const { return c; }
 
     /**
      * @brief Get the gravity vector of a specific type.

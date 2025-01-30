@@ -6,10 +6,10 @@
 #include "container/DSContainer.h"
 
 namespace physicsCalculator {
-    LJSmoothCalculator::LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont, const double new_rl)
+    LJSmoothCalculator::LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont)
         : Calculator { new_env, new_cont }
-        , r_l_squ { new_rl * new_rl }
-        , r_l { new_rl }
+        , r_l_squ { new_env.get_r_l() * new_env.get_r_l() }
+        , r_l { new_env.get_r_l() }
         , r_c_squ { new_env.get_r_cutoff() * new_env.get_r_cutoff() } {
         // Initialize the forces
         calculateF();
@@ -77,9 +77,11 @@ namespace physicsCalculator {
             std::cout << "sigma_to_6: " << sigma_to_6 << "\n";
             std::cout << "r_c_squ: " << r_c_squ << "\n";
             std::cout << (cont->get_type_pair_descriptor(t1, t2).get_scaled_epsilon() * sigma_to_6 / (dist_to_14 * rc_l * rc_l * rc_l)
-                * (env.get_r_cutoff() - dist)) << "\n";
+                * (env.get_r_cutoff() - dist))
+                      << "\n";
             std::cout << ((r_c_squ * (2.0 * sigma_to_6 - dist_to_6)) + env.get_r_cutoff() * (3.0 * r_l - dist) * (dist_to_6 - 2.0 * sigma_to_6)
-                + dist * (5.0 * r_l * sigma_to_6 - 2.0 * r_l * dist_to_6 - 3.0 * sigma_to_6 * dist + dist_to_7)) << "\n\n";
+                + dist * (5.0 * r_l * sigma_to_6 - 2.0 * r_l * dist_to_6 - 3.0 * sigma_to_6 * dist + dist_to_7))
+                      << "\n\n";
 
             return cont->get_type_pair_descriptor(t1, t2).get_scaled_epsilon() * sigma_to_6 / (dist_to_14 * rc_l * rc_l * rc_l)
                 * (env.get_r_cutoff() - dist)

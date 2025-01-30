@@ -36,9 +36,8 @@ namespace physicsCalculator {
          *
          * @param new_env The simulation environment that should be used for initialization.
          * @param new_cont The container storing the particles that should be used throughout the simulation.
-         * @param new_rl The smoothing length.
          */
-        LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont, const double new_rl);
+        LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont);
 
         /**
          * Provide a constructor that allows the construction of a calculator using a particle container
@@ -47,7 +46,6 @@ namespace physicsCalculator {
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
          * @param new_desc The particle types.
-         * @param new_rl The smoothing radius.
          * @param init_forces Define wether the forces should be initialized.
          * @param is_infinite A boolean indicating if the simulation ahs an infinite domain size.
          */
@@ -65,7 +63,7 @@ namespace physicsCalculator {
          * @param p1 The first particle.
          * @param p2 The second particle.
          * @param dist The distance between the particles.
-         * 
+         *
          * @return The force interacting between p1 and p2.
          */
         virtual double calculateFAbs(const Particle& p1, const Particle& p2, const double dist);
@@ -76,7 +74,7 @@ namespace physicsCalculator {
          * @param dist The distance between two particles.
          * @param t1 The type of the first particle.
          * @param t2 The type of the second particle.
-         * 
+         *
          * @return The force interacting between p1 and p2.
          */
         virtual double calculateFDist(const double dist, const int t1, const int t2) const;

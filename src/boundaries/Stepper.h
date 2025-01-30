@@ -9,9 +9,9 @@
 #include <memory>
 
 #include "boundaries/Boundary.h"
+#include "outputWriter/Diffusion.h"
 #include "physicsCalculator/Calculator.h"
 #include "physicsCalculator/Tweezers.h"
-#include "outputWriter/Diffusion.h"
 
 /**
  * @class Stepper
@@ -53,7 +53,7 @@ private:
     /**
      * The tweezers used for the simulation.
      */
-    physicsCalculator::Tweezers tw = physicsCalculator::Tweezers({}, {}, 0.0);
+    physicsCalculator::Tweezers tw;
 
 public:
     /**
@@ -64,7 +64,8 @@ public:
      * @param tweezers The tweezers that should be used (optional)
      */
     Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain,
-        const physicsCalculator::Tweezers& tweezers = physicsCalculator::Tweezers({}, {}, 0.0), const std::string diff_file = "diff_out.txt", const bool generate_diff = false);
+        const physicsCalculator::Tweezers& tweezers = physicsCalculator::Tweezers({}, {}, 0.0), const std::string diff_file = "diff_out.txt",
+        const bool generate_diff = false);
 
     /**
      * Provide a default destructor for a stepper.

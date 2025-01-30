@@ -50,6 +50,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     Environment environment;
     Thermostat thermo;
     DSContainer container;
+    physicsCalculator::Tweezers tweezer;
     inputReader::XMLTreeReader reader(xml);
 
     Thermostat exp_thermo;
@@ -59,7 +60,7 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     exp_thermo.set_T_target(28);
 
     reader.readArguments(environment, thermo);
-    reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
+    reader.readParticle(container, tweezer, environment.get_delta_t(), environment.get_gravity());
     EXPECT_EQ(container.size(), 0);
     EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
     EXPECT_EQ(environment.get_output_file_format(), XYZ);
@@ -77,12 +78,13 @@ TEST(XMLTreeReader, TestParticles) {
     const char* xml = "../tests/res/testParticles.xml";
 
     DSContainer container;
+    physicsCalculator::Tweezers tweezer;
     inputReader::XMLTreeReader reader(xml);
     Vec<double> x = { 0.1, 0.2, 0.3 };
     Vec<double> v = { 1.0, 1.5, 1.7 };
     double m = 0.01;
 
-    reader.readParticle(container, 0.0005, 0.0);
+    reader.readParticle(container, tweezer, 0.0005, 0.0);
 
     ASSERT_EQ(container.size(), 1);
     EXPECT_EQ(container[0].getX(), x);
@@ -95,6 +97,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
     const char* xml = "../tests/res/testCuboids.xml";
 
     DSContainer container;
+    physicsCalculator::Tweezers tweezer;
     inputReader::XMLTreeReader reader(xml);
 
     Vec<double> x0 = { 0, 0, 0 };
@@ -103,7 +106,7 @@ TEST(XMLTreeReader, TestXMLCuboid) {
     Vec<double> x3 = { 1, 1, 0 };
     Vec<double> v = { 0.5, 0.7, 0.9 };
 
-    reader.readParticle(container, 0.0005, 0.0);
+    reader.readParticle(container, tweezer, 0.0005, 0.0);
     ASSERT_EQ(container.size(), 4);
     EXPECT_EQ(container[0].getX(), x0);
     EXPECT_EQ(container[1].getX(), x1);
@@ -120,6 +123,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
     const char* xml = "../tests/res/testDisc.xml";
 
     DSContainer container;
+    physicsCalculator::Tweezers tweezer;
     inputReader::XMLTreeReader reader(xml);
 
     Vec<double> x1 = { -1, 0.0, 0.0 };
@@ -129,7 +133,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
     Vec<double> x5 = { 1, 0.0, 0.0 };
     Vec<double> v = { 1.0, 1.0, 1.0 };
 
-    reader.readParticle(container, 0.0005, 0.0);
+    reader.readParticle(container, tweezer, 0.0005, 0.0);
 
     ASSERT_EQ(container.size(), 5);
     EXPECT_EQ(container[0].getX(), x3);
@@ -169,6 +173,7 @@ TEST(XMLTreeReader, TestXMLCombined) {
     Environment environment;
     Thermostat thermo;
     DSContainer container;
+    physicsCalculator::Tweezers tweezer;
     inputReader::XMLTreeReader reader(xml);
 
     Thermostat exp_thermo;
@@ -178,7 +183,7 @@ TEST(XMLTreeReader, TestXMLCombined) {
     exp_thermo.set_T_target(std::numeric_limits<double>::quiet_NaN());
 
     reader.readArguments(environment, thermo);
-    reader.readParticle(container, environment.get_delta_t(), environment.get_gravity());
+    reader.readParticle(container, tweezer, environment.get_delta_t(), environment.get_gravity());
 
     ASSERT_EQ(container.size(), 10);
 
