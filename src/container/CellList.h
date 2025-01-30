@@ -71,26 +71,8 @@ private:
 
     UpdateStrategy strat;
 
-    /**
-     * adjacency list contains the neighbours of each cell
-     */
-    std::vector<std::vector<size_t>> adjacency_list;
 
-    /**
-     * adjacency_list_squared contains all neighbours and 2nd degree neighbours of each cell
-     */
-    std::vector<std::vector<size_t>> adjacency_list_squared;
 
-    /**
-     * contains all colors needed to group the cells into colors
-     */
-    std::vector<int> colors;
-
-    // the groups vector has the colors as index and a list of cells with the same color in it
-
-    int num_colors;
-
-    std::vector<std::vector<size_t>> groups;
 
 public:
     /**
