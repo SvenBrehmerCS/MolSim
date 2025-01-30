@@ -1,12 +1,11 @@
 #include "Tweezers.h"
 
 namespace physicsCalculator {
-    Tweezers::Tweezers(const std::vector<size_t>& i, const Vec<double>& f, const double e)
-{
-    indices = i;
-    force = f;
-    end = e;
-}
+    Tweezers::Tweezers(const std::vector<size_t>& i, const Vec<double>& f, const double e) {
+        indices = i;
+        force = f;
+        end = e;
+    }
 
     void Tweezers::apply(ParticleContainer& particles) {
         for (const size_t i : indices) {
