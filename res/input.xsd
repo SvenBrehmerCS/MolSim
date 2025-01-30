@@ -131,6 +131,12 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
+
+            <xs:element name="diffusion" type="xs:string" default="MD_Diff" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> Name of the diffusion output files. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -681,17 +687,38 @@
             </xs:element>
 
             <xs:element name="tweezer">
+                <xs:annotation>
+                    <xs:documentation> A tweezer capable of exerting a continuos force onto specific
+                        particles of the membrane. </xs:documentation>
+                </xs:annotation>
+
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="force" type="dvector3"></xs:element>
+                        <xs:element name="force" type="dvector3">
+                            <xs:annotation>
+                                <xs:documentation> The force exerted on the particles. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+
                         <xs:element name="t_end">
+                            <xs:annotation>
+                                <xs:documentation> A time step after which the force will no longer
+                                    be applied. </xs:documentation>
+                            </xs:annotation>
+
                             <xs:simpleType>
                                 <xs:restriction base="xs:double">
                                     <xs:minInclusive value="0.0" />
                                 </xs:restriction>
                             </xs:simpleType>
                         </xs:element>
-                        <xs:element name="target" type="pivector2" maxOccurs="unbounded"></xs:element>
+
+                        <xs:element name="target" type="pivector2" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation> The X- and Y-indices respective to the membrane
+                                    representing a particle affected by the tweezers. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
