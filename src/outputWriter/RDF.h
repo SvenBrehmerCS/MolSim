@@ -14,7 +14,11 @@
 #include <vector>
 
 namespace outputWriter {
-
+    /**
+     * @class RDF
+     * 
+     * @brief Define the RDF writer, which is used for computing and writing the radial distribution.
+     */
     class RDF {
     private:
         /**

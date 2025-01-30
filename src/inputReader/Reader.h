@@ -47,6 +47,6 @@ namespace inputReader {
          * @param delta_t Time between steps for type initialization.
          * @param gravity Constant force on particles for type initialization.
          */
-        virtual void readParticle(ParticleContainer& container, physicsCalculator::Tweezers& tweezer, const double delta_t, const double gravity) = 0;
+        virtual void readParticle(ParticleContainer& container, physicsCalculator::Tweezers& tweezers, const double delta_t, const double gravity) = 0;
     };
 } // namespace inputReader

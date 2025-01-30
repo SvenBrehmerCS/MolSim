@@ -2,7 +2,7 @@
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
-        <name>SlowCooling</name>
+        <name>SuperCooling</name>
         <format>VTK</format>
         <frequency>50</frequency>
     </output>

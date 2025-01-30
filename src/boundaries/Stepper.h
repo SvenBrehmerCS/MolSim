@@ -61,7 +61,9 @@ public:
      *
      * @param bt The boundary types used for the simulation.
      * @param new_domain The size of the new domain.
-     * @param tweezers The tweezers that should be used (optional)
+     * @param tweezers The tweezers that should be used. (optional)
+     * @param diff_file The name of the diffusion file. (optional)
+     * @param generate_diff A boolean indicating if the diffusion should be computed. (optional)
      */
     Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain,
         const physicsCalculator::Tweezers& tweezers = physicsCalculator::Tweezers({}, {}, 0.0), const std::string diff_file = "diff_out.txt",

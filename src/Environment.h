@@ -464,7 +464,7 @@ public:
     /**
      * Set the format of the the output file.
      *
-     * @param format The file format of the output file.
+     * @param output_format The file format of the output file.
      */
     inline void set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
 
@@ -527,7 +527,7 @@ public:
     /**
      * Set the gravity pulling the atoms down.
      *
-     * @param g The gravity pulling the atoms down.
+     * @param gravity The gravity pulling the atoms down.
      */
     inline void set_gravity(const double gravity) { this->gravity = gravity; }
 };

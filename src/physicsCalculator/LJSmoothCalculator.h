@@ -32,7 +32,7 @@ namespace physicsCalculator {
 
     public:
         /**
-         * Initialize a Lenard Jones calculator using a simulation environment.
+         * Initialize a Smoothed Lenard Jones calculator using a simulation environment.
          *
          * @param new_env The simulation environment that should be used for initialization.
          * @param new_cont The container storing the particles that should be used throughout the simulation.
@@ -45,6 +45,7 @@ namespace physicsCalculator {
          *
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
+         * @param rl The smoothing start radius.
          * @param new_desc The particle types.
          * @param init_forces Define wether the forces should be initialized.
          * @param is_infinite A boolean indicating if the simulation ahs an infinite domain size.
