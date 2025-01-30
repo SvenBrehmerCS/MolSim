@@ -111,12 +111,6 @@ public:
      * @return The corner vector.
      */
     Vec<double> get_corner_vector();
-    std::vector<std::vector<size_t>> adjacency_l();
-    static std::vector<std::vector<size_t>> adjacency_squared(std::vector<std::vector<size_t>>& adjacency);
-    // TODO Documentation and cleanup
-    void initialize_iterate_pairs_parallel_colors();
-    void loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
-    void loop_cell_pairs_molecules_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
     /**
      * Create the cell list using the particle vector. This method must only be called if the cell list was initialized with the detailed constructor.
