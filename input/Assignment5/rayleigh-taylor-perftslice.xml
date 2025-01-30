@@ -18,7 +18,7 @@
             <boundary_xy_far>PERIODIC</boundary_xy_far>
         </boundaries>
         <delta_t>0.0005</delta_t>
-        <t_end>0.5</t_end>
+        <t_end>5</t_end>
         <dimensions>3</dimensions>
         <r_cutoff>3.6</r_cutoff>
         <domain>
