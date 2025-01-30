@@ -48,6 +48,24 @@ const Vec<double>& Particle::getOldF() const { return old_f; }
 
 int Particle::getType() const { return type; }
 
+size_t Particle::getIndex() const { return index; }
+
+bool Particle::isMolecule() const { return in_molecule; }
+
+bool Particle::isDirectNeighbour(const size_t idx) const {
+    return (idx == neighbors[0]) | (idx == neighbors[1]) | (idx == neighbors[2]) | (idx == neighbors[3]);
+}
+
+bool Particle::isCornerNeighbour(const size_t idx) const {
+    return (idx == neighbors[4]) | (idx == neighbors[5]) | (idx == neighbors[6]) | (idx == neighbors[7]);
+}
+
+void Particle::setIndex(size_t idx) { index = idx; }
+
+void Particle::setNeighbors(const std::array<size_t, 8>& new_neighbors) { neighbors = new_neighbors; }
+
+void Particle::setInMolecule(bool in_molecule_arg) { in_molecule = in_molecule_arg; }
+
 void Particle::setX(const Vec<double>& x_new) { x = x_new; }
 
 void Particle::setV(const Vec<double>& v_new) { v = v_new; }
