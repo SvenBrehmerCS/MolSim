@@ -96,8 +96,8 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
     return num_particles_added;
 }
 
-void generateMembrane(ParticleContainer& container, int num_particles, const Vec<double>& x, const Vec<double>& v, int type,
-    const std::array<int, 3>& N, double h, double b_m, int dim) {
+void ParticleGenerator::generateMembrane(ParticleContainer& container, int num_particles, const Vec<double>& x, const Vec<double>& v, int type,
+    const std::array<int, 2>& N, double h, double b_m, int dim) {
     int N1 = N[0];
     int N2 = N[1];
     Vec<double> boltz_v;
