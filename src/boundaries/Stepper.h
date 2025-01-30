@@ -77,5 +77,5 @@ public:
      * @param calc The calculator that should be used for the step.
      * @param t The current time.
      */
-    void step(physicsCalculator::Calculator& calc, const double t);
+    void step(physicsCalculator::Calculator& calc, const double t = 0.0);
 };
