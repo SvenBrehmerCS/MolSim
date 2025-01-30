@@ -220,3 +220,31 @@ TEST(ParticleGenerator, generateDisc) {
     EXPECT_EQ(container[3].getV(), v);
     EXPECT_EQ(container[4].getV(), v);
 }
+
+// Test generating an membrane
+TEST(ParticleGenerator, generateMembrane) {
+    ParticleGenerator generator;
+    DSContainer container;
+
+    container.resize(4);
+    generator.generateMembrane(container, 0, {}, {}, 0, { 2, 2 }, 1, 0, 3);
+
+    ASSERT_EQ(container.size(), 4) << "the container size must not change";
+
+    EXPECT_EQ(container[0].getX(), Vec<double>(0.0, 0.0, 0.0));
+    EXPECT_TRUE(container[0].isDirectNeighbour(1));
+    EXPECT_TRUE(container[0].isDirectNeighbour(2));
+    EXPECT_TRUE(container[0].isCornerNeighbour(3));
+    EXPECT_EQ(container[1].getX(), Vec<double>(1.0, 0.0, 0.0));
+    EXPECT_TRUE(container[1].isDirectNeighbour(0));
+    EXPECT_TRUE(container[1].isDirectNeighbour(3));
+    EXPECT_TRUE(container[1].isCornerNeighbour(2));
+    EXPECT_EQ(container[2].getX(), Vec<double>(0.0, 1.0, 0.0));
+    EXPECT_TRUE(container[2].isDirectNeighbour(0));
+    EXPECT_TRUE(container[2].isDirectNeighbour(3));
+    EXPECT_TRUE(container[2].isCornerNeighbour(1));
+    EXPECT_EQ(container[3].getX(), Vec<double>(1.0, 1.0, 0.0));
+    EXPECT_TRUE(container[3].isDirectNeighbour(2));
+    EXPECT_TRUE(container[3].isDirectNeighbour(1));
+    EXPECT_TRUE(container[3].isCornerNeighbour(0));
+}
