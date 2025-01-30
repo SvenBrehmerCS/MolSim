@@ -34,9 +34,6 @@ CellList::CellList(const double rc, const Vec<double>& domain, const UpdateStrat
     domain_yz = { 0.0, domain[1], domain[2] };
 
     this->strat = strat;
-
-    // REMOVE
-    // initialize_iterate_pairs_parallel_colors();
 }
 
 void CellList::create_list(const std::vector<Particle>& particles) {
@@ -76,127 +73,6 @@ Vec<double> CellList::get_corner_vector() {
         rc * (n_y - 2),
         rc * (n_z - 2),
     };
-}
-
-std::vector<std::vector<size_t>> CellList::adjacency_l() {
-    std::vector<std::vector<size_t>> adjacency(cells.size());
-
-    for (size_t i = 1; i < n_x - 1; i++) {
-        for (size_t j = 1; j < n_y - 1; j++) {
-            for (size_t k = 1; k < n_z - 1; k++) {
-                // current cell where all neighbours should be searched
-                const size_t idx = get_cell_index(i, j, k);
-
-                for (int dx = -1; dx <= 1; dx++) {
-                    for (int dy = -1; dy <= 1; dy++) {
-                        for (int dz = -1; dz <= 1; dz++) {
-                            // coordinates of the neighbour cell
-                            if (dx == 0 && dy == 0 && dz == 0) {
-                                continue;
-                            }
-                            adjacency[idx].push_back(get_cell_index(i + dx, j + dy, k + dz));
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return adjacency;
-}
-
-std::vector<std::vector<size_t>> CellList::adjacency_squared(std::vector<std::vector<size_t>>& adjacency) {
-    std::vector<std::vector<size_t>> adjacency_squared(adjacency.size());
-
-    for (size_t node = 0; node < adjacency.size(); node++) {
-        std::unordered_set<size_t> neighbours;
-        for (auto neighbour1 : adjacency[node]) {
-            neighbours.insert(neighbour1);
-            for (auto neighbour2 : adjacency[neighbour1]) {
-                neighbours.insert(neighbour2);
-            }
-        }
-        neighbours.erase(node);
-        adjacency_squared[node] = std::vector(neighbours.begin(), neighbours.end());
-    }
-    return adjacency_squared;
-}
-
-std::vector<int> color_greedy(const std::vector<std::vector<size_t>>& adjacency) {
-    std::vector colors(adjacency.size(), -1);
-    for (size_t cell = 0; cell < adjacency.size(); cell++) {
-        std::set<int> used;
-        for (auto n : adjacency[cell]) {
-            if (colors[n] != -1) {
-                used.insert(colors[n]);
-            }
-        }
-        int c = 0;
-        while (used.find(c) != used.end()) {
-            ++c;
-        }
-        colors[cell] = c;
-    }
-    return colors;
-}
-
-void CellList::initialize_iterate_pairs_parallel_colors() {
-    adjacency_list = adjacency_l();
-
-    adjacency_list_squared = adjacency_squared(adjacency_list);
-
-    colors = color_greedy(adjacency_list_squared);
-
-    int num_colors = -1;
-
-#pragma omp parallel for reduction(max : num_colors) schedule(dynamic)
-    for (size_t i = 0; i < colors.size(); i++) {
-        num_colors = colors[i] > num_colors ? colors[i] : num_colors;
-    }
-    // the groups vector has the colors as index and a list of cells with the same color in it
-    const std::vector<std::vector<size_t>> tmp(num_colors + 1);
-    groups = tmp;
-
-    // fill the cells into groups here
-    for (size_t cell = 0; cell < adjacency_list.size(); cell++) {
-        groups[colors[cell]].push_back(cell);
-    }
-}
-
-void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
-    for (size_t color = 0; color < groups.size(); color++) {
-#pragma omp parallel for schedule(dynamic)
-        for (size_t cell = 0; cell < groups[color].size(); cell++) {
-            const size_t idx = groups[color][cell];
-
-            for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
-                for (auto l2_it = l1_it + 1; l2_it != cells[idx].end(); l2_it++) {
-                    Particle& p1 = particles[*l1_it];
-                    Particle& p2 = particles[*l2_it];
-                    auto diff = p1.getX() - p2.getX();
-                    double dis_squa = diff.len_squ();
-                    if (dis_squa <= rc_squ) {
-                        iterator(p1, p2);
-                    }
-                }
-            }
-
-            for (const size_t l : cells[idx]) {
-                Particle& self = particles[l];
-
-                for (auto n : adjacency_list[idx]) {
-                    if (idx < n) {
-                        continue;
-                    }
-                    for (const size_t m : cells[n]) {
-                        Particle& p = particles[m];
-                        if ((self.getX() - p.getX()).len_squ() <= rc_squ) {
-                            iterator(self, p);
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 void CellList::loop_cell_pairs_molecules_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
