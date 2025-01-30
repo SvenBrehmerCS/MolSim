@@ -36,8 +36,9 @@ namespace physicsCalculator {
          *
          * @param new_env The simulation environment that should be used for initialization.
          * @param new_cont The container storing the particles that should be used throughout the simulation.
+         * @param new_rl The smoothing length.
          */
-        LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont, const double rl);
+        LJSmoothCalculator(const Environment& new_env, const std::shared_ptr<ParticleContainer>& new_cont, const double new_rl);
 
         /**
          * Provide a constructor that allows the construction of a calculator using a particle container
@@ -46,6 +47,7 @@ namespace physicsCalculator {
          * @param new_env The new simulation environment.
          * @param particles The vector storing the particles that should be used throughout the simulation.
          * @param new_desc The particle types.
+         * @param new_rl The smoothing radius.
          * @param init_forces Define wether the forces should be initialized.
          * @param is_infinite A boolean indicating if the simulation ahs an infinite domain size.
          */
