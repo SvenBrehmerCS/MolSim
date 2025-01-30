@@ -8,6 +8,7 @@
     </output>
     <param>
         <calc>GRAVITY</calc>
+        <strategy></strategy>
         <boundaries>
             <boundary_yz_near>INF_CONT</boundary_yz_near>
             <boundary_xz_near>INF_CONT</boundary_xz_near>

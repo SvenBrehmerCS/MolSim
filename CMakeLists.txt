@@ -18,11 +18,11 @@ endif()
 # set Release as the default build type if it is not yet set.
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
-            "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+        "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 # Allow the user to set an upper limit for the log levels at compile time
-set(LOG_LEVEL "INFO" CACHE STRING "Set the log level. This must either be OFF, CRITICAL, ERROR, WARN, INFO, DEBUG or TRACE.") 
+set(LOG_LEVEL "INFO" CACHE STRING "Set the log level. This must either be OFF, CRITICAL, ERROR, WARN, INFO, DEBUG or TRACE.")
 add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})
 
 # collect all cpp files
@@ -55,30 +55,30 @@ add_executable(MolSim ${MY_SRC})
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
-        PUBLIC
-            cxx_std_17
+    PUBLIC
+    cxx_std_17
 )
 
 target_include_directories(MolSim
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_link_libraries(MolSim
-        # stuff that is used in headers and source files
-        PUBLIC
-            xerces-c
+    # stuff that is used in headers and source files
+    PUBLIC
+    xerces-c
 )
 
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
 target_compile_options(MolSim
-        PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror>
-            # disable some spam warnings for icpc...
-            $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259 -ip -ipo -fast>
+    PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror -Wno-unknown-pragmas>
+    # disable some spam warnings for icpc...
+    $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259 -ip -ipo -fast>
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
@@ -92,15 +92,15 @@ enable_testing()
 
 # Add and link the google test
 add_executable(MolTest
-        ${MY_TEST}
-        ${MY_TEST_SRC}
+    ${MY_TEST}
+    ${MY_TEST_SRC}
 )
 
 target_include_directories(MolTest
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_link_libraries(MolTest PRIVATE GTest::gtest_main PUBLIC xerces-c PUBLIC spdlog::spdlog)
@@ -112,10 +112,15 @@ gtest_discover_tests(MolTest)
 include(spdlog)
 # message(STATUS "Using libxsd from: ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd")
 target_include_directories(MolSim
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
 )
 target_link_libraries(MolSim PRIVATE spdlog::spdlog)
+
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(MolSim PUBLIC OpenMP::OpenMP_CXX)
+endif(OpenMP_CXX_FOUND)
 
 # Show the compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

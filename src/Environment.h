@@ -60,6 +60,28 @@ enum CalculatorType {
 };
 
 /**
+ * @enum UpdateStrategy
+ *
+ * @brief This enum describes the parallelization strategy used by the simulation.
+ */
+enum UpdateStrategy {
+    /**
+     * Define that no parallelization is used.
+     */
+    SERIAL,
+
+    /**
+     * Defines a strategy that  updates the cells, that are far enough spaced to not interfere with each other, at the same time.
+     */
+    GRID,
+
+    /**
+     * Defines a strategy that divides the cells into slices and executes the same directional update in parallel.
+     */
+    SLICE,
+};
+
+/**
  * @enum OutputFormat
  *
  * @brief The enum describes the different file formats used by this program.
@@ -139,6 +161,11 @@ private:
      * Store which calculator should be used for the force calculations.
      */
     CalculatorType calc = LJ_FULL;
+
+    /**
+     * Store the parallelization strategy used for updating the cells.
+     */
+    UpdateStrategy strat = SERIAL;
 
     /**
      * Store the condition of the XY boundary at the origin.
@@ -314,6 +341,13 @@ public:
     inline const CalculatorType get_calculator_type() const { return calc; }
 
     /**
+     * Get the update strategy used for parallel updating the cells.
+     *
+     * @return The update strategy.
+     */
+    inline const UpdateStrategy get_update_strategy() const { return strat; }
+
+    /**
      * Get the Boundary type used in the simulation.
      *
      * @return The boundary type. Will be in form {yz_near, xz_near, xy_near, yz_far, xz_far, xy_far}
@@ -413,6 +447,13 @@ public:
      * @param calculator_type The calculator type.
      */
     inline void set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
+
+    /**
+     * Set the update strategy used for parallel updating the cells.
+     *
+     * @param update_strategy The update strategy.
+     */
+    inline void set_update_strategy(const UpdateStrategy update_strategy) { this->strat = update_strategy; }
 
     /**
      * Set the boundary type used in the simulation.

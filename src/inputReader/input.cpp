@@ -145,6 +145,16 @@ void param_t::calc(::std::unique_ptr<calc_type> x) { this->calc_.set(std::move(x
 
 const param_t::calc_type& param_t::calc_default_value() { return calc_default_value_; }
 
+const param_t::strategy_type& param_t::strategy() const { return this->strategy_.get(); }
+
+param_t::strategy_type& param_t::strategy() { return this->strategy_.get(); }
+
+void param_t::strategy(const strategy_type& x) { this->strategy_.set(x); }
+
+void param_t::strategy(::std::unique_ptr<strategy_type> x) { this->strategy_.set(std::move(x)); }
+
+const param_t::strategy_type& param_t::strategy_default_value() { return strategy_default_value_; }
+
 const param_t::boundaries_type& param_t::boundaries() const { return this->boundaries_.get(); }
 
 param_t::boundaries_type& param_t::boundaries() { return this->boundaries_.get(); }
@@ -587,6 +597,31 @@ calc& calc::operator=(value v) {
 }
 
 
+// strategy
+//
+
+strategy::strategy(value v)
+    : ::xml_schema::string(_xsd_strategy_literals_[v]) { }
+
+strategy::strategy(const char* v)
+    : ::xml_schema::string(v) { }
+
+strategy::strategy(const ::std::string& v)
+    : ::xml_schema::string(v) { }
+
+strategy::strategy(const ::xml_schema::string& v)
+    : ::xml_schema::string(v) { }
+
+strategy::strategy(const strategy& v, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(v, f, c) { }
+
+strategy& strategy::operator=(value v) {
+    static_cast<::xml_schema::string&>(*this) = ::xml_schema::string(_xsd_strategy_literals_[v]);
+
+    return *this;
+}
+
+
 // boundaries
 //
 
@@ -992,10 +1027,13 @@ output_t::~output_t() { }
 
 const param_t::calc_type param_t::calc_default_value_("LJ_FULL");
 
-param_t::param_t(const calc_type& calc, const boundaries_type& boundaries, const delta_t_type& delta_t, const t_end_type& t_end,
-    const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, const domain_type& domain, const g_grav_type& g_grav)
+const param_t::strategy_type param_t::strategy_default_value_("GRID");
+
+param_t::param_t(const calc_type& calc, const strategy_type& strategy, const boundaries_type& boundaries, const delta_t_type& delta_t,
+    const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, const domain_type& domain, const g_grav_type& g_grav)
     : ::xml_schema::type()
     , calc_(calc, this)
+    , strategy_(strategy, this)
     , boundaries_(boundaries, this)
     , delta_t_(delta_t, this)
     , t_end_(t_end, this)
@@ -1004,10 +1042,12 @@ param_t::param_t(const calc_type& calc, const boundaries_type& boundaries, const
     , domain_(domain, this)
     , g_grav_(g_grav, this) { }
 
-param_t::param_t(const calc_type& calc, ::std::unique_ptr<boundaries_type> boundaries, const delta_t_type& delta_t, const t_end_type& t_end,
-    const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, ::std::unique_ptr<domain_type> domain, const g_grav_type& g_grav)
+param_t::param_t(const calc_type& calc, const strategy_type& strategy, ::std::unique_ptr<boundaries_type> boundaries, const delta_t_type& delta_t,
+    const t_end_type& t_end, const dimensions_type& dimensions, const r_cutoff_type& r_cutoff, ::std::unique_ptr<domain_type> domain,
+    const g_grav_type& g_grav)
     : ::xml_schema::type()
     , calc_(calc, this)
+    , strategy_(strategy, this)
     , boundaries_(std::move(boundaries), this)
     , delta_t_(delta_t, this)
     , t_end_(t_end, this)
@@ -1019,6 +1059,7 @@ param_t::param_t(const calc_type& calc, ::std::unique_ptr<boundaries_type> bound
 param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c)
     , calc_(x.calc_, f, this)
+    , strategy_(x.strategy_, f, this)
     , boundaries_(x.boundaries_, f, this)
     , delta_t_(x.delta_t_, f, this)
     , t_end_(x.t_end_, f, this)
@@ -1030,6 +1071,7 @@ param_t::param_t(const param_t& x, ::xml_schema::flags f, ::xml_schema::containe
 param_t::param_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c)
     , calc_(this)
+    , strategy_(this)
     , boundaries_(this)
     , delta_t_(this)
     , t_end_(this)
@@ -1055,6 +1097,17 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
 
             if (!calc_.present()) {
                 this->calc_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // strategy
+        //
+        if (n.name() == "strategy" && n.namespace_().empty()) {
+            ::std::unique_ptr<strategy_type> r(strategy_traits::create(i, f, this));
+
+            if (!strategy_.present()) {
+                this->strategy_.set(::std::move(r));
                 continue;
             }
         }
@@ -1141,6 +1194,10 @@ void param_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f
         throw ::xsd::cxx::tree::expected_element<char>("calc", "");
     }
 
+    if (!strategy_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("strategy", "");
+    }
+
     if (!boundaries_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("boundaries", "");
     }
@@ -1176,6 +1233,7 @@ param_t& param_t::operator=(const param_t& x) {
     if (this != &x) {
         static_cast<::xml_schema::type&>(*this) = x;
         this->calc_ = x.calc_;
+        this->strategy_ = x.strategy_;
         this->boundaries_ = x.boundaries_;
         this->delta_t_ = x.delta_t_;
         this->t_end_ = x.t_end_;
@@ -2204,6 +2262,41 @@ calc::value calc::_xsd_calc_convert() const {
 const char* const calc::_xsd_calc_literals_[2] = { "GRAVITY", "LJ_FULL" };
 
 const calc::value calc::_xsd_calc_indexes_[2] = { ::calc::GRAVITY, ::calc::LJ_FULL };
+
+// strategy
+//
+
+strategy::strategy(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(e, f, c) {
+    _xsd_strategy_convert();
+}
+
+strategy::strategy(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(a, f, c) {
+    _xsd_strategy_convert();
+}
+
+strategy::strategy(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::string(s, e, f, c) {
+    _xsd_strategy_convert();
+}
+
+strategy* strategy::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class strategy(*this, f, c); }
+
+strategy::value strategy::_xsd_strategy_convert() const {
+    ::xsd::cxx::tree::enum_comparator<char> c(_xsd_strategy_literals_);
+    const value* i(::std::lower_bound(_xsd_strategy_indexes_, _xsd_strategy_indexes_ + 3, *this, c));
+
+    if (i == _xsd_strategy_indexes_ + 3 || _xsd_strategy_literals_[*i] != *this) {
+        throw ::xsd::cxx::tree::unexpected_enumerator<char>(*this);
+    }
+
+    return *i;
+}
+
+const char* const strategy::_xsd_strategy_literals_[3] = { "SERIAL", "GRID", "SLICE" };
+
+const strategy::value strategy::_xsd_strategy_indexes_[3] = { ::strategy::GRID, ::strategy::SERIAL, ::strategy::SLICE };
 
 // boundaries
 //

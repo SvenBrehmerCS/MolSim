@@ -158,6 +158,39 @@
                 </xs:simpleType>
             </xs:element>
 
+            <xs:element name="strategy" default="GRID">
+                <xs:annotation>
+                    <xs:documentation> The desired parallelization strategy to be used. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation> This simple type represents the parallelization strategy
+                            used by the simulation. </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="SERIAL">
+                            <xs:annotation>
+                                <xs:documentation> @brief Uses no parallelization when updating the
+                                    container. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="GRID">
+                            <xs:annotation>
+                                <xs:documentation> @brief Divides the container update so that cells
+                                    that can not interfere with each other are updated parallelized. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="SLICE">
+                            <xs:annotation>
+                                <xs:documentation> @brief Divides the container update so that the
+                                    directional accesses are computed at the same time. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
             <xs:element name="boundaries">
                 <xs:annotation>
                     <xs:documentation> The desired boundary conditions. </xs:documentation>

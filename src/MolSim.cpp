@@ -51,7 +51,7 @@ int main(const int argc, const char* argv[]) {
     if (env.requires_direct_sum()) {
         cont = std::make_shared<DSContainer>(env.get_domain_size());
     } else {
-        cont = std::make_shared<BoxContainer>(env.get_r_cutoff(), env.get_domain_size());
+        cont = std::make_shared<BoxContainer>(env.get_r_cutoff(), env.get_domain_size(), env.get_update_strategy());
     }
 
     reader->readParticle(*cont, env.get_delta_t(), env.get_gravity());

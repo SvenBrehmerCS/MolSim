@@ -6,11 +6,16 @@
 
 #pragma once
 
+#include "Environment.h"
 #include "Particle.h"
 
 #include <functional>
 #include <list>
 #include <vector>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 /**
  * @typedef particle_pair_it
@@ -33,6 +38,12 @@ typedef void(particle_it)(Particle&);
  */
 class CellList {
 private:
+    enum Direction {
+        X,
+        Y,
+        Z,
+    };
+
     /**
      * Store the cells in a flat out vector.
      */
@@ -58,6 +69,28 @@ private:
      */
     Vec<double> dom, domain_x, domain_y, domain_z, domain_xy, domain_xz, domain_yz;
 
+    UpdateStrategy strat;
+
+    /**
+     * adjacency list contains the neighbours of each cell
+     */
+    std::vector<std::vector<size_t>> adjacency_list;
+
+    /**
+     * adjacency_list_squared contains all neighbours and 2nd degree neighbours of each cell
+     */
+    std::vector<std::vector<size_t>> adjacency_list_squared;
+
+    /**
+     * contains all colors needed to group the cells into colors
+     */
+    std::vector<int> colors;
+
+    // the groups vector has the colors as index and a list of cells with the same color in it
+
+    int num_colors;
+
+    std::vector<std::vector<size_t>> groups;
 
 public:
     /**
@@ -70,8 +103,9 @@ public:
      *
      * @param rc The new cutoff distance.
      * @param domain The domain size.
+     * @param strat The parallelization strategy used for updating the cells.
      */
-    CellList(const double rc, const Vec<double>& domain);
+    CellList(const double rc, const Vec<double>& domain, const UpdateStrategy strat = UpdateStrategy::SERIAL);
 
     /**
      * Define the default destructor.
@@ -84,7 +118,7 @@ public:
      * @param x The x coordinate.
      * @param y The y coordinate.
      * @param z The z coordinate.
-     * 
+     *
      * @return The index of the cell within the cell list.
      */
     size_t get_cell_index(const size_t x, const size_t y, const size_t z);
@@ -95,6 +129,12 @@ public:
      * @return The corner vector.
      */
     Vec<double> get_corner_vector();
+    std::vector<std::vector<size_t>> adjacency_l();
+    static std::vector<std::vector<size_t>> adjacency_squared(std::vector<std::vector<size_t>>& adjacency);
+    // TODO Documentation and cleanup
+    void initialize_iterate_pairs_parallel_colors();
+    void loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+    void loop_cell_pairs_molecules_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
     /**
      * Create the cell list using the particle vector. This method must only be called if the cell list was initialized with the detailed constructor.
@@ -111,6 +151,44 @@ public:
      */
     void loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
 
+private:
+    /**
+     * A serial looping algorithm making use of newton thrid law.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_cell_pairs_serial(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * A parallel implementation of loop_cell_pairs_serial(iterator, particles).
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_cell_pairs_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * A looping algorithm separating cell interactions to update domain slices parallel.
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     */
+    void loop_cell_pairs_slices(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles);
+
+    /**
+     * Implements the cell interactions for loop_cell_pairs_slices(iterator, particles).
+     *
+     * @param iterator The particle iteration lambda.
+     * @param particles The particles vector.
+     * @param offs_1 First offset for interaction. (e.g. X offset for XZ slices)
+     * @param offs_2 Second offset for interaction. (e.g. Z offset for XZ slices)
+     * @param dir The Axis piercing the simulated slice.
+     */
+    void slice_loop_helper(
+        const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles, const int offs_1, const int offs_2, const Direction dir);
+
+public:
     /**
      * Loop through the particles within the halo.
      *

@@ -8,6 +8,7 @@
     </output>
     <param>
         <calc>GRAVITY</calc>
+        <strategy>SLICE</strategy>
         <boundaries>
             <boundary_yz_near>PERIODIC</boundary_yz_near>
             <boundary_xz_near>HARD</boundary_xz_near>

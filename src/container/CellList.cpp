@@ -4,10 +4,13 @@
 
 #include <algorithm>
 #include <cmath>
+#include <set>
+#include <unordered_set>
 
 #include <spdlog/spdlog.h>
 
-CellList::CellList(const double rc, const Vec<double>& domain) {
+
+CellList::CellList(const double rc, const Vec<double>& domain, const UpdateStrategy strat) {
     this->rc = rc;
     rc_squ = rc * rc;
     n_x = std::ceil(domain[0] / rc) + 2;
@@ -29,6 +32,11 @@ CellList::CellList(const double rc, const Vec<double>& domain) {
     domain_xy = { domain[0], domain[1], 0.0 };
     domain_xz = { domain[0], 0.0, domain[2] };
     domain_yz = { 0.0, domain[1], domain[2] };
+
+    this->strat = strat;
+
+    // REMOVE
+    // initialize_iterate_pairs_parallel_colors();
 }
 
 void CellList::create_list(const std::vector<Particle>& particles) {
@@ -70,7 +78,203 @@ Vec<double> CellList::get_corner_vector() {
     };
 }
 
+std::vector<std::vector<size_t>> CellList::adjacency_l() {
+    std::vector<std::vector<size_t>> adjacency(cells.size());
+
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            for (size_t k = 1; k < n_z - 1; k++) {
+                // current cell where all neighbours should be searched
+                const size_t idx = get_cell_index(i, j, k);
+
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        for (int dz = -1; dz <= 1; dz++) {
+                            // coordinates of the neighbour cell
+                            if (dx == 0 && dy == 0 && dz == 0) {
+                                continue;
+                            }
+                            adjacency[idx].push_back(get_cell_index(i + dx, j + dy, k + dz));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return adjacency;
+}
+
+std::vector<std::vector<size_t>> CellList::adjacency_squared(std::vector<std::vector<size_t>>& adjacency) {
+    std::vector<std::vector<size_t>> adjacency_squared(adjacency.size());
+
+    for (size_t node = 0; node < adjacency.size(); node++) {
+        std::unordered_set<size_t> neighbours;
+        for (auto neighbour1 : adjacency[node]) {
+            neighbours.insert(neighbour1);
+            for (auto neighbour2 : adjacency[neighbour1]) {
+                neighbours.insert(neighbour2);
+            }
+        }
+        neighbours.erase(node);
+        adjacency_squared[node] = std::vector(neighbours.begin(), neighbours.end());
+    }
+    return adjacency_squared;
+}
+
+std::vector<int> color_greedy(const std::vector<std::vector<size_t>>& adjacency) {
+    std::vector colors(adjacency.size(), -1);
+    for (size_t cell = 0; cell < adjacency.size(); cell++) {
+        std::set<int> used;
+        for (auto n : adjacency[cell]) {
+            if (colors[n] != -1) {
+                used.insert(colors[n]);
+            }
+        }
+        int c = 0;
+        while (used.find(c) != used.end()) {
+            ++c;
+        }
+        colors[cell] = c;
+    }
+    return colors;
+}
+
+void CellList::initialize_iterate_pairs_parallel_colors() {
+    adjacency_list = adjacency_l();
+
+    adjacency_list_squared = adjacency_squared(adjacency_list);
+
+    colors = color_greedy(adjacency_list_squared);
+
+    int num_colors = -1;
+
+#pragma omp parallel for reduction(max : num_colors) schedule(dynamic)
+    for (size_t i = 0; i < colors.size(); i++) {
+        num_colors = colors[i] > num_colors ? colors[i] : num_colors;
+    }
+    // the groups vector has the colors as index and a list of cells with the same color in it
+    const std::vector<std::vector<size_t>> tmp(num_colors + 1);
+    groups = tmp;
+
+    // fill the cells into groups here
+    for (size_t cell = 0; cell < adjacency_list.size(); cell++) {
+        groups[colors[cell]].push_back(cell);
+    }
+}
+
+void CellList::loop_cell_pairs_parallel_colors(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+    for (size_t color = 0; color < groups.size(); color++) {
+#pragma omp parallel for schedule(dynamic)
+        for (size_t cell = 0; cell < groups[color].size(); cell++) {
+            const size_t idx = groups[color][cell];
+
+            for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
+                for (auto l2_it = l1_it + 1; l2_it != cells[idx].end(); l2_it++) {
+                    Particle& p1 = particles[*l1_it];
+                    Particle& p2 = particles[*l2_it];
+                    auto diff = p1.getX() - p2.getX();
+                    double dis_squa = diff.len_squ();
+                    if (dis_squa <= rc_squ) {
+                        iterator(p1, p2);
+                    }
+                }
+            }
+
+            for (const size_t l : cells[idx]) {
+                Particle& self = particles[l];
+
+                for (auto n : adjacency_list[idx]) {
+                    if (idx < n) {
+                        continue;
+                    }
+                    for (const size_t m : cells[n]) {
+                        Particle& p = particles[m];
+                        if ((self.getX() - p.getX()).len_squ() <= rc_squ) {
+                            iterator(self, p);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void CellList::loop_cell_pairs_molecules_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+#pragma omp parallel for collapse(3) schedule(dynamic)
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            for (size_t k = 1; k < n_z - 1; k++) {
+                const size_t idx = get_cell_index(i, j, k);
+
+                for (size_t l = 0; l < cells[idx].size(); l++) {
+                    auto l1_it = std::next(cells[idx].begin(), l);
+                    for (auto l2_it = std::next(cells[idx].begin(), l + 1); l2_it != cells[idx].end(); l2_it++) {
+                        if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
+#pragma omp critical
+                            iterator(particles[*l1_it], particles[*l2_it]);
+                        }
+                    }
+                }
+
+                // Loop through the direct neighbors
+                for (size_t l : cells[idx]) {
+                    Particle& self = particles[l];
+
+                    auto process_neigbour_cells = [&](size_t cell_idx) {
+                        for (size_t m : cells[cell_idx]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+#pragma omp critical
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    };
+                    // Loop through the direct neighbours
+                    process_neigbour_cells(get_cell_index(i + 1, j, k));
+                    process_neigbour_cells(get_cell_index(i, j + 1, k));
+                    process_neigbour_cells(get_cell_index(i, j, k + 1));
+
+                    // Loop through the neighbours with shared edge
+                    process_neigbour_cells(get_cell_index(i + 1, j + 1, k));
+                    process_neigbour_cells(get_cell_index(i + 1, j, k + 1));
+                    process_neigbour_cells(get_cell_index(i, j + 1, k + 1));
+
+                    // Loop through the neighbors with shared corners
+                    process_neigbour_cells(get_cell_index(i + 1, j + 1, k + 1));
+
+                    // Loop backwards particles
+                    process_neigbour_cells(get_cell_index(i + 1, j - 1, k));
+                    process_neigbour_cells(get_cell_index(i + 1, j, k - 1));
+                    process_neigbour_cells(get_cell_index(i + 1, j - 1, k - 1));
+
+                    // Loop sidewards particles
+                    process_neigbour_cells(get_cell_index(i - 1, j - 1, k + 1));
+                    process_neigbour_cells(get_cell_index(i, j - 1, k + 1));
+                    process_neigbour_cells(get_cell_index(i + 1, j - 1, k + 1));
+                }
+            }
+        }
+    }
+}
+
 void CellList::loop_cell_pairs(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+    switch (strat) {
+    case SERIAL:
+        loop_cell_pairs_serial(iterator, particles);
+        break;
+    case GRID:
+        loop_cell_pairs_parallel(iterator, particles);
+        break;
+    case SLICE:
+        loop_cell_pairs_slices(iterator, particles);
+        break;
+    default:
+        SPDLOG_ERROR("Parallelization strategy not fully added. Using GRID parallelization.");
+        loop_cell_pairs_parallel(iterator, particles);
+        break;
+    }
+}
+
+void CellList::loop_cell_pairs_serial(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
     // Loop through the cells using the indices, ignore halo cells
     for (size_t i = 1; i < n_x - 1; i++) {
         for (size_t j = 1; j < n_y - 1; j++) {
@@ -174,6 +378,268 @@ void CellList::loop_cell_pairs(const std::function<particle_pair_it>& iterator, 
                 }
             }
         }
+    }
+}
+
+void CellList::loop_cell_pairs_parallel(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+    for (size_t x = 1; x < 4; x++) {
+        for (size_t y = 1; y < 4; y++) {
+            for (size_t z = 1; z < 4; z++) {
+// Loop through the cells using the indices, ignore halo cells
+#pragma omp parallel for collapse(3) schedule(dynamic)
+                for (size_t i = x; i < n_x - 1; i += 3) {
+                    for (size_t j = y; j < n_y - 1; j += 3) {
+                        for (size_t k = z; k < n_z - 1; k += 3) {
+                            const size_t idx = get_cell_index(i, j, k);
+
+                            for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
+                                auto l2_it = l1_it;
+                                l2_it++;
+                                for (; l2_it != cells[idx].end(); l2_it++) {
+                                    if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
+                                        iterator(particles[*l1_it], particles[*l2_it]);
+                                    }
+                                }
+                            }
+
+                            // Loop through the direct neighbors
+                            for (size_t l : cells[idx]) {
+                                Particle& self = particles[l];
+                                for (size_t m : cells[get_cell_index(i + 1, j, k)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i, j + 1, k)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i, j, k + 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                // Loop through the neighbors with shared edge
+                                for (size_t m : cells[get_cell_index(i + 1, j + 1, k)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i + 1, j, k + 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i, j + 1, k + 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                // Loop through the neighbors with shared corners
+                                for (size_t m : cells[get_cell_index(i + 1, j + 1, k + 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                // Loop backwards particles
+                                for (size_t m : cells[get_cell_index(i + 1, j - 1, k)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i + 1, j, k - 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i + 1, j - 1, k - 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                // Loop sidewards particles
+                                for (size_t m : cells[get_cell_index(i - 1, j - 1, k + 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i, j - 1, k + 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+
+                                for (size_t m : cells[get_cell_index(i + 1, j - 1, k + 1)]) {
+                                    if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                        iterator(self, particles[m]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void CellList::loop_cell_pairs_slices(const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles) {
+#pragma omp parallel for collapse(3) schedule(dynamic)
+    for (size_t i = 1; i < n_x - 1; i++) {
+        for (size_t j = 1; j < n_y - 1; j++) {
+            for (size_t k = 1; k < n_z - 1; k++) {
+                const size_t idx = get_cell_index(i, j, k);
+
+                for (auto l1_it = cells[idx].begin(); l1_it != cells[idx].end(); l1_it++) {
+                    auto l2_it = l1_it;
+                    l2_it++;
+                    for (; l2_it != cells[idx].end(); l2_it++) {
+                        if ((particles[*l1_it].getX() - particles[*l2_it].getX()).len_squ() <= rc_squ) {
+                            iterator(particles[*l1_it], particles[*l2_it]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Update
+    slice_loop_helper(iterator, particles, 0, 0, X);
+    slice_loop_helper(iterator, particles, 0, -1, X);
+    slice_loop_helper(iterator, particles, 1, -1, X);
+    slice_loop_helper(iterator, particles, 1, 0, X);
+    slice_loop_helper(iterator, particles, 1, 1, X);
+    slice_loop_helper(iterator, particles, 0, 1, X);
+    slice_loop_helper(iterator, particles, 0, 1, Y);
+    slice_loop_helper(iterator, particles, 0, -1, Y);
+    slice_loop_helper(iterator, particles, -1, -1, Y);
+    slice_loop_helper(iterator, particles, -1, 1, Y);
+    slice_loop_helper(iterator, particles, -1, 0, Y);
+    slice_loop_helper(iterator, particles, 0, 0, Y);
+    slice_loop_helper(iterator, particles, 0, 0, Z);
+}
+
+void CellList::slice_loop_helper(
+    const std::function<particle_pair_it>& iterator, std::vector<Particle>& particles, const int offs_1, const int offs_2, const Direction dir) {
+    // Loop through the cells as slices, ignore halo cells
+    switch (dir) {
+    case X:
+#pragma omp parallel for collapse(3) schedule(dynamic)
+        for (size_t i = 1; i < n_x; i += 2) {
+            for (size_t j = 1; j < n_y - 1; j++) {
+                for (size_t k = 1; k < n_z - 1; k++) {
+
+                    for (size_t l : cells[get_cell_index(i - 1, j, k)]) {
+                        Particle& self = particles[l];
+                        for (size_t m : cells[get_cell_index(i, j + offs_1, k + offs_2)]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+#pragma omp parallel for collapse(3) schedule(dynamic)
+        for (size_t i = 2; i < n_x; i += 2) {
+            for (size_t j = 1; j < n_y - 1; j++) {
+                for (size_t k = 1; k < n_z - 1; k++) {
+
+                    for (size_t l : cells[get_cell_index(i - 1, j, k)]) {
+                        Particle& self = particles[l];
+                        for (size_t m : cells[get_cell_index(i, j + offs_1, k + offs_2)]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case Y:
+#pragma omp parallel for collapse(3) schedule(dynamic)
+        for (size_t i = 1; i < n_x - 1; i++) {
+            for (size_t j = 1; j < n_y; j += 2) {
+                for (size_t k = 1; k < n_z - 1; k++) {
+
+                    for (size_t l : cells[get_cell_index(i, j - 1, k)]) {
+                        Particle& self = particles[l];
+                        for (size_t m : cells[get_cell_index(i + offs_1, j, k + offs_2)]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+#pragma omp parallel for collapse(3) schedule(dynamic)
+        for (size_t i = 1; i < n_x - 1; i++) {
+            for (size_t j = 2; j < n_y; j += 2) {
+                for (size_t k = 1; k < n_z - 1; k++) {
+
+                    for (size_t l : cells[get_cell_index(i, j - 1, k)]) {
+                        Particle& self = particles[l];
+                        for (size_t m : cells[get_cell_index(i + offs_1, j, k + offs_2)]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case Z:
+#pragma omp parallel for collapse(3) schedule(dynamic)
+        for (size_t i = 1; i < n_x - 1; i++) {
+            for (size_t j = 1; j < n_y - 1; j++) {
+                for (size_t k = 1; k < n_z; k += 2) {
+
+                    for (size_t l : cells[get_cell_index(i, j, k - 1)]) {
+                        Particle& self = particles[l];
+                        for (size_t m : cells[get_cell_index(i, j, k)]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+#pragma omp parallel for collapse(3) schedule(dynamic)
+        for (size_t i = 1; i < n_x - 1; i++) {
+            for (size_t j = 1; j < n_y - 1; j++) {
+                for (size_t k = 2; k < n_z; k += 2) {
+
+                    for (size_t l : cells[get_cell_index(i, j, k - 1)]) {
+                        Particle& self = particles[l];
+                        for (size_t m : cells[get_cell_index(i, j, k)]) {
+                            if ((self.getX() - particles[m].getX()).len_squ() <= rc_squ) {
+                                iterator(self, particles[m]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    default:
+        SPDLOG_CRITICAL("Tried to create cell slices in a higher dimension.");
+        std::exit(EXIT_FAILURE);
     }
 }
 

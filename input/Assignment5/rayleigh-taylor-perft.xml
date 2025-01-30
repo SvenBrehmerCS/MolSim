@@ -4,10 +4,11 @@
     <output>
         <name>rayleigh_perft</name>
         <format>NO_OUT</format>
-        <frequency>100000</frequency>
+        <frequency>300000</frequency>
     </output>
     <param>
         <calc>LJ_FULL</calc>
+        <strategy>GRID</strategy>
         <boundaries>
             <boundary_yz_near>PERIODIC</boundary_yz_near>
             <boundary_xz_near>HALO</boundary_xz_near>
