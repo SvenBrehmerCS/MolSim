@@ -111,5 +111,3 @@ Initialize the Tags in the XML File, the values will be used to run the simulati
 | **T_target**   | Target temperature of the simulation.                      | `minOccurs="0" maxOccurs="1"`                             |
 | **T_frequency**| Simulation steps between thermostat applications.          | `default="10000"`                                         |
 | **max_delta_T**| Absolute maximum value of temperature change.              | `minOccurs="0"`                                           |
-
-<!-- TODO: Gonnet's Algorithms LCR - Sorted Linked Cells -->

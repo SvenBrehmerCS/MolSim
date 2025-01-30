@@ -39,7 +39,7 @@ namespace physicsCalculator {
          *
          * @param i The indices of the particles that should be tweezered.
          * @param f The force that should be applied to the particles.
-         * @param e THe end of the tweezers application.
+         * @param e The end of the tweezers application.
          */
         Tweezers(const std::vector<size_t>& i, const Vec<double>& f, const double e);
 
