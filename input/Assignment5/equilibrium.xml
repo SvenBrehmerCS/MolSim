@@ -4,7 +4,7 @@
     <output>
         <name>equilibrium</name>
         <format>CHECKPOINT</format>
-        <frequency>1000</frequency>
+        <frequency>50</frequency>
     </output>
     <param>
         <calc>LJ_SMOOTH</calc>

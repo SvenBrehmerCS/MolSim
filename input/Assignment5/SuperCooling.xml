@@ -4,7 +4,7 @@
     <output>
         <name>SlowCooling</name>
         <format>VTK</format>
-        <frequency>1000</frequency>
+        <frequency>50</frequency>
     </output>
     <param>
         <calc>LJ_SMOOTH</calc>
