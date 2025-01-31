@@ -3,8 +3,13 @@
     xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
         <name>SuperCooling</name>
-        <format>VTK</format>
+        <format>RDF</format>
         <frequency>50</frequency>
+        <RDF_args>
+            <num_buckets>20</num_buckets>
+            <bucket_size>0.46</bucket_size>
+        </RDF_args>
+        <diffusion>SuperDiff</diffusion>
     </output>
     <param>
         <calc>LJ_SMOOTH</calc>

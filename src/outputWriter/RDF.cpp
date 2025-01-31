@@ -2,13 +2,14 @@
 
 namespace outputWriter {
 
-    RDF::RDF(const double delta_r, const size_t buckets, const std::string& filename) {
+    RDF::RDF(const double delta_r, const size_t buckets, const std::array<BoundaryType, 6>& bt, const Vec<double>& domain) {
         this->buckets = buckets;
         this->delta_r = delta_r;
-        rdfFile = filename;
+        this->bt = bt;
+        this->domain = domain;
     }
 
-    std::vector<size_t> RDF::generateRDF(const ParticleContainer& pc, const std::array<BoundaryType, 6>& bt, const Vec<double> domain) {
+    std::vector<size_t> RDF::generateRDF(const ParticleContainer& pc) {
         std::vector<size_t> rdf(buckets);
 
         const double max_dist = buckets * delta_r;
@@ -213,9 +214,9 @@ namespace outputWriter {
         return rdf;
     }
 
-    void RDF::writeRDF(const ParticleContainer& pc, const std::array<BoundaryType, 6>& bt, const Vec<double> domain, const size_t it) {
-        std::vector<size_t> rdf = generateRDF(pc, bt, domain);
-        std::fstream file(rdfFile + std::to_string(it));
+    void RDF::plotParticles(const ParticleContainer& pc, const std::string& filename, const int it) {
+        std::vector<size_t> rdf = generateRDF(pc);
+        std::fstream file(filename + std::to_string(it));
 
         for (size_t i = 0; i < rdf.size(); i++) {
             const double r_i = i * delta_r;

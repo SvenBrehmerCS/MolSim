@@ -575,6 +575,7 @@ class pivector3;
 class pivector2;
 class format;
 class frequency;
+class RDF_args;
 class calc;
 class strategy;
 class boundaries;
@@ -1448,6 +1449,80 @@ public:
     //@}
 
     /**
+     * @name RDF_args
+     *
+     * @brief Accessor and modifier functions for the %RDF_args
+     * optional element.
+     *
+     * This complex type represents the arguments needed by the RDF
+     * writer.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::RDF_args RDF_args_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<RDF_args_type> RDF_args_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<RDF_args_type, char> RDF_args_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const RDF_args_optional& RDF_args() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    RDF_args_optional& RDF_args();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void RDF_args(const RDF_args_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void RDF_args(const RDF_args_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void RDF_args(::std::unique_ptr<RDF_args_type> p);
+
+    //@}
+
+    /**
      * @name diffusion
      *
      * @brief Accessor and modifier functions for the %diffusion
@@ -1604,6 +1679,7 @@ protected:
     ::xsd::cxx::tree::one<format_type> format_;
     static const format_type format_default_value_;
     ::xsd::cxx::tree::one<frequency_type> frequency_;
+    RDF_args_optional RDF_args_;
     diffusion_optional diffusion_;
     static const diffusion_type diffusion_default_value_;
 
@@ -6220,6 +6296,182 @@ public:
      * @brief Destructor.
      */
     virtual ~frequency();
+};
+
+/**
+ * @brief Class corresponding to the %RDF_args schema type.
+ *
+ * @nosubgrouping
+ */
+class RDF_args : public ::xml_schema::type {
+public:
+    /**
+     * @name num_buckets
+     *
+     * @brief Accessor and modifier functions for the %num_buckets
+     * required element.
+     *
+     * Number of buckets used by RDF.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::xml_schema::positive_integer num_buckets_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<num_buckets_type, char> num_buckets_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const num_buckets_type& num_buckets() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    num_buckets_type& num_buckets();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void num_buckets(const num_buckets_type& x);
+
+    //@}
+
+    /**
+     * @name bucket_size
+     *
+     * @brief Accessor and modifier functions for the %bucket_size
+     * required element.
+     *
+     * Size of the buckets used by RDF.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::xml_schema::double_ bucket_size_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<bucket_size_type, char, ::xsd::cxx::tree::schema_type::double_> bucket_size_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const bucket_size_type& bucket_size() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    bucket_size_type& bucket_size();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void bucket_size(const bucket_size_type& x);
+
+    //@}
+
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    RDF_args(const num_buckets_type&, const bucket_size_type&);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    RDF_args(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    RDF_args(const RDF_args& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual RDF_args* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    /**
+     * @brief Copy assignment operator.
+     *
+     * @param x An instance to make a copy of.
+     * @return A reference to itself.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    RDF_args& operator=(const RDF_args& x);
+
+    //@}
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~RDF_args();
+
+    // Implementation.
+    //
+
+    //@cond
+
+protected:
+    void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+protected:
+    ::xsd::cxx::tree::one<num_buckets_type> num_buckets_;
+    ::xsd::cxx::tree::one<bucket_size_type> bucket_size_;
+
+    //@endcond
 };
 
 /**

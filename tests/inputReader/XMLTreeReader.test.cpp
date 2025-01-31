@@ -66,8 +66,8 @@ TEST(XMLTreeReader, TestNonDefaultValues) {
     exp_thermo.set_max_change(5);
     exp_thermo.set_T_target(28);
 
-    reader.readArguments(environment, thermo);
-    reader.readParticle(container, tweezer, environment.get_delta_t(), environment.get_gravity());
+    ASSERT_NO_THROW(reader.readArguments(environment, thermo));
+    ASSERT_NO_THROW(reader.readParticle(container, tweezer, environment.get_delta_t(), environment.get_gravity()));
     EXPECT_EQ(container.size(), 0);
     EXPECT_STREQ(environment.get_output_file_name(), "TestNonDefault");
     EXPECT_EQ(environment.get_output_file_format(), XYZ);
@@ -153,6 +153,30 @@ TEST(XMLTreeReader, TestXMLDisc) {
     EXPECT_EQ(container[2].getV(), v);
     EXPECT_EQ(container[3].getV(), v);
     EXPECT_EQ(container[4].getV(), v);
+}
+
+// Test if the membrane and tweezers are generated correctly
+TEST(XMLTreeReader, TestXMLMembrane) {
+    const char* xml = "../tests/res/testMembrane.xml";
+
+    DSContainer container;
+    physicsCalculator::Tweezers tweezer;
+    inputReader::XMLTreeReader reader(xml);
+
+    reader.readParticle(container, tweezer, 0.0005, 0.0);
+
+    Vec<double> x1 = { 1, 2, 3 };
+    Vec<double> x2 = { 2, 2, 3 };
+    Vec<double> x3 = { 3, 2, 3 };
+    Vec<double> x4 = { 1, 3, 3 };
+    Vec<double> x5 = { 2, 3, 3 };
+    Vec<double> x6 = { 3, 3, 3 };
+    Vec<double> x7 = { 1, 4, 3 };
+    Vec<double> x8 = { 2, 4, 3 };
+    Vec<double> x9 = { 3, 4, 3 };
+    Vec<double> v1 = { 3, 2, 1 };
+
+    container.get_types();
 }
 
 // test of everything combined has the correct value (with default value thermostat)

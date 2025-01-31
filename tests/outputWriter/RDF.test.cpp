@@ -19,11 +19,10 @@ TEST(RDF, NoParticles) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the RDF
-    outputWriter::RDF rdf(2.0, 100, "ignore");
+    outputWriter::RDF rdf(2.0, 100, std::array<BoundaryType, 6> { PERIODIC, HARD, HARD, PERIODIC, HARD, HARD }, Vec<double> { 200.0, 200.0, 200.0 });
 
     // Generate the RDF
-    std::vector<size_t> rdf_data = rdf.generateRDF(
-        calc.get_container(), std::array<BoundaryType, 6> { PERIODIC, HARD, HARD, PERIODIC, HARD, HARD }, Vec<double> { 200.0, 200.0, 200.0 });
+    std::vector<size_t> rdf_data = rdf.generateRDF(calc.get_container());
 
     EXPECT_EQ(rdf_data, std::vector<size_t>(100)) << "RDF data should be empty.";
 }
@@ -64,11 +63,10 @@ TEST(RDF, NoPeriodic) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the RDF
-    outputWriter::RDF rdf(20.0, 10, "ignore");
+    outputWriter::RDF rdf(20.0, 10, std::array<BoundaryType, 6> { HARD, HARD, HARD, HARD, HARD, HARD }, Vec<double> { 200.0, 200.0, 200.0 });
 
     // Generate the RDF
-    std::vector<size_t> rdf_data = rdf.generateRDF(
-        calc.get_container(), std::array<BoundaryType, 6> { HARD, HARD, HARD, HARD, HARD, HARD }, Vec<double> { 200.0, 200.0, 200.0 });
+    std::vector<size_t> rdf_data = rdf.generateRDF(calc.get_container());
 
     EXPECT_EQ(rdf_data, std::vector<size_t>({ 36, 66, 58, 50, 42, 34, 26, 18, 10, 2 }))
         << "RDF data was incorrect: " << ArrayUtils::to_string(rdf_data);
@@ -110,11 +108,11 @@ TEST(RDF, Periodic) {
     physicsCalculator::LJCalculator calc(env, particles, ptypes, false);
 
     // Initialize the RDF
-    outputWriter::RDF rdf(20.0, 10, "ignore");
+    outputWriter::RDF rdf(
+        20.0, 10, std::array<BoundaryType, 6> { PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC }, Vec<double> { 200.0, 200.0, 200.0 });
 
     // Generate the RDF
-    std::vector<size_t> rdf_data = rdf.generateRDF(calc.get_container(),
-        std::array<BoundaryType, 6> { PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC, PERIODIC }, Vec<double> { 200.0, 200.0, 200.0 });
+    std::vector<size_t> rdf_data = rdf.generateRDF(calc.get_container());
 
     EXPECT_EQ(rdf_data, std::vector<size_t>({ 36, 72, 72, 72, 72, 72, 72, 72, 72, 72 }))
         << "RDF data was incorrect: " << ArrayUtils::to_string(rdf_data);

@@ -7,6 +7,7 @@
 #include "inputReader/XMLTreeReader.h"
 #include "outputWriter/CheckpointWriter.h"
 #include "outputWriter/NoWriter.h"
+#include "outputWriter/RDF.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "physicsCalculator/GravityCalculator.h"
@@ -99,6 +100,10 @@ int main(const int argc, const char* argv[]) {
         break;
     case CHECKPOINT:
         writer = std::make_unique<outputWriter::VTKWriter>();
+        break;
+    case RDF:
+        writer = std::make_unique<outputWriter::RDF>(
+            env.get_RDF_bucket_size(), env.get_RDF_bucket_num(), env.get_boundary_type(), env.get_domain_size());
         break;
     default:
         SPDLOG_CRITICAL("Error: Illegal file format specifier.");

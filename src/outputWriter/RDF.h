@@ -7,6 +7,7 @@
 #pragma once
 
 #include "Environment.h"
+#include "Writer.h"
 #include "container/ParticleContainer.h"
 
 #include <fstream>
@@ -16,16 +17,11 @@
 namespace outputWriter {
     /**
      * @class RDF
-     * 
+     *
      * @brief Define the RDF writer, which is used for computing and writing the radial distribution.
      */
-    class RDF {
+    class RDF : public Writer {
     private:
-        /**
-         * The name of the file to write to.
-         */
-        std::string rdfFile;
-
         /**
          * The number of buckets.
          */
@@ -36,15 +32,26 @@ namespace outputWriter {
          */
         double delta_r;
 
+        /**
+         * The boundary types of the simulation.
+         */
+        std::array<BoundaryType, 6> bt;
+
+        /**
+         *  The size of the simulation domain.
+         */
+        Vec<double> domain;
+
     public:
         /**
          * Constructor for the RDF class.
          *
          * @param delta_r The width of each bucket.
          * @param buckets The number of buckets.
-         * @param filename The name of the file to write to.
+         * @param bt The type of the boundaries.
+         * @param domain The domain size.
          */
-        RDF(const double delta_r, const size_t buckets, const std::string& filename);
+        RDF(const double delta_r, const size_t buckets, const std::array<BoundaryType, 6>& bt, const Vec<double>& domain);
 
         /**
          * @brief Destructor for the RDF class.
@@ -55,21 +62,18 @@ namespace outputWriter {
          * Generates a radial distribution function.
          *
          * @param pc The particle container.
-         * @param bt The type of the boundaries.
-         * @param domain The domain size.
          *
          * @return The radial distribution function.
          */
-        std::vector<size_t> generateRDF(const ParticleContainer& pc, const std::array<BoundaryType, 6>& bt, const Vec<double> domain);
+        std::vector<size_t> generateRDF(const ParticleContainer& pc);
 
         /**
-         * Writes the RDF to a file.
+         * Handles the creation and writing of the vtk file.
          *
-         * @param pc The particle container.
-         * @param bt The type of the boundaries.
-         * @param domain The domain size.
-         * @param it The current iteration.
+         * @param container List of particles to be plotted.
+         * @param filename The base name of the file to be written.
+         * @param iteration The number of the current iteration, which is used to generate an unique filename.
          */
-        void writeRDF(const ParticleContainer& pc, const std::array<BoundaryType, 6>& bt, const Vec<double> domain, const size_t it);
+        virtual void plotParticles(const ParticleContainer& pc, const std::string& filename, const int iteration);
     };
 }

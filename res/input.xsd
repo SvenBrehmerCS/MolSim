@@ -132,6 +132,29 @@
                 </xs:simpleType>
             </xs:element>
 
+            <xs:element name="RDF_args" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> This complex type represents the arguments needed by the RDF
+                        writer. </xs:documentation>
+                </xs:annotation>
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="num_buckets" type="xs:positiveInteger">
+                            <xs:annotation>
+                                <xs:documentation> Number of buckets used by RDF. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+
+                        <xs:element name="bucket_size" type="xs:double">
+                            <xs:annotation>
+                                <xs:documentation> Size of the buckets used by RDF. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
             <xs:element name="diffusion" type="xs:string" default="MD_Diff" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation> Name of the diffusion output files. </xs:documentation>

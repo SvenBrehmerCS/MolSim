@@ -44,6 +44,15 @@ namespace inputReader {
         const int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
 
+        if (form == output_t::format_type::RDF && !sim->output().RDF_args().present()) {
+            SPDLOG_CRITICAL("RDF arguments are missing. Pleas make sure, that the size and number have the correct values.");
+            std::exit(EXIT_FAILURE);
+        }
+        const size_t num_buckets = sim->output().RDF_args().get().num_buckets();
+        environment.set_RDF_bucket_num(num_buckets);
+        const double bucket_size = sim->output().RDF_args().get().bucket_size();
+        environment.set_RDF_bucket_size(bucket_size);
+
         if (sim->output().diffusion().present()) {
             std::string diff_output_name = sim->output().diffusion().get();
             environment.set_diff_file_name(diff_output_name);

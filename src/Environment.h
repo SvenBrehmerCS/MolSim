@@ -178,6 +178,16 @@ private:
     OutputFormat output_format = VTK;
 
     /**
+     * Stores the number of buckets the domain is divided into.
+     */
+    size_t RDF_bucket_num = 0;
+
+    /**
+     * Stores the size of the buckets the domain is divided into.
+     */
+    double RDF_bucket_size = 0.0;
+
+    /**
      * Store after how many steps the simulation state should be saved. By default it is initialized to 10.
      */
     int print_step = 10;
@@ -378,6 +388,20 @@ public:
     inline const OutputFormat get_output_file_format() const { return output_format; }
 
     /**
+     * Get the number of buckets dividing used by the RDF writer to divide the domain.
+     *
+     * @return The number of all buckets.
+     */
+    inline const size_t get_RDF_bucket_num() const { return RDF_bucket_num; }
+
+    /**
+     * Get the size of the buckets used by the RDF writer to divide the domain.
+     *
+     * @return The size oft all buckets.
+     */
+    inline const double get_RDF_bucket_size() const { return RDF_bucket_size; }
+
+    /**
      * Get the calculator type which should be used for the force calculations.
      *
      * @return The calculator type.
@@ -505,6 +529,20 @@ public:
      * @param output_format The file format of the output file.
      */
     inline void set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
+
+    /**
+     * Set the number of buckets dividing used by the RDF writer to divide the domain.
+     *
+     * @return The number of all buckets.
+     */
+    inline void set_RDF_bucket_num(const size_t RDF_bucket_num) { this->RDF_bucket_num = RDF_bucket_num; }
+
+    /**
+     * Set the size of the buckets used by the RDF writer to divide the domain.
+     *
+     * @param RDF_bucket_size The size oft all buckets.
+     */
+    inline void set_RDF_bucket_size(const double RDF_bucket_size) { this->RDF_bucket_size = RDF_bucket_size; }
 
     /**
      * Set the calculator type which should be used for the force calculations.

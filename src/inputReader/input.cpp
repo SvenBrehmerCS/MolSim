@@ -141,6 +141,16 @@ void output_t::frequency(::std::unique_ptr<frequency_type> x) { this->frequency_
 
 output_t::frequency_type output_t::frequency_default_value() { return frequency_type(10ULL); }
 
+const output_t::RDF_args_optional& output_t::RDF_args() const { return this->RDF_args_; }
+
+output_t::RDF_args_optional& output_t::RDF_args() { return this->RDF_args_; }
+
+void output_t::RDF_args(const RDF_args_type& x) { this->RDF_args_.set(x); }
+
+void output_t::RDF_args(const RDF_args_optional& x) { this->RDF_args_ = x; }
+
+void output_t::RDF_args(::std::unique_ptr<RDF_args_type> x) { this->RDF_args_.set(std::move(x)); }
+
 const output_t::diffusion_optional& output_t::diffusion() const { return this->diffusion_; }
 
 output_t::diffusion_optional& output_t::diffusion() { return this->diffusion_; }
@@ -722,6 +732,22 @@ format& format::operator=(value v) {
 //
 
 
+// RDF_args
+//
+
+const RDF_args::num_buckets_type& RDF_args::num_buckets() const { return this->num_buckets_.get(); }
+
+RDF_args::num_buckets_type& RDF_args::num_buckets() { return this->num_buckets_.get(); }
+
+void RDF_args::num_buckets(const num_buckets_type& x) { this->num_buckets_.set(x); }
+
+const RDF_args::bucket_size_type& RDF_args::bucket_size() const { return this->bucket_size_.get(); }
+
+RDF_args::bucket_size_type& RDF_args::bucket_size() { return this->bucket_size_.get(); }
+
+void RDF_args::bucket_size(const bucket_size_type& x) { this->bucket_size_.set(x); }
+
+
 // calc
 //
 
@@ -1145,6 +1171,7 @@ output_t::output_t(const name_type& name, const format_type& format, const frequ
     , name_(name, this)
     , format_(format, this)
     , frequency_(frequency, this)
+    , RDF_args_(this)
     , diffusion_(this) { }
 
 output_t::output_t(const output_t& x, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -1152,6 +1179,7 @@ output_t::output_t(const output_t& x, ::xml_schema::flags f, ::xml_schema::conta
     , name_(x.name_, f, this)
     , format_(x.format_, f, this)
     , frequency_(x.frequency_, f, this)
+    , RDF_args_(x.RDF_args_, f, this)
     , diffusion_(x.diffusion_, f, this) { }
 
 output_t::output_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -1159,6 +1187,7 @@ output_t::output_t(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_
     , name_(this)
     , format_(this)
     , frequency_(this)
+    , RDF_args_(this)
     , diffusion_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -1204,6 +1233,17 @@ void output_t::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags 
             }
         }
 
+        // RDF_args
+        //
+        if (n.name() == "RDF_args" && n.namespace_().empty()) {
+            ::std::unique_ptr<RDF_args_type> r(RDF_args_traits::create(i, f, this));
+
+            if (!this->RDF_args_) {
+                this->RDF_args_.set(::std::move(r));
+                continue;
+            }
+        }
+
         // diffusion
         //
         if (n.name() == "diffusion" && n.namespace_().empty()) {
@@ -1239,6 +1279,7 @@ output_t& output_t::operator=(const output_t& x) {
         this->name_ = x.name_;
         this->format_ = x.format_;
         this->frequency_ = x.frequency_;
+        this->RDF_args_ = x.RDF_args_;
         this->diffusion_ = x.diffusion_;
     }
 
@@ -2814,6 +2855,78 @@ frequency::frequency(const ::std::string& s, const ::xercesc::DOMElement* e, ::x
 frequency* frequency::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class frequency(*this, f, c); }
 
 frequency::~frequency() { }
+
+// RDF_args
+//
+
+RDF_args::RDF_args(const num_buckets_type& num_buckets, const bucket_size_type& bucket_size)
+    : ::xml_schema::type()
+    , num_buckets_(num_buckets, this)
+    , bucket_size_(bucket_size, this) { }
+
+RDF_args::RDF_args(const RDF_args& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c)
+    , num_buckets_(x.num_buckets_, f, this)
+    , bucket_size_(x.bucket_size_, f, this) { }
+
+RDF_args::RDF_args(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c)
+    , num_buckets_(this)
+    , bucket_size_(this) {
+    if ((f & ::xml_schema::flags::base) == 0) {
+        ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+        this->parse(p, f);
+    }
+}
+
+void RDF_args::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+    for (; p.more_content(); p.next_content(false)) {
+        const ::xercesc::DOMElement& i(p.cur_element());
+        const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
+
+        // num_buckets
+        //
+        if (n.name() == "num_buckets" && n.namespace_().empty()) {
+            if (!num_buckets_.present()) {
+                this->num_buckets_.set(num_buckets_traits::create(i, f, this));
+                continue;
+            }
+        }
+
+        // bucket_size
+        //
+        if (n.name() == "bucket_size" && n.namespace_().empty()) {
+            if (!bucket_size_.present()) {
+                this->bucket_size_.set(bucket_size_traits::create(i, f, this));
+                continue;
+            }
+        }
+
+        break;
+    }
+
+    if (!num_buckets_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("num_buckets", "");
+    }
+
+    if (!bucket_size_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("bucket_size", "");
+    }
+}
+
+RDF_args* RDF_args::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class RDF_args(*this, f, c); }
+
+RDF_args& RDF_args::operator=(const RDF_args& x) {
+    if (this != &x) {
+        static_cast<::xml_schema::type&>(*this) = x;
+        this->num_buckets_ = x.num_buckets_;
+        this->bucket_size_ = x.bucket_size_;
+    }
+
+    return *this;
+}
+
+RDF_args::~RDF_args() { }
 
 // calc
 //
