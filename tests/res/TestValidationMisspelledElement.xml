@@ -7,6 +7,7 @@
     </output>
     <param>
         <calc></calc>
+        <strategy></strategy>
         <boundaries>
             <boundary_yz_near></boundary_yz_near>
             <boundary_xz_near></boundary_xz_near>
@@ -15,8 +16,6 @@
             <boundary_xz_far></boundary_xz_far>
             <boundary_xy_far></boundary_xy_far>
         </boundaries>
-        <epsilon></epsilon>
-        <sigma></sigma>
         <delta_t></delta_t>
         <t_end></t_end>
         <dimensions></dimensions>
@@ -26,5 +25,6 @@
             <vy>5</vy>
             <vz>5</vz>
         </domain>
+        <g_grav></g_grav>
     </param>
 </simulation>

@@ -8,6 +8,7 @@
     </output>
     <param>
         <calc></calc>
+        <strategy></strategy>
         <boundaries>
             <boundary_yz_near></boundary_yz_near>
             <boundary_xz_near></boundary_xz_near>
@@ -19,7 +20,8 @@
         <delta_t></delta_t>
         <t_end></t_end>
         <dimensions></dimensions>
-        <r_cutoff></r_cutoff>
+        <r_c></r_c>
+        <r_l></r_l>
         <domain>
             <vx>25</vx>
             <vy>25</vy>
@@ -81,6 +83,8 @@
         <b_motion>0</b_motion>
     </disc>
     <thermo>
-        <T_frequency></T_frequency>
+        <T_target>40</T_target>
+        <T_frequency>15</T_frequency>
+        <max_delta_T>5</max_delta_T>
     </thermo>
 </simulation>

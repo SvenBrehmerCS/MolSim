@@ -16,6 +16,14 @@ For building the project follow these steps:
 
 For speeding up the compilation process it is recommended to append `-j #cores` to the `make` command.
 
+## Building on CoolMuc4 (Leibniz-Rechenzentrum)
+
+1. To build the project on coolMuc4 switch the CMakeLists.txt with the CMakeLists.txt in the subdirectory [coolMuc4](./coolMuc4).
+2. load the xerces-c module on coolMuc4 with module load xerces-c.
+3. The g++ version on the cluster should be at least 12.2.0, load it with module load gcc/12.2.0, 
+4. The icpx version should be from 2023.2.0 load with module load intel/2023.2.0, if you want to compile with icpx instead of g++.
+3. Then follow the normal build steps specified above under ## Building.
+
 ## Documentation
 
 For generating the Doxygen documentation:

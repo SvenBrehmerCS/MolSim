@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <array>
 #include <string>
 
 #include "utils/Vec.h"
@@ -20,6 +21,11 @@
 class Particle {
 
 private:
+    /**
+     * The indices of the connected particles in the cell list
+     */
+    std::array<size_t, 8> neighbors;
+
     /**
      * Position of the particle
      */
@@ -41,9 +47,20 @@ private:
     Vec<double> old_f;
 
     /**
+     * The index of the particle in the particle container
+     */
+    size_t index;
+
+    /**
      * Type of the particle.
      */
     int type;
+
+    /**
+     * Define wether the particle is part of a molecule
+     */
+    bool in_molecule = false;
+
 
 public:
     /**
@@ -110,6 +127,38 @@ public:
     int getType() const;
 
     /**
+     * Get the index of the particle in the particle container.
+     *
+     * @return The index of the particle in the particle container.
+     */
+    size_t getIndex() const;
+
+    /**
+     * Test if the particle is part of a molecule.
+     *
+     * @return A boolean indicating if the particle is part of a molecule.
+     */
+    bool isMolecule() const;
+
+    /**
+     * Test if a particle is a direct neighbour of the particle.
+     *
+     * @param idx The index of the particle to test.
+     *
+     * @return A boolean indicating if the particle is a neighbour.
+     */
+    bool isDirectNeighbour(const size_t idx) const;
+
+    /**
+     * Test if a particle is a corner neighbour of the particle.
+     *
+     * @param idx The index of the particle to test.
+     *
+     * @return A boolean indicating if the particle is a corner neighbour.
+     */
+    bool isCornerNeighbour(const size_t idx) const;
+
+    /**
      * Set the position of the particle.
      *
      * @param x_new The new position.
@@ -145,6 +194,27 @@ public:
     void setType(const int new_type);
 
     /**
+     * Set the index of the particle in the particle container.
+     *
+     * @param index_new The new index of the particle in the particle container.
+     */
+    void setIndex(const size_t index_new);
+
+    /**
+     * Set the indices of the neighbors.
+     *
+     * @param neighbors_new The new indices of the neighbors.
+     */
+    void setNeighbors(const std::array<size_t, 8>& neighbors_new);
+
+    /**
+     * Set if the particle is part of a molecule.
+     *
+     * @param in_molecule A boolean indicating if the particle is part of a molecule.
+     */
+    void setInMolecule(const bool in_molecule);
+
+    /**
      * Compare if two particles are equal.
      *
      * @param other The particle which should be compared.
@@ -164,7 +234,7 @@ public:
 /**
  * Print a particle to an output stream.
  *
- * @param stream THe output stream, to which the particle should be printed. (cout, cerr)
+ * @param stream The output stream, to which the particle should be printed. (cout, cerr)
  * @param p The particle that should be printed.
  *
  * @return The output stream.

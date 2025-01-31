@@ -8,9 +8,16 @@
 #include "boundaries/PeriodicBoundary.h"
 #include "container/BoxContainer.h"
 
-Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain) {
+Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_domain, const physicsCalculator::Tweezers& tweezers,
+    const std::string diff_file, const bool generate_diff) {
     bound_t = bt;
     domain = new_domain;
+    tw = tweezers;
+    gen_diff = generate_diff;
+
+    if (generate_diff) {
+        diff.set_out_file(diff_file);
+    }
 
     // Initialize the particle container.
     for (size_t i = 0; i < 6; i++) {
@@ -40,30 +47,47 @@ Stepper::Stepper(const std::array<BoundaryType, 6>& bt, const Vec<double>& new_d
     }
 }
 
-void Stepper::step(physicsCalculator::Calculator& calc) {
+void Stepper::step(physicsCalculator::Calculator& calc, const double t) {
+    // Update the position
     calc.calculateX();
 
+    // Generate the diffusion information
+    if (gen_diff) {
+        diff.add_diffusion(calc.get_container(), calc.get_env());
+    }
+
+    // Update the position for the boundaries
     for (Particle& p : calc.get_container()) {
         for (size_t i = 0; i < bc.size(); i++) {
             bc[i]->postX(p);
         }
     }
 
+    // Handle outflow boundaries
     if (out) {
         calc.get_container().remove_particles_out_of_domain();
     }
 
+    // Container update cell positions
     calc.get_container().update_positions();
 
+    // Container update old F and F
     calc.calculateOldF();
     calc.calculateF();
 
+    // Apply the boundary forces
     for (Particle& p : calc.get_container()) {
         for (size_t i = 0; i < bc.size(); i++) {
             bc[i]->postF(p, calc);
         }
     }
 
+    // Apply the tweezers
+    if (t <= tw.get_end()) {
+        tw.apply(calc.get_container());
+    }
+
+    // Apply the periodic boundary forces
     if (bound_t[0] == PERIODIC) {
         BoxContainer& cont = dynamic_cast<BoxContainer&>(calc.get_container());
 
@@ -212,5 +236,6 @@ void Stepper::step(physicsCalculator::Calculator& calc) {
         });
     }
 
+    // Update the particle velocity
     calc.calculateV();
 }
