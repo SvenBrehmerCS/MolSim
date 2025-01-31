@@ -156,7 +156,7 @@ TEST(XMLTreeReader, TestXMLDisc) {
 }
 
 // Test if the membrane and tweezers are generated correctly
-TEST(XMLTreeReader, TestXMLMembrane) {
+TEST(XMLTreeReader, TestXMLMembraneTweezer) {
     const char* xml = "../tests/res/testMembrane.xml";
 
     DSContainer container;
@@ -175,8 +175,22 @@ TEST(XMLTreeReader, TestXMLMembrane) {
     Vec<double> x8 = { 2, 4, 3 };
     Vec<double> x9 = { 3, 4, 3 };
     Vec<double> v1 = { 3, 2, 1 };
+    TypeDesc td { 2.0, 5.0, 6.0, 0.005, 0.0, 4.0, 2.0 };
+    physicsCalculator::Tweezers tw;
+    tw.set_end(15.0);
+    tw.set_force({ -1.0, 0.0, 0.8 });
+    tw.set_indices({ 0, 7, 2 });
 
-    container.get_types();
+    TypeDesc temp = container.get_type_descriptor(0);
+
+    EXPECT_EQ(temp.get_mass(), td.get_mass()) << "Mass should be equal";
+    EXPECT_EQ(temp.get_sigma(), td.get_sigma()) << "Sigma should be equal";
+    EXPECT_EQ(temp.get_epsilon(), td.get_epsilon()) << "Epsilon should be equal";
+    EXPECT_EQ(temp.get_G(), td.get_G()) << "F_grav should be equal";
+    EXPECT_EQ(temp.get_k(), td.get_k()) << "Stiffness should be equal";
+    EXPECT_EQ(temp.get_r0(), td.get_r0()) << "average bond length should be equal";
+
+    EXPECT_EQ(tw, tweezer) << "Tweezers should be equal";
 }
 
 // test of everything combined has the correct value (with default value thermostat)
@@ -208,10 +222,10 @@ TEST(XMLTreeReader, TestXMLCombined) {
     inputReader::XMLTreeReader reader(xml);
 
     Thermostat exp_thermo;
-    exp_thermo.set_active(false);
+    exp_thermo.set_active(true);
     exp_thermo.set_dimensions(3);
-    exp_thermo.set_max_change(std::numeric_limits<double>::infinity());
-    exp_thermo.set_T_target(std::numeric_limits<double>::quiet_NaN());
+    exp_thermo.set_max_change(5);
+    exp_thermo.set_T_target(40);
 
     reader.readArguments(environment, thermo);
     reader.readParticle(container, tweezer, environment.get_delta_t(), environment.get_gravity());
