@@ -13,14 +13,14 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    # Update the compile options for the release mode
-    set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
+        # Update the compile options for the release mode
+        set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -flto=auto -fomit-frame-pointer -mtune=native -march=native")
 endif()
 
 # set Release as the default build type if it is not yet set.
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
-            "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+        set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+                "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 # Allow the user to set an upper limit for the log levels at compile time
@@ -77,7 +77,7 @@ target_compile_options(MolSim
         PRIVATE
         $<$<CXX_COMPILER_ID:GNU>:-Wall -Werror -Wno-unknown-pragmas>
         # disable some spam warnings for icpc...
-        $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259 -ip -ipo -fast>
+        $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259 -ip -ipo -fast -Wno-unknown-pragmas>
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
@@ -118,7 +118,7 @@ target_link_libraries(MolSim PRIVATE spdlog::spdlog)
 
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
-    target_link_libraries(MolSim PUBLIC OpenMP::OpenMP_CXX)
+        target_link_libraries(MolSim PUBLIC OpenMP::OpenMP_CXX)
 endif(OpenMP_CXX_FOUND)
 
 # Show the compile commands
