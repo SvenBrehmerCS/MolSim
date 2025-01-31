@@ -216,7 +216,7 @@ namespace outputWriter {
 
     void RDF::plotParticles(const ParticleContainer& pc, const std::string& filename, const int it) {
         std::vector<size_t> rdf = generateRDF(pc);
-        std::fstream file(filename + std::to_string(it));
+        std::ofstream file(filename + std::to_string(it));
 
         for (size_t i = 0; i < rdf.size(); i++) {
             const double r_i = i * delta_r;
