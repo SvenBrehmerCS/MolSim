@@ -55,7 +55,7 @@ TEST(Tweezers, SingleAtom) {
 
 // Test if the tweezers work correctly if they should affect two out of two atoms
 TEST(Tweezers, Full) {
-std::vector<Particle> particles = {
+    std::vector<Particle> particles = {
         Particle({ 0.5, 0.5, 0.5 }, {}, 1),
         Particle({ 1.25, 0.5, 0.5 }, {}, 2),
     };

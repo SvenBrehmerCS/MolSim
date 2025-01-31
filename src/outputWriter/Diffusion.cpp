@@ -16,7 +16,7 @@ namespace outputWriter {
             var += (env.get_delta_t() * pc[i].getV() + pc.get_type_descriptor(pc[i].getType()).get_dt_dt_m() * pc[i].getF()).len_squ();
         }
 
-        var /= pc.size();
+        var /= static_cast<double>(pc.size());
 
         file << var << "\t";
     }

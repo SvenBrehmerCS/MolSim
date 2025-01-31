@@ -73,7 +73,7 @@ TEST(MolCalculator, calculateMolecules) {
 
 // Test if the forces work if the membrane is spaced out
 TEST(MolCalculator, calculateMoleculesSpaced) {
-        //  Set the margin for the maximum floatingpoint error
+    //  Set the margin for the maximum floatingpoint error
     const double error_margin = 1E-9;
 
     ParticleGenerator gen;

@@ -4,18 +4,18 @@
     <output>
         <name>Membrane</name>
         <format>VTK</format>
-        <frequency>1000</frequency>
+        <frequency>100</frequency>
     </output>
     <param>
         <calc>LJ_MOL</calc>
         <strategy>SERIAL</strategy>
         <boundaries>
-            <boundary_yz_near>OUTFLOW</boundary_yz_near>
-            <boundary_xz_near>OUTFLOW</boundary_xz_near>
+            <boundary_yz_near>HARD</boundary_yz_near>
+            <boundary_xz_near>HARD</boundary_xz_near>
             <boundary_xy_near>HALO</boundary_xy_near>
-            <boundary_yz_far>OUTFLOW</boundary_yz_far>
-            <boundary_xz_far>OUTFLOW</boundary_xz_far>
-            <boundary_xy_far>OUTFLOW</boundary_xy_far>
+            <boundary_yz_far>HARD</boundary_yz_far>
+            <boundary_xz_far>HARD</boundary_xz_far>
+            <boundary_xy_far>HARD</boundary_xy_far>
         </boundaries>
         <delta_t>0.01</delta_t>
         <t_end>500</t_end>

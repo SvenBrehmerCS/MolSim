@@ -72,8 +72,6 @@ private:
     UpdateStrategy strat;
 
 
-
-
 public:
     /**
      * Define the default constructor.
