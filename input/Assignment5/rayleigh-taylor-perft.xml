@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="../../res/input.xsd">
+    xsi:noNamespaceSchemaLocation="../../res/input.xsd">
     <output>
         <name>rayleigh_perft</name>
         <format>NO_OUT</format>
@@ -8,7 +8,7 @@
     </output>
     <param>
         <calc>LJ_FULL</calc>
-        <strategy>GRID</strategy>
+        <strategy>SLICE</strategy>
         <boundaries>
             <boundary_yz_near>PERIODIC</boundary_yz_near>
             <boundary_xz_near>HALO</boundary_xz_near>
@@ -18,9 +18,10 @@
             <boundary_xy_far>PERIODIC</boundary_xy_far>
         </boundaries>
         <delta_t>0.0005</delta_t>
-        <t_end>100</t_end>
+        <t_end>0.5</t_end>
         <dimensions>3</dimensions>
-        <r_cutoff>3.6</r_cutoff>
+        <r_c>3.6</r_c>
+        <r_l>0.1</r_l>
         <domain>
             <vx>60</vx>
             <vy>60</vy>

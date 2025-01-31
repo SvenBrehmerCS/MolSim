@@ -120,7 +120,7 @@ enum OutputFormat {
     /**
      * Define the radial distribution function format.
      */
-    RDF
+    RDF,
 };
 
 /**
@@ -161,6 +161,16 @@ private:
      * Store the beginning of the name of the output file. The default is MD_vtk. The output file name looks like this: <name>_<iteration>.<vtu | xyz>
      */
     std::string output_file = "MD_vtk";
+
+    /**
+     * Store the beginning of the name of the diffusion file. (default: MD_Diff). The file name looks like this: <name>_<iteration>.<vtu | xyz>
+     */
+    std::string diff_file = "MD_Diff";
+
+    /**
+     * Store wether the diffusion files should be created.
+     */
+    bool generate_diff = false;
 
     /**
      * Store the output file format. it can either be vtk or xyz, with vtk being the default.
@@ -347,6 +357,20 @@ public:
     inline const char* get_output_file_name() const { return output_file.c_str(); }
 
     /**
+     * Get the beginning of the name of the diffusion output. All diffusion files will start with this name.
+     *
+     * @return The file name of the diffusion file.
+     */
+    inline const char* get_diff_file_name() const { return diff_file.c_str(); }
+
+    /**
+     * Get the wether the diffusion files should be created.
+     *
+     * @return The boolean representing if the output should be created.
+     */
+    inline const bool get_generate_diff() const { return generate_diff; }
+
+    /**
      * Get the format of the the output file.
      *
      * @return The file format of the output file.
@@ -460,6 +484,20 @@ public:
      * @param output_file_name The file name of the output file.
      */
     inline void set_output_file_name(const std::string& output_file_name) { this->output_file = output_file_name; }
+
+    /**
+     * Set the beginning of the name of the diffusion output. All diffusion files will start with this name.
+     *
+     * @param diff_file_name The file name of the diffusion output.
+     */
+    inline void set_diff_file_name(const std::string& diff_file_name) { this->diff_file = diff_file_name; }
+
+    /**
+     * Set wether the diffusion files should be created.
+     *
+     * @param generate_diff The boolean representing if the output should be created.
+     */
+    inline void set_generate_diff(const bool generate_diff) { this->generate_diff = generate_diff; }
 
     /**
      * Set the format of the the output file.

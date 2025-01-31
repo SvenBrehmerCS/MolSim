@@ -234,7 +234,7 @@ public:
 /**
  * Print a particle to an output stream.
  *
- * @param stream THe output stream, to which the particle should be printed. (cout, cerr)
+ * @param stream The output stream, to which the particle should be printed. (cout, cerr)
  * @param p The particle that should be printed.
  *
  * @return The output stream.

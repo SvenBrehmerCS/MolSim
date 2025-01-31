@@ -88,6 +88,14 @@ namespace physicsCalculator {
          * @param end The end time.
          */
         inline void set_end(const double end) { this->end = end; }
-    };
 
+        /**
+         * Compare if two tweezers are equal.
+         *
+         * @param other The tweezers which should be compared.
+         *
+         * @return A boolean indicating if the tweezers are equal.
+         */
+        bool operator==(const Tweezers& other) const;
+    };
 } // namespace physicsCalculator

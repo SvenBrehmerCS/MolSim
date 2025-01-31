@@ -16,4 +16,6 @@ namespace physicsCalculator {
             particles[i].setF(particles[i].getF() + force);
         }
     }
+
+    bool Tweezers::operator==(const Tweezers& other) const { return (indices == other.indices) && (force == other.force && (end == other.end)); }
 } // namespace physicsCalculator

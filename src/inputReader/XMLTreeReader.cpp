@@ -44,6 +44,12 @@ namespace inputReader {
         const int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
 
+        if (sim->output().diffusion().present()) {
+            std::string diff_output_name = sim->output().diffusion().get();
+            environment.set_diff_file_name(diff_output_name);
+            environment.set_generate_diff(true);
+        }
+
         SPDLOG_TRACE("Loading environment arguments...");
         const param_t::calc_type::value calc = sim->param().calc();
         environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));

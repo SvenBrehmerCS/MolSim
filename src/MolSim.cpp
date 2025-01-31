@@ -107,7 +107,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper { env.get_boundary_type(), env.get_domain_size(), tweezer };
+    Stepper stepper { env.get_boundary_type(), env.get_domain_size(), tweezer, env.get_diff_file_name(), env.get_generate_diff() };
 
     // Fully initialise Thermostat
     thermostat.set_particles(cont);
