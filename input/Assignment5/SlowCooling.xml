@@ -4,10 +4,10 @@
     <output>
         <name>SlowCooling</name>
         <format>RDF</format>
-        <frequency>50</frequency>
+        <frequency>1000</frequency>
         <RDF_args>
-            <num_buckets>20</num_buckets>
-            <bucket_size>0.46</bucket_size>
+            <num_buckets>50</num_buckets>
+            <bucket_size>0.184</bucket_size>
         </RDF_args>
         <diffusion>SlowDiff</diffusion>
     </output>

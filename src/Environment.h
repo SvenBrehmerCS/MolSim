@@ -533,7 +533,7 @@ public:
     /**
      * Set the number of buckets dividing used by the RDF writer to divide the domain.
      *
-     * @return The number of all buckets.
+     * @param RDF_bucket_num The number of rdf buckets
      */
     inline void set_RDF_bucket_num(const size_t RDF_bucket_num) { this->RDF_bucket_num = RDF_bucket_num; }
 

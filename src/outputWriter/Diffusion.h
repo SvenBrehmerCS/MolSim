@@ -38,7 +38,7 @@ namespace outputWriter {
 
         /**
          * Set the output file.
-         * 
+         *
          * @param out_name The name of the output file.
          */
         void set_out_file(const std::string& out_name);

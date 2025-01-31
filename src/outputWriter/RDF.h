@@ -70,7 +70,7 @@ namespace outputWriter {
         /**
          * Handles the creation and writing of the vtk file.
          *
-         * @param container List of particles to be plotted.
+         * @param pc List of particles to be plotted.
          * @param filename The base name of the file to be written.
          * @param iteration The number of the current iteration, which is used to generate an unique filename.
          */
