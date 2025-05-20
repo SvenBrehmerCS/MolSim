@@ -7,10 +7,13 @@
 #include "inputReader/XMLTreeReader.h"
 #include "outputWriter/CheckpointWriter.h"
 #include "outputWriter/NoWriter.h"
+#include "outputWriter/RDF.h"
 #include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
 #include "physicsCalculator/GravityCalculator.h"
 #include "physicsCalculator/LJCalculator.h"
+#include "physicsCalculator/LJSmoothCalculator.h"
+#include "physicsCalculator/MolCalculator.h"
 
 #include <iostream>
 #include <spdlog/spdlog.h>
@@ -51,10 +54,12 @@ int main(const int argc, const char* argv[]) {
     if (env.requires_direct_sum()) {
         cont = std::make_shared<DSContainer>(env.get_domain_size());
     } else {
-        cont = std::make_shared<BoxContainer>(env.get_r_cutoff(), env.get_domain_size());
+        cont = std::make_shared<BoxContainer>(env.get_r_cutoff(), env.get_domain_size(), env.get_update_strategy());
     }
 
-    reader->readParticle(*cont, env.get_delta_t(), env.get_gravity());
+    physicsCalculator::Tweezers tweezer;
+
+    reader->readParticle(*cont, tweezer, env.get_delta_t(), env.get_gravity());
     reader.reset();
     env.assert_boundary_conditions();
 
@@ -67,6 +72,12 @@ int main(const int argc, const char* argv[]) {
         break;
     case LJ_FULL:
         calculator = std::make_unique<physicsCalculator::LJCalculator>(env, cont);
+        break;
+    case LJ_MOL:
+        calculator = std::make_unique<physicsCalculator::MolCalculator>(env, cont);
+        break;
+    case LJ_SMOOTH:
+        calculator = std::make_unique<physicsCalculator::LJSmoothCalculator>(env, cont);
         break;
     default:
         SPDLOG_CRITICAL("Error: Illegal force model specifier.");
@@ -90,6 +101,10 @@ int main(const int argc, const char* argv[]) {
     case CHECKPOINT:
         writer = std::make_unique<outputWriter::VTKWriter>();
         break;
+    case RDF:
+        writer = std::make_unique<outputWriter::RDF>(
+            env.get_RDF_bucket_size(), env.get_RDF_bucket_num(), env.get_boundary_type(), env.get_domain_size());
+        break;
     default:
         SPDLOG_CRITICAL("Error: Illegal file format specifier.");
         std::exit(EXIT_FAILURE);
@@ -97,7 +112,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Initialize the stepper.
-    Stepper stepper { env.get_boundary_type(), env.get_domain_size() };
+    Stepper stepper { env.get_boundary_type(), env.get_domain_size(), tweezer, env.get_diff_file_name(), env.get_generate_diff() };
 
     // Fully initialise Thermostat
     thermostat.set_particles(cont);
@@ -116,7 +131,7 @@ int main(const int argc, const char* argv[]) {
     // For this loop, we assume: current x, current f and current v are known
     while (current_time < env.get_t_end()) {
         // Update x, v, f
-        stepper.step(*calculator);
+        stepper.step(*calculator, current_time);
 
         iteration++;
         current_time += env.get_delta_t();

@@ -45,6 +45,12 @@
                 </xs:annotation>
             </xs:element>
 
+            <xs:element name="membrane" type="membrane_t" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> The information needed to generate a membrane. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
             <xs:element name="thermo" type="thermo_t" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation> The information needed to regulate the simulation
@@ -104,6 +110,12 @@
                                 <xs:documentation> @brief Checkpoint output will be generated. </xs:documentation>
                             </xs:annotation>
                         </xs:enumeration>
+                        <xs:enumeration value="RDF">
+                            <xs:annotation>
+                                <xs:documentation> @brief Radial distribution function will be
+                                    generated as output. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
@@ -118,6 +130,35 @@
                         <xs:maxInclusive value="2147483647" />
                     </xs:restriction>
                 </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="RDF_args" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> This complex type represents the arguments needed by the RDF
+                        writer. </xs:documentation>
+                </xs:annotation>
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="num_buckets" type="xs:positiveInteger">
+                            <xs:annotation>
+                                <xs:documentation> Number of buckets used by RDF. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+
+                        <xs:element name="bucket_size" type="xs:double">
+                            <xs:annotation>
+                                <xs:documentation> Size of the buckets used by RDF. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="diffusion" type="xs:string" default="MD_Diff" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation> Name of the diffusion output files. </xs:documentation>
+                </xs:annotation>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -152,6 +193,51 @@
                             <xs:annotation>
                                 <xs:documentation> @brief Calculates the Lennard-Jones forces
                                     between particles. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="LJ_MOL">
+                            <xs:annotation>
+                                <xs:documentation> @brief Calculates a version of the Lennard-Jones
+                                    forces between particles supporting membranes. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="LJ_SMOOTH">
+                            <xs:annotation>
+                                <xs:documentation> @brief Calculates a smoothed version of the
+                                    Lennard-Jones forces between particles. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="strategy" default="GRID">
+                <xs:annotation>
+                    <xs:documentation> The desired parallelization strategy to be used. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:documentation> This simple type represents the parallelization strategy
+                            used by the simulation. </xs:documentation>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="SERIAL">
+                            <xs:annotation>
+                                <xs:documentation> @brief Uses no parallelization when updating the
+                                    container. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="GRID">
+                            <xs:annotation>
+                                <xs:documentation> @brief Divides the container update so that cells
+                                    that can not interfere with each other are updated parallelized. </xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="SLICE">
+                            <xs:annotation>
+                                <xs:documentation> @brief Divides the container update so that the
+                                    directional accesses are computed at the same time. </xs:documentation>
                             </xs:annotation>
                         </xs:enumeration>
                     </xs:restriction>
@@ -250,10 +336,10 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="r_cutoff" default="3.0">
+            <xs:element name="r_c" default="3.0">
                 <xs:annotation>
-                    <xs:documentation> The distance to after which the force calculation is to be
-                        neglected. </xs:documentation>
+                    <xs:documentation> The cutoff distance after which the force calculation is to
+                        be neglected. </xs:documentation>
                 </xs:annotation>
 
                 <xs:simpleType>
@@ -263,7 +349,20 @@
                 </xs:simpleType>
             </xs:element>
 
-            <xs:element name="domain" type="pdvector">
+            <xs:element name="r_l" default="1.0">
+                <xs:annotation>
+                    <xs:documentation> The distance after which the force calculation is smoothed
+                        out until it reaches the cutoff distance. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="domain" type="pdvector3">
                 <xs:annotation>
                     <xs:documentation> Size of the simulation domain in each direction. </xs:documentation>
                 </xs:annotation>
@@ -285,13 +384,13 @@
         </xs:annotation>
 
         <xs:sequence>
-            <xs:element name="position" type="dvector">
+            <xs:element name="position" type="dvector3">
                 <xs:annotation>
                     <xs:documentation> The position of the particle. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="velocity" type="dvector">
+            <xs:element name="velocity" type="dvector3">
                 <xs:annotation>
                     <xs:documentation> The velocity of the particle. </xs:documentation>
                 </xs:annotation>
@@ -320,19 +419,19 @@
         </xs:annotation>
 
         <xs:sequence>
-            <xs:element name="position" type="dvector">
+            <xs:element name="position" type="dvector3">
                 <xs:annotation>
                     <xs:documentation> The position of the base particle. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="velocity" type="dvector">
+            <xs:element name="velocity" type="dvector3">
                 <xs:annotation>
                     <xs:documentation> The velocity of the cuboid. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="count" type="pivector">
+            <xs:element name="count" type="pivector3">
                 <xs:annotation>
                     <xs:documentation> The amount of particles in each direction. </xs:documentation>
                 </xs:annotation>
@@ -410,13 +509,13 @@
         </xs:annotation>
 
         <xs:sequence>
-            <xs:element name="center" type="dvector">
+            <xs:element name="center" type="dvector3">
                 <xs:annotation>
                     <xs:documentation> The position of the center of the disc. </xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="velocity" type="dvector">
+            <xs:element name="velocity" type="dvector3">
                 <xs:annotation>
                     <xs:documentation> The velocity of the disc. </xs:documentation>
                 </xs:annotation>
@@ -494,6 +593,157 @@
                         <xs:minInclusive value="0.0" />
                     </xs:restriction>
                 </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="membrane_t">
+        <xs:annotation>
+            <xs:documentation> This complex type represents an membrane in the simulation. @details
+                This complex type consists of all the parameters needed to define a plane of
+                particles representing a membrane, such as position of base particle, amount of
+                particles in each direction, distance between particles, and more. </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="position" type="dvector3">
+                <xs:annotation>
+                    <xs:documentation> The position of the base particle. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="velocity" type="dvector3">
+                <xs:annotation>
+                    <xs:documentation> The velocity of the cuboid. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="count" type="pivector2">
+                <xs:annotation>
+                    <xs:documentation> The amount of particles in each direction. </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="m">
+                <xs:annotation>
+                    <xs:documentation> The mass of the particles in the cuboid. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="sigma" default="1.0">
+                <xs:annotation>
+                    <xs:documentation> The zero crossing of the Lennard-Jones potential. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="epsilon" default="5.0">
+                <xs:annotation>
+                    <xs:documentation> The depth of the potential well of the Lennard-Jones
+                        potential. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="h">
+                <xs:annotation>
+                    <xs:documentation> The distance between the particles. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="b_motion" default="0.0">
+                <xs:annotation>
+                    <xs:documentation> The average brownian motion in the cuboid. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minInclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="m_stiffness">
+                <xs:annotation>
+                    <xs:documentation> The stiffness of a membrane. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="avg_bond_len">
+                <xs:annotation>
+                    <xs:documentation> The average brownian motion in the cuboid. </xs:documentation>
+                </xs:annotation>
+
+                <xs:simpleType>
+                    <xs:restriction base="xs:double">
+                        <xs:minExclusive value="0.0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="tweezer">
+                <xs:annotation>
+                    <xs:documentation> A tweezer capable of exerting a continuos force onto specific
+                        particles of the membrane. </xs:documentation>
+                </xs:annotation>
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="force" type="dvector3">
+                            <xs:annotation>
+                                <xs:documentation> The force exerted on the particles. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+
+                        <xs:element name="t_end">
+                            <xs:annotation>
+                                <xs:documentation> A time step after which the force will no longer
+                                    be applied. </xs:documentation>
+                            </xs:annotation>
+
+                            <xs:simpleType>
+                                <xs:restriction base="xs:double">
+                                    <xs:minInclusive value="0.0" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+
+                        <xs:element name="target" type="pivector2" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation> The X- and Y-indices respective to the membrane
+                                    representing a particle affected by the tweezers. </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
@@ -595,7 +845,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="dvector">
+    <xs:complexType name="dvector3">
         <xs:annotation>
             <xs:documentation> This complex type represents a three value vector of doubles.
                 @details This complex type consists of three double variables which are used as
@@ -621,7 +871,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="pdvector">
+    <xs:complexType name="pdvector3">
         <xs:annotation>
             <xs:documentation> This complex type represents a three value vector of positive
                 doubles. @details This complex type consists of three double variables which are
@@ -662,7 +912,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="pivector">
+    <xs:complexType name="pivector3">
         <xs:annotation>
             <xs:documentation> This complex type represents a three value vector of integers.
                 @details This complex type consists of three integer variables which are used as
@@ -693,6 +943,37 @@
             <xs:element name="vz">
                 <xs:annotation>
                     <xs:documentation> The value of the Z variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minExclusive value="0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pivector2">
+        <xs:annotation>
+            <xs:documentation> This complex type represents a three value vector of integers.
+                @details This complex type consists of three integer variables which are used as
+                number of particles in direction of the X- and Y-axis. </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="vx">
+                <xs:annotation>
+                    <xs:documentation> The value of the X variable. </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:minExclusive value="0" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="vy">
+                <xs:annotation>
+                    <xs:documentation> The value of the Y variable. </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:int">

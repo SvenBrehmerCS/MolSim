@@ -57,6 +57,38 @@ enum CalculatorType {
      * Define the lenard jones calculation type without range cut-offs.
      */
     LJ_FULL,
+
+    /**
+     * Define a membrane supporting lenard jones calculation type.
+     */
+    LJ_MOL,
+
+    /**
+     * Define the smoothed version of the lenard jones calculation.
+     */
+    LJ_SMOOTH,
+};
+
+/**
+ * @enum UpdateStrategy
+ *
+ * @brief This enum describes the parallelization strategy used by the simulation.
+ */
+enum UpdateStrategy {
+    /**
+     * Define that no parallelization is used.
+     */
+    SERIAL,
+
+    /**
+     * Defines a strategy that  updates the cells, that are far enough spaced to not interfere with each other, at the same time.
+     */
+    GRID,
+
+    /**
+     * Defines a strategy that divides the cells into slices and executes the same directional update in parallel.
+     */
+    SLICE,
 };
 
 /**
@@ -84,6 +116,11 @@ enum OutputFormat {
      * Define the checkpoint file format.
      */
     CHECKPOINT,
+
+    /**
+     * Define the radial distribution function format.
+     */
+    RDF,
 };
 
 /**
@@ -126,9 +163,29 @@ private:
     std::string output_file = "MD_vtk";
 
     /**
+     * Store the beginning of the name of the diffusion file. (default: MD_Diff). The file name looks like this: <name>_<iteration>.<vtu | xyz>
+     */
+    std::string diff_file = "MD_Diff";
+
+    /**
+     * Store wether the diffusion files should be created.
+     */
+    bool generate_diff = false;
+
+    /**
      * Store the output file format. it can either be vtk or xyz, with vtk being the default.
      */
     OutputFormat output_format = VTK;
+
+    /**
+     * Stores the number of buckets the domain is divided into.
+     */
+    size_t RDF_bucket_num = 0;
+
+    /**
+     * Stores the size of the buckets the domain is divided into.
+     */
+    double RDF_bucket_size = 0.0;
 
     /**
      * Store after how many steps the simulation state should be saved. By default it is initialized to 10.
@@ -139,6 +196,11 @@ private:
      * Store which calculator should be used for the force calculations.
      */
     CalculatorType calc = LJ_FULL;
+
+    /**
+     * Store the parallelization strategy used for updating the cells.
+     */
+    UpdateStrategy strat = SERIAL;
 
     /**
      * Store the condition of the XY boundary at the origin.
@@ -194,6 +256,11 @@ private:
      * Store the radius beyond which force calculation is cut off.
      */
     double r_cutoff = 3.0;
+
+    /**
+     * Store the radius beyond which force calculation is cut off.
+     */
+    double r_l = 3.0;
 
     /**
      * Store the total size of the simulation domain.
@@ -300,6 +367,20 @@ public:
     inline const char* get_output_file_name() const { return output_file.c_str(); }
 
     /**
+     * Get the beginning of the name of the diffusion output. All diffusion files will start with this name.
+     *
+     * @return The file name of the diffusion file.
+     */
+    inline const char* get_diff_file_name() const { return diff_file.c_str(); }
+
+    /**
+     * Get the wether the diffusion files should be created.
+     *
+     * @return The boolean representing if the output should be created.
+     */
+    inline const bool get_generate_diff() const { return generate_diff; }
+
+    /**
      * Get the format of the the output file.
      *
      * @return The file format of the output file.
@@ -307,11 +388,32 @@ public:
     inline const OutputFormat get_output_file_format() const { return output_format; }
 
     /**
+     * Get the number of buckets dividing used by the RDF writer to divide the domain.
+     *
+     * @return The number of all buckets.
+     */
+    inline const size_t get_RDF_bucket_num() const { return RDF_bucket_num; }
+
+    /**
+     * Get the size of the buckets used by the RDF writer to divide the domain.
+     *
+     * @return The size oft all buckets.
+     */
+    inline const double get_RDF_bucket_size() const { return RDF_bucket_size; }
+
+    /**
      * Get the calculator type which should be used for the force calculations.
      *
      * @return The calculator type.
      */
     inline const CalculatorType get_calculator_type() const { return calc; }
+
+    /**
+     * Get the update strategy used for parallel updating the cells.
+     *
+     * @return The update strategy.
+     */
+    inline const UpdateStrategy get_update_strategy() const { return strat; }
 
     /**
      * Get the Boundary type used in the simulation.
@@ -326,6 +428,13 @@ public:
      * @return The radius.
      */
     inline const double get_r_cutoff() const { return r_cutoff; }
+
+    /**
+     * Get the cutoff radius beyond which forces no longer affect particles.
+     *
+     * @return The radius.
+     */
+    inline const double get_r_l() const { return r_l; }
 
     /**
      * Get the gravity pulling the atoms down.
@@ -401,11 +510,39 @@ public:
     inline void set_output_file_name(const std::string& output_file_name) { this->output_file = output_file_name; }
 
     /**
+     * Set the beginning of the name of the diffusion output. All diffusion files will start with this name.
+     *
+     * @param diff_file_name The file name of the diffusion output.
+     */
+    inline void set_diff_file_name(const std::string& diff_file_name) { this->diff_file = diff_file_name; }
+
+    /**
+     * Set wether the diffusion files should be created.
+     *
+     * @param generate_diff The boolean representing if the output should be created.
+     */
+    inline void set_generate_diff(const bool generate_diff) { this->generate_diff = generate_diff; }
+
+    /**
      * Set the format of the the output file.
      *
-     * @param format The file format of the output file.
+     * @param output_format The file format of the output file.
      */
     inline void set_output_file_format(const OutputFormat output_format) { this->output_format = output_format; }
+
+    /**
+     * Set the number of buckets dividing used by the RDF writer to divide the domain.
+     *
+     * @param RDF_bucket_num The number of rdf buckets
+     */
+    inline void set_RDF_bucket_num(const size_t RDF_bucket_num) { this->RDF_bucket_num = RDF_bucket_num; }
+
+    /**
+     * Set the size of the buckets used by the RDF writer to divide the domain.
+     *
+     * @param RDF_bucket_size The size oft all buckets.
+     */
+    inline void set_RDF_bucket_size(const double RDF_bucket_size) { this->RDF_bucket_size = RDF_bucket_size; }
 
     /**
      * Set the calculator type which should be used for the force calculations.
@@ -413,6 +550,13 @@ public:
      * @param calculator_type The calculator type.
      */
     inline void set_calculator_type(const CalculatorType calculator_type) { this->calc = calculator_type; }
+
+    /**
+     * Set the update strategy used for parallel updating the cells.
+     *
+     * @param update_strategy The update strategy.
+     */
+    inline void set_update_strategy(const UpdateStrategy update_strategy) { this->strat = update_strategy; }
 
     /**
      * Set the boundary type used in the simulation.
@@ -427,6 +571,13 @@ public:
      * @param r_cutoff The radius.
      */
     inline void set_r_cutoff(const double r_cutoff) { this->r_cutoff = r_cutoff; }
+
+    /**
+     * Set the cutoff radius beyond which forces no longer affect particles.
+     *
+     * @param r_l The radius.
+     */
+    inline void set_r_l(const double r_l) { this->r_l = r_l; }
 
     /**
      * Set the domain size at whichs end the boundaries are located.
@@ -452,7 +603,7 @@ public:
     /**
      * Set the gravity pulling the atoms down.
      *
-     * @param g The gravity pulling the atoms down.
+     * @param gravity The gravity pulling the atoms down.
      */
     inline void set_gravity(const double gravity) { this->gravity = gravity; }
 };

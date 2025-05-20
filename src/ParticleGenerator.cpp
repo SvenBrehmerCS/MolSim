@@ -95,3 +95,31 @@ int ParticleGenerator::generateDisc(ParticleContainer& container, int num_partic
     }
     return num_particles_added;
 }
+
+void ParticleGenerator::generateMembrane(ParticleContainer& container, int num_particles, const Vec<double>& x, const Vec<double>& v, int type,
+    const std::array<int, 2>& N, double h, double b_m, int dim) {
+    int N1 = N[0];
+    int N2 = N[1];
+
+    for (int j = 0; j < N2; j++) {
+        for (int k = 0; k < N1; k++) {
+            // set place
+            container[num_particles].setX({ x[0] + k * h, x[1] + j * h, x[2] });
+            container[num_particles].setV(v + maxwellBoltzmannDistributedVelocity(b_m, dim));
+            container[num_particles].setType(type);
+            container[num_particles].setInMolecule(true);
+            container[num_particles].setIndex(num_particles);
+            container[num_particles].setNeighbors({
+                k == 0 ? SIZE_MAX : num_particles - 1,
+                k == N1 - 1 ? SIZE_MAX : num_particles + 1,
+                j == 0 ? SIZE_MAX : num_particles - N1,
+                j == N2 - 1 ? SIZE_MAX : num_particles + N1,
+                k == 0 || j == 0 ? SIZE_MAX : num_particles - N1 - 1,
+                k == 0 || j == N2 - 1 ? SIZE_MAX : num_particles + N1 - 1,
+                k == N1 - 1 || j == 0 ? SIZE_MAX : num_particles - N1 + 1,
+                k == N1 - 1 || j == N2 - 1 ? SIZE_MAX : num_particles + N1 + 1,
+            });
+            num_particles++;
+        }
+    }
+}

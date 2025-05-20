@@ -31,8 +31,9 @@ public:
      *
      * @param rc The cutoff distance used for the simulation.
      * @param new_domain Vector of the number of cells in each direction.
+     * @param strat The parallelization strategy used for updating the cells.
      */
-    BoxContainer(const double rc, const Vec<double>& new_domain);
+    BoxContainer(const double rc, const Vec<double>& new_domain, const UpdateStrategy strat = UpdateStrategy::SERIAL);
 
     /**
      * Define the box container.
@@ -41,9 +42,10 @@ public:
      * @param rc The cutoff distance used for the simulation.
      * @param new_domain Vector of the number of cells in each direction.
      * @param new_desc The types of the particles to be stored.
+     * @param strat The parallelization strategy used for updating the cells.
      */
-    BoxContainer(
-        const std::vector<Particle>& new_particles, const double rc, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc);
+    BoxContainer(const std::vector<Particle>& new_particles, const double rc, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc,
+        const UpdateStrategy strat = UpdateStrategy::SERIAL);
 
     /**
      * Define the default destructor for a box container.

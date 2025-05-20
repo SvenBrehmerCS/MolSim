@@ -2,16 +2,16 @@
 
 #include "BoxContainer.h"
 
-BoxContainer::BoxContainer(const double rc, const Vec<double>& new_domain)
+BoxContainer::BoxContainer(const double rc, const Vec<double>& new_domain, const UpdateStrategy strat)
     : ParticleContainer(new_domain) {
-    cells = CellList(rc, domain);
+    cells = CellList(rc, domain, strat);
     cells.create_list(particles);
 };
 
-BoxContainer::BoxContainer(
-    const std::vector<Particle>& new_particles, const double rc, const Vec<double>& new_domain, const std::vector<TypeDesc>& new_desc)
+BoxContainer::BoxContainer(const std::vector<Particle>& new_particles, const double rc, const Vec<double>& new_domain,
+    const std::vector<TypeDesc>& new_desc, const UpdateStrategy strat)
     : ParticleContainer(new_particles, new_domain, new_desc) {
-    cells = CellList(rc, domain);
+    cells = CellList(rc, domain, strat);
     cells.create_list(particles);
 };
 

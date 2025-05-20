@@ -44,9 +44,31 @@ namespace inputReader {
         const int write_frequency = sim->output().frequency();
         environment.set_print_step(write_frequency);
 
+        if (form == output_t::format_type::RDF) {
+            if (!sim->output().RDF_args().present()) {
+                SPDLOG_CRITICAL("RDF arguments are missing. Pleas make sure, that the size and number have the correct values.");
+                std::exit(EXIT_FAILURE);
+            }
+            const size_t num_buckets = sim->output().RDF_args().get().num_buckets();
+            environment.set_RDF_bucket_num(num_buckets);
+            const double bucket_size = sim->output().RDF_args().get().bucket_size();
+            environment.set_RDF_bucket_size(bucket_size);
+        }
+
+        if (sim->output().diffusion().present()) {
+            std::string diff_output_name = sim->output().diffusion().get();
+            environment.set_diff_file_name(diff_output_name);
+            environment.set_generate_diff(true);
+        }
+
         SPDLOG_TRACE("Loading environment arguments...");
         const param_t::calc_type::value calc = sim->param().calc();
         environment.set_calculator_type(static_cast<CalculatorType>(static_cast<int>(calc)));
+
+#ifdef _OPENMP
+        const param_t::strategy_type::value strat = sim->param().strategy();
+        environment.set_update_strategy(static_cast<UpdateStrategy>(static_cast<int>(strat)));
+#endif
 
         const bound::value yz_near = sim->param().boundaries().boundary_yz_near();
         const bound::value xz_near = sim->param().boundaries().boundary_xz_near();
@@ -71,8 +93,14 @@ namespace inputReader {
 
         environment.set_dimensions(sim->param().dimensions());
 
-        const double r_cutoff = sim->param().r_cutoff();
-        environment.set_r_cutoff(r_cutoff);
+        const double r_c = sim->param().r_c();
+        const double r_l = sim->param().r_l();
+        if (r_c <= r_l) {
+            SPDLOG_CRITICAL("The distance after which the force calculation is smoothed out should be smaller than the cutoff distance.");
+            std::exit(EXIT_FAILURE);
+        }
+        environment.set_r_cutoff(r_c);
+        environment.set_r_l(r_l);
 
         const Vec<double> domain_size = {
             sim->param().domain().vx(),
@@ -104,7 +132,8 @@ namespace inputReader {
         SPDLOG_TRACE("...Finished setting up simulation environment");
     }
 
-    void XMLTreeReader::readParticle(ParticleContainer& container, const double delta_t, const double gravity) {
+    void XMLTreeReader::readParticle(
+        ParticleContainer& container, physicsCalculator::Tweezers& tweezers, const double delta_t, const double gravity) {
         SPDLOG_DEBUG("Generating particles");
 
         if (sim->checkpoint().present()) {
@@ -205,6 +234,43 @@ namespace inputReader {
                 container, num_particles, disc_center, disc_velocity, ptype++, disc.r(), disc.h(), brownian_motion, num_dimensions);
 
             num_particles += particles_added;
+        }
+
+        // Initialize all the membrane into the container.
+        SPDLOG_TRACE("Membrane...");
+        if (sim->membrane().present()) {
+            const auto& membrane = sim->membrane().get();
+            const auto& mtweezer = membrane.tweezer();
+            const auto& mtargets = mtweezer.target();
+
+            x = { membrane.position().vx(), membrane.position().vy(), membrane.position().vz() };
+            v = { membrane.velocity().vx(), membrane.velocity().vy(), membrane.velocity().vz() };
+            std::array<int, 2> n = { membrane.count().vx(), membrane.count().vy() };
+            m = membrane.m();
+            s = membrane.sigma();
+            e = membrane.epsilon();
+            h = membrane.h();
+
+            if (sim->thermo().present() && sim->thermo().get().T_init().present()) {
+                brownian_motion = std::sqrt(sim->thermo().get().T_init().get() / m);
+            } else {
+                brownian_motion = membrane.b_motion();
+            }
+
+            container.resize(num_particles + n[0] * n[1]);
+
+            tweezers.set_force({ mtweezer.force().vx(), mtweezer.force().vy(), mtweezer.force().vz() });
+            tweezers.set_end(mtweezer.t_end());
+            std::vector<size_t> tlist;
+            for (const auto& p : mtargets) {
+                tlist.push_back(num_particles + (n[0] * (p.vy() - 1)) + (p.vx() - 1));
+            }
+            tlist.shrink_to_fit();
+            tweezers.set_indices(tlist);
+
+            ptypes.push_back(TypeDesc { m, s, e, delta_t, gravity, membrane.m_stiffness(), membrane.avg_bond_len() });
+
+            generator.generateMembrane(container, num_particles, x, v, ptype++, n, h, brownian_motion, num_dimensions);
         }
 
         container.build_type_table(ptypes);

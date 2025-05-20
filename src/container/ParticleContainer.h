@@ -87,6 +87,15 @@ public:
     Particle& operator[](const size_t idx);
 
     /**
+     * Get the reference of a particle at a certain index.
+     *
+     * @param idx The index of the referenced particle.
+     *
+     * @return The reference to the particle.
+     */
+    const Particle& operator[](const size_t idx) const;
+
+    /**
      * Returns a read/write iterator that points to the first element in the particle container.
      * Iteration is done in ordinary element order.
      *

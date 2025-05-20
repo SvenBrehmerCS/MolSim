@@ -8,6 +8,7 @@
     </output>
     <param>
         <calc>GRAVITY</calc>
+        <strategy></strategy>
         <boundaries>
             <boundary_yz_near>INF_CONT</boundary_yz_near>
             <boundary_xz_near>INF_CONT</boundary_xz_near>
@@ -19,7 +20,8 @@
         <delta_t></delta_t>
         <t_end></t_end>
         <dimensions></dimensions>
-        <r_cutoff></r_cutoff>
+        <r_c></r_c>
+        <r_l></r_l>
         <domain>
             <vx>25</vx>
             <vy>25</vy>

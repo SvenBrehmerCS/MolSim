@@ -8,6 +8,7 @@
     </output>
     <param>
         <calc>GRAVITY</calc>
+        <strategy>SLICE</strategy>
         <boundaries>
             <boundary_yz_near>PERIODIC</boundary_yz_near>
             <boundary_xz_near>HARD</boundary_xz_near>
@@ -19,7 +20,8 @@
         <delta_t>0.5</delta_t>
         <t_end>500</t_end>
         <dimensions>2</dimensions>
-        <r_cutoff>2.0</r_cutoff>
+        <r_c>1</r_c>
+        <r_l>0.5</r_l>
         <domain>
             <vx>25</vx>
             <vy>25</vy>
